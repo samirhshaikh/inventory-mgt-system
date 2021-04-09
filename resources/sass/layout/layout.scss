@@ -1,0 +1,36 @@
+html {
+    height: 100%;
+}
+
+aside.content {
+    height: calc(100vh - 2.5rem);
+}
+section.content {
+    height: calc(100vh - 5rem);
+}
+
+p {
+    @apply mb-5;
+}
+
+//firefox scroll bar
+* {
+    scrollbar-color: #6B6B6B #1A202C;
+    scrollbar-width: thin;
+}
+
+//chrome scroll bar
+::-webkit-scrollbar {
+    background-color: #1A202C;
+    width: .5rem;
+    height: .5rem;
+    padding: 1px;
+    border-radius: 0;
+}
+::-webkit-scrollbar-thumb {
+    background: #6B6B6B;
+    border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #4C4C4C;
+}

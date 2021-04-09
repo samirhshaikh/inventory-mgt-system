@@ -1,0 +1,8 @@
+@import url('~vue-select/dist/vue-select.css');
+
+.vs__dropdown-menu {
+    max-height: 250px;
+}
+.vs__actions {
+    @apply .cursor-pointer
+}

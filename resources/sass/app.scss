@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "layout/layout";
+
+// Variables
+@import 'variables';
+@import 'custom';
+@import 'layout/vue_select';

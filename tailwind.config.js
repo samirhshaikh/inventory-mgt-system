@@ -11,10 +11,10 @@ module.exports = {
             colors: {
                 gray: {
                     ...colors.gray,
-                    "600": "#3b3e45",
-                    "700": "#36393f",
-                    "800": "#2f3136",
-                    "900": "#202225"
+                    "600": "#3c3f44",
+                    "700": "#33363d",
+                    "800": "#2b2e33",
+                    "900": "#1b1d21"
                 }
             },
             width: {
@@ -36,20 +36,20 @@ module.exports = {
 
         backgroundColor: theme => ({
             ...theme("colors"),
-            "product-color": "#1380B6",
-            "product-color-lighter": "#c7dcea"
+            "product-color": "#397D92",
+            "product-color-lighter": "#b2ddea"
         }),
 
         borderColor: theme => ({
             ...theme("colors"),
-            "product-color": "#1380B6",
-            "product-color-lighter": "#c7dcea"
+            "product-color": "#397D92",
+            "product-color-lighter": "#b2ddea"
         }),
 
         textColor: theme => ({
             ...theme("colors"),
-            "product-color": "#1380B6",
-            "product-color-lighter": "#c7dcea"
+            "product-color": "#397D92",
+            "product-color-lighter": "#b2ddea"
         })
     },
     variants: {

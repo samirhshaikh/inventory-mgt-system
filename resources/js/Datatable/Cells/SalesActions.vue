@@ -2,6 +2,8 @@
     <div class="flex">
         <Button
             @click.native="edit"
+            icon="pen"
+            split="border-white"
             class="text-white bg-green-600"
             :class="{
                 hidden: !$page.user_details.IsAdmin
@@ -14,9 +16,9 @@
             :class="{
                 hidden: !$page.user_details.IsAdmin
             }"
-            :icon="deleting_record ? 'sync-alt' : ''"
+            :icon="deleting_record ? 'sync-alt' : 'trash'"
             :icon_class="deleting_record ? 'fa-spin' : ''"
-            :split="deleting_record ? 'border-white' : ''"
+            split="border-white"
         >
             {{ deleting_record ? "Deleting" : "Delete" }}
         </Button>

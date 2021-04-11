@@ -1,5 +1,5 @@
 <template>
-    <section>
+    <section class="hidden md:block">
         <button
             class="rounded text-green-600 px-2 pt-2"
             :class="{

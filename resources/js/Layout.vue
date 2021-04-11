@@ -6,43 +6,13 @@
             'text-white': dark_mode
         }"
     >
-        <header
-            class="z-50 flex w-full h-10 bg-product-color text-white fixed items-center"
-        >
-            <div
-                class="flex flex-shrink-0 text-xl font-semibold text-center mt-0 mb-0 border-r border-white h-full content-center"
-                :class="{
-                    'w-64': expanded_sidebar,
-                    'w-12': !expanded_sidebar
-                }"
-            >
-                <div v-if="expanded_sidebar" class="mb-auto mt-auto w-full">Inventory Mgt System</div>
-                <div v-else class="mb-auto mt-auto w-full">IMS</div>
-            </div>
-
-            <div class="w-full">
-                <div class="float-left flex justify-between"></div>
-
-                <div class="float-right flex justify-between">
-                    <button
-                        class="px-4 border-product-color-lighter border-l flex items-center text-sm h-10"
-                        @click="showUserOverlay"
-                    >
-                        <img
-                            :src="getAvatar"
-                            class="w-5 h-5 border-2 border-color-white rounded-full"
-                        />
-                        <span class="ml-2">{{ $page.user }}</span>
-                    </button>
-                </div>
-            </div>
-        </header>
+        <Header></Header>
 
         <main class="w-full mt-10">
             <div
                 :class="{
-                    'ml-64': expanded_sidebar,
-                    'ml-12': !expanded_sidebar
+                    'ml-64': expanded_sidebar && !small_screen,
+                    'ml-12': !expanded_sidebar || small_screen
                 }"
             >
                 <section
@@ -61,8 +31,8 @@
             <aside
                 class="main_side_bar fixed content mt-10"
                 :class="{
-                'w-64': expanded_sidebar,
-                'w-12': !expanded_sidebar,
+                'w-64': expanded_sidebar && !small_screen,
+                'w-12': !expanded_sidebar || small_screen,
                 'bg-gray-300': !dark_mode,
                 'bg-gray-700': dark_mode
             }">
@@ -71,12 +41,16 @@
         </main>
 
         <notifications group="messages" position="bottom left" :duration="5000"/>
+
+        <Window
+            class="hidden"
+            @resizeWindow="resizeWindow"
+        ></Window>
     </div>
 </template>
 
 <script>
-import {mapState, mapActions} from 'vuex';
-import UserOverlayVue from './Misc/UserOverlay.vue';
+import {mapState} from 'vuex';
 
 export default {
     data() {
@@ -88,12 +62,12 @@ export default {
                     payload: this.$page.app_settings
                 },
                 datatable: {method: 'datatable/setDatatableFromAppSetting', payload: this.$page.app_settings}
-            }
+            },
+            width: 0
         };
     },
 
     created() {
-        console.log(this.$page.app_settings);
         //app_settings in not initialized in the session. So nothing to restore.
         if (this.$page.app_settings === null || Object.keys(this.$page.app_settings).length === 0) {
             return;
@@ -107,30 +81,21 @@ export default {
         });
     },
 
-    methods: {
-        showUserOverlay() {
-            this.setPopperOpen(true);
-
-            this.$modal.show(UserOverlayVue, {}, {
-                width: '80%',
-                height: '80%'
-            });
-        },
-
-        ...mapActions({
-            setPopperOpen: 'local_settings/setPopperOpen'
-        })
-    },
-
     computed: {
-        getAvatar() {
-            return "https://i.picsum.photos/id/402/200/200.jpg?hmac=9PZqzeq_aHvVAxvDPNfP6GuD58m4rilq-TUrG4e7V80";
+        small_screen() {
+            return this.width <= 640;
         },
 
         ...mapState({
             dark_mode: state => state.framework.dark_mode,
             expanded_sidebar: state => state.framework.expanded_sidebar
         })
+    },
+
+    methods: {
+        resizeWindow(width) {
+            this.width = width;
+        }
     }
 }
 </script>

@@ -45,7 +45,9 @@ import {
     faMinus,
     faBuilding,
     faCalendarAlt,
-    faMagic
+    faMagic,
+    faPen,
+    faTrash
 } from '@fortawesome/free-solid-svg-icons';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -73,7 +75,9 @@ library.add([
     faMinus,
     faBuilding,
     faCalendarAlt,
-    faMagic
+    faMagic,
+    faPen,
+    faTrash
 ]);
 
 Vue.component('FA', FontAwesomeIcon);

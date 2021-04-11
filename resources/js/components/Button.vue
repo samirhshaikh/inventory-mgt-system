@@ -1,9 +1,9 @@
 <template>
 <button class="flex rounded items-center cursor-pointer hover:opacity-75" @click.stop="stopClick()">
-    <div class="p-1" v-if="icon">
+    <div class="p-1 text-xs" v-if="icon">
         <FA class="fa-fw" :icon="['fas', icon]" :class="icon_class"></FA>
     </div>
-    <div class="p-1 md:p-2 text-xs md:text-sm w-full truncate" :class="labelClass" v-if="this.$slots.default">
+    <div class="p-1 text-sm w-full truncate hidden md:block" :class="labelClass" v-if="this.$slots.default">
         <slot></slot>
     </div>
 </button>

@@ -9,7 +9,7 @@
                         'text-product-color-lighter': dark_mode,
                         hidden: section_title == 'Dashboard'
                     }"
-                    v-if="expanded_sidebar && atleast_one_link_available(section_title)"
+                    v-if="expanded_sidebar && !small_screen && atleast_one_link_available(section_title)"
                 >
                     {{ section_title }}
                 </h3>
@@ -28,7 +28,7 @@
                                 <div class="w-5 text-center">
                                     <FA class="fas" :icon="link.icon"></FA>
                                 </div>
-                                <div class="ml-1" v-show="expanded_sidebar">
+                                <div class="ml-1" v-show="expanded_sidebar && !small_screen">
                                     {{ link.title }}
                                 </div>
                             </div>
@@ -43,7 +43,7 @@
                                 <div class="w-5 text-center">
                                     <FA class="fas" :icon="link.icon"></FA>
                                 </div>
-                                <div class="ml-1" v-show="expanded_sidebar">
+                                <div class="ml-1" v-show="expanded_sidebar && !small_screen">
                                     {{ link.title }}
                                 </div>
                             </div>
@@ -56,8 +56,8 @@
         <div
             class="flex py-2"
             :class="{
-                'flex-col px-2': !expanded_sidebar,
-                'px-4': expanded_sidebar
+                'flex-col px-2': !expanded_sidebar || small_screen,
+                'px-4': expanded_sidebar && !small_screen
             }"
         >
             <button
@@ -71,17 +71,22 @@
             >
                 <FA
                     :icon="['fas', 'angle-double-left']"
-                    v-if="expanded_sidebar"
+                    v-if="expanded_sidebar && !small_screen"
                 ></FA>
                 <FA :icon="['fas', 'angle-double-right']" v-else></FA>
             </button>
         </div>
+
+        <Window
+            class="hidden"
+            @resizeWindow="resizeWindow"
+        ></Window>
     </div>
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
-import AppSettings from './AppSettings.vue';
+import AppSettings from '../Misc/AppSettings.vue';
 
 export default {
     data() {
@@ -176,11 +181,16 @@ export default {
                     }
                 ]
             },
-            currentRoute: window.location.pathname
+            currentRoute: window.location.pathname,
+            width: 0
         };
     },
 
     computed: {
+        small_screen() {
+            return this.width <= 640;
+        },
+
         ...mapState({
             dark_mode: state => state.framework.dark_mode,
             expanded_sidebar: state => state.framework.expanded_sidebar
@@ -188,6 +198,10 @@ export default {
     },
 
     methods: {
+        resizeWindow(width) {
+            this.width = width;
+        },
+
         atleast_one_link_available(key) {
             let flag = false;
             _.forEach(this.navigation[key], (link, key) => {

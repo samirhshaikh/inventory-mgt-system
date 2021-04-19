@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import helper_functions from "../../Store/modules/helper_functions";
+import helper_functions from "../../store/modules/helper_functions";
 import {datatable_cell} from "./datatable_cell";
 
 export default {

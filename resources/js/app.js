@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import store from './Store';
+import store from './store';
 
 var _ = require('lodash');
 

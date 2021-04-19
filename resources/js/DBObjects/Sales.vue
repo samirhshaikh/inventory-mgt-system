@@ -7,7 +7,7 @@ import {mapState, mapActions} from "vuex";
 import moment from "moment";
 import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
-import helper_functions from "../Store/modules/helper_functions";
+import helper_functions from "../store/modules/helper_functions";
 import {list_controller} from "./list_controller";
 import {notifications} from "../Helpers/notifications";
 

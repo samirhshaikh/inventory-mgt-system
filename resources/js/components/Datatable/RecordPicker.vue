@@ -98,7 +98,6 @@ import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
 import {list_controller} from "../../DBObjects/list_controller";
 import {datatable_common} from "../../Pages/datatable_common";
-import helper_functions from "../../store/modules/helper_functions";
 import moment from "moment";
 
 export default {

@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import 'es6-promise/auto';
-import moment from 'moment';
 import dbSettings from '../Helpers/dbSettings';
 import framework from './modules/framework';
 import store_settings from './modules/store_settings';

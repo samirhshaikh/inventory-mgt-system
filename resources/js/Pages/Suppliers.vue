@@ -69,7 +69,7 @@ import { mapState, mapActions } from "vuex";
 import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
 import Supplier from "../DBObjects/Supplier.vue";
-import {datatable_common} from "./datatable_common";
+import {datatable_common} from "../Helpers/datatable_common";
 
 export default {
     mixins: [datatable_common],

@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import {datatable_cell} from "./datatable_cell";
+import {datatable_cell} from "../datatable_cell";
 import moment from "moment";
 
 export default {

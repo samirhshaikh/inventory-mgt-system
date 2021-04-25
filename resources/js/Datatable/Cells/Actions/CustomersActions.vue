@@ -2,6 +2,8 @@
     <div class="flex">
         <Button
             @click.native="edit"
+            icon="pen"
+            split="border-white"
             class="text-white bg-green-600"
             :class="{
                 hidden: !$page.user_details.IsAdmin
@@ -15,21 +17,21 @@
             :class="{
                 hidden: !$page.user_details.IsAdmin
             }"
-            :icon="deleting_record ? 'sync-alt' : ''"
+            :icon="deleting_record ? 'sync-alt' : 'trash'"
             :icon_class="deleting_record ? 'fa-spin' : ''"
-            :split="deleting_record ? 'border-white' : ''"
-        >{{ deleting_record ? "Deleting" : "Delete" }}
-        </Button
+            split="border-white"
         >
+            {{ deleting_record ? "Deleting" : "Delete" }}
+        </Button>
     </div>
 </template>
 
 <script>
-import User from "../../DBObjects/User.vue";
+import Customer from "../../../DBObjects/Customer.vue";
 import {mapActions} from "vuex";
-import Confirm from "../../components/Confirm.vue";
-import {datatable_cell} from "./datatable_cell";
-import {notifications} from "../../Helpers/notifications";
+import Confirm from "../../../components/Confirm.vue";
+import {datatable_cell} from "../datatable_cell";
+import {notifications} from "../../../Helpers/notifications";
 
 export default {
     mixins: [datatable_cell, notifications],
@@ -39,12 +41,13 @@ export default {
             this.setPopperOpen(true);
 
             this.$modal.show(
-                User,
+                Customer,
                 {
-                    edit_id: this.row.UserName
+                    edit_id: String(this.row.Id),
+                    options: this.options
                 },
                 {
-                    width: "650px",
+                    width: "750px",
                     height: "600px"
                 }
             );
@@ -63,31 +66,29 @@ export default {
                         this.deleting_record = true;
 
                         axios
-                            .post(route("users.delete"), {
-                                UserName: this.row.UserName
+                            .post(route("customers.delete"), {
+                                Id: this.row.Id
                             })
-                            .then(
-                                response => {
-                                    if (response.data.message == "record_deleted") {
-                                        this.$notify({
-                                            group: "messages",
-                                            title: "Success",
-                                            text: this.formatMessage(response.data.message, this.options.record_name)
-                                        });
+                            .then(response => {
+                                if (response.data.message == "record_deleted") {
+                                    this.$notify({
+                                        group: "messages",
+                                        title: "Success",
+                                        text: this.formatMessage(response.data.message, this.options.record_name)
+                                    });
 
-                                        this.refreshData(this.options.id);
-                                    } else {
-                                        this.$notify({
-                                            group: "messages",
-                                            title: "Error",
-                                            type: "error",
-                                            text: this.formatMessage("unknown_error", this.options.record_name)
-                                        });
-                                    }
-
-                                    this.deleting_record = false;
+                                    this.refreshData(this.options.id);
+                                } else {
+                                    this.$notify({
+                                        group: "messages",
+                                        title: "Error",
+                                        type: "error",
+                                        text: this.formatMessage("unknown_error", this.options.record_name)
+                                    });
                                 }
-                            )
+
+                                this.deleting_record = false;
+                            })
                             .catch(error => {
                                 this.deleting_record = false;
 

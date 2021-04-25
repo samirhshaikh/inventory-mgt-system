@@ -73,8 +73,8 @@ import {mapState, mapActions} from "vuex";
 import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
 import Sale from "../DBObjects/Sale.vue";
-import {list_controller} from "../DBObjects/list_controller";
-import {datatable_common} from "./datatable_common";
+import {list_controller} from "../Helpers/list_controller";
+import {datatable_common} from "../Helpers/datatable_common";
 import SearchParameters from "../components/Search/SearchParameters";
 
 export default {

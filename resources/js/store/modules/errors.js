@@ -1,3 +1,7 @@
+/**
+ * State storage for errors.
+ */
+
 import moment from 'moment';
 
 const state = {

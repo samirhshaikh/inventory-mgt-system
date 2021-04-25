@@ -1,3 +1,7 @@
+/**
+ * State storage for some commonly used items.
+ */
+
 const state = {
     name: "Store Name",
     stock_types: "New,Kit,Partial,Refurb,Used,Others,ReTrade",

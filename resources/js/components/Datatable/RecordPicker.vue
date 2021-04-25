@@ -96,8 +96,8 @@ import {mapActions, mapState} from "vuex";
 import SearchParameters from "../Search/SearchParameters";
 import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
-import {list_controller} from "../../DBObjects/list_controller";
-import {datatable_common} from "../../Pages/datatable_common";
+import {list_controller} from "../../Helpers/list_controller";
+import {datatable_common} from "../../Helpers/datatable_common";
 import moment from "moment";
 
 export default {

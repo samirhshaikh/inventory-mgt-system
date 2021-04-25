@@ -563,8 +563,8 @@ import {mapState, mapActions} from "vuex";
 import moment from "moment";
 import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
-import helper_functions from "../store/modules/helper_functions";
-import {list_controller} from "./list_controller";
+import helper_functions from "../Helpers/helper_functions";
+import {list_controller} from "../Helpers/list_controller";
 import {notifications} from "../Helpers/notifications";
 
 export default {

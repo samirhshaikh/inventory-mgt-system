@@ -1,7 +1,21 @@
+/**
+ * Mixin file. It maintains the cache of the following items:
+ * Suppliers
+ * Colors
+ * Models
+ * Manufacturers
+ * Customers
+ * Stock Types
+ * Networks
+ * Phone sizes
+ * Payment Types
+ *
+ * ToDo: Need to remove customers from here as it can be pretty big list. So need to make customer select box ajax connected.
+ */
 import {mapState, mapActions} from "vuex";
-import Supplier from "./Supplier";
-import Customer from "./Customer";
-import ObjectType1 from "./ObjectType1";
+import Supplier from "../DBObjects/Supplier";
+import Customer from "../DBObjects/Customer";
+import ObjectType1 from "../DBObjects/ObjectType1";
 
 export const list_controller = {
     data() {

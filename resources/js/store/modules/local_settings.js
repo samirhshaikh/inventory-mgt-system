@@ -1,3 +1,7 @@
+/**
+ * State storage for local data. Will not be sent to server for storing in app settings.
+ */
+
 const state = {
     active_tab: null,
     popper_open: false,

@@ -27,11 +27,11 @@
 </template>
 
 <script>
-import Customer from "../../DBObjects/Customer.vue";
+import Supplier from "../../../DBObjects/Supplier.vue";
 import {mapActions} from "vuex";
-import Confirm from "../../components/Confirm.vue";
-import {datatable_cell} from "./datatable_cell";
-import {notifications} from "../../Helpers/notifications";
+import Confirm from "../../../components/Confirm.vue";
+import {datatable_cell} from "../datatable_cell";
+import {notifications} from "../../../Helpers/notifications";
 
 export default {
     mixins: [datatable_cell, notifications],
@@ -41,7 +41,7 @@ export default {
             this.setPopperOpen(true);
 
             this.$modal.show(
-                Customer,
+                Supplier,
                 {
                     edit_id: String(this.row.Id),
                     options: this.options
@@ -66,7 +66,7 @@ export default {
                         this.deleting_record = true;
 
                         axios
-                            .post(route("customers.delete"), {
+                            .post(route("suppliers.delete"), {
                                 Id: this.row.Id
                             })
                             .then(response => {

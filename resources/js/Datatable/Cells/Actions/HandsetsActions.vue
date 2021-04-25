@@ -2,14 +2,11 @@
     <div class="flex">
         <Button
             @click.native="edit"
-            icon="pen"
-            split="border-white"
             class="text-white bg-green-600"
             :class="{
                 hidden: !$page.user_details.IsAdmin
             }"
-        >Edit
-        </Button
+            >Edit</Button
         >
         <Button
             @click.native="remove"
@@ -17,9 +14,9 @@
             :class="{
                 hidden: !$page.user_details.IsAdmin
             }"
-            :icon="deleting_record ? 'sync-alt' : 'trash'"
+            :icon="deleting_record ? 'sync-alt' : ''"
             :icon_class="deleting_record ? 'fa-spin' : ''"
-            split="border-white"
+            :split="deleting_record ? 'border-white' : ''"
         >
             {{ deleting_record ? "Deleting" : "Delete" }}
         </Button>
@@ -27,11 +24,11 @@
 </template>
 
 <script>
-import Supplier from "../../DBObjects/Supplier.vue";
-import {mapActions} from "vuex";
-import Confirm from "../../components/Confirm.vue";
-import {datatable_cell} from "./datatable_cell";
-import {notifications} from "../../Helpers/notifications";
+import Handset from "../../../DBObjects/Handset.vue";
+import { mapActions } from "vuex";
+import Confirm from "../../../components/Confirm.vue";
+import {datatable_cell} from "../datatable_cell";
+import {notifications} from "../../../Helpers/notifications";
 
 export default {
     mixins: [datatable_cell, notifications],
@@ -41,7 +38,7 @@ export default {
             this.setPopperOpen(true);
 
             this.$modal.show(
-                Supplier,
+                Handset,
                 {
                     edit_id: String(this.row.Id),
                     options: this.options
@@ -66,7 +63,7 @@ export default {
                         this.deleting_record = true;
 
                         axios
-                            .post(route("suppliers.delete"), {
+                            .post(route("handsets.delete"), {
                                 Id: this.row.Id
                             })
                             .then(response => {

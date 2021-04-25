@@ -114,7 +114,7 @@
 <script>
 import {mapActions, mapState} from "vuex";
 import moment from "moment";
-import {list_controller} from "../../DBObjects/list_controller";
+import {list_controller} from "../../Helpers/list_controller";
 
 export default {
     name: "AdvancedSearch",

@@ -2,13 +2,12 @@
     <div class="flex">
         <Button
             @click.native="edit"
-            icon="pen"
-            split="border-white"
             class="text-white bg-green-600"
             :class="{
                 hidden: !$page.user_details.IsAdmin
             }"
-            >Edit</Button
+        >Edit
+        </Button
         >
         <Button
             @click.native="remove"
@@ -16,21 +15,21 @@
             :class="{
                 hidden: !$page.user_details.IsAdmin
             }"
-            :icon="deleting_record ? 'sync-alt' : 'trash'"
+            :icon="deleting_record ? 'sync-alt' : ''"
             :icon_class="deleting_record ? 'fa-spin' : ''"
-            split="border-white"
+            :split="deleting_record ? 'border-white' : ''"
+        >{{ deleting_record ? "Deleting" : "Delete" }}
+        </Button
         >
-            {{ deleting_record ? "Deleting" : "Delete" }}
-        </Button>
     </div>
 </template>
 
 <script>
-import ObjectType1 from "../../DBObjects/ObjectType1.vue";
-import { mapActions } from "vuex";
-import Confirm from "../../components/Confirm.vue";
-import {datatable_cell} from "./datatable_cell";
-import {notifications} from "../../Helpers/notifications";
+import User from "../../../DBObjects/User.vue";
+import {mapActions} from "vuex";
+import Confirm from "../../../components/Confirm.vue";
+import {datatable_cell} from "../datatable_cell";
+import {notifications} from "../../../Helpers/notifications";
 
 export default {
     mixins: [datatable_cell, notifications],
@@ -40,10 +39,9 @@ export default {
             this.setPopperOpen(true);
 
             this.$modal.show(
-                ObjectType1,
+                User,
                 {
-                    edit_id: String(this.row.Id),
-                    options: this.options
+                    edit_id: this.row.UserName
                 },
                 {
                     width: "650px",
@@ -65,38 +63,31 @@ export default {
                         this.deleting_record = true;
 
                         axios
-                            .post(this.options.routes["delete"], {
-                                Id: this.row.Id
+                            .post(route("users.delete"), {
+                                UserName: this.row.UserName
                             })
-                            .then(response => {
-                                if (response.data.message == "record_deleted") {
-                                    this.$notify({
-                                        group: "messages",
-                                        title: "Success",
-                                        text: this.formatMessage(response.data.message, this.options.record_name)
-                                    });
+                            .then(
+                                response => {
+                                    if (response.data.message == "record_deleted") {
+                                        this.$notify({
+                                            group: "messages",
+                                            title: "Success",
+                                            text: this.formatMessage(response.data.message, this.options.record_name)
+                                        });
 
-                                    if (
-                                        this.options.hasOwnProperty(
-                                            "cache_data"
-                                        ) &&
-                                        this.options.cache_data
-                                    ) {
-                                        this.resetCachedData(this.options.id);
+                                        this.refreshData(this.options.id);
+                                    } else {
+                                        this.$notify({
+                                            group: "messages",
+                                            title: "Error",
+                                            type: "error",
+                                            text: this.formatMessage("unknown_error", this.options.record_name)
+                                        });
                                     }
 
-                                    this.refreshData(this.options.id);
-                                } else {
-                                    this.$notify({
-                                        group: "messages",
-                                        title: "Error",
-                                        type: "error",
-                                        text: this.formatMessage("unknown_error", this.options.record_name)
-                                    });
+                                    this.deleting_record = false;
                                 }
-
-                                this.deleting_record = false;
-                            })
+                            )
                             .catch(error => {
                                 this.deleting_record = false;
 
@@ -119,7 +110,6 @@ export default {
         ...mapActions({
             refreshData: "framework/refreshData",
             setPopperOpen: "local_settings/setPopperOpen",
-            resetCachedData: "local_settings/resetCachedData",
             addError: "errors/addError"
         })
     }

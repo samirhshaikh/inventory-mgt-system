@@ -1,3 +1,6 @@
+/**
+ * Mixin file. Description of codes sent from server
+ */
 export const notifications = {
     methods: {
         formatMessage(error_code, record_name) {

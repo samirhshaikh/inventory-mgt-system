@@ -2,6 +2,8 @@
     <div class="flex">
         <Button
             @click.native="edit"
+            icon="pen"
+            split="border-white"
             class="text-white bg-green-600"
             :class="{
                 hidden: !$page.user_details.IsAdmin
@@ -14,9 +16,9 @@
             :class="{
                 hidden: !$page.user_details.IsAdmin
             }"
-            :icon="deleting_record ? 'sync-alt' : ''"
+            :icon="deleting_record ? 'sync-alt' : 'trash'"
             :icon_class="deleting_record ? 'fa-spin' : ''"
-            :split="deleting_record ? 'border-white' : ''"
+            split="border-white"
         >
             {{ deleting_record ? "Deleting" : "Delete" }}
         </Button>
@@ -24,11 +26,11 @@
 </template>
 
 <script>
-import Handset from "../../DBObjects/Handset.vue";
+import ObjectType1 from "../../../DBObjects/ObjectType1.vue";
 import { mapActions } from "vuex";
-import Confirm from "../../components/Confirm.vue";
-import {datatable_cell} from "./datatable_cell";
-import {notifications} from "../../Helpers/notifications";
+import Confirm from "../../../components/Confirm.vue";
+import {datatable_cell} from "../datatable_cell";
+import {notifications} from "../../../Helpers/notifications";
 
 export default {
     mixins: [datatable_cell, notifications],
@@ -38,13 +40,13 @@ export default {
             this.setPopperOpen(true);
 
             this.$modal.show(
-                Handset,
+                ObjectType1,
                 {
                     edit_id: String(this.row.Id),
                     options: this.options
                 },
                 {
-                    width: "750px",
+                    width: "650px",
                     height: "600px"
                 }
             );
@@ -63,7 +65,7 @@ export default {
                         this.deleting_record = true;
 
                         axios
-                            .post(route("handsets.delete"), {
+                            .post(this.options.routes["delete"], {
                                 Id: this.row.Id
                             })
                             .then(response => {
@@ -73,6 +75,15 @@ export default {
                                         title: "Success",
                                         text: this.formatMessage(response.data.message, this.options.record_name)
                                     });
+
+                                    if (
+                                        this.options.hasOwnProperty(
+                                            "cache_data"
+                                        ) &&
+                                        this.options.cache_data
+                                    ) {
+                                        this.resetCachedData(this.options.id);
+                                    }
 
                                     this.refreshData(this.options.id);
                                 } else {
@@ -108,6 +119,7 @@ export default {
         ...mapActions({
             refreshData: "framework/refreshData",
             setPopperOpen: "local_settings/setPopperOpen",
+            resetCachedData: "local_settings/resetCachedData",
             addError: "errors/addError"
         })
     }

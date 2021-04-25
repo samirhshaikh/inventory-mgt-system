@@ -1,3 +1,8 @@
+/**
+ * Mixin file. Commonly used methods in all data tables.
+ * Methods related to search and pagination.
+ */
+
 import moment from "moment";
 
 export const datatable_common = {

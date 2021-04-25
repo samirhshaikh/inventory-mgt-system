@@ -1,3 +1,7 @@
+/**
+ * State storage for framework settings. Like expanded side bar, dark mode, page size, etc.
+ */
+
 import moment from 'moment';
 
 const state = {

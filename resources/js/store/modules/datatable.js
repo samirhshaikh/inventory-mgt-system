@@ -1,3 +1,7 @@
+/**
+ * State storage to datatable objects.
+ */
+
 const state = {
     sorting: {
         users: {

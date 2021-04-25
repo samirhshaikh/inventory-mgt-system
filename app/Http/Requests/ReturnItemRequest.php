@@ -20,6 +20,7 @@ class ReturnItemRequest extends FormRequest
      */
     public function rules() {
         return [
+            'InvoiceId' => 'required|numeric',
             'IMEI' => 'required|string',
             'ReturnDate' => 'required|string'
         ];
@@ -32,6 +33,7 @@ class ReturnItemRequest extends FormRequest
      */
     public function messages() {
         return [
+            'InvoiceId.required' => 'InvoiceId cannot be empty',
             'IMEI.required' => 'IMEI cannot be empty',
             'ReturnDate.required' => 'Return Date cannot be empty'
         ];

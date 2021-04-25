@@ -21,7 +21,7 @@ Route::get('/', 'PagesController@index')->name('index');
 Route::get('/dashboard', 'PagesController@dashboard')->name('dashboard');
 Route::get('/search', 'PagesController@search')->name('search');
 Route::get('/sales', 'PagesController@sales')->name('sales');
-Route::get('/purchase', 'PagesController@purchase')->name('purchase');
+Route::get('/purchases', 'PagesController@purchases')->name('purchases');
 
 Route::get('/handset-colors', 'PagesController@handsetColors')->name('handset-colors');
 Route::group(['prefix' => 'handset-colors'], function ($router) {
@@ -93,19 +93,19 @@ Route::group(['prefix' => 'phonestock'], function ($router) {
     $router->post('check-duplicate-imei', 'DBObjects\PhoneStockController@checkDuplicateIMEI')->name('phonestock.check-duplicate-imei');
 });
 
-Route::get('/purchase', 'PagesController@purchase')->name('purchase');
+Route::get('/purchases', 'PagesController@purchases')->name('purchases');
 Route::group(['prefix' => 'purchase'], function ($router) {
     $router->post('save', 'DBObjects\PurchaseController@save')->name('purchase.save');
-    $router->post('get-single', 'DBObjects\PurchaseController@getSingle')->name('purchase.get-single');
+    $router->get('get-single', 'DBObjects\PurchaseController@getSingle')->name('purchase.get-single');
     $router->post('delete', 'DBObjects\PurchaseController@delete')->name('purchase.delete');
-    $router->post('return-item', 'DBObjects\PurchaseController@returnItem')->name('purchase.return-item');
 });
 
 Route::get('/sales', 'PagesController@sales')->name('sales');
-Route::group(['prefix' => 'sales'], function ($router) {
+Route::group(['prefix' => 'sale'], function ($router) {
     $router->post('save', 'DBObjects\SalesController@save')->name('sales.save');
-    $router->post('get-single', 'DBObjects\SalesController@getSingle')->name('sales.get-single');
-    $router->post('delete', 'DBObjects\SalesController@delete')->name('sales.delete');
+    $router->get('get-single', 'DBObjects\SalesController@getSingle')->name('sale.get-single');
+    $router->post('delete', 'DBObjects\SalesController@delete')->name('sale.delete');
+    $router->post('return-item', 'DBObjects\SalesController@returnItem')->name('sale.return-item');
 });
 
 Route::get('/app-settings', 'PagesController@appSettings')->name('app-settings');
@@ -146,8 +146,8 @@ Route::group(['prefix' => 'datatables'], function ($router) {
         $router->get('available', 'Datatables\PhoneStockController@getAvailablePhoneData')->name('datatable.phonestock.available');
     });
 
-    Route::group(['prefix' => 'purchase'], function ($router) {
-        $router->post('data', 'Datatables\PurchaseController@getData')->name('datatable.purchase.data');
+    Route::group(['prefix' => 'purchases'], function ($router) {
+        $router->post('data', 'Datatables\PurchasesController@getData')->name('datatable.purchases.data');
     });
 
     Route::group(['prefix' => 'sales'], function ($router) {

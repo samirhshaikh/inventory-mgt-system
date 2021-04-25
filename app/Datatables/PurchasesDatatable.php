@@ -2,7 +2,7 @@
 
 namespace App\Datatables;
 
-class PurchaseDatatable extends BaseDatatable
+class PurchasesDatatable extends BaseDatatable
 {
     public $columns = [
         [
@@ -72,7 +72,7 @@ class PurchaseDatatable extends BaseDatatable
             'key' => 'route',
             'enabled' => true,
             'th' => 'sticky',
-            'type' => 'PurchaseActions',
+            'type' => 'PurchasesActions',
             'sorting' => false,
             'searching' => false,
             'order' => 7
@@ -156,8 +156,8 @@ class PurchaseDatatable extends BaseDatatable
     public function options()
     {
         $this->options = [
-            'id' => 'purchase',
-            'url' => route('datatable.purchase.data'),
+            'id' => 'purchases',
+            'url' => route('datatable.purchases.data'),
             'pagination' => false,
             'enable_search' => true,
             'primary_key' => 'Id',

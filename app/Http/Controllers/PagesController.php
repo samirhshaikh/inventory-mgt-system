@@ -8,7 +8,7 @@ use App\Datatables\HandsetManufacturersDatatable;
 use App\Datatables\HandsetModelsDatatable;
 use App\Datatables\HandsetsDatatable;
 use App\Datatables\SalesDatatable;
-use App\Datatables\PurchaseDatatable;
+use App\Datatables\PurchasesDatatable;
 use App\Datatables\UsersDatatable;
 use App\Datatables\SuppliersDatatable;
 use App\Datatables\PhoneStockDatatable;
@@ -67,10 +67,10 @@ class PagesController extends Controller {
         ]);
     }
 
-    public function purchase() {
-        $table = new PurchaseDatatable();
+    public function purchases() {
+        $table = new PurchasesDatatable();
 
-        return Inertia::render('Pages/Purchase', [
+        return Inertia::render('Pages/Purchases', [
             'columns' => $table->columns,
             'child_columns' => $table->child_columns,
             'options' => $table->options

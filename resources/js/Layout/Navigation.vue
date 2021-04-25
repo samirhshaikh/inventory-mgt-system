@@ -117,9 +117,9 @@ export default {
                         visible: true
                     },
                     {
-                        title: "Purchase",
+                        title: "Purchases",
                         link_type: "route",
-                        route: "purchase",
+                        route: "purchases",
                         icon: ["fas", "arrow-down"],
                         visible: true
                     }

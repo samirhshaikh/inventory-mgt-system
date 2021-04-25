@@ -148,7 +148,7 @@ class SalesDatatable extends BaseDatatable
             'key' => 'route',
             'enabled' => true,
             'th' => '',
-            'type' => 'SalesPhoneActions',
+            'type' => 'SalePhoneActions',
             'sorting' => false,
             'searching' => false,
             'order' => 6

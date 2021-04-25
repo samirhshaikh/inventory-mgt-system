@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers\Datatables;
 
-use App\Datatables\PurchaseDatatable;
+use App\Datatables\PurchasesDatatable;
 use App\Models\Purchase;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class PurchaseController extends BaseDatatableController
+class PurchasesController extends BaseDatatableController
 {
     public function getData(Request $request)
     {
 //        DB::enableQueryLog();
-        $table = new PurchaseDatatable();
+        $table = new PurchasesDatatable();
 
         $order_by = $request->get('order_by', '') == ''
             ? session('app_settings.datatable.sorting.purchase.column', array_get($table->options(), 'sorting.default'))
@@ -73,7 +73,7 @@ class PurchaseController extends BaseDatatableController
 
     public function getDataUsingJoin(Request $request)
     {
-        $table = new PurchaseDatatable();
+        $table = new PurchasesDatatable();
 
         $order_by = $request->get('order_by', '') == ''
             ? session('app_settings.datatable.sorting.purchase.column', array_get($table->options(), 'sorting.default'))

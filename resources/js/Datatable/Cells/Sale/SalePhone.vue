@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import {datatable_cell} from "./datatable_cell";
+import {datatable_cell} from "../datatable_cell";
 
 export default {
     mixins: [datatable_cell]

@@ -19,15 +19,6 @@
             Sell
         </Button>
         <Button
-            @click.native="returnItem"
-            class="text-white bg-red-400 ml-2"
-            :class="{
-                hidden: !$page.user_details.IsAdmin || row['Id'] == '' || row.Status != this.phonestock.STATUS_SOLD
-            }"
-        >
-            Return
-        </Button>
-        <Button
             @click.native="viewSalesInvoice"
             class="text-white bg-green-600 ml-2"
             :class="{
@@ -50,10 +41,8 @@
 </template>
 
 <script>
-import Confirm from "../../components/Confirm.vue";
-import ReturnItem from "../../DBObjects/ReturnItem";
-import {datatable_cell} from "./datatable_cell";
-import Purchase from "../../DBObjects/Purchase";
+import Confirm from "../../../components/Confirm.vue";
+import {datatable_cell} from "../datatable_cell";
 
 export default {
     mixins: [datatable_cell],
@@ -86,24 +75,6 @@ export default {
                 {
                     width: "350px",
                     height: "auto"
-                }
-            );
-        },
-
-        returnItem() {
-            this.$modal.show(
-                ReturnItem,
-                {
-                    IMEI: this.row["IMEI"],
-                    refresh: () => {
-                        //this.$emit("refresh");
-                        console.log('refresh');
-                        // this.refreshData(this.options.id);
-                    }
-                },
-                {
-                    width: "500px",
-                    height: "400px"
                 }
             );
         }

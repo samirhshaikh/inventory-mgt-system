@@ -540,7 +540,7 @@
                     </div>
 
                     <div class="w-1/2 ml-2 p-2">
-                        <PhoneDatatable
+                        <PurchaseItemsDatatable
                             :columns="columns"
                             :options="options"
                             :source_data="rows"
@@ -548,7 +548,7 @@
                             :current_row_id="current_row_id"
                             @editRecord="editRecord"
                             @removeRecord="removeRecord"
-                        ></PhoneDatatable>
+                        ></PurchaseItemsDatatable>
                     </div>
                 </div>
 
@@ -582,7 +582,7 @@ export default {
     mixins: [list_controller, notifications],
 
     components: {
-        PhoneDatatable: lazyLoadComponent({
+        PurchaseItemsDatatable: lazyLoadComponent({
             componentFactory: () => import("@/Datatable/Datatable"),
             loading: loading
         })
@@ -637,7 +637,7 @@ export default {
                 },
                 {
                     enabled: true,
-                    key: "manufacturer",
+                    key: "",
                     name: "Phone",
                     order: 3,
                     searching: false,
@@ -753,8 +753,10 @@ export default {
             this.loading = true;
 
             axios
-                .post(route("purchase.get-single"), {
-                    Id: this.edit_id
+                .get(route("purchase.get-single"), {
+                    params: {
+                        Id: this.edit_id
+                    }
                 })
                 .then(
                     response => {

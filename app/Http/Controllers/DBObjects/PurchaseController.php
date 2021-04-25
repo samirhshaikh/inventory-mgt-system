@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\DBObjects;
 
 use App\Http\Controllers\BaseController;
-use App\Http\Requests\ReturnItemRequest;
 use App\Models\PhoneStock;
 use App\Models\Purchase;
-use App\Models\StockLog;
 use App\Traits\TableActions;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -141,34 +139,6 @@ class PurchaseController extends BaseController
             Purchase::where('Id', $request->get('Id'))->delete();
 
             return $this->sendOK([], 'record_deleted');
-        } else {
-            return $this->sendError([], 'record_not_found', 500);
-        }
-    }
-
-    public function returnItem(ReturnItemRequest $request)
-    {
-        $record = PhoneStock::where('IMEI', $request->get('IMEI'))
-            ->get();
-
-        if ($record->count()) {
-            //Change the status in phonestock
-            $record = $record->first();
-            $record->Status = PhoneStock::STATUS_IN_STOCK;
-            $record->UpdatedBy = session('user_details.UserName');
-            $record->save();
-
-            //Add an entry to stock_log
-            $record = new StockLog();
-            $record->IMEI = $request->get('IMEI');
-            $record->Activty = StockLog::ACTIVITY_RETURNED;
-            $record->LogDate = Carbon::createFromFormat('d-M-Y', $request->get('ReturnDate'))->toDateTimeString();
-            $record->Comments = $request->get('Comments');
-            $record->CreatedBy = session('user_details.UserName');
-            $record->UpdatedBy = session('user_details.UserName');
-            $record->save();
-
-            return $this->sendOK([], 'record_saved');
         } else {
             return $this->sendError([], 'record_not_found', 500);
         }

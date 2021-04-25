@@ -1,6 +1,6 @@
 <template>
     <div class="leading-tight">
-        {{ data["manufacturer"]["Name"] }} - {{ data["model"]["Name"] }} - {{ data["color"]["Name"] }}
+        {{ phone_details }}
     </div>
 </template>
 
@@ -17,6 +17,25 @@ export default {
             } else {
                 return this.row[this.column];
             }
+        },
+
+        phone_details() {
+            if (typeof this.data == "undefined") {
+                return "";
+            }
+
+            let phone_details = [];
+            if (this.data.hasOwnProperty("manufacturer")) {
+                phone_details.push(this.data["manufacturer"]["Name"]);
+            }
+            if (this.data.hasOwnProperty("model")) {
+                phone_details.push(this.data["model"]["Name"]);
+            }
+            if (this.data.hasOwnProperty("color")) {
+                phone_details.push(this.data["color"]["Name"]);
+            }
+
+            return phone_details.join(" - ");
         }
     }
 }

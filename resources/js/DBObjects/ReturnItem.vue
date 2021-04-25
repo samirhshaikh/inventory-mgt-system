@@ -45,14 +45,38 @@
                                 'bg-gray-600 text-gray-500 cursor-not-allowed': !valid_data
                             }"
                         >
-                            Save
+                            Submit
                         </Button>
                     </div>
                 </div>
 
                 <form class="w-full pl-2" autocomplete="off" v-if="!loading">
                     <div class="flex flex-wrap -mx-3 form_field_container">
-                        <div class="w-full md:w-1/2 px-3">
+                        <div class="w-full px-3 mb-6 md:mb-0">
+                            <label
+                                class="block form_field_label"
+                                :class="{
+                                   'text-gray-700': !dark_mode,
+                                   'text-white': dark_mode
+                               }"
+                            >
+                                Invoice No
+                            </label>
+                            <label
+                                class="block form_value_label"
+                                :class="{
+                                   'text-gray-600': !dark_mode,
+                                   'text-product-color-lighter': dark_mode
+                                }"
+                            >
+                                {{ SalesInvoiceNo }}
+                            </label>
+                        </div>
+                    </div>
+
+
+                    <div class="flex flex-wrap -mx-3 form_field_container">
+                        <div class="w-1/2 px-3">
                             <label
                                 class="block form_field_label"
                                 :class="{
@@ -73,7 +97,7 @@
                             </label>
                         </div>
 
-                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                        <div class="w-1/2 px-3 mb-6 md:mb-0">
                             <label
                                 class="block form_field_label"
                                 :class="{
@@ -129,9 +153,17 @@ export default {
     mixins: [notifications],
 
     props: {
+        SalesInvoiceId: {
+            type: Number,
+            required: true
+        },
+        SalesInvoiceNo: {
+            type: String,
+            required: true
+        },
         IMEI: {
             type: String,
-            default: ""
+            required: true
         },
         refresh: {
             type: Function
@@ -177,6 +209,7 @@ export default {
             }
 
             let data = {};
+            data.InvoiceId = this.SalesInvoiceId;
             data.IMEI = this.IMEI;
             data.Comments = this.Comments;
             data.ReturnDate = this.ReturnDate;
@@ -184,7 +217,7 @@ export default {
             this.saving_data = true;
 
             axios
-                .post(route("purchase.return-item"), data)
+                .post(route("sale.return-item"), data)
                 .then(response => {
                     this.saving_data = false;
 

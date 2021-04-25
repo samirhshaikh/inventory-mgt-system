@@ -233,15 +233,17 @@
                     </div>
 
                     <div class="w-1/2 ml-2 p-2">
-                        <SelectedInvoiceDatatable
+                        <SaleItemsDatatable
                             :columns="selected_products_columns"
                             :options="selected_products_options"
                             :source_data="rows"
+                            :parent_row="row"
                             v-bind:load_data_from_server="false"
                             :current_row_id="current_row_id"
                             @editRecord="editRecord"
                             @removeRecord="removeRecord"
-                        ></SelectedInvoiceDatatable>
+                            @returnItem="returnItem"
+                        ></SaleItemsDatatable>
                     </div>
                 </div>
 
@@ -253,7 +255,6 @@
 
 <script>
 import {mapState, mapActions} from "vuex";
-import moment from "moment";
 import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
 import helper_functions from "../store/modules/helper_functions";
@@ -275,17 +276,8 @@ export default {
 
     mixins: [list_controller, notifications],
 
-    created() {
-        this.setTableMetaData({
-            columns: this.selected_products_columns,
-            options: this.selected_products_options
-        });
-
-        this.setActiveTab(this.selected_products_options.id);
-    },
-
     components: {
-        SelectedInvoiceDatatable: lazyLoadComponent({
+        SaleItemsDatatable: lazyLoadComponent({
             componentFactory: () => import("@/Datatable/Datatable"),
             loading: loading
         })
@@ -294,6 +286,9 @@ export default {
     data() {
         return {
             row: {},
+            child_row: {
+                IMEI: ""
+            },
             rows: [],
 
             saving_data: false,
@@ -330,7 +325,7 @@ export default {
                 },
                 {
                     enabled: true,
-                    key: "phone_details",
+                    key: "phone",
                     name: "Phone",
                     order: 3,
                     searching: false,
@@ -368,7 +363,7 @@ export default {
                     searching: false,
                     sorting: false,
                     th: "",
-                    type: "AddPhoneActions"
+                    type: "AddSaleActions"
                 }
             ]
         };
@@ -410,8 +405,10 @@ export default {
             this.loading = true;
 
             axios
-                .post(route("sales.get-single"), {
-                    Id: this.edit_id
+                .get(route("sale.get-single"), {
+                    params: {
+                        Id: this.edit_id
+                    }
                 })
                 .then(
                     response => {
@@ -503,6 +500,27 @@ export default {
             });
 
             this.rows = _.cloneDeep(rows);
+        },
+
+        returnItem(row_id) {
+            //Remove the row from Sale
+            let rows = [];
+
+            _.forIn(this.rows, (object, key) => {
+                if (object["row_id"] != row_id) {
+                    rows.push(_.cloneDeep(object));
+                }
+            });
+
+            this.rows = _.cloneDeep(rows);
+
+            //If there are no more rows in the Invoice that mean the Invoice must have been removed.
+            //So close the popup and refresh the Sales Page.
+            if (this.rows.length === 0) {
+                this.refreshData(this.options.id);
+
+                this.$modal.hide(this.$parent.name);
+            }
         },
 
         dateSelected(date) {

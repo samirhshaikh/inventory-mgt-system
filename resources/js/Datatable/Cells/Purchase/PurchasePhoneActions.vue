@@ -10,15 +10,6 @@
             Sell
         </Button>
         <Button
-            @click.native="returnItem"
-            class="text-white bg-red-400"
-            :class="{
-                hidden: !$page.user_details.IsAdmin || row.Status != this.phonestock.STATUS_SOLD
-            }"
-        >
-            Return
-        </Button>
-        <Button
             @click.native="viewSalesInvoice"
             class="text-white bg-green-600 ml-2"
             :class="{
@@ -31,11 +22,9 @@
 </template>
 
 <script>
-import Sales from "../../DBObjects/Sales.vue";
+import Sale from "../../../DBObjects/Sale.vue";
 import { mapActions } from "vuex";
-import Confirm from "../../components/Confirm.vue";
-import {datatable_cell} from "./datatable_cell";
-import ReturnItem from "../../DBObjects/ReturnItem";
+import {datatable_cell} from "../datatable_cell";
 
 export default {
     mixins: [datatable_cell],
@@ -45,7 +34,7 @@ export default {
             this.setPopperOpen(true);
 
             this.$modal.show(
-                Sales,
+                Sale,
                 {
                     edit_id: String(this.row.Id),
                     options: this.options,
@@ -56,24 +45,6 @@ export default {
                 {
                     width: "90%",
                     height: "80%"
-                }
-            );
-        },
-
-        returnItem() {
-            this.setPopperOpen(true);
-
-            this.$modal.show(
-                ReturnItem,
-                {
-                    IMEI: this.row["IMEI"],
-                    refresh: () => {
-                        this.refreshData(this.options.id);
-                    }
-                },
-                {
-                    width: "500px",
-                    height: "400px"
                 }
             );
         },

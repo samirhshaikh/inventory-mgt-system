@@ -12,7 +12,7 @@
                     class="pt-1 ml-2 text-product-color text-2xl tracking-tight w-full"
                 >
                     <FA :icon="['fas', 'mobile-alt']" class="mr-1"></FA>
-                    {{ options.record_name }}
+                    {{ options.record_name }}s
                 </h1>
                 <div class="mr-2 flex flex-row">
                     <SearchBar
@@ -50,7 +50,7 @@
                 @advancedSearchDataModified="triggerAdvancedSearch"
             ></SearchParameters>
 
-            <PhoneStockInvoicesDatatable
+            <PurchasesDatatable
                 :columns="columns"
                 :child_columns="child_columns"
                 :expanded_row_id="expanded_row_id"
@@ -63,7 +63,7 @@
                 @changeTotalReports="changeTotalReports"
                 @changePageNo="changePage"
                 @setExpandedRowId="setExpandedRowId"
-            ></PhoneStockInvoicesDatatable>
+            ></PurchasesDatatable>
         </div>
     </Layout>
 </template>
@@ -89,7 +89,7 @@ export default {
 
     components: {
         SearchParameters,
-        PhoneStockInvoicesDatatable: lazyLoadComponent({
+        PurchasesDatatable: lazyLoadComponent({
             componentFactory: () => import("@/Datatable/Datatable"),
             loading: loading
         })

@@ -26,11 +26,11 @@
 </template>
 
 <script>
-import Invoice from "../../DBObjects/Invoice.vue";
+import Purchase from "../../../DBObjects/Purchase.vue";
 import { mapActions } from "vuex";
-import Confirm from "../../components/Confirm.vue";
-import {datatable_cell} from "./datatable_cell";
-import {notifications} from "../../Helpers/notifications";
+import Confirm from "../../../components/Confirm.vue";
+import {datatable_cell} from "../datatable_cell";
+import {notifications} from "../../../Helpers/notifications";
 
 export default {
     mixins: [datatable_cell, notifications],
@@ -40,14 +40,14 @@ export default {
             this.setPopperOpen(true);
 
             this.$modal.show(
-                Invoice,
+                Purchase,
                 {
                     edit_id: String(this.row.Id),
                     options: this.options
                 },
                 {
                     width: "90%",
-                    height: "80%"
+                    height: "90%"
                 }
             );
         },
@@ -65,7 +65,7 @@ export default {
                         this.deleting_record = true;
 
                         axios
-                            .post(route("sales.delete"), {
+                            .post(route("purchase.delete"), {
                                 Id: this.row.Id
                             })
                             .then(response => {

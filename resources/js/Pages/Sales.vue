@@ -50,7 +50,7 @@
                 @advancedSearchDataModified="triggerAdvancedSearch"
             ></SearchParameters>
 
-            <SalesInvoiceDatatable
+            <SalesDatatable
                 :columns="columns"
                 :child_columns="child_columns"
                 :expanded_row_id="expanded_row_id"
@@ -63,7 +63,7 @@
                 @changeTotalReports="changeTotalReports"
                 @changePageNo="changePage"
                 @setExpandedRowId="setExpandedRowId"
-            ></SalesInvoiceDatatable>
+            ></SalesDatatable>
         </div>
     </Layout>
 </template>
@@ -72,7 +72,7 @@
 import {mapState, mapActions} from "vuex";
 import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
-import Invoice from "../DBObjects/Invoice.vue";
+import Sale from "../DBObjects/Sale.vue";
 import {list_controller} from "../DBObjects/list_controller";
 import {datatable_common} from "./datatable_common";
 import SearchParameters from "../components/Search/SearchParameters";
@@ -89,7 +89,7 @@ export default {
 
     components: {
         SearchParameters,
-        SalesInvoiceDatatable: lazyLoadComponent({
+        SalesDatatable: lazyLoadComponent({
             componentFactory: () => import("@/Datatable/Datatable"),
             loading: loading
         })
@@ -205,7 +205,7 @@ export default {
             this.setPopperOpen(true);
 
             this.$modal.show(
-                Invoice,
+                Sale,
                 {
                     edit_id: "",
                     options: this.options,

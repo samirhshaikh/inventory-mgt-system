@@ -110,6 +110,7 @@
                             v-else
                             :is="header.type"
                             :row="row"
+                            :parent_row="parent_row"
                             :column="header.key"
                             :column_details="header"
                             :options="options"
@@ -120,10 +121,12 @@
                             @removeRecord="removeRecord"
                             @selectRecord="selectRecord"
                             @setExpandedRowId="setExpandedRowId"
+                            @returnItem="returnItem"
                         ></span>
                     </td>
                 </Row>
 
+                <!-- Child rows -->
                 <Row type="header" v-show="expanded_row_id == row.Id">
                     <th
                         v-for="child_header in active_child_columns"
@@ -182,6 +185,7 @@
                             v-else
                             :is="child_header.type"
                             :row="child_row"
+                            :parent_row="row"
                             :column="child_header.key"
                             :column_details="child_header"
                             :options="options"
@@ -224,6 +228,10 @@ export default {
         source_data: {
             type: Array,
             default: () => ([])
+        },
+        parent_row: {
+            type: Object,
+            default: () => ({})
         },
         load_data_from_server: {
             type: Boolean,
@@ -467,6 +475,10 @@ export default {
 
         setExpandedRowId(row_id) {
             this.$emit('setExpandedRowId', row_id);
+        },
+
+        returnItem(row_id) {
+            this.$emit('returnItem', row_id);
         },
 
         toggleLoading() {

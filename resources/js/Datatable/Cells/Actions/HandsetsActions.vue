@@ -93,7 +93,7 @@ export default {
                                     group: "messages",
                                     title: "Error",
                                     type: "error",
-                                    text: this.formatMessage(error.response.data, this.options.record_name)
+                                    text: this.formatMessage(error.response.data.message, this.options.record_name)
                                 });
                             });
                     }

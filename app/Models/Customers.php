@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Traits\CompositeKeysTrait;
-use App\Transformers\CustomersTransfomer;
+use App\Transformers\CustomersTransformer;
 
 class Customers extends BaseModel {
     use CompositeKeysTrait;
@@ -11,7 +11,7 @@ class Customers extends BaseModel {
     protected $connection = 'mysql';
     protected $table = 'Customer';
     protected $primaryKey = ['Id'];
-    protected $transformer = CustomersTransfomer::class;
+    protected $transformer = CustomersTransformer::class;
     public $incrementing = false;
     public $timestamps = true;
     protected $guarded = [];

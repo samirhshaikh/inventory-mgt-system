@@ -41,7 +41,8 @@ export default {
             this.$modal.show(
                 User,
                 {
-                    edit_id: this.row.UserName
+                    edit_id: this.row.UserName,
+                    options: this.options
                 },
                 {
                     width: "650px",
@@ -64,7 +65,7 @@ export default {
 
                         axios
                             .post(route("users.delete"), {
-                                UserName: this.row.UserName
+                                username: this.row.UserName
                             })
                             .then(
                                 response => {
@@ -95,7 +96,7 @@ export default {
                                     group: "messages",
                                     title: "Error",
                                     type: "error",
-                                    text: this.formatMessage(error.response.data, this.options.record_name)
+                                    text: this.formatMessage(error.response.data.message, this.options.record_name)
                                 });
                             });
                     }

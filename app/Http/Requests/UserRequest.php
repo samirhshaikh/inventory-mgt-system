@@ -2,13 +2,15 @@
 
 namespace App\Http\Requests;
 
-class UserRequest extends FormRequest {
+class UserRequest extends FormRequest
+{
     /**
      * Determine if the user is authorised to make this request
      *
      * @return bool
      */
-    public function authorize() {
+    public function authorize(): bool
+    {
         return true;
     }
 
@@ -17,7 +19,8 @@ class UserRequest extends FormRequest {
      *
      * @return array
      */
-    public function rules() {
+    public function rules(): array
+    {
         return [
             'username' => 'required|string|max:20',
             'password' => 'required|string|max:20'
@@ -29,13 +32,15 @@ class UserRequest extends FormRequest {
      *
      * @return array
      */
-    public function messages() {
+    public function messages(): array
+    {
         return [
-            'username.required' => 'Username cannot be empty',
-            'password.required' => 'Password cannot be empty',
+            'username.required' => 'Username is required',
+            'password.required' => 'Password is required',
             'username.max' => 'Username cannot be more than 20 characters long',
             'password.max' => 'Password cannot be more than 20 characters long'
         ];
     }
 }
+
 ?>

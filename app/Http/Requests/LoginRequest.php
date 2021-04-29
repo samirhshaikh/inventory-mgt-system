@@ -2,13 +2,15 @@
 
 namespace App\Http\Requests;
 
-class LoginRequest extends FormRequest {
+class LoginRequest extends FormRequest
+{
     /**
      * Determine if the user is authorised to make this request
      *
      * @return bool
      */
-    public function authorize() {
+    public function authorize(): bool
+    {
         return true;
     }
 
@@ -17,7 +19,8 @@ class LoginRequest extends FormRequest {
      *
      * @return array
      */
-    public function rules() {
+    public function rules(): array
+    {
         return [
             'username' => 'required|string',
             'password' => 'required|string'
@@ -29,11 +32,13 @@ class LoginRequest extends FormRequest {
      *
      * @return array
      */
-    public function messages() {
+    public function messages(): array
+    {
         return [
             'username.required' => 'Username cannot be empty',
             'password.required' => 'Password cannot be empty'
         ];
     }
 }
+
 ?>

@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Datatables;
 use App\Http\Controllers\BaseController;
 use Illuminate\Support\Facades\DB;
 
-class BaseDatatableController extends BaseController {
-    protected function prepareSearch($model, $columns_to_search, $search_text = '', $search_join = 'OR') {
+class BaseDatatableController extends BaseController
+{
+    protected function prepareSearch($model, $columns_to_search, $search_text = '', $search_join = 'OR')
+    {
         $search_words = explode(' ', $search_text);
 
         if (!is_array($columns_to_search)) {
@@ -27,7 +29,8 @@ class BaseDatatableController extends BaseController {
         return $model;
     }
 
-    protected function prepareSearchOnRelation(&$query, $columns_to_search, $search_text = '', $where_type = 'AND') {
+    protected function prepareSearchOnRelation(&$query, $columns_to_search, $search_text = '', $where_type = 'AND')
+    {
         $search_words = explode(' ', $search_text);
 
         if (!is_array($columns_to_search)) {
@@ -48,7 +51,8 @@ class BaseDatatableController extends BaseController {
         }
     }
 
-    protected function prepareAdvancedSearchQuery($model, $columns_to_search, $search_text = '', $comparision_type = 'anywhere') {
+    protected function prepareAdvancedSearchQuery($model, $columns_to_search, $search_text = '', $comparision_type = 'anywhere')
+    {
         $search_words = explode(' ', $search_text);
 
         if (!is_array($columns_to_search)) {
@@ -70,13 +74,9 @@ class BaseDatatableController extends BaseController {
         return $model;
     }
 
-    protected function prepareRecordsOutput($table, $records, $page_no, $search_text = '', $get_all_records = 0) {
+    protected function prepareRecordsOutput($table, $records, $page_no, $search_text = '', $get_all_records = 0)
+    {
         $page_size = session('app_settings.framework.page_size', 10);
-
-//        $all_records = $records->count();
-
-//        $return = [];
-//        $return['total_rows'] = $all_records;
 
         $all_records = $records->get();
 
@@ -114,10 +114,8 @@ class BaseDatatableController extends BaseController {
 
     protected function searchDataPresent($search_data = [])
     {
-        foreach ($search_data as $column => $search_text)
-        {
-            if ($search_text != '' || !is_null($search_text))
-            {
+        foreach ($search_data as $column => $search_text) {
+            if ($search_text != '' || !is_null($search_text)) {
                 return true;
             }
         }
@@ -127,14 +125,13 @@ class BaseDatatableController extends BaseController {
 
     protected function getSql($model)
     {
-        $replace = function ($sql, $bindings)
-        {
+        $replace = function ($sql, $bindings) {
             $needle = '?';
-            foreach ($bindings as $replace){
+            foreach ($bindings as $replace) {
                 $pos = strpos($sql, $needle);
                 if ($pos !== false) {
                     if (gettype($replace) === "string") {
-                        $replace = ' "'.addslashes($replace).'" ';
+                        $replace = ' "' . addslashes($replace) . '" ';
                     }
                     $sql = substr_replace($sql, $replace, $pos, strlen($needle));
                 }

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\User;
 use Closure;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class JwtAuth
@@ -24,7 +25,7 @@ class JwtAuth
                 ->json([
                     'message' => 'Invalid token supplied.'
                 ])
-                ->setStatusCode(401);
+                ->setStatusCode(JsonResponse::HTTP_UNAUTHORIZED);
         }
 
         //parse it
@@ -33,7 +34,7 @@ class JwtAuth
                 ->json([
                     'message' => 'Invalid token supplied.'
                 ])
-                ->setStatusCode(401);
+                ->setStatusCode(JsonResponse::HTTP_UNAUTHORIZED);
         }
 
         //grab the user the token is on about

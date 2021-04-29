@@ -15,7 +15,7 @@
 import {mapState, mapActions} from "vuex";
 import Supplier from "../DBObjects/Supplier";
 import Customer from "../DBObjects/Customer";
-import ObjectType1 from "../DBObjects/ObjectType1";
+import ObjectTypeName from "../DBObjects/ObjectTypeName";
 
 export const list_controller = {
     data() {
@@ -341,7 +341,7 @@ export const list_controller = {
             routes["save"] = route("handset-manufacturers.save");
             routes["check-duplicate-name"] = route("handset-manufacturers.check-duplicate-name");
 
-            this.addObjectType1({
+            this.addObjectTypeName({
                 id: "handset_manufacturers",
                 record_name: "Manufacturer",
                 routes: routes,
@@ -355,7 +355,7 @@ export const list_controller = {
             routes["save"] = route("handset-models.save");
             routes["check-duplicate-name"] = route("handset-models.check-duplicate-name");
 
-            this.addObjectType1({
+            this.addObjectTypeName({
                 id: "handset_models",
                 record_name: "Model",
                 routes: routes,
@@ -369,7 +369,7 @@ export const list_controller = {
             routes["save"] = route("handset-colors.save");
             routes["check-duplicate-name"] = route("handset-colors.check-duplicate-name");
 
-            this.addObjectType1({
+            this.addObjectTypeName({
                 id: "handset_colors",
                 record_name: "Color",
                 routes: routes,
@@ -377,11 +377,11 @@ export const list_controller = {
             });
         },
 
-        addObjectType1(options) {
+        addObjectTypeName(options) {
             this.setPopperOpen(true);
 
             this.$modal.show(
-                ObjectType1,
+                ObjectTypeName,
                 {
                     edit_id: "",
                     options: options

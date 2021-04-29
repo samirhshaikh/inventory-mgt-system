@@ -123,7 +123,7 @@ class SalesDatatable extends BaseDatatable
         ],
         [
             'name' => 'Phone',
-            'key' => 'phone',
+            'key' => 'phone_details',
             'enabled' => true,
             'th' => 'text-left',
             'td' => 'text-left',

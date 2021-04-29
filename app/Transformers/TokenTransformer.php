@@ -1,11 +1,14 @@
 <?php
+
 namespace App\Transformer;
 
 use App\Models\Token;
 use League\Fractal\TransformerAbstract;
 
-class TokenTransformer extends TransformerAbstract {
-    public function transform(Token $model) {
+class TokenTransformer extends TransformerAbstract
+{
+    public function transform(Token $model)
+    {
         return [
             'username' => $model->UserName,
             'token' => $model->Token,

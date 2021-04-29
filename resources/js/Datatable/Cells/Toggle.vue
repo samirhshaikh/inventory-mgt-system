@@ -53,12 +53,12 @@ export default {
                     .catch(error => {
                         this.deleting_record = false;
 
-                        if (error.response.data == "record_not_found") {
+                        if (error.response.data.message == "record_not_found") {
                             this.$notify({
                                 group: "messages",
                                 title: "Error",
                                 type: "error",
-                                text: this.formatMessage(error.response.data, this.options.record_name)
+                                text: this.formatMessage(error.response.data.message, this.options.record_name)
                             });
                         }
                     });

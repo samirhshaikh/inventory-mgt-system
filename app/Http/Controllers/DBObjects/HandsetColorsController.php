@@ -4,16 +4,20 @@ namespace App\Http\Controllers\DBObjects;
 
 use App\Models\HandsetColors;
 
-class HandsetColorsController extends ObjectType1 {
-    protected function getModel() {
+class HandsetColorsController extends ObjectTypeNameController
+{
+    protected function getModel()
+    {
         return new HandsetColors;
     }
 
-    protected function getRecordName() {
+    protected function getRecordName()
+    {
         return 'Color';
     }
 
-    protected function getColumnIdInReferenceTables() {
+    protected function getColumnIdInReferenceTables()
+    {
         return 'ColorId';
     }
 }

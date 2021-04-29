@@ -2,20 +2,25 @@
 
 namespace App\Datatables;
 
-class HandsetModelsDatatable extends ObjectType1Datatable {
-    protected function getRouteId() {
+class HandsetModelsDatatable extends ObjectType1Datatable
+{
+    protected function getRouteId()
+    {
         return 'handset-models';
     }
 
-    protected function getId() {
+    protected function getId()
+    {
         return 'handset_models';
     }
 
-    protected function getRecordName() {
+    protected function getRecordName()
+    {
         return 'Model';
     }
 
-    protected function getIcon() {
+    protected function getIcon()
+    {
         return 'mobile-alt';
     }
 }

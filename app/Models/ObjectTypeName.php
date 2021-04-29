@@ -3,15 +3,15 @@
 namespace App\Models;
 
 use App\Traits\CompositeKeysTrait;
-use App\Transformers\ObjectType1Transformer;
+use App\Transformers\ObjectTypeNameTransformer;
 
-abstract class ObjectType1 extends BaseModel {
+abstract class ObjectTypeName extends BaseModel {
     use CompositeKeysTrait;
 
     protected $connection = 'mysql';
     protected $table = '';
     protected $primaryKey = ['Id'];
-    protected $transformer = ObjectType1Transformer::class;
+    protected $transformer = ObjectTypeNameTransformer::class;
     public $incrementing = false;
     public $timestamps = true;
     protected $guarded = [];

@@ -21,6 +21,10 @@ class SalesStock extends BaseModel
     const CREATED_AT = 'CreatedDate';
     const UPDATED_AT = 'UpdatedDate';
 
+    protected $dates = [
+        'ReturnedData'
+    ];
+
     public function phone() {
         return $this->hasOne(PhoneStock::class, 'IMEI', 'IMEI')
             ->with('manufacturer')

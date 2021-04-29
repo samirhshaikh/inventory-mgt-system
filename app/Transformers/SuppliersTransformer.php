@@ -5,8 +5,10 @@ namespace App\Transformers;
 use App\Models\Suppliers;
 use League\Fractal\TransformerAbstract;
 
-class SuppliersTransformer extends TransformerAbstract {
-    public function transform(Suppliers $model) {
+class SuppliersTransformer extends TransformerAbstract
+{
+    public function transform(Suppliers $model)
+    {
         return [
             'Id' => $model->Id,
             'SupplierName' => $model->SupplierName,

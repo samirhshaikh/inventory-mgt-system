@@ -105,11 +105,11 @@
                                     'text-white': dark_mode
                                 }"
                             >
-                                Return Date
+                                Returned Date
                             </label>
 
                             <CustomDatePicker
-                                :start_date_value="ReturnDate"
+                                :start_date_value="ReturnedDate"
                                 v-bind:required_field="true"
                                 @dateSelected="dateSelected"
                                 @clearDate="clearDate"
@@ -173,7 +173,7 @@ export default {
     data() {
         return {
             Comments: "",
-            ReturnDate: moment().format("D-MMM-YYYY"),
+            ReturnedDate: moment().format("D-MMM-YYYY"),
 
             saving_data: false,
             loading: false
@@ -183,7 +183,7 @@ export default {
     computed: {
         valid_data() {
             if (
-                this.ReturnDate == ""
+                this.ReturnedDate == ""
             ) {
                 return false;
             }
@@ -212,7 +212,7 @@ export default {
             data.InvoiceId = this.SalesInvoiceId;
             data.IMEI = this.IMEI;
             data.Comments = this.Comments;
-            data.ReturnDate = this.ReturnDate;
+            data.ReturnedDate = this.ReturnedDate;
 
             this.saving_data = true;
 
@@ -243,12 +243,12 @@ export default {
                 .catch(error => {
                     this.saving_data = false;
 
-                    if (error.response.data == "record_not_found") {
+                    if (error.response.data.message == "record_not_found") {
                         this.$notify({
                             group: "messages",
                             title: "Error",
                             type: "error",
-                            text: this.formatMessage(error.response.data, 'Item')
+                            text: this.formatMessage(error.response.data.message, 'Item')
                         });
                     } else {
                         this.$notify({
@@ -263,14 +263,14 @@ export default {
 
         dateSelected(date) {
             if (date != '' && date != null) {
-                this.ReturnDate = date;
+                this.ReturnedDate = date;
             } else {
-                this.ReturnDate = "";
+                this.ReturnedDate = "";
             }
         },
 
         clearDate() {
-            this.ReturnDate = "";
+            this.ReturnedDate = "";
         },
 
         ...mapActions({

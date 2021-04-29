@@ -41,8 +41,8 @@
                             split="border-white"
                             class="ml-1"
                             :class="{
-                                'bg-green-600': rows.length,
-                                'bg-gray-600 text-gray-500 cursor-not-allowed': !rows.length
+                                'bg-green-600': valid_data,
+                                'bg-gray-600 text-gray-500 cursor-not-allowed': !valid_data
                             }"
                         >
                             Save All
@@ -62,27 +62,30 @@
                                             'text-white': dark_mode
                                         }"
                                     >
-                                        Invoice No:
+                                        Customer
                                     </label>
-                                    <div class="flex flex-row items-center">
-                                        <span v-if="row_keys.indexOf('Id') < 0 || row['Id'] == 0 || row['Id'] == ''">Auto Generated</span>
-                                        <span v-else>{{ row["InvoiceNo"] }}</span>
+                                    <div class="flex flex-row items-center" v-if="!loading_customers">
+                                        <v-select
+                                            :value="row['CustomerId']"
+                                            label="CustomerName"
+                                            v-model="row['CustomerId']"
+                                            :reduce="customer => customer.Id"
+                                            :options="customers"
+                                            class="w-48 generic_vs_select"
+                                            v-if="!loading_customers"
+                                            :class="{
+                                                required_field: row['CustomerId'] == '' || row['CustomerId'] == null
+                                            }"
+                                        ></v-select>
+                                        <button class="p-1" @click="addCustomer">
+                                            <FA :icon="['fas', 'plus']" class="ml-1"></FA>
+                                        </button>
                                     </div>
+                                    <Loading v-else/>
                                 </div>
 
                                 <div class="text-white px-3 mt-5">
-                                    <Button
-                                        @click.native="addRecord"
-                                        icon="plus"
-                                        split="border-white"
-                                        class="ml-1"
-                                        :class="{
-                                            'bg-green-600': valid_data,
-                                            'bg-gray-600 text-gray-500 cursor-not-allowed': !valid_data
-                                        }"
-                                    >
-                                        {{ add_record_title }}
-                                    </Button>
+
                                 </div>
                             </div>
 
@@ -107,11 +110,67 @@
                                 </div>
 
                                 <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-
+                                    <label
+                                        class="block form_field_label"
+                                        :class="{
+                                            'text-gray-700': !dark_mode,
+                                            'text-white': dark_mode
+                                        }"
+                                    >
+                                        Invoice No:
+                                    </label>
+                                    <div class="flex flex-row items-center">
+                                        <span v-if="row_keys.indexOf('Id') < 0 || row['Id'] == 0 || row['Id'] == ''">Auto Generated</span>
+                                        <span v-else>{{ row["InvoiceNo"] }}</span>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="flex flex-wrap -mx-3 form_field_container">
+                            <div
+                                class="flex justify-between border-b border-product-color-lighter mb-4 pb-1"
+                                :class="{
+                                    'border-product-color-lighter': dark_mode,
+                                    'border-product-color': !dark_mode
+                                }"
+                            >
+                                <h1
+                                    class="text-base pt-2 ml-1"
+                                    :class="{
+                                        'text-product-color-lighter': dark_mode,
+                                        'text-product-color': !dark_mode
+                                    }"
+                                >
+                                    Phone Details
+                                </h1>
+                                <div
+                                    class="mr-2 text-white"
+                                >
+                                    <Button
+                                        @click.native="updateRecord"
+                                        icon="plus"
+                                        split="border-white"
+                                        class="ml-1"
+                                        :class="{
+                                            'bg-green-600': valid_phone_data,
+                                            'bg-gray-600 text-gray-500 cursor-not-allowed': !valid_phone_data
+                                        }"
+                                        v-if="current_row_id != ''"
+                                    >
+                                        Update
+                                    </Button>
+                                    <Button
+                                        @click.native="selectPhoneStock"
+                                        icon="search"
+                                        split="border-white"
+                                        class="ml-1 bg-green-600 text-white"
+                                        v-if="current_row_id == ''"
+                                    >
+                                        Add Phone
+                                    </Button>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-wrap -mx-3 form_field_container" v-if="current_row_id != ''">
                                 <div class="w-full px-3 mb-6 md:mb-0">
                                     <label
                                         class="block form_field_label"
@@ -130,17 +189,53 @@
                                             'text-product-color-lighter': dark_mode
                                         }"
                                         >
-                                            {{ getColumnValue("IMEI") }}
+                                            {{ child_row["IMEI"] }}
                                         </label>
-                                        <Button
-                                            @click.native="selectPhoneStock"
-                                            icon="search"
-                                            split="border-white"
-                                            class="ml-1 bg-green-600 text-white"
-                                        >
-                                            Add Phone
-                                        </Button>
+
                                     </div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-wrap -mx-3 form_field_container border-b border-product-color-lighter pb-5" v-if="current_row_id != ''">
+                                <div class="w-full md:w-1/2 px-3">
+                                    <label
+                                        class="block form_field_label"
+                                        :class="{
+                                            'text-gray-700': !dark_mode,
+                                            'text-white': dark_mode
+                                        }"
+                                    >
+                                        Cost
+                                    </label>
+                                    £ <input
+                                    class="w-32 generic_input"
+                                    type="number"
+                                    v-model.number="child_row['Cost']"
+                                    autocomplete="off"
+                                    :class="{
+                                        required_field: child_row['Cost'] == '' || child_row['Cost'] == null
+                                    }"
+                                    ref="cost"
+                                />
+                                </div>
+                            </div>
+
+                            <div class="flex flex-wrap -mx-3 form_field_container">
+                                <div class="w-full px-3">
+                                    <label
+                                        class="block form_field_label"
+                                        :class="{
+                                            'text-gray-700': !dark_mode,
+                                            'text-white': dark_mode
+                                        }"
+                                    >
+                                        Comments
+                                    </label>
+                                    <textarea
+                                        class="w-3/4 generic_input"
+                                        v-model.trim="row['Comments']"
+                                        rows="3"
+                                    />
                                 </div>
                             </div>
 
@@ -287,7 +382,8 @@ export default {
         return {
             row: {},
             child_row: {
-                IMEI: ""
+                IMEI: "",
+                Cost: ""
             },
             rows: [],
 
@@ -325,7 +421,7 @@ export default {
                 },
                 {
                     enabled: true,
-                    key: "phone",
+                    key: "phone_details",
                     name: "Phone",
                     order: 3,
                     searching: false,
@@ -373,7 +469,19 @@ export default {
         valid_data() {
             if (
                 this.rows.length == 0 ||
-                this.row_keys.indexOf("InvoiceDate") < 0 || this.row["InvoiceDate"] == ""
+                this.row_keys.indexOf("InvoiceDate") < 0 || this.row["InvoiceDate"] == "" ||
+                this.row_keys.indexOf("CustomerId") < 0 || this.row["CustomerId"] == "" || this.row["CustomerId"] == null
+            ) {
+                return false;
+            }
+            //Start here. valid_data is returning false.
+
+            return true;
+        },
+
+        valid_phone_data() {
+            if (
+                this.child_row_keys.indexOf("Cost") < 0 || this.child_row["Cost"] == "" || parseFloat(this.child_row["Cost"]) == 0
             ) {
                 return false;
             }
@@ -383,6 +491,10 @@ export default {
 
         row_keys() {
             return Object.keys(this.row);
+        },
+
+        child_row_keys() {
+            return Object.keys(this.child_row);
         },
 
         ...mapState({
@@ -416,6 +528,7 @@ export default {
 
                         this.row = _.cloneDeep(record);
 
+                        //Assign a random id to the child row.
                         _.forEach(record.childs, (child_row, key) => {
                             child_row["row_id"] = helper_functions.getRandomId();
                             this.rows.push(child_row);
@@ -431,7 +544,6 @@ export default {
             this.add_record_title = "Add";
 
             this.child_row["row_id"] = helper_functions.getRandomId();
-            this.current_row_id = _.clone(this.child_row["row_id"]);
         }
     },
 
@@ -474,20 +586,18 @@ export default {
                 .catch(error => {
                     this.checking_duplicate_imei = false;
 
-                    if (error.response.data == "duplicate_imei") {
+                    if (error.response.data.message == "duplicate_imei") {
                         this.duplicate_imei = true;
                     }
                 });
         },
 
-        editRecord(row) {
-            this.row = _.cloneDeep(row);
+        editRecord(child_row) {
+            this.child_row = _.cloneDeep(child_row);
 
             this.add_record_title = "Update";
 
-            this.current_row_id = _.clone(this.row["row_id"]);
-
-            this.$refs.imei.focus();
+            this.current_row_id = _.clone(this.child_row["row_id"]);
         },
 
         removeRecord(row_id) {
@@ -563,43 +673,26 @@ export default {
             return _.get(this.row, column);
         },
 
-        addRecord() {
+        updateRecord() {
             //Validate
-            if (!this.valid_data) {
+            if (!this.valid_phone_data) {
                 return false;
             }
 
-            if (this.edit_id == "") {
-                this.row["Id"] = 0;
-            }
-
             let rows = [];
-            let existing_row = false;
             _.forIn(this.rows, (object, key) => {
-                if (object["row_id"] == this.row["row_id"]) {
-                    rows.push(_.cloneDeep(this.row));
-                    existing_row = true;
+                if (object["IMEI"] === this.child_row["IMEI"]) {
+                    rows.push(_.cloneDeep(this.child_row));
                 } else {
                     rows.push(object);
                 }
             });
-            if (!existing_row) {
-                rows.push(_.cloneDeep(this.row));
-            }
             this.rows = _.cloneDeep(rows);
 
-            this.row["Id"] = 0;
-            this.row["IMEI"] = "";
-            this.row["ModelNo"] = "";
-            this.row["Network"] = "";
-            this.row["Comments"] = "";
-            this.row["IsActive"] = 0;
+            this.child_row["IMEI"] = "";
+            this.child_row["Cost"] = "";
 
-            this.add_record_title = "Add";
-            this.row["row_id"] = helper_functions.getRandomId();
             this.current_row_id = "";
-
-            this.$refs.imei.focus();
         },
 
         saveAll() {
@@ -634,14 +727,14 @@ export default {
                 .catch(error => {
                     this.saving_data = false;
 
-                    if (error.response.data == "record_not_found") {
+                    if (error.response.data.message == "record_not_found") {
                         this.$notify({
                             group: "messages",
                             title: "Error",
                             type: "error",
                             text: this.formatMessage(error.response.data, this.options.record_name)
                         });
-                    } else if (error.response.data == "duplicate_imei") {
+                    } else if (error.response.data.message == "duplicate_imei") {
                         this.duplicate_imei = true;
                     }
                 });

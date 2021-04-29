@@ -62,7 +62,7 @@
 import {mapState, mapActions} from "vuex";
 import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
-import ObjecType1 from "../DBObjects/ObjectType1.vue";
+import ObjectTypeName from "../DBObjects/ObjectTypeName.vue";
 import {datatable_common} from "../Helpers/datatable_common";
 
 export default {
@@ -95,7 +95,7 @@ export default {
             this.setPopperOpen(true);
 
             this.$modal.show(
-                ObjecType1,
+                ObjectTypeName,
                 {
                     edit_id: "",
                     options: this.options

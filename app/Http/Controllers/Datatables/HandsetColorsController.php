@@ -6,8 +6,10 @@ use App\Datatables\HandsetColorsDatatable;
 use App\Models\HandsetColors;
 use Illuminate\Http\Request;
 
-class HandsetColorsController extends BaseDatatableController {
-    public function getData(Request $request) {
+class HandsetColorsController extends BaseDatatableController
+{
+    public function getData(Request $request)
+    {
         $table = new HandsetColorsDatatable();
 
         $order_by = $request->get('order_by', '') == ''

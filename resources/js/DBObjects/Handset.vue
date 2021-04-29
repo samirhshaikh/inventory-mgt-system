@@ -515,14 +515,14 @@ export default {
                 .catch(error => {
                     this.saving_data = false;
 
-                    if (error.response.data == "record_not_found") {
+                    if (error.response.data.message == "record_not_found") {
                         this.$notify({
                             group: "messages",
                             title: "Error",
                             type: "error",
-                            text: this.formatMessage(error.response.data, this.options.record_name)
+                            text: this.formatMessage(error.response.data.message, this.options.record_name)
                         });
-                    } else if (error.response.data == "duplicate_name") {
+                    } else if (error.response.data.message == "duplicate_name") {
                         this.duplicate_name = true;
                     }
                 });
@@ -551,7 +551,7 @@ export default {
                 .catch(error => {
                     this.checking_duplicate_name = false;
 
-                    if (error.response.data == "duplicate_name") {
+                    if (error.response.data.message == "duplicate_name") {
                         this.duplicate_name = true;
                     }
                 });

@@ -13,7 +13,7 @@
             @click.native="returnItem"
             class="text-white bg-red-400 ml-2"
             :class="{
-                hidden: !$page.user_details.IsAdmin || row['Id'] == ''
+                hidden: !$page.user_details.IsAdmin || !row.hasOwnProperty('row_id')
             }"
         >
             Return
@@ -22,7 +22,7 @@
             @click.native="removeRecord"
             class="text-white bg-red-400 ml-2"
             :class="{
-                hidden: !$page.user_details.IsAdmin || row['Id'] == '' || row['row_id'] == current_row_id
+                hidden: !$page.user_details.IsAdmin || row['row_id'] == current_row_id
             }"
             split="border-white"
         >

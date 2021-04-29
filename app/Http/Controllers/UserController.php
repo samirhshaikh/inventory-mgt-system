@@ -6,6 +6,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
 use App\Http\Controllers\BaseAPIController;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Facades\JWTFactory;
@@ -17,7 +18,11 @@ use Carbon\Carbon;
 
 class UserController extends BaseAPIController
 {
-    public function register(UserRequest $request)
+    /**
+     * @param UserRequest $request
+     * @return JsonResponse
+     */
+    public function register(UserRequest $request): JsonResponse
     {
         $user = User::create([
             'UserName' => $request->get('username'),
@@ -26,10 +31,14 @@ class UserController extends BaseAPIController
 
         $token = JWTAuth::fromUser($user);
 
-        return response()->json(compact('user', 'token'), 201);
+        return response()->json(compact('user', 'token'), JsonResponse::HTTP_CREATED);
     }
 
-    public function login(LoginRequest $request)
+    /**
+     * @param LoginRequest $request
+     * @return JsonResponse
+     */
+    public function login(LoginRequest $request): JsonResponse
     {
         $credentials = $request->only(['username', 'password']);
 
@@ -37,10 +46,10 @@ class UserController extends BaseAPIController
             $token = auth('api')->attempt($credentials);
 
             if (!$token) {
-                return response()->json(['error' => 'invalid_credentials'], 400);
+                return response()->json(['error' => 'invalid_credentials'], JsonResponse::HTTP_BAD_REQUEST);
             }
         } catch (JWTException $e) {
-            return response()->json(['error' => 'could_not_create_token'], 500);
+            return response()->json(['error' => 'could_not_create_token'], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $user = auth('api')->user();
@@ -69,11 +78,14 @@ class UserController extends BaseAPIController
         ]);
     }
 
-    public function getAuthenticatedUser()
+    /**
+     * @return JsonResponse
+     */
+    public function getAuthenticatedUser(): JsonResponse
     {
         try {
             if (!$user = JWTAuth::parseToken()->authenticate()) {
-                return response()->json(['user_not_found'], 404);
+                return response()->json(['user_not_found'], JsonResponse::HTTP_NOT_FOUND);
             }
         } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
             return response()->json(['token_expired'], $e->getStatusCode());

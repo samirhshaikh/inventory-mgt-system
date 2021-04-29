@@ -26,8 +26,7 @@ class PhoneStockController extends BaseDatatableController
         $records = PhoneStock::selectRaw('PhoneStock.*, ManufactureMaster.Name, ColorMaster.Name, modelmaster.Name')
             ->leftJoin('ManufactureMaster', 'ManufactureMaster.Id', '=', 'MakeId')
             ->leftJoin('ColorMaster', 'ColorMaster.Id', '=', 'ColorId')
-            ->leftJoin('modelmaster', 'modelmaster.Id', '=', 'ModelId')
-        ;
+            ->leftJoin('modelmaster', 'modelmaster.Id', '=', 'ModelId');
 
         if ($request->get("available_stock_only", 0)) {
             $records = $records->whereRaw('PhoneStock.Status != "Sold"');
@@ -77,7 +76,8 @@ class PhoneStockController extends BaseDatatableController
         return $this->getData($request);
     }
 
-    protected function prepareAdvancedSearch($model, $search_data = []) {
+    protected function prepareAdvancedSearch($model, $search_data = [])
+    {
         foreach ($search_data as $column => $search_text) {
             if ($search_text == '' || is_null($search_text)) {
                 continue;

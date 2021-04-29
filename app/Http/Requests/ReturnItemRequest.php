@@ -9,7 +9,8 @@ class ReturnItemRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize() {
+    public function authorize(): bool
+    {
         return true;
     }
 
@@ -18,11 +19,12 @@ class ReturnItemRequest extends FormRequest
      *
      * @return array
      */
-    public function rules() {
+    public function rules(): array
+    {
         return [
             'InvoiceId' => 'required|numeric',
             'IMEI' => 'required|string',
-            'ReturnDate' => 'required|string'
+            'ReturnedDate' => 'required|string'
         ];
     }
 
@@ -31,11 +33,12 @@ class ReturnItemRequest extends FormRequest
      *
      * @return array
      */
-    public function messages() {
+    public function messages(): array
+    {
         return [
-            'InvoiceId.required' => 'InvoiceId cannot be empty',
+            'InvoiceId.required' => 'InvoiceId is required',
             'IMEI.required' => 'IMEI cannot be empty',
-            'ReturnDate.required' => 'Return Date cannot be empty'
+            'ReturnedDate.required' => 'Returned Date cannot be empty'
         ];
     }
 }

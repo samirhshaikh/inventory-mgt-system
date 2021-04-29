@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
-class DebugController extends BaseController {
+use Illuminate\Http\JsonResponse;
+
+class DebugController extends BaseController
+{
     /**
-     * Get all the debug info
+     * @return JsonResponse
      */
-    public function getDebugInfo() {
+    public function getDebugInfo(): JsonResponse
+    {
         return $this->sendOK([
             'session' => session()->all()
         ]);

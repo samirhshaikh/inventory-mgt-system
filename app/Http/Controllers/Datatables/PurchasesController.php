@@ -95,8 +95,7 @@ class PurchasesController extends BaseDatatableController
             ->leftJoin('PhoneStock', 'PhoneStock.InvoiceId', '=', 'Purchase.Id')
             ->leftJoin('ManufactureMaster', 'ManufactureMaster.Id', '=', 'MakeId')
             ->leftJoin('ColorMaster', 'ColorMaster.Id', '=', 'ColorId')
-            ->leftJoin('ModelMaster', 'ModelMaster.Id', '=', 'ModelId')
-        ;
+            ->leftJoin('ModelMaster', 'ModelMaster.Id', '=', 'ModelId');
 
         $search_type = $request->get('search_type', 'simple');
 
@@ -156,8 +155,7 @@ class PurchasesController extends BaseDatatableController
                 ->join('PhoneStock', 'PhoneStock.InvoiceId', '=', 'Purchase.Id')
                 ->join('ManufactureMaster', 'ManufactureMaster.Id', '=', 'MakeId')
                 ->join('ColorMaster', 'ColorMaster.Id', '=', 'ColorId')
-                ->join('ModelMaster', 'ModelMaster.Id', '=', 'ModelId')
-            ;
+                ->join('ModelMaster', 'ModelMaster.Id', '=', 'ModelId');
         }
 
         if ($search_type === 'simple' && $request->get('search_text', '') != '') {
@@ -191,7 +189,8 @@ class PurchasesController extends BaseDatatableController
         return $records->pluck('Id')->all();
     }
 
-    protected function prepareAdvancedSearch($model, $search_data = []) {
+    protected function prepareAdvancedSearch($model, $search_data = [])
+    {
         foreach ($search_data as $column => $search_text) {
             if ($search_text == '' || is_null($search_text)) {
                 continue;

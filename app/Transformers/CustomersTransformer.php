@@ -5,8 +5,10 @@ namespace App\Transformers;
 use App\Models\Customers;
 use League\Fractal\TransformerAbstract;
 
-class CustomersTransfomer extends TransformerAbstract {
-    public function transform(Customers $model) {
+class CustomersTransformer extends TransformerAbstract
+{
+    public function transform(Customers $model)
+    {
         return [
             'Id' => $model->Id,
             'CustomerName' => $model->CustomerName,

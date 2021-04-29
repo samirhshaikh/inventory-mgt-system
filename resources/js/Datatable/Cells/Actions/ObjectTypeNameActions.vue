@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import ObjectType1 from "../../../DBObjects/ObjectType1.vue";
+import ObjectTypeName from "../../../DBObjects/ObjectTypeName.vue";
 import { mapActions } from "vuex";
 import Confirm from "../../../components/Confirm.vue";
 import {datatable_cell} from "../datatable_cell";
@@ -40,7 +40,7 @@ export default {
             this.setPopperOpen(true);
 
             this.$modal.show(
-                ObjectType1,
+                ObjectTypeName,
                 {
                     edit_id: String(this.row.Id),
                     options: this.options
@@ -104,7 +104,7 @@ export default {
                                     group: "messages",
                                     title: "Error",
                                     type: "error",
-                                    text: this.formatMessage(error.response.data, this.options.record_name)
+                                    text: this.formatMessage(error.response.data.message, this.options.record_name)
                                 });
                             });
                     }

@@ -75,7 +75,6 @@ Route::group(['prefix' => 'customers'], function ($router) {
     $router->post('save', 'DBObjects\CustomersController@save')->name('customers.save');
     $router->post('get-single', 'DBObjects\CustomersController@getSingle')->name('customers.get-single');
     $router->post('delete', 'DBObjects\CustomersController@delete')->name('customers.delete');
-    $router->post('check-duplicate-name', 'DBObjects\CustomersController@checkDuplicateName')->name('customers.check-duplicate-name');
 });
 
 Route::get('/suppliers', 'PagesController@suppliers')->name('suppliers');
@@ -84,7 +83,6 @@ Route::group(['prefix' => 'suppliers'], function ($router) {
     $router->post('save', 'DBObjects\SuppliersController@save')->name('suppliers.save');
     $router->post('get-single', 'DBObjects\SuppliersController@getSingle')->name('suppliers.get-single');
     $router->post('delete', 'DBObjects\SuppliersController@delete')->name('suppliers.delete');
-    $router->post('check-duplicate-name', 'DBObjects\SuppliersController@checkDuplicateName')->name('suppliers.check-duplicate-name');
 });
 
 Route::get('/phonestock', 'PagesController@phoneStock')->name('phonestock');
@@ -141,9 +139,7 @@ Route::group(['prefix' => 'datatables'], function ($router) {
 
     Route::group(['prefix' => 'phonestock'], function ($router) {
         $router->post('data', 'Datatables\PhoneStockController@getData')->name('datatable.phonestock.data');
-        $router->get('data', 'Datatables\PhoneStockController@getData')->name('datatable.phonestock.data');
         $router->post('available', 'Datatables\PhoneStockController@getAvailablePhoneData')->name('datatable.phonestock.available');
-        $router->get('available', 'Datatables\PhoneStockController@getAvailablePhoneData')->name('datatable.phonestock.available');
     });
 
     Route::group(['prefix' => 'purchases'], function ($router) {

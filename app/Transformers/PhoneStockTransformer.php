@@ -5,8 +5,10 @@ namespace App\Transformers;
 use App\Models\PhoneStock;
 use League\Fractal\TransformerAbstract;
 
-class PhoneStockTransfomer extends TransformerAbstract {
-    public function transform(PhoneStock $model) {
+class PhoneStockTransformer extends TransformerAbstract
+{
+    public function transform(PhoneStock $model)
+    {
         $return = [
             'Id' => $model->Id,
             'IMEI' => $model->IMEI,

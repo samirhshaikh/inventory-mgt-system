@@ -2,146 +2,69 @@
 
 namespace App\Http\Controllers\DBObjects;
 
+use App\Exceptions\DuplicateIMEIException;
+use App\Exceptions\RecordNotFoundException;
+use App\Exceptions\ReferenceException;
 use App\Http\Controllers\BaseController;
-use App\Models\PhoneStock;
-use App\Traits\TableActions;
+use App\Http\Requests\IdRequest;
+use App\Http\Requests\IMEIRequest;
+use App\Services\PhoneStockService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class PhoneStockController extends BaseController
 {
-    use TableActions;
-
-    public function changeActiveStatus(Request $request)
+    /**
+     * @param IdRequest $request
+     * @return JsonResponse
+     */
+    public function getSingle(IdRequest $request): JsonResponse
     {
-        $message = $this->changeRecordStatus(new PhoneStock, $request);
+        $phonestock_service = new PhoneStockService();
 
-        if ($message === '') {
-            return $this->sendOK([], 'status_changed');
-        } else {
-            return $this->sendError([], $message, 500);
-        }
-    }
-
-    public function getSingle(Request $request)
-    {
-        $record = PhoneStock::selectRaw('PhoneStock.*, Supplier.SupplierName as supplier, ManufactureMaster.Name as manufacturer, ColorMaster.Name as color, modelmaster.Name as model')
-            ->where('PhoneStock.Id', $request->get('Id'))
-            ->join('Supplier', 'Supplier.Id', '=', 'SupplierId')
-            ->join('ManufactureMaster', 'ManufactureMaster.Id', '=', 'MakeId')
-            ->join('ColorMaster', 'ColorMaster.Id', '=', 'ColorId')
-            ->join('modelmaster', 'modelmaster.Id', '=', 'ModelId')
-            ->get()
-        ;
-
-        if ($record->count()) {
+        try {
             $response = [];
-            $response['record'] = $record->map->transform()->first();
+            $response['record'] = $phonestock_service->getSingle($request);
+
             return $this->sendOK($response);
-        } else {
-            return $this->sendError([], 'record_not_found', 500);
+        } catch (RecordNotFoundException $e) {
+            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
         }
     }
 
-    public static function save($invoiceId, Array $phones)
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function delete(Request $request): JsonResponse
     {
-        $records_count = 0;
-        foreach ($phones as $row) {
-            if (self::isDuplicateIMEI($row['IMEI'], $row['Id'] ?? 0)) {
-                continue;
-            }
+        $phonestock_service = new PhoneStockService();
 
-            //New Record
-            if (empty($row['Id'] ?? 0)) {
-                $record = new PhoneStock;
+        try {
+            $phonestock_service->delete($request);
 
-                $record->InvoiceId = $invoiceId;
-                $record->CreatedBy = session('user_details.UserName');
-            }
-            //Edit Record
-            else {
-                $record = PhoneStock::where('Id', $row['Id'])->get();
-
-                if (!$record->count()) {
-                    continue;
-                }
-
-                $record = $record->first();
-            }
-
-            $record->IMEI = $row['IMEI'];
-            $record->MakeId = $row['manufacturer']['Id'];
-            $record->ModelId = $row['model']['Id'];
-            $record->ColorId = $row['color']['Id'];
-            $record->Size = $row['Size'];
-            $record->Cost = number_format($row['Cost'], 2);
-            $record->StockType = $row['StockType'];
-            $record->ModelNo = $row['ModelNo'] ?? '';
-            $record->Network = $row['Network'];
-            $record->Status = $row['Status'];
-            $record->UpdatedBy = session('user_details.UserName');
-            $record->IsActive = 1;
-            $record->save();
-
-            $records_count++;
-        }
-
-        return $records_count;
-    }
-
-    public function delete(Request $request)
-    {
-        //Check whether the record exist or not
-        $record = PhoneStock::where('Id', $request->get('Id'))->get();
-
-        if ($record->count()) {
-            $record = $record->first();
-
-            $tables_to_check = ['Sales'];
-            if ($this->foreignReferenceFound($tables_to_check, 'IMEI', $record->IMEI)) {
-                return $this->sendError([], 'record_reference_found', 500);
-            }
-
-            $tables_to_check = ['TradedDetails'];
-            if ($this->foreignReferenceFound($tables_to_check, 'PhoneStockId', $request->get('Id'))) {
-                return $this->sendError([], 'record_reference_found', 500);
-            }
-
-            PhoneStock::where('Id', $request->get('Id'))->delete();
-
-            return $this->sendOK([], 'record_deleted');
-        } else {
-            return $this->sendError([], 'record_not_found', 500);
+            return $this->sendOK([], self::RECORD_DELETED);
+        } catch (RecordNotFoundException $e) {
+            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+        } catch (ReferenceException $e) {
+            return $this->sendError(self::RECORD_REFERENCE_FOUND, [], JsonResponse::HTTP_FORBIDDEN);
         }
     }
 
-    public function checkDuplicateIMEI(Request $request)
+    /**
+     * @param IMEIRequest $request
+     * @return JsonResponse
+     */
+    public function checkDuplicateIMEI(IMEIRequest $request): JsonResponse
     {
-        if ($this->isDuplicateIMEI($request->get('IMEI'), $request->get('Id', 0))) {
-            return $this->sendError([], 'duplicate_imei', 500);
-        } else {
+        $phonestock_service = new PhoneStockService();
+
+        try {
+            $phonestock_service->checkDuplicateIMEI($request);
+
             return $this->sendOK([]);
+        } catch (DuplicateIMEIException $e) {
+            return $this->sendError(self::DUPLICATE_IMEI, [], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
         }
-    }
-
-    public static function isDuplicateIMEI($imei, $id = 0)
-    {
-        //Check whether the record exists or not
-        if (!empty($id)) {
-            $record = PhoneStock::where('Id', $id)->get();
-
-            if (!$record->count()) {
-                return false;
-            }
-        }
-
-        $record = PhoneStock::whereRaw('LOWER(IMEI) = ?', [strtolower($imei)]);
-
-        if (!empty($id)) {
-            $record = $record->where('id', '!=', $id);
-        }
-
-        $record = $record->get();
-
-        return $record->count() ? true : false;
     }
 }

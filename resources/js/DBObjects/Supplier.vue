@@ -418,43 +418,14 @@ export default {
                 .catch(error => {
                     this.saving_data = false;
 
-                    if (error.response.data == "record_not_found") {
+                    if (error.response.data.message == "record_not_found") {
                         this.$notify({
                             group: "messages",
                             title: "Error",
                             type: "error",
                             text: this.formatMessage(error.response.data, this.options.record_name)
                         });
-                    } else if (error.response.data == "duplicate_name") {
-                        this.duplicate_name = true;
-                    }
-                });
-        },
-
-        isDuplicateName() {
-            if (this.row_keys.indexOf("Name") < 0 || this.row["Name"] == "") {
-                return false;
-            }
-
-            this.checking_duplicate_name = true;
-            this.duplicate_name = false;
-
-            axios
-                .post(route("handsets.check-duplicate-name"), {
-                    Id: this.row["Id"],
-                    Name: this.row["Name"]
-                })
-                .then(response => {
-                    this.checking_duplicate_name = false;
-
-                    this.duplicate_name = false;
-
-                    this.checking_duplicate_name = false;
-                })
-                .catch(error => {
-                    this.checking_duplicate_name = false;
-
-                    if (error.response.data == "duplicate_name") {
+                    } else if (error.response.data.message == "duplicate_name") {
                         this.duplicate_name = true;
                     }
                 });

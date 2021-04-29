@@ -2,117 +2,106 @@
 
 namespace App\Http\Controllers\DBObjects;
 
+use App\Exceptions\DuplicateNameException;
+use App\Exceptions\RecordNotFoundException;
 use App\Http\Controllers\BaseController;
-use App\Models\Handsets;
+use App\Http\Requests\IdRequest;
+use App\Http\Requests\SaveHandsetRequest;
+use App\Services\HandsetsService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class HandsetsController extends BaseController
 {
-    public function changeActiveStatus(Request $request)
+    /**
+     * @param IdRequest $request
+     * @return JsonResponse
+     */
+    public function changeActiveStatus(IdRequest $request): JsonResponse
     {
-        $message = $this->changeRecordStatus(new Handsets, $request);
+        $handsets_service = new HandsetsService();
 
-        if ($message === '') {
+        try {
+            $handsets_service->changeActiveStatus($request);
+
             return $this->sendOK([], 'status_changed');
-        } else {
-            return $this->sendError([], $message, 500);
+        } catch (RecordNotFoundException $e) {
+            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
         }
     }
 
-    public function getSingle(Request $request)
+    /**
+     * @param IdRequest $request
+     * @return JsonResponse
+     */
+    public function getSingle(IdRequest $request): JsonResponse
     {
-        $record = Handsets::selectRaw('HandsetMaster.*, ManufactureMaster.Name as manufacturer, ColorMaster.Name as color, modelmaster.Name as model')
-            ->where('HandsetMaster.Id', $request->get('Id'))
-            ->join('ManufactureMaster', 'ManufactureMaster.Id', '=', 'MakeId')
-            ->join('ColorMaster', 'ColorMaster.Id', '=', 'ColorId')
-            ->join('modelmaster', 'modelmaster.Id', '=', 'ModelId')
-            ->get()
-        ;
+        $handsets_service = new HandsetsService();
 
-        if ($record->count()) {
+        try {
             $response = [];
-            $response['record'] = $record->map->transform()->first();
+            $response['record'] = $handsets_service->getSingle($request);
+
             return $this->sendOK($response);
-        } else {
-            return $this->sendError([], 'record_not_found', 500);
+        } catch (RecordNotFoundException $e) {
+            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
         }
     }
 
-    public function save(Request $request)
+    /**
+     * @param SaveHandsetRequest $request
+     * @return JsonResponse
+     */
+    public function save(SaveHandsetRequest $request): JsonResponse
     {
-        //Check for duplicate name
-        if ($this->isDuplicateName($request->get('Name'), $request->get('Id', 0))) {
-            return $this->sendError([], 'duplicate_name', 500);
-        }
+        $handsets_service = new HandsetsService();
 
-        $record = Handsets::where('Id', $request->get('Id'))->get();
+        try {
+            $id = $handsets_service->save($request);
 
-        if ($request->get('operation', 'add') == 'edit') {
-            if (!$record->count()) {
-                return $this->sendError([], 'record_not_found', 500);
-            }
-
-            $record = $record->first();
-        } else {
-            $record = new Handsets;
-
-            $record->CreatedBy = session('user_details.UserName');
-        }
-
-        $record->Name = $request->get('Name');
-        $record->ColorId = $request->get('ColorId');
-        $record->MakeId = $request->get('MakeId');
-        $record->ModelId = $request->get('ModelId');
-        $record->UpdatedBy = session('user_details.UserName');
-        $record->IsActive = $request->get('IsActive');
-        $record->save();
-
-        return $this->sendOK([], 'record_saved');
-    }
-
-    public function delete(Request $request)
-    {
-        $record = Handsets::where('Id', $request->get('Id'))->get();
-
-        if ($record->count()) {
-            Handsets::where('Id', $request->get('Id'))->delete();
-
-            //Remove the reference of user from all the tables.
-
-            return $this->sendOK([], 'record_deleted');
-        } else {
-            return $this->sendError([], 'record_not_found', 500);
+            return $this->sendOK([
+                'id' => $id
+            ], self::RECORD_SAVED);
+        } catch (RecordNotFoundException $e) {
+            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+        } catch (DuplicateNameException $e) {
+            return $this->sendError(self::DUPLICATE_NAME, [], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 
-    public function checkDuplicateName(Request $request)
+    /**
+     * @param IdRequest $request
+     * @return JsonResponse
+     */
+    public function delete(IdRequest $request): JsonResponse
     {
-        if ($this->isDuplicateName($request->get('Name'), $request->get('Id', 0))) {
-            return $this->sendError([], 'duplicate_name', 500);
-        } else {
+        $handsets_service = new HandsetsService();
+
+        try {
+            $handsets_service->delete($request);
+
+            return $this->sendOK([], self::RECORD_DELETED);
+        } catch (RecordNotFoundException $e) {
+            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+        } catch (ReferenceException $e) {
+            return $this->sendError(self::RECORD_REFERENCE_FOUND, [], JsonResponse::HTTP_FORBIDDEN);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function checkDuplicateName(Request $request): JsonResponse
+    {
+        $handsets_service = new HandsetsService();
+
+        try {
+            $handsets_service->checkDuplicateName($request);
+
             return $this->sendOK([]);
+        } catch (DuplicateNameException $e) {
+            return $this->sendError(self::DUPLICATE_NAME, [], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
         }
-    }
-
-    private function isDuplicateName($name, $id = 0)
-    {
-        //Check whether the record exists or not
-        if (!empty($id)) {
-            $record = Handsets::where('Id', $id)->get();
-
-            if (!$record->count()) {
-                return false;
-            }
-        }
-
-        $record = Handsets::whereRaw('LOWER(Name) = ?', [strtolower($name)]);
-
-        if (!empty($id)) {
-            $record = $record->where('id', '!=', $id);
-        }
-
-        $record = $record->get();
-
-        return $record->count() ? true : false;
     }
 }

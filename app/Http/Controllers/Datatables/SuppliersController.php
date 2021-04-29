@@ -6,8 +6,10 @@ use App\Models\Suppliers;
 use App\Datatables\SuppliersDatatable;
 use Illuminate\Http\Request;
 
-class SuppliersController extends BaseDatatableController {
-    public function getData(Request $request) {
+class SuppliersController extends BaseDatatableController
+{
+    public function getData(Request $request)
+    {
         $table = new SuppliersDatatable();
 
         $order_by = $request->get('order_by', '') == ''
@@ -49,7 +51,8 @@ class SuppliersController extends BaseDatatableController {
         );
     }
 
-    protected function prepareAdvancedSearch($model, $search_data = []) {
+    protected function prepareAdvancedSearch($model, $search_data = [])
+    {
         foreach ($search_data as $column => $search_text) {
             if ($search_text == '' || is_null($search_text)) {
                 continue;

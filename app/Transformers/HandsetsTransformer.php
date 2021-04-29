@@ -5,8 +5,10 @@ namespace App\Transformers;
 use App\Models\Handsets;
 use League\Fractal\TransformerAbstract;
 
-class HandsetsTransfomer extends TransformerAbstract {
-    public function transform(Handsets $model) {
+class HandsetsTransfomer extends TransformerAbstract
+{
+    public function transform(Handsets $model)
+    {
         $return = [
             'Id' => $model->Id,
             'Name' => $model->Name,

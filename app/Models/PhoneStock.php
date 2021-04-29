@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Traits\CompositeKeysTrait;
-use App\Transformers\PhoneStockTransfomer;
+use App\Transformers\PhoneStockTransformer;
 
 class PhoneStock extends BaseModel {
     use CompositeKeysTrait;
@@ -11,7 +11,7 @@ class PhoneStock extends BaseModel {
     protected $connection = 'mysql';
     protected $table = 'PhoneStock';
     protected $primaryKey = ['Id'];
-    protected $transformer = PhoneStockTransfomer::class;
+    protected $transformer = PhoneStockTransformer::class;
     public $incrementing = false;
     public $timestamps = true;
     protected $guarded = [];

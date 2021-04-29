@@ -2,80 +2,86 @@
 
 namespace App\Http\Controllers\DBObjects;
 
+use App\Exceptions\RecordNotFoundException;
+use App\Exceptions\ReferenceException;
 use App\Http\Controllers\BaseController;
-use App\Models\Customers;
-use App\Traits\TableActions;
-use Illuminate\Http\Request;
+use App\Http\Requests\IdRequest;
+use App\Http\Requests\SaveCustomerRequest;
+use App\Services\CustomersService;
+use Illuminate\Http\JsonResponse;
 
-class CustomersController extends BaseController {
-    use TableActions;
+class CustomersController extends BaseController
+{
+    /**
+     * @param IdRequest $request
+     * @return JsonResponse
+     */
+    public function changeActiveStatus(IdRequest $request): JsonResponse
+    {
+        $customers_service = new CustomersService();
 
-    public function changeActiveStatus(Request $request) {
-        $message = $this->changeRecordStatus(new Customers, $request);
+        try {
+            $customers_service->changeActiveStatus($request);
 
-        if ($message === '') {
             return $this->sendOK([], 'status_changed');
-        } else {
-            return $this->sendError([], $message, 500);
+        } catch (RecordNotFoundException $e) {
+            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
         }
     }
 
-    public function getSingle(Request $request) {
-        $record = Customers::where('Id', $request->get('Id'))
-        ->get();
+    /**
+     * @param IdRequest $request
+     * @return JsonResponse
+     */
+    public function getSingle(IdRequest $request): JsonResponse
+    {
+        $customers_service = new CustomersService();
 
-        if ($record->count()) {
+        try {
             $response = [];
-            $response['record'] = $record->map->transform()->first();
+            $response['record'] = $customers_service->getSingle($request);
+
             return $this->sendOK($response);
-        } else {
-            return $this->sendError([], 'record_not_found', 500);
+        } catch (RecordNotFoundException $e) {
+            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
         }
     }
 
-    public function save(Request $request) {
-        $record = Customers::where('Id', $request->get('Id'))->get();
+    /**
+     * @param SaveCustomerRequest $request
+     * @return JsonResponse
+     */
+    public function save(SaveCustomerRequest $request): JsonResponse
+    {
+        $customers_service = new CustomersService();
 
-        if ($request->get('operation', 'add') == 'edit') {
-            if (!$record->count()) {
-                return $this->sendError([], 'record_not_found', 500);
-            }
+        try {
+            $id = $customers_service->save($request);
 
-            $record = $record->first();
-        } else {
-            $record = new Customers;
-
-            $record->CreatedBy = session('user_details.UserName');
+            return $this->sendOK([
+                'id' => $id
+            ], self::RECORD_SAVED);
+        } catch (RecordNotFoundException $e) {
+            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
         }
-
-        $record->CustomerName = $request->get('CustomerName');
-        $record->ContactNo1 = $request->get('ContactNo1');
-        $record->ContactNo2 = $request->get('ContactNo2');
-        $record->Comments = $request->get('Comments');
-        $record->Balance = number_format($request->get('Balance'), 2);
-        $record->UpdatedBy = session('user_details.UserName');
-        $record->IsActive = $request->get('IsActive');
-        $record->save();
-
-        return $this->sendOK([], 'record_saved');
     }
 
-    public function delete(Request $request) {
-        //Check whether the record exist or not
-        $record = Customers::where('Id', $request->get('Id'))->get();
+    /**
+     * @param IdRequest $request
+     * @return JsonResponse
+     */
+    public function delete(IdRequest $request): JsonResponse
+    {
+        $customers_service = new CustomersService();
 
-        if ($record->count()) {
-            //Check whether the record is used as a reference in other tables.
-            $tables_to_check = ['Sales'];//, 'Repair'
-            if ($this->foreignReferenceFound($tables_to_check, 'CustomerId', $request->get('Id'))) {
-                return $this->sendError([], 'record_reference_found', 500);
-            }
+        try {
+            $customers_service->delete($request);
 
-            Customers::where('Id', $request->get('Id'))->delete();
-
-            return $this->sendOK([], 'record_deleted');
-        } else {
-            return $this->sendError([], 'record_not_found', 500);
+            return $this->sendOK([], self::RECORD_DELETED);
+        } catch (RecordNotFoundException $e) {
+            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+        } catch (ReferenceException $e) {
+            return $this->sendError(self::RECORD_REFERENCE_FOUND, [], JsonResponse::HTTP_FORBIDDEN);
         }
     }
 }

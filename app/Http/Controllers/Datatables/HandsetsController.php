@@ -21,8 +21,7 @@ class HandsetsController extends BaseDatatableController
             ->join('ColorMaster', 'ColorMaster.Id', '=', 'ColorId')
             ->join('modelmaster', 'modelmaster.Id', '=', 'ModelId')
             ->orderBy($order_by, $order_direction)
-            ->get()
-        ;
+            ->get();
 
         $handsets = $handsets->map->transform();
 

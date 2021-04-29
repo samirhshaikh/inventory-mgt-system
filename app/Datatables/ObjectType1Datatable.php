@@ -2,12 +2,14 @@
 
 namespace App\Datatables;
 
-use App\Datatables\BaseDatatable;
-
-abstract class ObjectType1Datatable extends BaseDatatable {
+abstract class ObjectType1Datatable extends BaseDatatable
+{
     protected abstract function getRouteId();
+
     protected abstract function getId();
+
     protected abstract function getRecordName();
+
     protected abstract function getIcon();
 
     public $columns = [
@@ -48,15 +50,16 @@ abstract class ObjectType1Datatable extends BaseDatatable {
             'key' => 'route',
             'enabled' => true,
             'th' => 'sticky',
-            'type' => 'ObjectType1Actions',
+            'type' => 'ObjectTypeNameActions',
             'sorting' => false,
             'searching' => false,
             'order' => 6
         ]
     ];
 
-    public function columns() {
-        for ($i=0; $i<count($this->columns); $i++) {
+    public function columns()
+    {
+        for ($i = 0; $i < count($this->columns); $i++) {
             if (array_key_exists('route', $this->columns[$i])) {
                 $this->columns[$i]['route'] = sprintf($this->columns[$i]['route'], $this->getRouteId());
             }
@@ -65,7 +68,8 @@ abstract class ObjectType1Datatable extends BaseDatatable {
         return $this->columns;
     }
 
-    public function options() {
+    public function options()
+    {
         $this->options = [
             'id' => $this->getId(),
             'url' => route('datatable.' . $this->getRouteId() . '.data'),

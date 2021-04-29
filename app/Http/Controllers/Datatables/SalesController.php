@@ -91,8 +91,7 @@ class SalesController extends BaseDatatableController
                 ->join('PhoneStock', 'PhoneStock.IMEI', '=', 'SalesStock.IMEI')
                 ->join('ManufactureMaster', 'ManufactureMaster.Id', '=', 'MakeId')
                 ->join('ColorMaster', 'ColorMaster.Id', '=', 'ColorId')
-                ->join('ModelMaster', 'ModelMaster.Id', '=', 'ModelId')
-            ;
+                ->join('ModelMaster', 'ModelMaster.Id', '=', 'ModelId');
         }
 
         if ($search_type === 'simple' && $request->get('search_text', '') != '') {

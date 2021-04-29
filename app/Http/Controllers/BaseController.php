@@ -2,13 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Http\JsonResponse;
 
-class BaseController extends Controller {
-    protected function sendResponse($message, $status, $data = []) {
+class BaseController extends Controller
+{
+    const RECORD_SAVED = 'record_saved';
+    const RECORD_DELETED = 'record_deleted';
+
+    const RECORD_NO_FOUND = 'record_not_found';
+    const DUPLICATE_NAME = 'duplicate_name';
+    const DUPLICATE_IMEI = 'duplicate_imei';
+    const INVALID_DATA = 'invalid_data';
+    const RECORD_REFERENCE_FOUND = 'record_reference_found';
+
+    /**
+     * @param $message
+     * @param $status
+     * @param array $data
+     * @return JsonResponse
+     */
+    protected function sendResponse($message, $status, $data = []): JsonResponse
+    {
         $reply = [
-            'status_code' => $status,
             'message' => $message
         ];
 
@@ -17,28 +33,31 @@ class BaseController extends Controller {
         }
 
         return response()
-        ->json($reply);
+            ->json($reply)
+            ->setStatusCode($status);
     }
 
-    public function sendOK($data, $message = 'OK', $status = 200) {
+    /**
+     * @param $data
+     * @param string $message
+     * @param int $status
+     * @return JsonResponse
+     */
+    public function sendOK($data, $message = 'OK', $status = JsonResponse::HTTP_OK): JsonResponse
+    {
         return $this->sendResponse($message, $status, $data);
     }
 
-    public function sendError($data, $message = 'System Error', $status = 500) {
-        return response($message, $status);
-        //return $this->sendResponse($message, $status, $data);
-    }
-
-    public function canSendVerbose(Request $request = null) {
-        if (is_null($request)) {
-            $request = request();
-        }
-
-        if (!$request->get('verbose', false)) {
-            return false;
-        }
-
-        return true;
+    /**
+     * @param string $message
+     * @param array $data
+     * @param int $status
+     * @return JsonResponse
+     */
+    public function sendError($message = 'System Error', $data = [], $status = JsonResponse::HTTP_INTERNAL_SERVER_ERROR): JsonResponse
+    {
+        return $this->sendResponse($message, $status, $data);
     }
 }
+
 ?>

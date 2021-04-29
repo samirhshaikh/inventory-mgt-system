@@ -21,7 +21,7 @@
                             'text-product-color': !dark_mode
                         }"
                     >
-                        Purchase Details
+                        {{ options.record_name }} Details
                     </h1>
                     <div
                         class="float-right flex justify-end mr-2 text-white w-64"
@@ -764,6 +764,7 @@ export default {
 
                         this.row = _.cloneDeep(record);
 
+                        //Assign a random id to the child row.
                         _.forEach(record.childs, (child_row, key) => {
                             child_row["row_id"] = helper_functions.getRandomId();
                             this.rows.push(child_row);
@@ -921,14 +922,14 @@ export default {
                 .catch(error => {
                     this.saving_data = false;
 
-                    if (error.response.data == "duplicate_imei") {
+                    if (error.response.data.message == "duplicate_imei") {
                         this.duplicate_imei = true;
                     } else {
                         this.$notify({
                             group: "messages",
                             title: "Error",
                             type: "error",
-                            text: this.formatMessage(error.response.data, this.options.record_name)
+                            text: this.formatMessage(error.response.data.message, this.options.record_name)
                         });
 
                         _.forIn(this.deleted_childs, (object, key) => {
@@ -976,7 +977,7 @@ export default {
                 .catch(error => {
                     this.checking_duplicate_imei = false;
 
-                    if (error.response.data == "duplicate_imei") {
+                    if (error.response.data.message == "duplicate_imei") {
                         this.duplicate_imei = true;
                     }
                 });

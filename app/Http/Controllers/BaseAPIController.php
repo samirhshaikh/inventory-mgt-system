@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
 
-class BaseAPIController extends BaseController {
-    protected function sendResponse($message, $status, $data = []) {
+class BaseAPIController extends BaseController
+{
+    protected function sendResponse($message, $status, $data = [])
+    {
         $reply = [
             'status_code' => $status,
             'message' => $message
@@ -19,24 +21,15 @@ class BaseAPIController extends BaseController {
         return response()->json($reply);
     }
 
-    public function sendOK($data, $message = 'OK', $status = 200) {
+    public function sendOK($data, $message = 'OK', $status = JsonResponse::HTTP_OK)
+    {
         return $this->sendResponse($message, $status, $data);
     }
 
-    public function sendError($data, $message = 'System Error', $status = 500) {
+    public function sendError($data, $message = 'System Error', $status = JsonResponse::HTTP_INTERNAL_SERVER_ERROR)
+    {
         return $this->sendResponse($message, $status, $data);
-    }
-
-    public function canSendVerbose(Request $request = null) {
-        if (is_null($request)) {
-            $request = request();
-        }
-
-        if (!$request->get('verbose', false)) {
-            return false;
-        }
-        
-        return true;
     }
 }
+
 ?>

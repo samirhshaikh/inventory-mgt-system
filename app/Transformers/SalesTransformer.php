@@ -7,7 +7,8 @@ use League\Fractal\TransformerAbstract;
 
 class SalesTransformer extends TransformerAbstract
 {
-    public function transform(Sales $model) {
+    public function transform(Sales $model)
+    {
         $return = [
             'Id' => $model->Id,
             'InvoiceNo' => $model->InvoiceNo,

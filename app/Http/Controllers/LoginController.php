@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
+use Illuminate\Http\JsonResponse;
 
 class LoginController extends Controller
 {
     /**
      * Check the user credentials by doing a request to api/generateToken
-     * 
-     * @param App\Http\Requests\LoginRequest $request
-     * @return $mixed
+     *
+     * @param LoginRequest $request
+     * @return mixed
      */
     public function doLogin(LoginRequest $request)
     {
@@ -22,7 +23,7 @@ class LoginController extends Controller
         $return = [];
 
         switch ($loginResponse->status()) {
-            case 200:
+            case JsonResponse::HTTP_OK:
                 $loginResponse = json_decode($loginResponse->content(), true);
 
                 session([
@@ -50,13 +51,18 @@ class LoginController extends Controller
     /**
      * Logs out the user and clears the session
      */
-    public function doLogout() {
+    public function doLogout()
+    {
         session()->flush();
-        
+
         return redirect('login');
     }
 
-    private function formatErrorMessages($error)
+    /**
+     * @param $error
+     * @return string
+     */
+    private function formatErrorMessages($error): string
     {
         $error_codes_to_messages = [
             'invalid_credentials' => 'Invalid Username/Password',

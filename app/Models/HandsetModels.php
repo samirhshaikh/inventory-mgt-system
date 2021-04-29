@@ -2,6 +2,6 @@
 
 namespace App\Models;
 
-class HandsetModels extends ObjectType1 {
+class HandsetModels extends ObjectTypeName {
     protected $table = 'ModelMaster';
 }

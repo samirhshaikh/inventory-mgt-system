@@ -4,16 +4,20 @@ namespace App\Http\Controllers\DBObjects;
 
 use App\Models\HandsetModels;
 
-class HandsetModelsController extends ObjectType1 {
-    protected function getModel() {
+class HandsetModelsController extends ObjectTypeNameController
+{
+    protected function getModel()
+    {
         return new HandsetModels;
     }
 
-    protected function getRecordName() {
+    protected function getRecordName()
+    {
         return 'Model';
     }
 
-    protected function getColumnIdInReferenceTables() {
+    protected function getColumnIdInReferenceTables()
+    {
         return 'ModelId';
     }
 }

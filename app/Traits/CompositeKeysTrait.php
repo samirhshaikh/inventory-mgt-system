@@ -5,15 +5,17 @@ namespace App\Traits;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 
-trait CompositeKeysTrait {
+trait CompositeKeysTrait
+{
     /**
      * Set the keys for a save update query.
      *
-     * @param  Builder $query
+     * @param Builder $query
      * @return Builder
      * @throws Exception
      */
-    protected function setKeysForSaveQuery(Builder $query) {
+    protected function setKeysForSaveQuery(Builder $query)
+    {
         $keys = $this->getKeyName();
         if (!is_array($keys)) {
             return parent::setKeysForSaveQuery($query);
@@ -28,11 +30,12 @@ trait CompositeKeysTrait {
 
     /**
      * Get the primary key value for a save query
-     * 
+     *
      * @param mixed $key
      * @return mixed
      */
-    protected function getKeyForSaveQuery($key = null) {
+    protected function getKeyForSaveQuery($key = null)
+    {
         if (is_null($key)) {
             $key = $this->getKeyName();
         }

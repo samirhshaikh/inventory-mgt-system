@@ -6,8 +6,10 @@ use App\Datatables\UsersDatatable;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class UsersController extends BaseDatatableController {
-    public function getData(Request $request) {
+class UsersController extends BaseDatatableController
+{
+    public function getData(Request $request)
+    {
         $table = new UsersDatatable();
 
         $order_by = $request->get('order_by', '') == ''

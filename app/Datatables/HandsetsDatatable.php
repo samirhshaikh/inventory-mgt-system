@@ -2,9 +2,8 @@
 
 namespace App\Datatables;
 
-use App\Datatables\BaseDatatable;
-
-class HandsetsDatatable extends BaseDatatable {
+class HandsetsDatatable extends BaseDatatable
+{
     public $columns = [
         [
             'name' => 'Name',
@@ -80,7 +79,8 @@ class HandsetsDatatable extends BaseDatatable {
         ]
     ];
 
-    public function options() {
+    public function options()
+    {
         $this->options = [
             'id' => 'handsets',
             'url' => route('datatable.handsets.data'),

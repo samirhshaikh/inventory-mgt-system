@@ -2,136 +2,130 @@
 
 namespace App\Http\Controllers\DBObjects;
 
+use App\Exceptions\DuplicateNameException;
+use App\Exceptions\NotEnoughRightsException;
+use App\Exceptions\RecordNotFoundException;
+use App\Exceptions\ReferenceException;
 use App\Http\Controllers\BaseController;
-use App\Models\User;
-use App\Traits\TableActions;
+use App\Http\Requests\SaveUserRequest;
+use App\Services\UserService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UsersController extends BaseController
 {
-    use TableActions;
-
-    public function changeActiveStatus(Request $request)
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function changeActiveStatus(Request $request): JsonResponse
     {
-        $user = User::where('UserName', $request->get('Id'))
-            ->first();
+        $user_service = new UserService();
 
-        if ($user) {
-            //Only allow to change if the requesting user is an admin
-            if (session('user_details.IsAdmin', false)) {
-                $user->IsActive = $request->get('value');
-                $user->save();
+        try {
+            $user_service->changeActiveStatus($request);
 
-                return $this->sendOK([], 'status_changed');
-            } else {
-                return $this->sendError([], 'not_enough_rights', 500);
-            }
-        } else {
-            return $this->sendError([], 'User not found.', 500);
+            return $this->sendOK([], 'status_changed');
+        } catch (NotEnoughRightsException $e) {
+            return $this->sendError('not_enough_rights', [], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (RecordNotFoundException $e) {
+            return $this->sendError('User not found.', [], JsonResponse::HTTP_NOT_FOUND);
         }
     }
 
-    public function changeAdminStatus(Request $request)
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function changeAdminStatus(Request $request): JsonResponse
     {
-        $user = User::where('UserName', $request->get('Id'))
-            ->first();
+        $user_service = new UserService();
 
-        if ($user) {
-            //Only allow to change if the requesting user is an admin
-            if (session('user_details.IsAdmin', false)) {
-                $user->IsAdmin = $request->get('value');
-                $user->save();
+        try {
+            $user_service->changeAdminStatus($request);
 
-                return $this->sendOK([], 'status_changed');
-            } else {
-                return $this->sendError([], 'not_enough_rights', 500);
-            }
-        } else {
-            return $this->sendError([], 'record_not_found', 500);
+            return $this->sendOK([], 'status_changed');
+        } catch (NotEnoughRightsException $e) {
+            return $this->sendError('not_enough_rights', [], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (RecordNotFoundException $e) {
+            return $this->sendError('User not found.', [], JsonResponse::HTTP_NOT_FOUND);
         }
     }
 
-    public function getSingle(Request $request)
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getSingle(Request $request): JsonResponse
     {
-        $user = User::where('UserName', $request->get('user_name'))->get();
+        $user_service = new UserService();
 
-        if ($user->count()) {
+        try {
             $response = [];
-            $response['record'] = $user->map->transform()->first();
+            $response['record'] = $user_service->getSingle($request);
+
             return $this->sendOK($response);
-        } else {
-            return $this->sendError([], 'record_not_found', 500);
+        } catch (RecordNotFoundException $e) {
+            return $this->sendError('User not found.', [], JsonResponse::HTTP_NOT_FOUND);
         }
     }
 
-    public function save(Request $request)
+    /**
+     * @param SaveUserRequest $request
+     * @return JsonResponse
+     */
+    public function save(SaveUserRequest $request): JsonResponse
     {
-        //Check for duplicate user name
-        if ($request->get('operation', 'add') == 'add') {
-            if ($this->isDuplicateName($request->get('UserName'))) {
-                return $this->sendError([], 'duplicate_name', 500);
-            }
+        $user_service = new UserService();
+
+        try {
+            $username = $user_service->save($request);
+
+            return $this->sendOK([
+                'username' => $username
+            ], self::RECORD_SAVED);
+        } catch (RecordNotFoundException $e) {
+            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+        } catch (DuplicateNameException $e) {
+            return $this->sendError(self::DUPLICATE_NAME, [], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $user = User::where('UserName', $request->get('UserName'))->get();
-
-        if ($request->get('operation', 'add') == 'edit') {
-            if (!$user->count()) {
-                return $this->sendError([], 'record_not_found', 500);
-            }
-
-            $user = $user->first();
-        } else {
-            $user = new User;
-
-            $user->UserName = $request->get('UserName');
-            $user->Password = $request->get('Password');
-            $user->CreatedBy = session('user_details.UserName');
-        }
-
-        $user->UpdatedBy = session('user_details.UserName');
-        $user->IsAdmin = $request->get('IsAdmin');
-        $user->IsActive = $request->get('IsActive');
-        $user->save();
-
-        return $this->sendOK([], 'record_saved');
+        return $this->sendOK([], self::RECORD_SAVED);
     }
 
-    public function delete(Request $request)
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function delete(Request $request): JsonResponse
     {
-        //Check whether the record exist or not
-        $user = User::where('UserName', $request->get('UserName'))->get();
+        $user_service = new UserService();
 
-        if ($user->count()) {
-            //Check whether the record is used as a reference in other tables.
-            $tables_to_check = ['HandsetColors', 'HandsetManufacturers', 'HandsetModels', 'Handsets', 'PhoneStock', 'Suppliers'];
-            if ($this->foreignReferenceFound($tables_to_check, ['CreatedBy', 'UpdatedBy'], $request->get('UserName'))) {
-                return $this->sendError([], 'record_reference_found', 500);
-            }
+        try {
+            $user_service->delete($request);
 
-            User::where('UserName', $request->get('UserName'))->delete();
-
-            return $this->sendOK([], 'record_deleted');
-        } else {
-            return $this->sendError([], 'record_not_found', 500);
+            return $this->sendOK([], self::RECORD_DELETED);
+        } catch (RecordNotFoundException $e) {
+            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+        } catch (ReferenceException $e) {
+            return $this->sendError(self::RECORD_REFERENCE_FOUND, [], JsonResponse::HTTP_FORBIDDEN);
         }
     }
 
-    public function checkDuplicateName(Request $request)
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function checkDuplicateName(Request $request): JsonResponse
     {
-        if ($this->isDuplicateName($request->get('UserName'))) {
-            return $this->sendError([], 'duplicate_name', 500);
-        } else {
+        $user_service = new UserService();
+
+        try {
+            $user_service->checkDuplicateName($request);
+
             return $this->sendOK([]);
+        } catch (DuplicateNameException $e) {
+            return $this->sendError(self::DUPLICATE_NAME, [], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
         }
-    }
-
-    private function isDuplicateName($userName)
-    {
-        $user = User::whereRaw('LOWER(UserName) = ?', [strtolower($userName)]);
-
-        $user = $user->get();
-
-        return $user->count() ? true : false;
     }
 }

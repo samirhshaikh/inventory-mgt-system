@@ -297,6 +297,10 @@ export default {
     mixins: [notifications],
 
     props: {
+        options: {
+            type: Object,
+            default: () => ({})
+        },
         edit_id: {
             type: String,
             default: ""
@@ -365,7 +369,7 @@ export default {
 
             axios
                 .post(route("users.get-single"), {
-                    user_name: this.edit_id
+                    username: this.edit_id
                 })
                 .then(
                     response => {
@@ -425,14 +429,14 @@ export default {
                 .catch(error => {
                     this.saving_data = false;
 
-                    if (error.response.data == "record_not_found") {
+                    if (error.response.data.message == "record_not_found") {
                         this.$notify({
                             group: "messages",
                             title: "Error",
                             type: "error",
                             text: this.formatMessage(error.response.data, this.options.record_name)
                         });
-                    } else if (error.response.data == "duplicate_name") {
+                    } else if (error.response.data.message == "duplicate_name") {
                         this.duplicate_name = true;
                     }
                 });
@@ -448,7 +452,7 @@ export default {
 
             axios
                 .post(route("users.check-duplicate-name"), {
-                    UserName: this.row["UserName"]
+                    username: this.row["UserName"]
                 })
                 .then(
                     response => {
@@ -463,7 +467,7 @@ export default {
                     error => {
                         this.checking_duplicate_name = false;
 
-                        if (error.response.data == 'duplicate_name') {
+                        if (error.response.data.message == "duplicate_name") {
                             this.duplicate_name = true;
                         }
                     }

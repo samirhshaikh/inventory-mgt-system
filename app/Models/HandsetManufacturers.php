@@ -2,6 +2,6 @@
 
 namespace App\Models;
 
-class HandsetManufacturers extends ObjectType1 {
+class HandsetManufacturers extends ObjectTypeName {
     protected $table = 'ManufactureMaster';
 }

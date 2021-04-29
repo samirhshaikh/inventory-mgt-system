@@ -2,20 +2,25 @@
 
 namespace App\Datatables;
 
-class HandsetColorsDatatable extends ObjectType1Datatable {
-    protected function getRouteId() {
+class HandsetColorsDatatable extends ObjectType1Datatable
+{
+    protected function getRouteId()
+    {
         return 'handset-colors';
     }
 
-    protected function getId() {
+    protected function getId()
+    {
         return 'handset_colors';
     }
 
-    protected function getRecordName() {
+    protected function getRecordName()
+    {
         return 'Color';
     }
 
-    protected function getIcon() {
+    protected function getIcon()
+    {
         return 'palette';
     }
 }

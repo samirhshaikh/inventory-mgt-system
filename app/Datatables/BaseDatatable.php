@@ -4,22 +4,26 @@ namespace App\Datatables;
 
 use NumberFormatter;
 
-abstract class BaseDatatable {
+abstract class BaseDatatable
+{
     public $options = [];
     public $columns = [];
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->options();
         $this->columns();
     }
 
     abstract public function options();
 
-    public function columns() {
+    public function columns()
+    {
         return $this->columns;
     }
 
-    public function rowTransformer(array $row, string $rowKey) {
+    public function rowTransformer(array $row, string $rowKey)
+    {
 //        $unformratted_values = [];
 
         //transform the keys
@@ -55,7 +59,8 @@ abstract class BaseDatatable {
         return $row;
     }
 
-    protected function processRules($value, $rules) {
+    protected function processRules($value, $rules)
+    {
         //check whether there are more than one rules
         $rules = explode('|', $rules);
 
@@ -74,24 +79,29 @@ abstract class BaseDatatable {
     }
 
     //Define all the rules
-    protected function decimal($value, $decimalPoint = 2) {
+    protected function decimal($value, $decimalPoint = 2)
+    {
         return round($value, $decimalPoint);
     }
 
-    protected function percentage($value): string {
+    protected function percentage($value): string
+    {
         return $value . '%';
     }
 
-    protected function number($value, $decimalPoint = 0): string {
+    protected function number($value, $decimalPoint = 0): string
+    {
         $value = str_replace(',', '', $value);
         return number_format((string)$value, $decimalPoint);
     }
 
-    protected function jsondecode($value): array {
+    protected function jsondecode($value): array
+    {
         return json_decode($value, true);
     }
 
-    protected function currency($value, $currencySymbol = 'gbp') {
+    protected function currency($value, $currencySymbol = 'gbp')
+    {
         $currencySymbol = strtoupper($currencySymbol);
         $moneyFormatter = new NumberFormatter('en_GB', NumberFormatter::CURRENCY);
 

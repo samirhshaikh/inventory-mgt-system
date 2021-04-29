@@ -8,9 +8,10 @@ use Illuminate\Http\Request;
 class AppSettingsController extends BaseController
 {
     /**
-     * Store the app_settings
+     * @param Request $request
+     * @return Request
      */
-    public function storeAppSettings(Request $request)
+    public function storeAppSettings(Request $request): Request
     {
         $settings = $request->all();
 

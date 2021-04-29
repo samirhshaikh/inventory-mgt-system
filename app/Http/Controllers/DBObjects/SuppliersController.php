@@ -2,79 +2,86 @@
 
 namespace App\Http\Controllers\DBObjects;
 
+use App\Exceptions\RecordNotFoundException;
+use App\Exceptions\ReferenceException;
 use App\Http\Controllers\BaseController;
-use App\Models\Suppliers;
-use App\Traits\TableActions;
-use Illuminate\Http\Request;
+use App\Http\Requests\IdRequest;
+use App\Http\Requests\SaveSupplierRequest;
+use App\Services\SuppliersService;
+use Illuminate\Http\JsonResponse;
 
-class SuppliersController extends BaseController {
-    use TableActions;
+class SuppliersController extends BaseController
+{
+    /**
+     * @param IdRequest $request
+     * @return JsonResponse
+     */
+    public function changeActiveStatus(IdRequest $request): JsonResponse
+    {
+        $suppliers_service = new SuppliersService();
 
-    public function changeActiveStatus(Request $request) {
-        $message = $this->changeRecordStatus(new Suppliers, $request);
+        try {
+            $suppliers_service->changeActiveStatus($request);
 
-        if ($message === '') {
             return $this->sendOK([], 'status_changed');
-        } else {
-            return $this->sendError([], $message, 500);
+        } catch (RecordNotFoundException $e) {
+            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
         }
     }
 
-    public function getSingle(Request $request) {
-        $record = Suppliers::where('Id', $request->get('Id'))
-            ->get();
+    /**
+     * @param IdRequest $request
+     * @return JsonResponse
+     */
+    public function getSingle(IdRequest $request): JsonResponse
+    {
+        $suppliers_service = new SuppliersService();
 
-        if ($record->count()) {
+        try {
             $response = [];
-            $response['record'] = $record->map->transform()->first();
+            $response['record'] = $suppliers_service->getSingle($request);
+
             return $this->sendOK($response);
-        } else {
-            return $this->sendError([], 'record_not_found', 500);
+        } catch (RecordNotFoundException $e) {
+            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
         }
     }
 
-    public function save(Request $request) {
-        $record = Suppliers::where('Id', $request->get('Id'))->get();
+    /**
+     * @param SaveSupplierRequest $request
+     * @return JsonResponse
+     */
+    public function save(SaveSupplierRequest $request): JsonResponse
+    {
+        $suppliers_service = new SuppliersService();
 
-        if ($request->get('operation', 'add') == 'edit') {
-            if (!$record->count()) {
-                return $this->sendError([], 'record_not_found', 500);
-            }
+        try {
+            $id = $suppliers_service->save($request);
 
-            $record = $record->first();
-        } else {
-            $record = new Suppliers;
-
-            $record->CreatedBy = session('user_details.UserName');
+            return $this->sendOK([
+                'id' => $id
+            ], self::RECORD_SAVED);
+        } catch (RecordNotFoundException $e) {
+            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
         }
-
-        $record->SupplierName = $request->get('SupplierName');
-        $record->ContactNo1 = $request->get('ContactNo1');
-        $record->ContactNo2 = $request->get('ContactNo2');
-        $record->CurrentBalance = number_format($request->get('CurrentBalance'), 2);
-        $record->Comments = $request->get('Comments');
-        $record->UpdatedBy = session('user_details.UserName');
-        $record->IsActive = $request->get('IsActive');
-        $record->save();
-
-        return $this->sendOK([], 'record_saved');
     }
 
-    public function delete(Request $request) {
-        //Check whether the record exist or not
-        $record = Suppliers::where('Id', $request->get('Id'))->get();
+    /**
+     * @param IdRequest $request
+     * @return JsonResponse
+     */
+    public function delete(IdRequest $request): JsonResponse
+    {
+        $suppliers_service = new SuppliersService();
 
-        if ($record->count()) {
-            $tables_to_check = ['PhoneStock'];
-            if ($this->foreignReferenceFound($tables_to_check, 'SupplierId', $request->get('Id'))) {
-                return $this->sendError([], 'record_reference_found', 500);
-            }
+        try {
+            $suppliers_service->delete($request);
 
-            Suppliers::where('Id', $request->get('Id'))->delete();
-
-            return $this->sendOK([], 'record_deleted');
-        } else {
-            return $this->sendError([], 'record_not_found', 500);
+            return $this->sendOK([], self::RECORD_DELETED);
+        } catch (RecordNotFoundException $e) {
+            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+        } catch (ReferenceException $e) {
+            return $this->sendError(self::RECORD_REFERENCE_FOUND, [], JsonResponse::HTTP_FORBIDDEN);
         }
     }
 }

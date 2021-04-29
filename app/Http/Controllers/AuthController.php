@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -20,7 +21,7 @@ class AuthController extends Controller
     /**
      * Get a JWT token via given credentials.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -32,7 +33,7 @@ class AuthController extends Controller
             return $this->respondWithToken($token);
         }
 
-        return response()->json(['error' => 'Unauthorized'], 401);
+        return response()->json(['error' => 'Unauthorized'], JsonResponse::HTTP_UNAUTHORIZED);
     }
 
     /**
@@ -70,7 +71,7 @@ class AuthController extends Controller
     /**
      * Get the token array structure.
      *
-     * @param  string $token
+     * @param string $token
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -93,4 +94,5 @@ class AuthController extends Controller
         return Auth::guard();
     }
 }
+
 ?>

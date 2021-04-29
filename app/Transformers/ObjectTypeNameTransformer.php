@@ -2,11 +2,13 @@
 
 namespace App\Transformers;
 
+use App\Models\ObjectTypeName;
 use League\Fractal\TransformerAbstract;
-use App\Models\ObjectType1;
 
-class ObjectType1Transformer extends TransformerAbstract {
-    public function transform(ObjectType1 $model) {
+class ObjectTypeNameTransformer extends TransformerAbstract
+{
+    public function transform(ObjectTypeName $model)
+    {
         return [
             'Id' => $model->Id,
             'Name' => $model->Name,

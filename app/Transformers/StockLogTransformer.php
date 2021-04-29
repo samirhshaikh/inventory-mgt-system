@@ -7,7 +7,8 @@ use League\Fractal\TransformerAbstract;
 
 class StockLogTransformer extends TransformerAbstract
 {
-    public function transform(StockLog $model) {
+    public function transform(StockLog $model)
+    {
         $return = [
             'Id' => $model->Id,
             'LogDate' => empty($model->LogDate) ? '' : $model->LogDate->format('d-M-Y'),

@@ -4,7 +4,8 @@ namespace App\Datatables;
 
 use App\Datatables\BaseDatatable;
 
-class CustomersDatatable extends BaseDatatable {
+class CustomersDatatable extends BaseDatatable
+{
     public $columns = [
         [
             'name' => 'Name',
@@ -72,7 +73,8 @@ class CustomersDatatable extends BaseDatatable {
         ]
     ];
 
-    public function options() {
+    public function options()
+    {
         $this->options = [
             'id' => 'customers',
             'url' => route('datatable.customers.data'),

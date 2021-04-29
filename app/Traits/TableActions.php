@@ -2,8 +2,9 @@
 
 namespace App\Traits;
 
+use App\Exceptions\RecordNotFoundException;
+use App\Http\Requests\IdRequest;
 use App\Models\BaseModel;
-use Illuminate\Http\Request;
 
 trait TableActions
 {
@@ -11,10 +12,11 @@ trait TableActions
      * Set the keys for a save update query.
      *
      * @param BaseModel $model
-     * @param Request $request
-     * @return String
+     * @param IdRequest $request
+     * @return bool
+     * @throws RecordNotFoundException
      */
-    protected function changeRecordStatus(BaseModel $model, Request $request)
+    protected function changeRecordStatus(BaseModel $model, IdRequest $request): bool
     {
         $record = $model::where('Id', $request->get('Id'))
             ->first();
@@ -23,21 +25,22 @@ trait TableActions
             $record->IsActive = $request->get('value');
             $record->save();
 
-            return '';
+            return true;
         } else {
-            return 'record_not_found';
+            throw new RecordNotFoundException;
         }
     }
 
     /**
      * Set the keys for a save update query.
      *
-     * @param Array $tables_to_check
-     * @param Mix $column_ids
-     * @param Mix $id_value
+     * @param array $tables_to_check
+     * @param mixed $column_ids
+     * @param mixed $id_value
      * @return Boolean
      */
-    protected function foreignReferenceFound($tables_to_check, $column_ids, $id_value) {
+    protected function foreignReferenceFound(array $tables_to_check, $column_ids, $id_value): bool
+    {
         if (!is_array($column_ids)) {
             $column_ids = [$column_ids];
         }

@@ -14,6 +14,8 @@ CREATE TABLE AppSettings (
 UPDATE User SET UpdatedDate = CreatedDate WHERE UpdatedDate = 0 OR UpdatedDate = '' OR UpdatedDate IS NULL;
 -- ALTER TABLE User CHANGE COLUMN CreatedDate CreatedDate DATETIME DEFAULT NULL, CHANGE COLUMN UpdatedDate UpdatedDate DATETIME DEFAULT NULL;
 ALTER TABLE User CHANGE COLUMN Id Id INT(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE User DROP COLUMN Id, DROP PRIMARY KEY;
+ALTER TABLE User CHANGE COLUMN UserName UserName VARCHAR(250) NOT NULL, ADD PRIMARY KEY (UserName);
 ALTER TABLE User CHANGE COLUMN CreatedBy CreatedBy VARCHAR(250) NULL DEFAULT NULL, CHANGE COLUMN UpdatedBy UpdatedBy VARCHAR(250) NULL DEFAULT NULL;
 
 -- ALTER TABLE `colormaster` RENAME TO ColorMaster;
@@ -132,12 +134,14 @@ CREATE TABLE salesstock (
     `IMEI` VARCHAR(50) NOT NULL,
     `Cost` DOUBLE NOT NULL,
     `Discount` DOUBLE NULL DEFAULT 0,
+    `Returned` BOOLEAN DEFAULT false,
+    `ReturnedData` DATETIME DEFAULT NULL,
     `CreatedDate` DATETIME NOT NULL,
     `CreatedBy` VARCHAR(250) NOT NULL,
     `UpdatedDate` DATETIME NULL,
     `UpdatedBy` VARCHAR(250) NULL,
 PRIMARY KEY (`Id`), INDEX (`IMEI` ASC), INDEX (`InvoiceId` ASC));
-INSERT INTO salesstock SELECT '', Id, IMEI, TotalAmount, 0, CreatedDate, CreatedBy, UpdatedDate, UpdatedBy FROM Sales ORDER BY Id;
+INSERT INTO salesstock SELECT '', Id, IMEI, TotalAmount, 0, false, NULL, CreatedDate, CreatedBy, UpdatedDate, UpdatedBy FROM Sales ORDER BY Id;
 ALTER TABLE Sales DROP COLUMN `IMEI`, DROP COLUMN `TotalAmount`, DROP COLUMN `Discount`;
 ALTER TABLE Sales CHANGE COLUMN `Remarks` `Comments` TEXT NULL DEFAULT NULL;
 ALTER TABLE Sales CHANGE COLUMN `SalesTax` `Comments` DOUBLE NULL DEFAULT NULL;

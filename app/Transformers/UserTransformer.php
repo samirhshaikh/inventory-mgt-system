@@ -5,8 +5,10 @@ namespace App\Transformer;
 use App\Models\User;
 use League\Fractal\TransformerAbstract;
 
-class UserTransformer extends TransformerAbstract {
-    public function transform(User $model) {
+class UserTransformer extends TransformerAbstract
+{
+    public function transform(User $model)
+    {
         return [
             'UserName' => $model->UserName,
             'Password' => '***',
@@ -19,4 +21,5 @@ class UserTransformer extends TransformerAbstract {
         ];
     }
 }
+
 ?>

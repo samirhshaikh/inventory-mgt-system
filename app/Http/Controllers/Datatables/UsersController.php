@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Datatables;
 use App\Datatables\UsersDatatable;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class UsersController extends BaseDatatableController
 {
@@ -13,10 +14,10 @@ class UsersController extends BaseDatatableController
         $table = new UsersDatatable();
 
         $order_by = $request->get('order_by', '') == ''
-            ? session('app_settings.datatable.sorting.users.column', array_get($table->options(), 'sorting.default'))
+            ? session('app_settings.datatable.sorting.users.column', Arr::get($table->options(), 'sorting.default'))
             : $request->get('order_by');
         $order_direction = $request->get('order_by', '') == ''
-            ? session('app_settings.datatable.sorting.users.direction', array_get($table->options(), 'sorting.direction'))
+            ? session('app_settings.datatable.sorting.users.direction', Arr::get($table->options(), 'sorting.direction'))
             : 'asc';
 
         $records = new User();

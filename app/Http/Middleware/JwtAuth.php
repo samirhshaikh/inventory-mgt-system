@@ -6,6 +6,7 @@ use App\Models\User;
 use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class JwtAuth
 {
@@ -38,14 +39,16 @@ class JwtAuth
         }
 
         //grab the user the token is on about
-        $user = User::where('Username', $payload->get('email'))
-            ->where('Password', $payload->get('password'))
+        $user = User::where('Username', $payload->get('username'))
             ->firstOrFail();
 
         if ($user) {
-            auth('api')->setUser($user);
+            //Check password
+            if (Hash::check($payload->get('password'), $user->Password)) {
+                auth('api')->setUser($user);
 
-            return $next($request);
+                return $next($request);
+            }
         }
     }
 }

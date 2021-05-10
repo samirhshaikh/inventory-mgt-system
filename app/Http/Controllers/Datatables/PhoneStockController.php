@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Datatables;
 use App\Datatables\PhoneStockDatatable;
 use App\Models\PhoneStock;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class PhoneStockController extends BaseDatatableController
 {
@@ -13,10 +14,10 @@ class PhoneStockController extends BaseDatatableController
         $table = new PhoneStockDatatable();
 
         $order_by = $request->get('order_by', '') == ''
-            ? session('app_settings.datatable.sorting.phonestock.column', array_get($table->options(), 'sorting.default'))
+            ? session('app_settings.datatable.sorting.phonestock.column', Arr::get($table->options(), 'sorting.default'))
             : $request->get('order_by');
         $order_direction = $request->get('order_by', '') == ''
-            ? session('app_settings.datatable.sorting.phonestock.direction', array_get($table->options(), 'sorting.direction'))
+            ? session('app_settings.datatable.sorting.phonestock.direction', Arr::get($table->options(), 'sorting.direction'))
             : 'asc';
 
         if (in_array($order_by, ['UpdatedDate'])) {

@@ -17,7 +17,7 @@ class User extends BaseModel implements Authenticatable, JWTSubject {
     protected $primaryKey = ['UserName'];
     protected $transformer = UserTransformer::class;
     public $incrementing = false;
-    public $timespamps = true;
+    public $timestamps = true;
     protected $guarded = [];
 
     const CREATED_AT = 'CreatedDate';

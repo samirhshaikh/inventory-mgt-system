@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Datatables;
 
 use App\Datatables\HandsetsDatatable;
-use App\Http\Controllers\Datatables\BaseDatatableController;
 use App\Models\Handsets;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class HandsetsController extends BaseDatatableController
 {
@@ -13,8 +13,8 @@ class HandsetsController extends BaseDatatableController
     {
         $table = new HandsetsDatatable();
 
-        $order_by = session('app_settings.datatable.sorting.handsets.column', array_get($table->options(), 'sorting.default'));
-        $order_direction = strtoupper(session('app_settings.datatable.sorting.handsets.direction', array_get($table->options(), 'sorting.direction')));
+        $order_by = session('app_settings.datatable.sorting.handsets.column', Arr::get($table->options(), 'sorting.default'));
+        $order_direction = strtoupper(session('app_settings.datatable.sorting.handsets.direction', Arr::get($table->options(), 'sorting.direction')));
 
         $handsets = Handsets::selectRaw('HandsetMaster.*, ManufactureMaster.Name as manufacturer, ColorMaster.Name as color, modelmaster.Name as model')
             ->join('ManufactureMaster', 'ManufactureMaster.Id', '=', 'MakeId')

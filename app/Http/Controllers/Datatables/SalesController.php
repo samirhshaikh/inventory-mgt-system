@@ -6,6 +6,7 @@ use App\Datatables\SalesDatatable;
 use App\Models\Sales;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
 
 class SalesController extends BaseDatatableController
 {
@@ -15,10 +16,10 @@ class SalesController extends BaseDatatableController
         $table = new SalesDatatable();
 
         $order_by = $request->get('order_by', '') == ''
-            ? session('app_settings.datatable.sorting.sales.column', array_get($table->options(), 'sorting.default'))
+            ? session('app_settings.datatable.sorting.sales.column', Arr::get($table->options(), 'sorting.default'))
             : $request->get('order_by');
         $order_direction = $request->get('order_by', '') == ''
-            ? session('app_settings.datatable.sorting.sales.direction', array_get($table->options(), 'sorting.direction'))
+            ? session('app_settings.datatable.sorting.sales.direction', Arr::get($table->options(), 'sorting.direction'))
             : 'asc';
 
         $invoice_ids = null;

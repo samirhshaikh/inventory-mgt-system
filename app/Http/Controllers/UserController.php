@@ -2,19 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\UserValidationException;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
-use App\Http\Controllers\BaseAPIController;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Facades\JWTFactory;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 use Tymon\JWTAuth\PayloadFactory;
-use Tymon\JWTAuth\JWTManager as JWT;
-use Carbon\Carbon;
 
 class UserController extends BaseAPIController
 {
@@ -46,15 +42,17 @@ class UserController extends BaseAPIController
             $token = auth('api')->attempt($credentials);
 
             if (!$token) {
-                return response()->json(['error' => 'invalid_credentials'], JsonResponse::HTTP_BAD_REQUEST);
+                return response()->json(['error' => 'invalid_credentials'], JsonResponse::HTTP_UNAUTHORIZED);
             }
         } catch (JWTException $e) {
             return response()->json(['error' => 'could_not_create_token'], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (UserValidationException $e) {
+            return response()->json(['error' => 'invalid_credentials'], JsonResponse::HTTP_UNAUTHORIZED);
         }
 
         $user = auth('api')->user();
 
-        $payload = JWTFactory::iss('core')
+        $payload = JWTFactory::iss('IMS')
             ->aud(null)
             ->iat(time())
             ->nbf(time())

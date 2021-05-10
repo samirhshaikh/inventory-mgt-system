@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Datatables;
 use App\Models\Suppliers;
 use App\Datatables\SuppliersDatatable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class SuppliersController extends BaseDatatableController
 {
@@ -13,10 +14,10 @@ class SuppliersController extends BaseDatatableController
         $table = new SuppliersDatatable();
 
         $order_by = $request->get('order_by', '') == ''
-            ? session('app_settings.datatable.sorting.suppliers.column', array_get($table->options(), 'sorting.default'))
+            ? session('app_settings.datatable.sorting.suppliers.column', Arr::get($table->options(), 'sorting.default'))
             : $request->get('order_by');
         $order_direction = $request->get('order_by', '') == ''
-            ? session('app_settings.datatable.sorting.suppliers.direction', array_get($table->options(), 'sorting.direction'))
+            ? session('app_settings.datatable.sorting.suppliers.direction', Arr::get($table->options(), 'sorting.direction'))
             : 'asc';
 
         $records = new Suppliers();

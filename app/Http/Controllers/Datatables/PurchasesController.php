@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Datatables;
 
 use App\Datatables\PurchasesDatatable;
 use App\Models\Purchase;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
 
 class PurchasesController extends BaseDatatableController
 {
@@ -16,10 +16,10 @@ class PurchasesController extends BaseDatatableController
         $table = new PurchasesDatatable();
 
         $order_by = $request->get('order_by', '') == ''
-            ? session('app_settings.datatable.sorting.purchase.column', array_get($table->options(), 'sorting.default'))
+            ? session('app_settings.datatable.sorting.purchase.column', Arr::get($table->options(), 'sorting.default'))
             : $request->get('order_by');
         $order_direction = $request->get('order_by', '') == ''
-            ? session('app_settings.datatable.sorting.purchase.direction', array_get($table->options(), 'sorting.direction'))
+            ? session('app_settings.datatable.sorting.purchase.direction', Arr::get($table->options(), 'sorting.direction'))
             : 'asc';
 
         $invoice_ids = null;
@@ -76,10 +76,10 @@ class PurchasesController extends BaseDatatableController
         $table = new PurchasesDatatable();
 
         $order_by = $request->get('order_by', '') == ''
-            ? session('app_settings.datatable.sorting.purchase.column', array_get($table->options(), 'sorting.default'))
+            ? session('app_settings.datatable.sorting.purchase.column', Arr::get($table->options(), 'sorting.default'))
             : $request->get('order_by');
         $order_direction = $request->get('order_by', '') == ''
-            ? session('app_settings.datatable.sorting.purchase.direction', array_get($table->options(), 'sorting.direction'))
+            ? session('app_settings.datatable.sorting.purchase.direction', Arr::get($table->options(), 'sorting.direction'))
             : 'asc';
 
         if (in_array($order_by, ['UpdatedDate'])) {

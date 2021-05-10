@@ -6,6 +6,7 @@ use App\Exceptions\UserValidationException;
 use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Support\Arr;
 
 class UserAuthService implements UserProvider
 {
@@ -53,8 +54,7 @@ class UserAuthService implements UserProvider
      */
     public function retrieveByCredentials(array $credentials)
     {
-        $user = User::where('UserName', array_get($credentials, 'username'))
-            ->where('Password', array_get($credentials, 'password'))
+        $user = User::where('UserName', Arr::get($credentials, 'username'))
             ->first();
 
         return $user;
@@ -69,11 +69,11 @@ class UserAuthService implements UserProvider
      */
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
-        if ($user->getAuthIdentifierName() !== array_get($credentials, 'username')) {
+        if ($user->getAuthIdentifierName() !== Arr::get($credentials, 'username')) {
             throw new UserValidationException();
         }
 
-        if ($user->getAuthPassword() != array_get($credentials, 'password')) {
+        if (!password_verify(Arr::get($credentials, 'password'), $user->getAuthPassword())) {
             throw new UserValidationException();
         }
 

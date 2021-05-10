@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Datatables;
 use App\Datatables\HandsetModelsDatatable;
 use App\Models\HandsetModels;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class HandsetModelsController extends BaseDatatableController
 {
@@ -13,10 +14,10 @@ class HandsetModelsController extends BaseDatatableController
         $table = new HandsetModelsDatatable;
 
         $order_by = $request->get('order_by', '') == ''
-            ? session('app_settings.datatable.sorting.handset_models.column', array_get($table->options(), 'sorting.default'))
+            ? session('app_settings.datatable.sorting.handset_models.column', Arr::get($table->options(), 'sorting.default'))
             : $request->get('order_by');
         $order_direction = $request->get('order_by', '') == ''
-            ? session('app_settings.datatable.sorting.handset_models.direction', array_get($table->options(), 'sorting.direction'))
+            ? session('app_settings.datatable.sorting.handset_models.direction', Arr::get($table->options(), 'sorting.direction'))
             : 'asc';
 
         $records = new HandsetModels();

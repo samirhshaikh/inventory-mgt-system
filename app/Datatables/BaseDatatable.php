@@ -2,6 +2,7 @@
 
 namespace App\Datatables;
 
+use Illuminate\Support\Arr;
 use NumberFormatter;
 
 abstract class BaseDatatable
@@ -29,12 +30,12 @@ abstract class BaseDatatable
         //transform the keys
         foreach ($this->columns as $colKey => $column) {
             //if we don't have a value then just carry on
-            if (array_get($row, $column['key'], null) === null) {
+            if (Arr::get($row, $column['key'], null) === null) {
                 clock()->info([$column['key'], 'skipped with no data', $row]);
                 continue;
             }
 
-            $value = array_get($row, $column['key']);
+            $value = Arr::get($row, $column['key']);
 
 //            array_set($unformratted_values, $column['key'], $value);
 
@@ -44,7 +45,7 @@ abstract class BaseDatatable
             }
 
             //do a check if the type is a actual file
-            if (($type = array_get($column, 'type', null)) !== null) {
+            if (($type = Arr::get($column, 'type', null)) !== null) {
                 if (!file_exists(base_path('resources/js/Datatable/Cells/' . $type . '.vue'))) {
                     clock()->error(`$type does not exist as Datatable cell`);
                     array_set($column, 'type', null);

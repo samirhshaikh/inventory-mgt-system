@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Arr;
 
 class LoginController extends Controller
 {
@@ -18,19 +19,17 @@ class LoginController extends Controller
         $userController = new UserController;
         $loginResponse = $userController->login($request);
 
-        $error = '';
+        $status = $loginResponse->status();
 
-        $return = [];
-
-        switch ($loginResponse->status()) {
+        switch ($status) {
             case JsonResponse::HTTP_OK:
                 $loginResponse = json_decode($loginResponse->content(), true);
 
                 session([
                     'user' => $request->get('username'),
-                    'user_details' => array_get($loginResponse, 'response.user_details'),
-                    'api_token' => array_get($loginResponse, 'response.access_token'),
-                    'expires_at' => array_get($loginResponse, 'response.expires_at')
+                    'user_details' => Arr::get($loginResponse, 'response.user_details'),
+                    'api_token' => Arr::get($loginResponse, 'response.access_token'),
+                    'expires_at' => Arr::get($loginResponse, 'response.expires_at')
                 ]);
 
                 $return = ['error' => '', 'api_token' => session('api_token')];
@@ -38,14 +37,15 @@ class LoginController extends Controller
                 break;
             default:
                 $loginResponse = json_decode($loginResponse->content(), true);
-                $error = $this->formatErrorMessages(array_get($loginResponse, 'error'));
 
-                $return = ['error' => $error];
+                $return = ['error' => $this->formatErrorMessages(Arr::get($loginResponse, 'error'))];
 
                 break;
         }
 
-        return response()->json($return);
+        return response()
+            ->json($return)
+            ->setStatusCode($status);
     }
 
     /**

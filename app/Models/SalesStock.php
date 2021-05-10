@@ -22,7 +22,7 @@ class SalesStock extends BaseModel
     const UPDATED_AT = 'UpdatedDate';
 
     protected $dates = [
-        'ReturnedData'
+        'ReturnedDate'
     ];
 
     public function phone() {

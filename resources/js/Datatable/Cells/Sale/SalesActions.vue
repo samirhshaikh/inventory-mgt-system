@@ -1,10 +1,21 @@
 <template>
     <div class="flex">
         <Button
+            @click.native="viewSalesInvoice"
+            icon="file-alt"
+            split="border-white"
+            class="text-white bg-green-600"
+            :class="{
+                hidden: !$page.user_details.IsAdmin
+            }"
+        >
+            Invoice
+        </Button>
+        <Button
             @click.native="edit"
             icon="pen"
             split="border-white"
-            class="text-white bg-green-600"
+            class="text-white bg-green-600 ml-2"
             :class="{
                 hidden: !$page.user_details.IsAdmin
             }"
@@ -105,6 +116,10 @@ export default {
                     height: "auto"
                 }
             );
+        },
+
+        viewSalesInvoice() {
+
         },
 
         ...mapActions({

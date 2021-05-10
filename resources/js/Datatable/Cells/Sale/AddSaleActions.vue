@@ -13,7 +13,7 @@
             @click.native="returnItem"
             class="text-white bg-red-400 ml-2"
             :class="{
-                hidden: !$page.user_details.IsAdmin || !row.hasOwnProperty('row_id')
+                hidden: !$page.user_details.IsAdmin || !row.hasOwnProperty('row_id') || row['Returned']
             }"
         >
             Return
@@ -88,7 +88,7 @@ export default {
                 },
                 {
                     width: "500px",
-                    height: "400px"
+                    height: "500px"
                 }
             );
         }

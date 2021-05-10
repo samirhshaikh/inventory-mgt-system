@@ -57,7 +57,7 @@ class SalesService
      * @return bool
      * @throws RecordNotFoundException
      */
-    public function returnItem(ReturnItemRequest $request)
+    public function returnItem(ReturnItemRequest $request): bool
     {
         $record = PhoneStock::where('IMEI', $request->get('IMEI'))
             ->get();
@@ -71,10 +71,14 @@ class SalesService
 
             //Mark the entry in salesstock as returned.
             $sale_stock = SalesStock::where('InvoiceId', $request->get('InvoiceId'))
-                ->where('IMEI', $request->get('IMEI'));
-            if ($sale_stock->get()->count()) {
+                ->where('IMEI', $request->get('IMEI'))
+                ->get();
+            if ($sale_stock->count()) {
+                $sale_stock = $sale_stock->first();
+
                 $sale_stock->Returned = true;
                 $sale_stock->ReturnedDate = Carbon::createFromFormat('d-M-Y', $request->get('ReturnedDate'))->toDateTimeString();
+                $sale_stock->Comments = $request->get('Comments');
                 $sale_stock->save();
             }
 

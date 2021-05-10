@@ -110,7 +110,6 @@
                             v-else
                             :is="header.type"
                             :row="row"
-                            :parent_row="parent_row"
                             :column="header.key"
                             :column_details="header"
                             :options="options"
@@ -147,6 +146,7 @@
                         </span>
                     </th>
                 </Row>
+
                 <Row
                     type="body"
                     v-for="(child_row, child_id) in row.childs"
@@ -192,9 +192,11 @@
                             @editRecord="editRecord"
                             @removeRecord="removeRecord"
                             @selectRecord="selectRecord"
+                            @returnItem="returnItem"
                         ></span>
                     </td>
                 </Row>
+
             </tbody>
         </table>
     </div>
@@ -228,10 +230,6 @@ export default {
         source_data: {
             type: Array,
             default: () => ([])
-        },
-        parent_row: {
-            type: Object,
-            default: () => ({})
         },
         load_data_from_server: {
             type: Boolean,
@@ -478,6 +476,7 @@ export default {
         },
 
         returnItem(row_id) {
+            console.log(["Datatable", row_id]);
             this.$emit('returnItem', row_id);
         },
 

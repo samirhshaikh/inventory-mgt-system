@@ -4,20 +4,17 @@
             @click.native="returnItem"
             class="text-white bg-red-400"
             :class="{
-                hidden: !$page.user_details.IsAdmin
+                hidden: !$page.user_details.IsAdmin || row['Returned'] == 1
             }"
         >
             Return
         </Button>
-        <Button
-            @click.native="viewSalesInvoice"
-            class="text-white bg-green-600 ml-2"
+        <span
+            class="text-red-700"
             :class="{
-                hidden: !$page.user_details.IsAdmin
+                hidden: row['Returned'] == 0
             }"
-        >
-            Invoice
-        </Button>
+        >Item Returned</span>
     </div>
 
 </template>
@@ -44,20 +41,17 @@ export default {
                     SalesInvoiceId: this.parent_row["Id"],
                     SalesInvoiceNo: this.parent_row["InvoiceNo"],
                     IMEI: this.row["IMEI"],
-                    refresh: () => {
-                        this.$emit("returnItem", this.row["row_id"]);
+                    refresh: (id) => {
+                        console.log(['SalePhoneActions', id]);
+                        this.$emit("returnItem", id);
                     }
                 },
                 {
                     width: "500px",
-                    height: "400px"
+                    height: "500px"
                 }
             );
         },
-
-        viewSalesInvoice() {
-
-        }
     }
 }
 </script>

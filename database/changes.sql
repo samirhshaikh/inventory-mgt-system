@@ -135,13 +135,14 @@ CREATE TABLE salesstock (
     `Cost` DOUBLE NOT NULL,
     `Discount` DOUBLE NULL DEFAULT 0,
     `Returned` BOOLEAN DEFAULT false,
-    `ReturnedData` DATETIME DEFAULT NULL,
+    `ReturnedDate` DATETIME DEFAULT NULL,
+    `Comments` TEXT NULL,
     `CreatedDate` DATETIME NOT NULL,
     `CreatedBy` VARCHAR(250) NOT NULL,
     `UpdatedDate` DATETIME NULL,
     `UpdatedBy` VARCHAR(250) NULL,
 PRIMARY KEY (`Id`), INDEX (`IMEI` ASC), INDEX (`InvoiceId` ASC));
-INSERT INTO salesstock SELECT '', Id, IMEI, TotalAmount, 0, false, NULL, CreatedDate, CreatedBy, UpdatedDate, UpdatedBy FROM Sales ORDER BY Id;
+INSERT INTO salesstock SELECT '', Id, IMEI, TotalAmount, 0, false, NULL, NULL, CreatedDate, CreatedBy, UpdatedDate, UpdatedBy FROM Sales ORDER BY Id;
 ALTER TABLE Sales DROP COLUMN `IMEI`, DROP COLUMN `TotalAmount`, DROP COLUMN `Discount`;
 ALTER TABLE Sales CHANGE COLUMN `Remarks` `Comments` TEXT NULL DEFAULT NULL;
 ALTER TABLE Sales CHANGE COLUMN `SalesTax` `Comments` DOUBLE NULL DEFAULT NULL;

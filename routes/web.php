@@ -27,7 +27,7 @@ Route::get('/handset-colors', 'PagesController@handsetColors')->name('handset-co
 Route::group(['prefix' => 'handset-colors'], function ($router) {
     $router->post('change-active-status', 'DBObjects\HandsetColorsController@changeActiveStatus')->name('handset-colors.change-active-status');
     $router->post('save', 'DBObjects\HandsetColorsController@save')->name('handset-colors.save');
-    $router->post('get-single', 'DBObjects\HandsetColorsController@getSingle')->name('handset-colors.get-single');
+    $router->get('get-single', 'DBObjects\HandsetColorsController@getSingle')->name('handset-colors.get-single');
     $router->post('delete', 'DBObjects\HandsetColorsController@delete')->name('handset-colors.delete');
     $router->post('check-duplicate-name', 'DBObjects\HandsetColorsController@checkDuplicateName')->name('handset-colors.check-duplicate-name');
 });
@@ -36,7 +36,7 @@ Route::get('/handset-models', 'PagesController@handsetModels')->name('handset-mo
 Route::group(['prefix' => 'handset-models'], function ($router) {
     $router->post('change-active-status', 'DBObjects\HandsetModelsController@changeActiveStatus')->name('handset-models.change-active-status');
     $router->post('save', 'DBObjects\HandsetModelsController@save')->name('handset-models.save');
-    $router->post('get-single', 'DBObjects\HandsetModelsController@getSingle')->name('handset-models.get-single');
+    $router->get('get-single', 'DBObjects\HandsetModelsController@getSingle')->name('handset-models.get-single');
     $router->post('delete', 'DBObjects\HandsetModelsController@delete')->name('handset-models.delete');
     $router->post('check-duplicate-name', 'DBObjects\HandsetModelsController@checkDuplicateName')->name('handset-models.check-duplicate-name');
 });
@@ -45,7 +45,7 @@ Route::get('/handset-manufacturers', 'PagesController@handsetManufacturers')->na
 Route::group(['prefix' => 'handset-manufacturers'], function ($router) {
     $router->post('change-active-status', 'DBObjects\HandsetManufacturersController@changeActiveStatus')->name('handset-manufacturers.change-active-status');
     $router->post('save', 'DBObjects\HandsetManufacturersController@save')->name('handset-manufacturers.save');
-    $router->post('get-single', 'DBObjects\HandsetManufacturersController@getSingle')->name('handset-manufacturers.get-single');
+    $router->get('get-single', 'DBObjects\HandsetManufacturersController@getSingle')->name('handset-manufacturers.get-single');
     $router->post('delete', 'DBObjects\HandsetManufacturersController@delete')->name('handset-manufacturers.delete');
     $router->post('check-duplicate-name', 'DBObjects\HandsetManufacturersController@checkDuplicateName')->name('handset-manufacturers.check-duplicate-name');
 });
@@ -54,7 +54,7 @@ Route::get('/handsets', 'PagesController@handsets')->name('handsets');
 Route::group(['prefix' => 'handsets'], function ($router) {
     $router->post('change-active-status', 'DBObjects\HandsetsController@changeActiveStatus')->name('handsets.change-active-status');
     $router->post('save', 'DBObjects\HandsetsController@save')->name('handsets.save');
-    $router->post('get-single', 'DBObjects\HandsetsController@getSingle')->name('handsets.get-single');
+    $router->get('get-single', 'DBObjects\HandsetsController@getSingle')->name('handsets.get-single');
     $router->post('delete', 'DBObjects\HandsetsController@delete')->name('handsets.delete');
     $router->post('check-duplicate-name', 'DBObjects\HandsetsController@checkDuplicateName')->name('handsets.check-duplicate-name');
 });
@@ -64,7 +64,7 @@ Route::group(['prefix' => 'users'], function ($router) {
     $router->post('change-active-status', 'DBObjects\UsersController@changeActiveStatus')->name('users.change-active-status');
     $router->post('change-admin-status', 'DBObjects\UsersController@changeAdminStatus')->name('users.change-admin-status');
     $router->post('save', 'DBObjects\UsersController@save')->name('users.save');
-    $router->post('get-single', 'DBObjects\UsersController@getSingle')->name('users.get-single');
+    $router->get('get-single', 'DBObjects\UsersController@getSingle')->name('users.get-single');
     $router->post('delete', 'DBObjects\UsersController@delete')->name('users.delete');
     $router->post('check-duplicate-name', 'DBObjects\UsersController@checkDuplicateName')->name('users.check-duplicate-name');
 });
@@ -73,7 +73,7 @@ Route::get('/customers', 'PagesController@customers')->name('customers');
 Route::group(['prefix' => 'customers'], function ($router) {
     $router->post('change-active-status', 'DBObjects\CustomersController@changeActiveStatus')->name('customers.change-active-status');
     $router->post('save', 'DBObjects\CustomersController@save')->name('customers.save');
-    $router->post('get-single', 'DBObjects\CustomersController@getSingle')->name('customers.get-single');
+    $router->get('get-single', 'DBObjects\CustomersController@getSingle')->name('customers.get-single');
     $router->post('delete', 'DBObjects\CustomersController@delete')->name('customers.delete');
 });
 
@@ -81,7 +81,7 @@ Route::get('/suppliers', 'PagesController@suppliers')->name('suppliers');
 Route::group(['prefix' => 'suppliers'], function ($router) {
     $router->post('change-active-status', 'DBObjects\SuppliersController@changeActiveStatus')->name('suppliers.change-active-status');
     $router->post('save', 'DBObjects\SuppliersController@save')->name('suppliers.save');
-    $router->post('get-single', 'DBObjects\SuppliersController@getSingle')->name('suppliers.get-single');
+    $router->get('get-single', 'DBObjects\SuppliersController@getSingle')->name('suppliers.get-single');
     $router->post('delete', 'DBObjects\SuppliersController@delete')->name('suppliers.delete');
 });
 
@@ -111,7 +111,6 @@ Route::get('/app-settings', 'PagesController@appSettings')->name('app-settings')
 Route::group(['prefix' => 'datatables'], function ($router) {
     Route::group(['prefix' => 'users'], function ($router) {
         $router->post('data', 'Datatables\UsersController@getData')->name('datatable.users.data');
-        $router->get('data', 'Datatables\UsersController@getData')->name('datatable.users.data');
     });
 
     Route::group(['prefix' => 'handset-colors'], function ($router) {
@@ -136,7 +135,6 @@ Route::group(['prefix' => 'datatables'], function ($router) {
 
     Route::group(['prefix' => 'suppliers'], function ($router) {
         $router->post('data', 'Datatables\SuppliersController@getData')->name('datatable.suppliers.data');
-        $router->get('data', 'Datatables\SuppliersController@getData')->name('datatable.suppliers.data');
     });
 
     Route::group(['prefix' => 'phonestock'], function ($router) {
@@ -150,7 +148,6 @@ Route::group(['prefix' => 'datatables'], function ($router) {
 
     Route::group(['prefix' => 'sales'], function ($router) {
         $router->post('data', 'Datatables\SalesController@getData')->name('datatable.sales.data');
-        $router->get('data', 'Datatables\SalesController@getData')->name('datatable.sales.data');
     });
 });
 //Auth::routes();

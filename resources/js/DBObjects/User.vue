@@ -368,8 +368,10 @@ export default {
             this.loading = true;
 
             axios
-                .post(route("users.get-single"), {
-                    username: this.edit_id
+                .get(route("users.get-single"), {
+                    params: {
+                        username: this.edit_id
+                    }
                 })
                 .then(
                     response => {

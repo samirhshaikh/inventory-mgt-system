@@ -255,8 +255,10 @@ export default {
             this.loading = true;
 
             axios
-                .post(this.options.routes["get-single"], {
-                    Id: this.edit_id
+                .get(this.options.routes["get-single"], {
+                    params: {
+                        Id: this.edit_id
+                    }
                 })
                 .then(
                     response => {

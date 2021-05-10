@@ -363,8 +363,10 @@ export default {
             this.loading = true;
 
             axios
-                .post(route("handsets.get-single"), {
-                    Id: this.edit_id
+                .get(route("handsets.get-single"), {
+                    params: {
+                        Id: this.edit_id
+                    }
                 })
                 .then(
                     response => {

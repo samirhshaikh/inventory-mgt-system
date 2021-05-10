@@ -342,8 +342,10 @@ export default {
             this.loading = true;
 
             axios
-                .post(route("customers.get-single"), {
-                    Id: this.edit_id
+                .get(route("customers.get-single"), {
+                    params: {
+                        Id: this.edit_id
+                    }
                 })
                 .then(
                     response => {

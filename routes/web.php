@@ -111,6 +111,7 @@ Route::get('/app-settings', 'PagesController@appSettings')->name('app-settings')
 Route::group(['prefix' => 'datatables'], function ($router) {
     Route::group(['prefix' => 'users'], function ($router) {
         $router->post('data', 'Datatables\UsersController@getData')->name('datatable.users.data');
+        $router->get('data', 'Datatables\UsersController@getData')->name('datatable.users.data');
     });
 
     Route::group(['prefix' => 'handset-colors'], function ($router) {
@@ -135,6 +136,7 @@ Route::group(['prefix' => 'datatables'], function ($router) {
 
     Route::group(['prefix' => 'suppliers'], function ($router) {
         $router->post('data', 'Datatables\SuppliersController@getData')->name('datatable.suppliers.data');
+        $router->get('data', 'Datatables\SuppliersController@getData')->name('datatable.suppliers.data');
     });
 
     Route::group(['prefix' => 'phonestock'], function ($router) {

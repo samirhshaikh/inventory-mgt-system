@@ -80,10 +80,10 @@ class UsersDatatable extends BaseDatatable
         return $this->options;
     }
 
-    public function rowTransformer(array $row, string $rowKey)
-    {
-        $row = parent::rowTransformer($row, $rowKey);
-
-        return $row;
-    }
+//    public function rowTransformer(mixed $row, string $rowKey)
+//    {
+//        $row = parent::rowTransformer($row, $rowKey);
+//
+//        return $row;
+//    }
 }

@@ -11,6 +11,7 @@ use App\Http\Requests\SaveUserRequest;
 use App\Models\User;
 use App\Traits\TableActions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
@@ -115,7 +116,7 @@ class UserService
             $user = new User;
 
             $user->UserName = $request->get('UserName');
-            $user->Password = $request->get('Password');
+            $user->Password = Hash::make($request->get('Password'));
             $user->CreatedBy = session('user_details.UserName');
         }
 

@@ -102,6 +102,7 @@ class BaseDatatableController extends BaseController
             ->map
             ->transform();
 
+
         $return['rows'] = $records
             ->transform(function ($row, $key) use ($table) {
                 return $table->rowTransformer($row, $key);

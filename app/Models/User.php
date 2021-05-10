@@ -1,9 +1,8 @@
 <?php
 namespace App\Models;
 
-use App\Models\BaseModel;
 use App\Traits\CompositeKeysTrait;
-use App\Transformer\UserTransformer;
+use App\Transformers\UserTransformer;
 use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;

@@ -59,6 +59,17 @@ export default {
                 {
                     width: "90%",
                     height: "80%"
+                },
+                {
+                    "closed": event => {
+                        this.setTableMetaData({
+                            columns: this.columns,
+                            options: this.options
+                        });
+
+                        this.setActiveTab(this.options.id);
+                        this.setTabToRefresh(this.options.id);
+                    }
                 }
             );
         },
@@ -123,6 +134,9 @@ export default {
         },
 
         ...mapActions({
+            setTableMetaData: 'datatable/setTableMetaData',
+            setActiveTab: 'local_settings/setActiveTab',
+            setTabToRefresh: 'framework/setTabToRefresh',
             refreshData: "framework/refreshData",
             setPopperOpen: "local_settings/setPopperOpen",
             addError: "errors/addError"

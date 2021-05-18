@@ -81,11 +81,15 @@ export const list_controller = {
                 this.load_suppliers_simple();
             } else {
                 this.loading_suppliers = true;
-                axios.post(route("datatable.suppliers.data"), {
-                    get_all_records: 1,
-                    order_by: 'SupplierName'
-                }).then(
-                    response => {
+
+                axios
+                    .get(route("datatable.suppliers.data"), {
+                        params: {
+                            get_all_records: 1,
+                            order_by: 'SupplierName'
+                        }
+                    })
+                    .then(response => {
                         this.suppliers = response.data.rows;
 
                         this.setCachedData({
@@ -124,11 +128,15 @@ export const list_controller = {
                 this.load_customers_simple();
             } else {
                 this.loading_customers = true;
-                axios.post(route("datatable.customers.data"), {
-                    get_all_records: 1,
-                    order_by: 'CustomerName'
-                }).then(
-                    response => {
+
+                axios
+                    .get(route("datatable.customers.data"), {
+                        params: {
+                            get_all_records: 1,
+                            order_by: 'CustomerName'
+                        }
+                    })
+                    .then(response => {
                         this.customers = response.data.rows;
 
                         this.setCachedData({
@@ -167,11 +175,15 @@ export const list_controller = {
                 this.load_handset_colors_simple();
             } else {
                 this.loading_handset_colors = true;
-                axios.post(route("datatable.handset-colors.data"), {
-                    get_all_records: 1,
-                    order_by: 'Name'
-                }).then(
-                    response => {
+
+                axios
+                    .get(route("datatable.handset-colors.data"), {
+                        params: {
+                            get_all_records: 1,
+                            order_by: 'Name'
+                        }
+                    })
+                    .then(response => {
                         this.handset_colors = response.data.rows;
 
                         this.setCachedData({
@@ -210,11 +222,15 @@ export const list_controller = {
                 this.load_handset_models_simple();
             } else {
                 this.loading_handset_models = true;
-                axios.post(route("datatable.handset-models.data"), {
-                    get_all_records: 1,
-                    order_by: 'Name'
-                }).then(
-                    response => {
+
+                axios
+                    .get(route("datatable.handset-models.data"), {
+                        params: {
+                            get_all_records: 1,
+                            order_by: 'Name'
+                        }
+                    })
+                    .then(response => {
                         this.handset_models = response.data.rows;
 
                         this.setCachedData({
@@ -254,11 +270,15 @@ export const list_controller = {
                 this.load_handset_manufacturers_simple();
             } else {
                 this.loading_handset_manufacturers = true;
-                axios.post(route("datatable.handset-manufacturers.data"), {
-                    get_all_records: 1,
-                    order_by: 'Name'
-                }).then(
-                    response => {
+
+                axios
+                    .get(route("datatable.handset-manufacturers.data"), {
+                        params: {
+                            get_all_records: 1,
+                            order_by: 'Name'
+                        }
+                    })
+                    .then(response => {
                         this.handset_manufacturers = response.data.rows;
 
                         this.setCachedData({

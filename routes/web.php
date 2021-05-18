@@ -100,54 +100,55 @@ Route::group(['prefix' => 'purchase'], function ($router) {
 
 Route::get('/sales', 'PagesController@sales')->name('sales');
 Route::group(['prefix' => 'sale'], function ($router) {
-    $router->post('save', 'DBObjects\SalesController@save')->name('sales.save');
+    $router->post('save', 'DBObjects\SalesController@save')->name('sale.save');
     $router->get('get-single', 'DBObjects\SalesController@getSingle')->name('sale.get-single');
     $router->post('delete', 'DBObjects\SalesController@delete')->name('sale.delete');
     $router->post('return-item', 'DBObjects\SalesController@returnItem')->name('sale.return-item');
+    $router->get('get-next-invoice-no', 'DBObjects\SalesController@getNextInvoiceNo')->name('sale.return-item');
 });
 
 Route::get('/app-settings', 'PagesController@appSettings')->name('app-settings');
 
 Route::group(['prefix' => 'datatables'], function ($router) {
     Route::group(['prefix' => 'users'], function ($router) {
-        $router->post('data', 'Datatables\UsersController@getData')->name('datatable.users.data');
+        $router->get('data', 'Datatables\UsersController@getData')->name('datatable.users.data');
     });
 
     Route::group(['prefix' => 'handset-colors'], function ($router) {
-        $router->post('data', 'Datatables\HandsetColorsController@getData')->name('datatable.handset-colors.data');
+        $router->get('data', 'Datatables\HandsetColorsController@getData')->name('datatable.handset-colors.data');
     });
 
     Route::group(['prefix' => 'handset-models'], function ($router) {
-        $router->post('data', 'Datatables\HandsetModelsController@getData')->name('datatable.handset-models.data');
+        $router->get('data', 'Datatables\HandsetModelsController@getData')->name('datatable.handset-models.data');
     });
 
     Route::group(['prefix' => 'customers'], function ($router) {
-        $router->post('data', 'Datatables\CustomersController@getData')->name('datatable.customers.data');
+        $router->get('data', 'Datatables\CustomersController@getData')->name('datatable.customers.data');
     });
 
     Route::group(['prefix' => 'handset-manufacturers'], function ($router) {
-        $router->post('data', 'Datatables\HandsetManufacturersController@getData')->name('datatable.handset-manufacturers.data');
+        $router->get('data', 'Datatables\HandsetManufacturersController@getData')->name('datatable.handset-manufacturers.data');
     });
 
     Route::group(['prefix' => 'handsets'], function ($router) {
-        $router->post('data', 'Datatables\HandsetsController@getData')->name('datatable.handsets.data');
+        $router->get('data', 'Datatables\HandsetsController@getData')->name('datatable.handsets.data');
     });
 
     Route::group(['prefix' => 'suppliers'], function ($router) {
-        $router->post('data', 'Datatables\SuppliersController@getData')->name('datatable.suppliers.data');
+        $router->get('data', 'Datatables\SuppliersController@getData')->name('datatable.suppliers.data');
     });
 
     Route::group(['prefix' => 'phonestock'], function ($router) {
-        $router->post('data', 'Datatables\PhoneStockController@getData')->name('datatable.phonestock.data');
-        $router->post('available', 'Datatables\PhoneStockController@getAvailablePhoneData')->name('datatable.phonestock.available');
+        $router->get('data', 'Datatables\PhoneStockController@getData')->name('datatable.phonestock.data');
+        $router->get('available', 'Datatables\PhoneStockController@getAvailablePhoneData')->name('datatable.phonestock.available');
     });
 
     Route::group(['prefix' => 'purchases'], function ($router) {
-        $router->post('data', 'Datatables\PurchasesController@getData')->name('datatable.purchases.data');
+        $router->get('data', 'Datatables\PurchasesController@getData')->name('datatable.purchases.data');
     });
 
     Route::group(['prefix' => 'sales'], function ($router) {
-        $router->post('data', 'Datatables\SalesController@getData')->name('datatable.sales.data');
+        $router->get('data', 'Datatables\SalesController@getData')->name('datatable.sales.data');
     });
 });
 //Auth::routes();

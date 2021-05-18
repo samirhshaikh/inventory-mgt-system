@@ -26,7 +26,7 @@ class PurchasesController extends BaseDatatableController
         $search_type = $request->get('search_type', 'simple');
         if (
             ($search_type === 'simple' && $request->get('search_text', '') != '') ||
-            ($search_type === 'advanced' && $this->searchDataPresent($request->get('search_data', [])))
+            ($search_type === 'advanced' && $this->searchDataPresent($request->get('search_data', '{}')))
         ) {
             $invoice_ids = $this->getInvoiceIds($request);
         }
@@ -65,9 +65,9 @@ class PurchasesController extends BaseDatatableController
         return $this->prepareRecordsOutput(
             $table,
             $records,
-            $request->get('page_no', 1),
+            (int)$request->get('page_no', 1),
             $request->get('search_text', ''),
-            $request->get('get_all_records', 0)
+            (int)$request->get('get_all_records', 0)
         );
     }
 
@@ -120,8 +120,8 @@ class PurchasesController extends BaseDatatableController
             ];
 
             $records = $this->prepareSearch($records, $fields_to_search, $request->get('search_text'));
-        } else if ($search_type === 'advanced' && count($request->get('search_data', []))) {
-            $records = $this->prepareAdvancedSearch($records, collect($request->get('search_data'))->all());
+        } else if ($search_type === 'advanced' && $this->searchDataPresent($request->get('search_data', '{}'))) {
+            $records = $this->prepareAdvancedSearch($records, json_decode($request->get('search_data')));
         }
 
         //If ordering on child records, then add the InvoiceNo as primary order by
@@ -134,9 +134,9 @@ class PurchasesController extends BaseDatatableController
         return $this->prepareRecordsOutput(
             $table,
             $records,
-            $request->get('page_no', 1),
+            (int)$request->get('page_no', 1),
             $request->get('search_text', ''),
-            $request->get('get_all_records', 0)
+            (int)$request->get('get_all_records', 0)
         );
     }
 
@@ -148,7 +148,7 @@ class PurchasesController extends BaseDatatableController
 
         if (
             ($search_type === 'simple' && $request->get('search_text', '') != '') ||
-            ($search_type === 'advanced' && $this->searchDataPresent($request->get('search_data', [])))
+            ($search_type === 'advanced' && $this->searchDataPresent($request->get('search_data', '{}')))
         ) {
             $records = $records
                 ->join('Supplier', 'Supplier.Id', '=', 'SupplierId')
@@ -179,8 +179,8 @@ class PurchasesController extends BaseDatatableController
             ];
 
             $records = $this->prepareSearch($records, $fields_to_search, $request->get('search_text'));
-        } else if ($search_type === 'advanced' && count($request->get('search_data', []))) {
-            $records = $this->prepareAdvancedSearch($records, collect($request->get('search_data'))->all());
+        } else if ($search_type === 'advanced' && count(json_decode($request->get('search_data', '{}')))) {
+            $records = $this->prepareAdvancedSearch($records, json_decode($request->get('search_data')));
         }
 
         $records = $records->orderBy('Purchase.Id', 'ASC')

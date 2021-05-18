@@ -53,7 +53,7 @@
     .bg-transparent
 }
 .search_input {
-    line-height: 20px;
+    line-height: 18px;
 }
 .search_input:focus, .search_input:focus {
     @apply .outline-none

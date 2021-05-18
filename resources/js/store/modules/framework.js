@@ -10,6 +10,7 @@ const state = {
     page_size: 10,
     refresh_data: false,
     refresh_suppliers: false,
+    refresh_customers: false,
     refresh_handset_models: false,
     refresh_handset_manufacturers: false,
     refresh_handset_colors: false,
@@ -35,6 +36,10 @@ const getters = {
 
     refresh_suppliers: (state) => {
         return state.refresh_suppliers;
+    },
+
+    refresh_customers: (state) => {
+        return state.refresh_customers;
     },
 
     refresh_handset_models: (state) => {
@@ -67,8 +72,16 @@ const actions = {
         commit('refreshData', tab);
     },
 
+    setTabToRefresh({ commit }, payload) {
+        commit('setTabToRefresh', payload);
+    },
+
     refreshSuppliers({commit}) {
         commit('refreshSuppliers');
+    },
+
+    refreshCustomers({commit}) {
+        commit('refreshCustomers');
     },
 
     refreshHandsetModels({commit}) {
@@ -121,8 +134,16 @@ const mutations = {
         state.tab_to_refresh = tab;
     },
 
+    setTabToRefresh(state, tab) {
+        state.tab_to_refresh = tab;
+    },
+
     refreshSuppliers(state) {
         state.refresh_suppliers = moment().format();
+    },
+
+    refreshCustomers(state) {
+        state.refresh_customers = moment().format();
     },
 
     refreshHandsetModels(state) {

@@ -37,9 +37,9 @@ class UsersController extends BaseDatatableController
         return $this->prepareRecordsOutput(
             $table,
             $records,
-            $request->get('page_no', 1),
+            (int)$request->get('page_no', 1),
             $request->get('search_text', ''),
-            $request->get('get_all_records', 0)
+            (int)$request->get('get_all_records', 0)
         );
     }
 }

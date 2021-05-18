@@ -111,6 +111,16 @@ ALTER TABLE Sales CHANGE COLUMN CreatedBy CreatedBy VARCHAR(250) NULL DEFAULT NU
 ALTER TABLE Sales CHANGE COLUMN Remarks Remarks TEXT NULL DEFAULT NULL, CHANGE COLUMN AccessoriesDesc AccessoriesDesc TEXT NULL DEFAULT NULL;
 ALTER TABLE Sales ADD COLUMN BusinessInvoice TINYINT NOT NULL DEFAULT 0 AFTER InvoiceDate;
 
+ALTER TABLE `InvoiceDetails` RENAME TO salesstock;
+UPDATE salesstock SET UpdatedDate = CreatedDate WHERE UpdatedDate = 0 OR UpdatedDate = '' OR UpdatedDate IS NULL;
+ALTER TABLE salesstock CHANGE COLUMN Id Id INT(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE salesstock CHANGE COLUMN Item IMEI VARCHAR(50) NULL DEFAULT NULL;
+ALTER TABLE salesstock CHANGE COLUMN UnitPrice Cost DOUBLE NULL DEFAULT NULL;
+ALTER TABLE salesstock DROP COLUMN IsActive;
+ALTER TABLE salesstock DROP COLUMN SalesTax;
+ALTER TABLE salesstock ADD COLUMN Returned BOOLEAN DEFAULT false AFTER Discount, ADD COLUMN ReturnedDate DATETIME DEFAULT NULL AFTER Returned;
+ALTER TABLE salesstock CHANGE COLUMN CreatedBy CreatedBy VARCHAR(250) NULL DEFAULT NULL, CHANGE COLUMN UpdatedBy UpdatedBy VARCHAR(250) NULL DEFAULT NULL;
+
 CREATE TABLE stock_log (
   `Id` INT NOT NULL AUTO_INCREMENT,
   `IMEI` VARCHAR(50) NOT NULL,
@@ -123,29 +133,10 @@ CREATE TABLE stock_log (
   `UpdatedBy` varchar(250) NOT NULL,
   PRIMARY KEY (`Id`), INDEX (`IMEI` ASC));
 INSERT INTO stock_log
-(SELECT '', IMEI, UpdatedDate, 'Sold', CreatedDate, CreatedBy, UpdatedDate, UpdatedBy from sales Order By CreatedDate)
+(SELECT '', IMEI, UpdatedDate,  '', 'Sold', CreatedDate, CreatedBy, UpdatedDate, UpdatedBy from salesstock Order By CreatedDate)
 UNION
-(SELECT '', IMEI, UpdatedDate, Status, UpdatedDate, UpdatedBy, UpdatedDate, UpdatedBy FROM phonestock where Status in ('Returned', 'Rejected') Order By UpdatedDate);
+(SELECT '', IMEI, UpdatedDate,  '', Status, UpdatedDate, UpdatedBy, UpdatedDate, UpdatedBy FROM phonestock where Status in ('Returned', 'Rejected') Order By UpdatedDate);
 UPDATE stock_log SET UpdatedBy = CreatedBy where UpdatedBy = '';
-
-CREATE TABLE salesstock (
-    `Id` INT NOT NULL AUTO_INCREMENT,
-    `InvoiceId` INT(11) NOT NULL,
-    `IMEI` VARCHAR(50) NOT NULL,
-    `Cost` DOUBLE NOT NULL,
-    `Discount` DOUBLE NULL DEFAULT 0,
-    `Returned` BOOLEAN DEFAULT false,
-    `ReturnedDate` DATETIME DEFAULT NULL,
-    `Comments` TEXT NULL,
-    `CreatedDate` DATETIME NOT NULL,
-    `CreatedBy` VARCHAR(250) NOT NULL,
-    `UpdatedDate` DATETIME NULL,
-    `UpdatedBy` VARCHAR(250) NULL,
-PRIMARY KEY (`Id`), INDEX (`IMEI` ASC), INDEX (`InvoiceId` ASC));
-INSERT INTO salesstock SELECT '', Id, IMEI, TotalAmount, 0, false, NULL, NULL, CreatedDate, CreatedBy, UpdatedDate, UpdatedBy FROM Sales ORDER BY Id;
-ALTER TABLE Sales DROP COLUMN `IMEI`, DROP COLUMN `TotalAmount`, DROP COLUMN `Discount`;
-ALTER TABLE Sales CHANGE COLUMN `Remarks` `Comments` TEXT NULL DEFAULT NULL;
-ALTER TABLE Sales CHANGE COLUMN `SalesTax` `Comments` DOUBLE NULL DEFAULT NULL;
 
 -- ALTER TABLE `AdHocReceipt` RENAME TO AdHocReceipt;
 -- UPDATE AdHocReceipt SET CreatedDate = UNIX_TIMESTAMP(CreatedDate);

@@ -372,7 +372,9 @@ export default {
             }
 
             axios
-                .post(this.options.url, data)
+                .get(this.options.url, {
+                    params: data
+                })
                 .then(response => {
                     this.data = response.data.rows;
                     this.totals = response.data.totals || [];
@@ -493,14 +495,13 @@ export default {
 
     watch: {
         active_tab: function() {
-            console.log('active_tab');
             if (this.active_tab == this.options.id) {
                 this.getData(true);
             }
         },
 
         refresh_data: function() {
-            console.log('refresh_data');
+            console.log(['refresh_data', this.tab_to_refresh, this.active_tab]);
             if (this.tab_to_refresh === this.active_tab) {
                 this.data_loaded = false;
                 this.getData(true);

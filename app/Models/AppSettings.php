@@ -8,7 +8,7 @@ class AppSettings extends BaseModel {
     use CompositeKeysTrait;
 
     protected $connection = 'mysql';
-    protected $table = 'AppSettings';
+    protected $table = 'App_Settings';
     protected $primaryKey = ['UserName', 'State'];
     public $incrementing = false;
     public $timestamps = true;

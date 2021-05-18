@@ -13,7 +13,7 @@
             @click.native="returnItem"
             class="text-white bg-red-400 ml-2"
             :class="{
-                hidden: !$page.user_details.IsAdmin || !row.hasOwnProperty('row_id') || row['Returned']
+                hidden: !$page.user_details.IsAdmin || !row.hasOwnProperty('Id') || row['Returned']
             }"
         >
             Return

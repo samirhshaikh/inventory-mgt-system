@@ -71,7 +71,7 @@
                                             v-model="row['CustomerId']"
                                             :reduce="customer => customer.Id"
                                             :options="customers"
-                                            class="w-48 generic_vs_select"
+                                            class="w-72 generic_vs_select"
                                             v-if="!loading_customers"
                                             :class="{
                                                 required_field: row['CustomerId'] == '' || row['CustomerId'] == null
@@ -117,11 +117,57 @@
                                             'text-white': dark_mode
                                         }"
                                     >
-                                        Invoice No:
+                                        Invoice No
                                     </label>
                                     <div class="flex flex-row items-center">
                                         <span v-if="row_keys.indexOf('Id') < 0 || row['Id'] == 0 || row['Id'] == ''">Auto Generated</span>
                                         <span v-else>{{ row["InvoiceNo"] }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-wrap -mx-3 form_field_container">
+                                <div class="w-full md:w-1/2 px-3">
+                                    <label
+                                        class="block form_field_label"
+                                        :class="{
+                                            'text-gray-700': !dark_mode,
+                                            'text-white': dark_mode
+                                        }"
+                                    >
+                                        Payment Type
+                                    </label>
+
+                                    <v-select
+                                        :value="row['PaymentMethod']"
+                                        label="Size"
+                                        v-model="row['PaymentMethod']"
+                                        :options="payment_types"
+                                        class="w-32 generic_vs_select"
+                                        :class="{
+                                            required_field: row['PaymentMethod'] == '' || row['PaymentMethod'] == null
+                                        }"
+                                    ></v-select>
+                                </div>
+
+                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                    <label
+                                        class="block form_field_label"
+                                        :class="{
+                                            'text-gray-700': !dark_mode,
+                                            'text-white': dark_mode
+                                        }"
+                                    >
+                                        VAT
+                                    </label>
+                                    <div class="flex flex-row items-center">
+                                        <input
+                                            class="w-20 generic_input mr-1"
+                                            type="number"
+                                            v-model.number="row['VAT']"
+                                            autocomplete="off"
+                                            ref="cost"
+                                        />%
                                     </div>
                                 </div>
                             </div>
@@ -207,8 +253,8 @@
                                     >
                                         Cost
                                     </label>
-                                    £ <input
-                                    class="w-32 generic_input"
+                                    £<input
+                                    class="w-32 generic_input ml-1"
                                     type="number"
                                     v-model.number="child_row['Cost']"
                                     autocomplete="off"
@@ -287,9 +333,9 @@
                                     <label
                                         class="block form_field_label"
                                         :class="{
-                                    'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
-                                }"
+                                        'text-gray-700': !dark_mode,
+                                        'text-white': dark_mode
+                                    }"
                                     >
                                         Updated By
                                     </label>
@@ -356,6 +402,7 @@ import helper_functions from "../Helpers/helper_functions";
 import {list_controller} from "../Helpers/list_controller";
 import RecordPicker from "../components/Datatable/RecordPicker";
 import {notifications} from "../Helpers/notifications";
+import moment from "moment";
 
 export default {
     props: {
@@ -380,12 +427,19 @@ export default {
 
     data() {
         return {
-            row: {},
+            row: {
+                CustomerId: "",
+                PaymentMethod: "Cash",
+                VAT: 0,
+                InvoiceDate: moment().format("D-MMM-YYYY"),
+            },
             child_row: {
                 IMEI: "",
-                Cost: ""
+                Cost: "",
+                Discount: ""
             },
             rows: [],
+            deleted_childs: [],
 
             saving_data: false,
             checking_duplicate_imei: false,
@@ -398,7 +452,7 @@ export default {
             selected_products_options: {
                 enable_search: true,
                 url: "",
-                Id: "selected_invoices_table",
+                id: "selected_invoices_table",
                 pagination: true,
                 primary_key: "Id",
                 record_name: "Phone",
@@ -432,7 +486,7 @@ export default {
                 },
                 {
                     enabled: true,
-                    key: "Size",
+                    key: "phone_details.Size",
                     name: "Size",
                     order: 5,
                     searching: false,
@@ -470,11 +524,12 @@ export default {
             if (
                 this.rows.length == 0 ||
                 this.row_keys.indexOf("InvoiceDate") < 0 || this.row["InvoiceDate"] == "" ||
-                this.row_keys.indexOf("CustomerId") < 0 || this.row["CustomerId"] == "" || this.row["CustomerId"] == null
+                this.row_keys.indexOf("CustomerId") < 0 || this.row["CustomerId"] == "" || this.row["CustomerId"] == null ||
+                this.row_keys.indexOf("PaymentMethod") < 0 || this.row["PaymentMethod"] == "" || this.row["PaymentMethod"] == null ||
+                (this.row_keys.indexOf("VAT") >= 0 && parseFloat(this.row["VAT"]) < 0)
             ) {
                 return false;
             }
-            //Start here. valid_data is returning false.
 
             return true;
         },
@@ -502,11 +557,20 @@ export default {
             expanded_sidebar: state => state.framework.expanded_sidebar,
             local_settings: state => state.local_settings,
             store_settings: state => state.store_settings,
-            refresh_suppliers: state => state.framework.refresh_suppliers,
+            refresh_customers: state => state.framework.refresh_customers,
             refresh_handset_models: state => state.framework.refresh_handset_models,
             refresh_handset_manufacturers: state => state.framework.refresh_handset_manufacturers,
             refresh_handset_colors: state => state.framework.refresh_handset_colors
         })
+    },
+
+    created() {
+        this.setTableMetaData({
+            columns: this.selected_products_columns,
+            options: this.selected_products_options
+        });
+
+        this.setActiveTab(this.selected_products_options.id);
     },
 
     mounted() {
@@ -548,50 +612,6 @@ export default {
     },
 
     methods: {
-        isDuplicateIMEI() {
-            if (this.row_keys.indexOf("IMEI") < 0 || this.row["IMEI"] == "") {
-                return false;
-            }
-
-            //Check in existing rows
-            this.duplicate_imei = false;
-            _.forIn(this.rows, (object, key) => {
-                if (object["Id"] == 0) {
-                    if (object["IMEI"] == this.row["IMEI"]) {
-                        this.duplicate_imei = true;
-                    }
-                } else if (object["Id"] != this.row["Id"] && object["IMEI"] == this.row["IMEI"]) {
-                    this.duplicate_imei = true;
-                }
-            });
-            if (this.duplicate_imei) {
-                return false;
-            }
-
-            this.checking_duplicate_imei = true;
-            this.duplicate_imei = false;
-
-            axios
-                .post(route("phonestock.check-duplicate-imei"), {
-                    Id: this.row["Id"],
-                    IMEI: this.row["IMEI"]
-                })
-                .then(response => {
-                    this.checking_duplicate_imei = false;
-
-                    this.duplicate_imei = false;
-
-                    this.checking_duplicate_imei = false;
-                })
-                .catch(error => {
-                    this.checking_duplicate_imei = false;
-
-                    if (error.response.data.message == "duplicate_imei") {
-                        this.duplicate_imei = true;
-                    }
-                });
-        },
-
         editRecord(child_row) {
             this.child_row = _.cloneDeep(child_row);
 
@@ -606,6 +626,8 @@ export default {
             _.forIn(this.rows, (object, key) => {
                 if (object["row_id"] != row_id) {
                     rows.push(_.cloneDeep(object));
+                } else if (Object.keys(object).indexOf("Id") >= 0 && object["Id"] != "") {
+                    this.deleted_childs.push(object);
                 }
             });
 
@@ -636,37 +658,13 @@ export default {
         dateSelected(date) {
             if (date != '' && date != null) {
                 this.row['InvoiceDate'] = date;
-                // this.row['InvoiceDateTimeStamp'] = moment(date).format("X");
             } else {
                 this.row['InvoiceDate'] = "";
-                // this.row['InvoiceDateTimeStamp'] = "";
             }
         },
 
         clearDate(key) {
             this.row['InvoiceDate'] = "";
-            // this.row['InvoiceDateTimeStamp'] = "";
-        },
-
-        setModel(value) {
-            let object = helper_functions.searchJsonObjects(this.handset_models, "Id", value);
-            if (Object.keys(object).length) {
-                this.row['model'] = object['Name'];
-            }
-        },
-
-        setManufacturer(value) {
-            let object = helper_functions.searchJsonObjects(this.handset_manufacturers, "Id", value);
-            if (Object.keys(object).length) {
-                this.row['manufacturer'] = object['Name'];
-            }
-        },
-
-        setColor(value) {
-            let object = helper_functions.searchJsonObjects(this.handset_colors, "Id", value);
-            if (Object.keys(object).length) {
-                this.row['color'] = object['Name'];
-            }
         },
 
         getColumnValue(column) {
@@ -691,6 +689,7 @@ export default {
 
             this.child_row["IMEI"] = "";
             this.child_row["Cost"] = "";
+            this.child_row["Discount"] = "";
 
             this.current_row_id = "";
         },
@@ -701,14 +700,14 @@ export default {
             }
 
             this.row["operation"] = this.edit_id == "" ? "add" : "edit";
+            this.row["childs"] = this.rows;
+            this.row["deleted_childs"] = this.deleted_childs;
 
             //save the user
             this.saving_data = true;
 
             axios
-                .post(route("phonestock.save"), {
-                    rows: this.rows
-                })
+                .post(route("sale.save"), this.row)
                 .then(response => {
                     if (response.data.message == "record_saved") {
                         this.$notify({
@@ -734,8 +733,17 @@ export default {
                             type: "error",
                             text: this.formatMessage(error.response.data, this.options.record_name)
                         });
-                    } else if (error.response.data.message == "duplicate_imei") {
-                        this.duplicate_imei = true;
+                    } else {
+                        this.$notify({
+                            group: "messages",
+                            title: "Error",
+                            type: "error",
+                            text: this.formatMessage(error.response.data.message, this.options.record_name)
+                        });
+
+                        _.forIn(this.deleted_childs, (object, key) => {
+                            this.rows.push(_.clone(object))
+                        });
                     }
                 });
         },
@@ -823,7 +831,7 @@ export default {
                     options: {
                         enable_search: true,
                         url: route('datatable.phonestock.available'),
-                        Id: "phonestock_record_picker",
+                        id: "phonestock_record_picker",
                         pagination: true,
                         primary_key: "Id",
                         record_name: "Phone",
@@ -834,9 +842,14 @@ export default {
                         }
                     },
                     submitRecordsSelected: (selected_records) => {
-                        this.rows = [];
                         _.forEach(selected_records, (data, key) => {
-                            this.rows.push(data);
+                            this.rows.push({
+                                IMEI: data["IMEI"],
+                                Cost: data["Cost"],
+                                Discount: "",
+                                row_id: helper_functions.getRandomId(),
+                                phone_details: data
+                            });
                         });
                     }
                 },
@@ -852,6 +865,7 @@ export default {
                         });
 
                         this.setActiveTab(this.selected_products_options.id);
+                        this.setTabToRefresh(this.selected_products_options.id);
                     }
                 }
             );
@@ -862,26 +876,15 @@ export default {
             setActiveTab: 'local_settings/setActiveTab',
             setPopperOpen: 'local_settings/setPopperOpen',
             refreshData: "framework/refreshData",
+            setTabToRefresh: "framework/setTabToRefresh",
             setCachedData: "local_settings/setCachedData",
             addError: "errors/addError"
         })
     },
 
     watch: {
-        refresh_suppliers: function () {
-            this.load_suppliers();
-        },
-
-        refresh_handset_models: function () {
-            this.load_handset_models();
-        },
-
-        refresh_handset_manufacturers: function () {
-            this.load_handset_manufacturers();
-        },
-
-        refresh_handset_colors: function () {
-            this.load_handset_colors();
+        refresh_customers: function () {
+            this.load_customers();
         }
     }
 };

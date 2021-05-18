@@ -13,6 +13,8 @@ class SalesStockTransformer extends TransformerAbstract
             'Id' => $model->Id,
             'InvoiceId' => $model->InvoiceId,
             'IMEI' => $model->IMEI,
+            'Qty' => $model->Qty,
+            'Description' => $model->Description,
             'Cost' => $model->Cost ? number_format($model->Cost, 2) : '',
             'Discount' => $model->Discount ? number_format($model->Discount, 2) : '',
             'Returned' => $model->Returned,

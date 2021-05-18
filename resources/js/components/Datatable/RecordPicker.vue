@@ -53,7 +53,7 @@
                                 'bg-gray-600 text-gray-500 cursor-not-allowed': timer && !Object.keys(selected_records).length
                             }"
                         >
-                            Submit {{ timer && Object.keys(selected_records).length }}
+                            Submit
                         </Button>
                     </div>
                 </div>
@@ -213,6 +213,7 @@ export default {
             } else {
                 delete this.selected_records[row["Id"]];
             }
+
             this.updateTimer();
         },
 
@@ -221,6 +222,7 @@ export default {
             if (typeof handler === "function") {
                 handler(this.selected_records);
 
+                console.log(['recordpicker', this.$parent.name]);
                 this.$modal.hide(this.$parent.name);
             }
         },

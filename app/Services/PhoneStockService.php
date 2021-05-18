@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Exceptions\DuplicateIMEIException;
@@ -118,6 +119,29 @@ class PhoneStockService
     }
 
     /**
+     * @param mixed $imei
+     * @param string $status
+     * @return bool
+     * @throws RecordNotFoundException
+     */
+    public function changePhoneAvailabilityStatus($imei, $status = PhoneStock::STATUS_IN_STOCK): bool
+    {
+        $record = PhoneStock::where('IMEI', $imei)
+            ->get();
+
+        if ($record->count()) {
+            $record = $record->first();
+            $record->Status = $status;
+            $record->UpdatedBy = session('user_details.UserName');
+            $record->save();
+
+            return true;
+        } else {
+            throw new RecordNotFoundException;
+        }
+    }
+
+    /**
      * @param IMEIRequest $request
      * @return bool
      * @throws DuplicateIMEIException
@@ -132,11 +156,11 @@ class PhoneStockService
     }
 
     /**
-     * @param string $imei
-     * @param int $id
+     * @param mixed $imei
+     * @param $id
      * @return bool
      */
-    public function isDuplicateIMEI(string $imei, int $id = 0): bool
+    public function isDuplicateIMEI($imei, $id = 0): bool
     {
         //Check whether the record exists or not
         if (!empty($id)) {

@@ -11,7 +11,9 @@ class SalesTransformer extends TransformerAbstract
     {
         $return = [
             'Id' => $model->Id,
-            'InvoiceNo' => $model->InvoiceNo,
+            'InvoiceNo' => is_numeric($model->InvoiceNo)
+                ? $this->formatInvoiceNumber($model->InvoiceNo, $model->InvoiceDate)  //New Invoice No
+                : $model->InvoiceNo,  //Old Invoice No
             'InvoiceDate' => empty($model->InvoiceDate) ? '' : $model->InvoiceDate->format('d-M-Y'),
             'CustomerId' => $model->CustomerId,
             'customer' => $model->customer,
@@ -47,5 +49,10 @@ class SalesTransformer extends TransformerAbstract
         }
 
         return $return;
+    }
+
+    private function formatInvoiceNumber($invoiceNo, $invoiceDate)
+    {
+        return sprintf('%s-%s-%s-%s-000%s', 'INV', $invoiceDate->format('Y'), $invoiceDate->format('m'), $invoiceDate->format('d'), $invoiceNo);
     }
 }

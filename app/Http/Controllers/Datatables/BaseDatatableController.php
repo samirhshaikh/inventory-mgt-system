@@ -3,11 +3,19 @@
 namespace App\Http\Controllers\Datatables;
 
 use App\Http\Controllers\BaseController;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 class BaseDatatableController extends BaseController
 {
-    protected function prepareSearch($model, $columns_to_search, $search_text = '', $search_join = 'OR')
+    /**
+     * @param mixed $model
+     * @param mixed $columns_to_search
+     * @param string $search_text
+     * @param string $search_join
+     * @return Builder
+     */
+    protected function prepareSearch($model, $columns_to_search, string $search_text = '', string $search_join = 'OR'): Builder
     {
         $search_words = explode(' ', $search_text);
 
@@ -29,7 +37,14 @@ class BaseDatatableController extends BaseController
         return $model;
     }
 
-    protected function prepareSearchOnRelation(&$query, $columns_to_search, $search_text = '', $where_type = 'AND')
+    /**
+     * @param mixed $query
+     * @param mixed $columns_to_search
+     * @param string $search_text
+     * @param string $where_type
+     * @return Builder
+     */
+    protected function prepareSearchOnRelation(&$query, $columns_to_search, string $search_text = '', string $where_type = 'AND'): Builder
     {
         $search_words = explode(' ', $search_text);
 
@@ -51,10 +66,15 @@ class BaseDatatableController extends BaseController
         }
     }
 
-    protected function prepareAdvancedSearchQuery($model, $columns_to_search, $search_text = '', $comparision_type = 'anywhere')
+    /**
+     * @param mixed $model
+     * @param $columns_to_search
+     * @param string $search_text
+     * @param string $comparison_type
+     * @return Builder
+     */
+    protected function prepareAdvancedSearchQuery($model, $columns_to_search, string $search_text = '', string $comparison_type = 'anywhere'): Builder
     {
-        $search_words = explode(' ', $search_text);
-
         if (!is_array($columns_to_search)) {
             $columns_to_search = [$columns_to_search];
         }
@@ -62,10 +82,10 @@ class BaseDatatableController extends BaseController
         $conditions = [];
         foreach ($columns_to_search as $column) {
             //If you want search to look for even one word then uncomment the following.
-//            foreach ($search_words as $search_word) {
+//            foreach (explode(' ', $search_text) as $search_word) {
 //                $conditions[] = DB::raw($column) . ' LIKE "%' . $search_word . '%"';
 //            }
-            $conditions[] = $comparision_type === 'anywhere'
+            $conditions[] = $comparison_type === 'anywhere'
                 ? DB::raw($column) . ' LIKE "%' . $search_text . '%"'
                 : DB::raw($column) . ' = "' . $search_text . '"';
         }
@@ -74,7 +94,15 @@ class BaseDatatableController extends BaseController
         return $model;
     }
 
-    protected function prepareRecordsOutput($table, $records, $page_no, $search_text = '', $get_all_records = 0)
+    /**
+     * @param $table
+     * @param $records
+     * @param int $page_no
+     * @param mixed $search_text
+     * @param int $get_all_records
+     * @return array
+     */
+    protected function prepareRecordsOutput($table, $records, int $page_no, $search_text = '', int $get_all_records = 0): array
     {
         $page_size = session('app_settings.framework.page_size', 10);
 
@@ -108,14 +136,18 @@ class BaseDatatableController extends BaseController
                 return $table->rowTransformer($row, $key);
             });
 
-        $return['page_no'] = $page_no;
+        $return['page_no'] = (int)$page_no;
 
         return $return;
     }
 
-    protected function searchDataPresent($search_data = [])
+    /**
+     * @param string $search_data
+     * @return bool
+     */
+    protected function searchDataPresent(string $search_data = '{}'): bool
     {
-        foreach ($search_data as $column => $search_text) {
+        foreach (json_decode($search_data) as $column => $search_text) {
             if ($search_text != '' || !is_null($search_text)) {
                 return true;
             }

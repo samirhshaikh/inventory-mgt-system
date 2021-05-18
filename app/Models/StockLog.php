@@ -21,6 +21,8 @@ class StockLog extends BaseModel
     const UPDATED_AT = 'UpdatedDate';
 
     const ACTIVITY_RETURNED = 'Returned';
+    const ACTIVITY_SOLD = 'Sold';
+    const ACTIVITY_DELETED = 'Deleted';
 
     protected $dates = [
         'LogDate'

@@ -102,7 +102,7 @@ class SalesDatatable extends BaseDatatable
         ],
         [
             'name' => 'IMEI',
-            'key' => 'IMEI',
+            'key' => 'phone_details.IMEI',
             'enabled' => true,
             'th' => 'text-left',
             'td' => 'text-left',
@@ -112,7 +112,7 @@ class SalesDatatable extends BaseDatatable
         ],
         [
             'name' => 'Cost',
-            'key' => 'phone.Cost',
+            'key' => 'phone_details.Cost',
             'enabled' => true,
             'th' => 'text-left',
             'td' => 'text-left',
@@ -135,7 +135,7 @@ class SalesDatatable extends BaseDatatable
         ],
         [
             'name' => 'Size',
-            'key' => 'phone.Size',
+            'key' => 'phone_details.Size',
             'enabled' => true,
             'th' => 'text-left',
             'td' => 'text-left',

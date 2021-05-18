@@ -52,8 +52,8 @@ class PhoneStockController extends BaseDatatableController
             ];
 
             $records = $this->prepareSearch($records, $fields_to_search, $request->get('search_text'), 'AND');
-        } else if ($search_type === 'advanced' && count($request->get('search_data', []))) {
-            $records = $this->prepareAdvancedSearch($records, collect($request->get('search_data'))->all());
+        } else if ($search_type === 'advanced' && count(json_decode($request->get('search_data', '{}')))) {
+            $records = $this->prepareAdvancedSearch($records, json_decode($request->get('search_data')));
         }
 
         $records = $records->orderBy($order_by, $order_direction);
@@ -61,9 +61,9 @@ class PhoneStockController extends BaseDatatableController
         return $this->prepareRecordsOutput(
             $table,
             $records,
-            $request->get('page_no', 1),
+            (int)$request->get('page_no', 1),
             $request->get('search_text', ''),
-            $request->get('get_all_records', 0)
+            (int)$request->get('get_all_records', 0)
         );
     }
 

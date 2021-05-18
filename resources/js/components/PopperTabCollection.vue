@@ -147,6 +147,7 @@ export default {
 
             this.$root.$emit("tabs-changed", selectedTab);
 
+            console.log(selectedTab);
             if (selectedTab.id) {
                 this.setPopperActiveTab(selectedTab.id);
             }

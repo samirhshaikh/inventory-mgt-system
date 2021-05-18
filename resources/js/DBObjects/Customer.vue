@@ -400,7 +400,17 @@ export default {
                                 " successfully."
                         });
 
+                        //Reset the cache
+                        if (
+                            this.options.hasOwnProperty("cache_data") &&
+                            this.options.cache_data
+                        ) {
+                            this.resetCachedData(this.options.id);
+                        }
+
                         this.refreshData(this.options.id);
+
+                        this.refreshCustomers();
                     }
 
                     this.saving_data = false;
@@ -454,7 +464,9 @@ export default {
 
         ...mapActions({
             refreshData: "framework/refreshData",
+            refreshCustomers: "framework/refreshCustomers",
             setCachedData: "local_settings/setCachedData",
+            resetCachedData: "local_settings/resetCachedData",
             addError: "errors/addError"
         })
     }

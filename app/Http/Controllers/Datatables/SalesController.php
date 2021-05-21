@@ -180,7 +180,7 @@ class SalesController extends BaseDatatableController
     /**
      * For new invoice number we have a different format. INV-YYYY-MM-DD-XXXX where XXXX represents a four digit invoice number with leading zeros.
      * We need to special mysql string to get that in search
-     * 
+     *
      * @return string
      */
     private function getInvoiceSearchString(): string

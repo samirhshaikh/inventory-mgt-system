@@ -64,15 +64,15 @@
                                     >
                                         Customer
                                     </label>
-                                    <div class="flex flex-row items-center" v-if="!loading_customers">
+                                    <div class="flex flex-row items-center" v-if="!loading_customer_sales">
                                         <v-select
                                             :value="row['CustomerId']"
                                             label="CustomerName"
                                             v-model="row['CustomerId']"
                                             :reduce="customer => customer.Id"
-                                            :options="customers"
+                                            :options="customer_sales"
                                             class="w-72 generic_vs_select"
-                                            v-if="!loading_customers"
+                                            v-if="!loading_customer_sales"
                                             :class="{
                                                 required_field: row['CustomerId'] == '' || row['CustomerId'] == null
                                             }"
@@ -557,7 +557,7 @@ export default {
             expanded_sidebar: state => state.framework.expanded_sidebar,
             local_settings: state => state.local_settings,
             store_settings: state => state.store_settings,
-            refresh_customers: state => state.framework.refresh_customers,
+            refresh_customer_sales: state => state.framework.refresh_customer_sales,
             refresh_handset_models: state => state.framework.refresh_handset_models,
             refresh_handset_manufacturers: state => state.framework.refresh_handset_manufacturers,
             refresh_handset_colors: state => state.framework.refresh_handset_colors
@@ -883,8 +883,8 @@ export default {
     },
 
     watch: {
-        refresh_customers: function () {
-            this.load_customers();
+        refresh_customer_sales: function () {
+            this.load_customer_sales();
         }
     }
 };

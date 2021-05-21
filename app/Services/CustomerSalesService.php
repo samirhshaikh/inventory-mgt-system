@@ -5,11 +5,11 @@ namespace App\Services;
 use App\Exceptions\RecordNotFoundException;
 use App\Exceptions\ReferenceException;
 use App\Http\Requests\IdRequest;
-use App\Http\Requests\SaveCustomerRequest;
-use App\Models\Customers;
+use App\Http\Requests\SaveCustomerSalesRequest;
+use App\Models\CustomerSales;
 use App\Traits\TableActions;
 
-class CustomersService
+class CustomerSalesService
 {
     use TableActions;
 
@@ -20,7 +20,7 @@ class CustomersService
      */
     public function getSingle(IdRequest $request)
     {
-        $record = Customers::where('Id', $request->get('Id'))
+        $record = CustomerSales::where('Id', $request->get('Id'))
             ->get();
 
         if ($record->count()) {
@@ -38,20 +38,20 @@ class CustomersService
     public function changeActiveStatus(IdRequest $request): bool
     {
         try {
-            return $this->changeRecordStatus(new Customers, $request);
+            return $this->changeRecordStatus(new CustomerSales, $request);
         } catch (RecordNotFoundException $e) {
             throw new RecordNotFoundException;
         }
     }
 
     /**
-     * @param SaveCustomerRequest $request
+     * @param SaveCustomerSalesRequest $request
      * @return int
      * @throws RecordNotFoundException
      */
-    public function save(SaveCustomerRequest $request): int
+    public function save(SaveCustomerSalesRequest $request): int
     {
-        $record = Customers::where('Id', $request->get('Id'))
+        $record = CustomerSales::where('Id', $request->get('Id'))
             ->get();
 
         if ($request->get('operation', 'add') == 'edit') {
@@ -61,7 +61,7 @@ class CustomersService
 
             $record = $record->first();
         } else {
-            $record = new Customers;
+            $record = new CustomerSales;
 
             $record->CreatedBy = session('user_details.UserName');
         }
@@ -77,7 +77,7 @@ class CustomersService
 
         return $request->get('operation', 'add') == 'edit'
             ? $request->get('Id')
-            : Customers::lastInsertId();
+            : CustomerSales::lastInsertId();
     }
 
     /**
@@ -89,7 +89,7 @@ class CustomersService
     public function delete(IdRequest $request): bool
     {
         //Check whether the record exist or not
-        $record = Customers::where('Id', $request->get('Id'));
+        $record = CustomerSales::where('Id', $request->get('Id'));
 
         if ($record->get()->count()) {
             $tables_to_check = ['Sales'];

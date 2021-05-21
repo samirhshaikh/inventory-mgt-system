@@ -10,6 +10,8 @@ abstract class BaseDatatable
     public $options = [];
     public $columns = [];
 
+    private $cached_cell_type_validation = [];
+
     public function __construct()
     {
         $this->options();
@@ -23,41 +25,54 @@ abstract class BaseDatatable
         return $this->columns;
     }
 
+    /**
+     * @param array $row
+     * @param string $rowKey
+     * @return mixed
+     */
     public function rowTransformer(array $row, string $rowKey)
     {
-//        $unformratted_values = [];
-
         //transform the keys
         foreach ($this->columns as $colKey => $column) {
             //if we don't have a value then just carry on
             if (Arr::get($row, $column['key'], null) === null) {
-                clock()->info([$column['key'], 'skipped with no data', $row]);
                 continue;
             }
 
             $value = Arr::get($row, $column['key']);
 
-//            array_set($unformratted_values, $column['key'], $value);
-
-            //apply rules if needed
+            //apply rules if defined
             if (!empty($column['rules'])) {
-                array_set($row, $column['key'], $this->processRules($value, $column['rules']));
+                Arr::set($row, $column['key'], $this->processRules($value, $column['rules']));
             }
 
             //do a check if the type is a actual file
-            if (($type = Arr::get($column, 'type', null)) !== null) {
-                if (!file_exists(base_path('resources/js/Datatable/Cells/' . $type . '.vue'))) {
-                    clock()->error(`$type does not exist as Datatable cell`);
-                    array_set($column, 'type', null);
-                }
+            if (!$this->is_valid_cell_type(Arr::get($column, 'type', null))) {
+                Arr::set($column, 'type', null);
             }
-
-//            $row['unformatted_values'] = $unformratted_values;
-
-//            $row['_level'] = 0;
         }
 
         return $row;
+    }
+
+    /**
+     * @param mixed $type
+     * @return bool
+     */
+    protected function is_valid_cell_type($type): bool
+    {
+        if (is_null($type)) {
+            return false;
+        }
+
+        //If we have already cached it then no need to do it again
+        if (isset($this->cached_cell_type_validation[$type])) {
+            return $this->cached_cell_type_validation[$type];
+        }
+
+        $this->cached_cell_type_validation[$type] = file_exists(base_path('resources/js/Datatable/Cells/' . $type . '.vue'));
+
+        return $this->cached_cell_type_validation[$type];
     }
 
     protected function processRules($value, $rules)

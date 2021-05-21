@@ -141,7 +141,7 @@
                                     'text-white': dark_mode
                                 }"
                             >
-                                Cost
+                                Balance
                             </label>
                             £ <input
                             class="w-32 generic_input"
@@ -342,7 +342,7 @@ export default {
             this.loading = true;
 
             axios
-                .get(route("customers.get-single"), {
+                .get(route("customer_sales.get-single"), {
                     params: {
                         Id: this.edit_id
                     }
@@ -385,7 +385,7 @@ export default {
             this.saving_data = true;
 
             axios
-                .post(route("customers.save"), this.row)
+                .post(route("customer_sales.save"), this.row)
                 .then(response => {
                     if (response.data.message == "record_saved") {
                         this.$notify({
@@ -410,7 +410,7 @@ export default {
 
                         this.refreshData(this.options.id);
 
-                        this.refreshCustomers();
+                        this.refreshCustomerSales();
                     }
 
                     this.saving_data = false;
@@ -464,7 +464,7 @@ export default {
 
         ...mapActions({
             refreshData: "framework/refreshData",
-            refreshCustomers: "framework/refreshCustomers",
+            refreshCustomerSales: "framework/refreshCustomerSales",
             setCachedData: "local_settings/setCachedData",
             resetCachedData: "local_settings/resetCachedData",
             addError: "errors/addError"

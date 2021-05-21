@@ -50,7 +50,7 @@
                 @advancedSearchDataModified="triggerAdvancedSearch"
             ></SearchParameters>
 
-            <CustomersDatatable
+            <CustomerSalesDatatable
                 :columns="columns"
                 :options="options"
                 :page_no="page_no"
@@ -60,7 +60,7 @@
                 :update_search="update_search"
                 @changeTotalReports="changeTotalReports"
                 @changePageNo="changePage"
-            ></CustomersDatatable>
+            ></CustomerSalesDatatable>
         </div>
     </Layout>
 </template>
@@ -69,14 +69,14 @@
 import {mapState, mapActions} from "vuex";
 import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
-import Customer from "../DBObjects/Customer.vue";
+import Customer from "../DBObjects/CustomerSale.vue";
 import {datatable_common} from "../Helpers/datatable_common";
 
 export default {
     mixins: [datatable_common],
 
     components: {
-        CustomersDatatable: lazyLoadComponent({
+        CustomerSalesDatatable: lazyLoadComponent({
             componentFactory: () => import("@/Datatable/Datatable"),
             loading: loading
         })

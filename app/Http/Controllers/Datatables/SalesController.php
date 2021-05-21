@@ -33,7 +33,7 @@ class SalesController extends BaseDatatableController
 
         $records = new Sales();
 
-        $records = $records->leftjoin('Customer', 'Customer.Id', '=', 'CustomerId');
+        $records = $records->leftjoin('Customer_Sales', 'Customer_Sales.Id', '=', 'CustomerId');
 
         $records = $records->with(['sales' => function ($query) {
             $query->orderBy('IMEI', 'ASC');
@@ -53,7 +53,7 @@ class SalesController extends BaseDatatableController
                     ->orderBy('Total_Cost', $order_direction);
                 break;
             case 'customer.CustomerName':
-                $records = $records->leftJoin('Customer', 'Customer.Id', '=', 'CustomerId');
+                $records = $records->leftJoin('Customer_Sales', 'Customer_Sales.Id', '=', 'CustomerId');
                 break;
             case 'UpdatedDate':
                 $records = $records->orderBy('Sales.UpdatedDate', $order_direction);
@@ -87,7 +87,7 @@ class SalesController extends BaseDatatableController
             ($search_type === 'advanced' && $this->searchDataPresent($request->get('search_data', '{}')))
         ) {
             $records = $records
-                ->leftjoin('Customer', 'Customer.Id', '=', 'CustomerId')
+                ->leftjoin('Customer_Sales', 'Customer_Sales.Id', '=', 'CustomerId')
                 ->join('SalesStock', 'SalesStock.InvoiceId', '=', 'Sales.Id')
                 ->join('PhoneStock', 'PhoneStock.IMEI', '=', 'SalesStock.IMEI')
                 ->join('ManufactureMaster', 'ManufactureMaster.Id', '=', 'MakeId')
@@ -97,9 +97,10 @@ class SalesController extends BaseDatatableController
 
         if ($search_type === 'simple' && $request->get('search_text', '') != '') {
             $fields_to_search = [
+                $this->getInvoiceSearchString(),
                 'InvoiceNo',
                 'DATE_FORMAT(InvoiceDate, "%d-%b-%Y")',
-                'Customer.CustomerName',
+                'Customer_Sales.CustomerName',
                 'SalesStock.IMEI',
                 'ManufactureMaster.Name',
                 'ColorMaster.Name',
@@ -135,10 +136,10 @@ class SalesController extends BaseDatatableController
 
             switch ($column) {
                 case 'customer':
-                    $model = $this->prepareAdvancedSearchQuery($model, 'Customer.CustomerName', $search_text);
+                    $model = $this->prepareAdvancedSearchQuery($model, 'Customer_Sales.CustomerName', $search_text);
                     break;
                 case 'contact':
-                    $model = $this->prepareAdvancedSearchQuery($model, ['Customer.ContactNo1', 'Customer.ContactNo2', 'Customer.ContactNo3'], $search_text);
+                    $model = $this->prepareAdvancedSearchQuery($model, ['Customer_Sales.ContactNo1', 'Customer_Sales.ContactNo2'], $search_text);
                     break;
                 case 'InvoiceDate':
                     $model = $this->prepareAdvancedSearchQuery($model, 'DATE_FORMAT(Sales.InvoiceDate, "%d-%b-%Y")', $search_text, 'exact_match');
@@ -153,6 +154,8 @@ class SalesController extends BaseDatatableController
                     $model = $this->prepareAdvancedSearchQuery($model, 'ColorMaster.Name', $search_text);
                     break;
                 case 'InvoiceNo':
+                    $model = $this->prepareAdvancedSearchQuery($model, ['InvoiceNo', $this->getInvoiceSearchString()], $search_text);
+                    break;
                 case 'IMEI':
                 case 'Cost':
                     $model = $this->prepareAdvancedSearchQuery($model, 'Sales.' . $column, $search_text);
@@ -172,5 +175,16 @@ class SalesController extends BaseDatatableController
         }
 
         return $model;
+    }
+
+    /**
+     * For new invoice number we have a different format. INV-YYYY-MM-DD-XXXX where XXXX represents a four digit invoice number with leading zeros.
+     * We need to special mysql string to get that in search
+     * 
+     * @return string
+     */
+    private function getInvoiceSearchString(): string
+    {
+        return 'IF(InvoiceNo REGEXP "^-?[0-9]+$", CONCAT("INV-", DATE_FORMAT(InvoiceDate, "%Y-%m-%d"), "-", LPAD(InvoiceNo, 4, "0")), "")';
     }
 }

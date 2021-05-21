@@ -69,12 +69,12 @@ Route::group(['prefix' => 'users'], function ($router) {
     $router->post('check-duplicate-name', 'DBObjects\UsersController@checkDuplicateName')->name('users.check-duplicate-name');
 });
 
-Route::get('/customers', 'PagesController@customers')->name('customers');
-Route::group(['prefix' => 'customers'], function ($router) {
-    $router->post('change-active-status', 'DBObjects\CustomersController@changeActiveStatus')->name('customers.change-active-status');
-    $router->post('save', 'DBObjects\CustomersController@save')->name('customers.save');
-    $router->get('get-single', 'DBObjects\CustomersController@getSingle')->name('customers.get-single');
-    $router->post('delete', 'DBObjects\CustomersController@delete')->name('customers.delete');
+Route::get('/customer_sales', 'PagesController@customerSales')->name('customer_sales');
+Route::group(['prefix' => 'customer_sales'], function ($router) {
+    $router->post('change-active-status', 'DBObjects\CustomerSalesController@changeActiveStatus')->name('customer_sales.change-active-status');
+    $router->post('save', 'DBObjects\CustomerSalesController@save')->name('customer_sales.save');
+    $router->get('get-single', 'DBObjects\CustomerSalesController@getSingle')->name('customer_sales.get-single');
+    $router->post('delete', 'DBObjects\CustomerSalesController@delete')->name('customer_sales.delete');
 });
 
 Route::get('/suppliers', 'PagesController@suppliers')->name('suppliers');
@@ -122,8 +122,8 @@ Route::group(['prefix' => 'datatables'], function ($router) {
         $router->get('data', 'Datatables\HandsetModelsController@getData')->name('datatable.handset-models.data');
     });
 
-    Route::group(['prefix' => 'customers'], function ($router) {
-        $router->get('data', 'Datatables\CustomersController@getData')->name('datatable.customers.data');
+    Route::group(['prefix' => 'customer_sales'], function ($router) {
+        $router->get('data', 'Datatables\CustomerSalesController@getData')->name('datatable.customer_sales.data');
     });
 
     Route::group(['prefix' => 'handset-manufacturers'], function ($router) {

@@ -4,17 +4,17 @@
  * Colors
  * Models
  * Manufacturers
- * Customers
+ * Customer Sales
  * Stock Types
  * Networks
  * Phone sizes
  * Payment Types
  *
- * ToDo: Need to remove customers from here as it can be pretty big list. So need to make customer select box ajax connected.
+ * ToDo: Need to remove customer_sales from here as it can be pretty big list. So need to make customer select box ajax connected.
  */
 import {mapState, mapActions} from "vuex";
 import Supplier from "../DBObjects/Supplier";
-import Customer from "../DBObjects/Customer";
+import Customer from "../DBObjects/CustomerSale";
 import ObjectTypeName from "../DBObjects/ObjectTypeName";
 
 export const list_controller = {
@@ -24,13 +24,13 @@ export const list_controller = {
             loading_handset_colors: false,
             loading_handset_models: false,
             loading_handset_manufacturers: false,
-            loading_customers: false,
+            loading_customer_sales: false,
 
             suppliers: [],
             handset_colors: [],
             handset_models: [],
             handset_manufacturers: [],
-            customers: [],
+            customer_sales: [],
 
             suppliers_simple: [],
             handset_colors_simple: [],
@@ -68,7 +68,7 @@ export const list_controller = {
 
         this.load_handset_manufacturers();
 
-        this.load_customers();
+        this.load_customer_sales();
     },
 
     methods: {
@@ -119,39 +119,39 @@ export const list_controller = {
             });
         },
 
-        load_customers() {
+        load_customer_sales() {
             if (
-                this.local_settings.cached_data.hasOwnProperty("customers") &&
-                this.local_settings.cached_data["customers"].length
+                this.local_settings.cached_data.hasOwnProperty("customer_sales") &&
+                this.local_settings.cached_data["customer_sales"].length
             ) {
-                this.customers = this.local_settings.cached_data["customers"];
+                this.customer_sales = this.local_settings.cached_data["customer_sales"];
                 this.load_customers_simple();
             } else {
-                this.loading_customers = true;
+                this.loading_customer_sales = true;
 
                 axios
-                    .get(route("datatable.customers.data"), {
+                    .get(route("datatable.customer_sales.data"), {
                         params: {
                             get_all_records: 1,
                             order_by: 'CustomerName'
                         }
                     })
                     .then(response => {
-                        this.customers = response.data.rows;
+                        this.customer_sales = response.data.rows;
 
                         this.setCachedData({
-                            key: "customers",
+                            key: "customer_sales",
                             data: response.data.rows
                         });
 
-                        this.loading_customers = false;
+                        this.loading_customer_sales = false;
 
                         this.load_customers_simple();
                     },
                     error => {
                         this.addError(error);
 
-                        this.loading_customers = false;
+                        this.loading_customer_sales = false;
                     }
                 );
             }
@@ -159,7 +159,7 @@ export const list_controller = {
 
         load_customers_simple() {
             this.customers_simple = [];
-            _.forEach(this.customers, (data, key) => {
+            _.forEach(this.customer_sales, (data, key) => {
                 if (!this.customers_simple.includes(data["CustomerName"])) {
                     this.customers_simple.push(data["CustomerName"]);
                 }
@@ -339,7 +339,7 @@ export const list_controller = {
                 {
                     edit_id: "",
                     options: {
-                        id: "customers",
+                        id: "customer_sales",
                         record_name: "Customer",
                         cache_data: true
                     }

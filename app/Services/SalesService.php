@@ -30,7 +30,6 @@ class SalesService
 //        Customer.CustomerName as customer,
 //        Customer.ContactNo1 as ContactNo1,
 //        Customer.ContactNo2 as ContactNo2,
-//        Customer.ContactNo3 as ContactNo3,
 //        PhoneStock.Id as PhoneStockId,
 //        ManufactureMaster.Name as manufacturer,
 //        ColorMaster.Name as color,

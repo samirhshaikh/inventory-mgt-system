@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers\Datatables;
 
-use App\Models\Customers;
-use App\Datatables\CustomersDatatable;
+use App\Models\CustomerSales;
+use App\Datatables\CustomerSalesDatatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
-class CustomersController extends BaseDatatableController
+class CustomerSalesController extends BaseDatatableController
 {
     public function getData(Request $request)
     {
-        $table = new CustomersDatatable();
+        $table = new CustomerSalesDatatable();
 
         $order_by = $request->get('order_by', '') == ''
-            ? session('app_settings.datatable.sorting.customers.column', Arr::get($table->options(), 'sorting.default'))
+            ? session('app_settings.datatable.sorting.customer_sales.column', Arr::get($table->options(), 'sorting.default'))
             : $request->get('order_by');
         $order_direction = $request->get('order_by', '') == ''
-            ? session('app_settings.datatable.sorting.customers.direction', Arr::get($table->options(), 'sorting.direction'))
+            ? session('app_settings.datatable.sorting.customer_sales.direction', Arr::get($table->options(), 'sorting.direction'))
             : 'asc';
 
-        $records = new Customers();
+        $records = new CustomerSales();
 
         $search_type = $request->get('search_type', 'simple');
 
@@ -29,7 +29,6 @@ class CustomersController extends BaseDatatableController
                 'CustomerName',
                 'ContactNo1',
                 'ContactNo2',
-                'ContactNo3',
                 'Address',
                 'City',
                 'Balance',
@@ -66,7 +65,7 @@ class CustomersController extends BaseDatatableController
                     $model = $this->prepareAdvancedSearchQuery($model, $column, $search_text);
                     break;
                 case 'ContactNo':
-                    $model = $this->prepareAdvancedSearchQuery($model, ['ContactNo1', 'ContactNo2', 'ContactNo3'], $search_text);
+                    $model = $this->prepareAdvancedSearchQuery($model, ['ContactNo1', 'ContactNo2'], $search_text);
                     break;
                 case 'UpdatedDate':
                     $model = $this->prepareAdvancedSearchQuery($model, ['DATE_FORMAT(CreatedDate, "%d-%b-%Y")', 'DATE_FORMAT(UpdatedDate, "%d-%b-%Y")'], $search_text, 'exact_match');

@@ -10,7 +10,7 @@ const state = {
     page_size: 10,
     refresh_data: false,
     refresh_suppliers: false,
-    refresh_customers: false,
+    refresh_customer_sales: false,
     refresh_handset_models: false,
     refresh_handset_manufacturers: false,
     refresh_handset_colors: false,
@@ -38,8 +38,8 @@ const getters = {
         return state.refresh_suppliers;
     },
 
-    refresh_customers: (state) => {
-        return state.refresh_customers;
+    refresh_customer_sales: (state) => {
+        return state.refresh_customer_sales;
     },
 
     refresh_handset_models: (state) => {
@@ -80,8 +80,8 @@ const actions = {
         commit('refreshSuppliers');
     },
 
-    refreshCustomers({commit}) {
-        commit('refreshCustomers');
+    refreshCustomerSales({commit}) {
+        commit('refreshCustomerSales');
     },
 
     refreshHandsetModels({commit}) {
@@ -142,8 +142,8 @@ const mutations = {
         state.refresh_suppliers = moment().format();
     },
 
-    refreshCustomers(state) {
-        state.refresh_customers = moment().format();
+    refreshCustomerSales(state) {
+        state.refresh_customer_sales = moment().format();
     },
 
     refreshHandsetModels(state) {

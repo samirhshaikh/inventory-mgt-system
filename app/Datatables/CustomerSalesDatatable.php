@@ -2,9 +2,7 @@
 
 namespace App\Datatables;
 
-use App\Datatables\BaseDatatable;
-
-class CustomersDatatable extends BaseDatatable
+class CustomerSalesDatatable extends BaseDatatable
 {
     public $columns = [
         [
@@ -46,7 +44,7 @@ class CustomersDatatable extends BaseDatatable
             'th' => 'w-1/12 text-left sticky',
             'td' => 'text-left',
             'type' => 'Toggle',
-            'route' => 'customers.change-active-status',
+            'route' => 'customer_sales.change-active-status',
             'sorting' => false,
             'searching' => false,
             'order' => 3
@@ -76,8 +74,8 @@ class CustomersDatatable extends BaseDatatable
     public function options()
     {
         $this->options = [
-            'id' => 'customers',
-            'url' => route('datatable.customers.data'),
+            'id' => 'customer_sales',
+            'url' => route('datatable.customer_sales.data'),
             'pagination' => false,
             'enable_search' => true,
             'primary_key' => 'Id',

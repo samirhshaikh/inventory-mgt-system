@@ -6,11 +6,11 @@ use App\Exceptions\RecordNotFoundException;
 use App\Exceptions\ReferenceException;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\IdRequest;
-use App\Http\Requests\SaveCustomerRequest;
-use App\Services\CustomersService;
+use App\Http\Requests\SaveCustomerSalesRequest;
+use App\Services\CustomerSalesService;
 use Illuminate\Http\JsonResponse;
 
-class CustomersController extends BaseController
+class CustomerSalesController extends BaseController
 {
     /**
      * @param IdRequest $request
@@ -18,7 +18,7 @@ class CustomersController extends BaseController
      */
     public function changeActiveStatus(IdRequest $request): JsonResponse
     {
-        $customers_service = new CustomersService();
+        $customers_service = new CustomerSalesService();
 
         try {
             $customers_service->changeActiveStatus($request);
@@ -35,7 +35,7 @@ class CustomersController extends BaseController
      */
     public function getSingle(IdRequest $request): JsonResponse
     {
-        $customers_service = new CustomersService();
+        $customers_service = new CustomerSalesService();
 
         try {
             $response = [];
@@ -48,12 +48,12 @@ class CustomersController extends BaseController
     }
 
     /**
-     * @param SaveCustomerRequest $request
+     * @param SaveCustomerSalesRequest $request
      * @return JsonResponse
      */
-    public function save(SaveCustomerRequest $request): JsonResponse
+    public function save(SaveCustomerSalesRequest $request): JsonResponse
     {
-        $customers_service = new CustomersService();
+        $customers_service = new CustomerSalesService();
 
         try {
             $id = $customers_service->save($request);
@@ -72,7 +72,7 @@ class CustomersController extends BaseController
      */
     public function delete(IdRequest $request): JsonResponse
     {
-        $customers_service = new CustomersService();
+        $customers_service = new CustomerSalesService();
 
         try {
             $customers_service->delete($request);

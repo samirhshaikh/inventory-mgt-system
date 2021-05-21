@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Datatables\CustomersDatatable;
+use App\Datatables\CustomerSalesDatatable;
 use App\Datatables\HandsetColorsDatatable;
 use App\Datatables\HandsetManufacturersDatatable;
 use App\Datatables\HandsetModelsDatatable;
@@ -97,11 +97,11 @@ class PagesController extends Controller
         ]);
     }
 
-    public function customers()
+    public function customerSales()
     {
-        $table = new CustomersDatatable();
+        $table = new CustomerSalesDatatable();
 
-        return Inertia::render('Pages/Customers', [
+        return Inertia::render('Pages/CustomerSales', [
             'columns' => $table->columns,
             'options' => $table->options
         ]);

@@ -129,7 +129,7 @@ export default {
                     {
                         title: "Customers",
                         link_type: "route",
-                        route: "customers",
+                        route: "customer_sales",
                         icon: ["fas", "users"],
                         visible: true
                     },

@@ -24,7 +24,7 @@ class Sales extends BaseModel {
     ];
 
     public function customer() {
-        return $this->hasOne(Customers::class, 'Id', 'CustomerId');
+        return $this->hasOne(CustomerSales::class, 'Id', 'CustomerId');
     }
 
     public function sales() {

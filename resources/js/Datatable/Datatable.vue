@@ -149,7 +149,7 @@
 
                 <Row
                     type="body"
-                    v-for="(child_row, child_id) in row.childs"
+                    v-for="(child_row, child_id) in row.children"
                     :class="[
                         rowClass(child_row),
                         {
@@ -501,7 +501,6 @@ export default {
         },
 
         refresh_data: function() {
-            console.log(['refresh_data', this.tab_to_refresh, this.active_tab]);
             if (this.tab_to_refresh === this.active_tab) {
                 this.data_loaded = false;
                 this.getData(true);
@@ -509,19 +508,16 @@ export default {
         },
 
         page_no: function(new_value, old_value) {
-            console.log('page_no');
             this.setExpandedRowId(0);
             this.data_loaded = false;
             this.getData(true);
         },
 
         source_data: function(new_value, old_value) {
-            console.log('source_data');
             this.data = new_value;
         },
 
         update_search: function(value) {
-            console.log('update_search');
             this.data_loaded = false;
             this.getData(true);
         }

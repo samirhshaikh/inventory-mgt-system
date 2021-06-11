@@ -97,19 +97,18 @@ class BaseDatatableController extends BaseController
     /**
      * @param $table
      * @param $records
+     * @param int $total_rows
      * @param int $page_no
      * @param mixed $search_text
      * @param int $get_all_records
      * @return array
      */
-    protected function prepareRecordsOutput($table, $records, int $page_no, $search_text = '', int $get_all_records = 0): array
+    protected function prepareRecordsOutput($table, $records, int $total_rows = 0, int $page_no, $search_text = '', int $get_all_records = 0): array
     {
         $page_size = session('app_settings.framework.page_size', 10);
 
-        $all_records = $records->get();
-
         $return = [];
-        $return['total_rows'] = count($all_records);
+        $return['total_rows'] = $total_rows;
 
         //Check whether user is searching for record on page other than 1
         if ($page_no > 1 && $search_text != '') {
@@ -120,7 +119,8 @@ class BaseDatatableController extends BaseController
             }
         }
 
-        if ($get_all_records == 0) {
+        //Some request needs all the data
+        if (empty($get_all_records)) {
             $records = $records->skip(($page_no - 1) * $page_size);
 
             $records = $records->limit($page_size);
@@ -129,7 +129,6 @@ class BaseDatatableController extends BaseController
         $records = $records->get()
             ->map
             ->transform();
-
 
         $return['rows'] = $records
             ->transform(function ($row, $key) use ($table) {

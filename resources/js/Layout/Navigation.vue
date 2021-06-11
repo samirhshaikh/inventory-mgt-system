@@ -87,6 +87,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import AppSettings from '../Misc/AppSettings.vue';
+import StoreSettings from '../Misc/StoreSettings.vue';
 
 export default {
     data() {
@@ -172,10 +173,16 @@ export default {
                         visible: this.$page.user_details.IsAdmin
                     },
                     {
+                        title: "Store",
+                        link_type: "javascript_link",
+                        link_function: "storeSettings",
+                        icon: ["fas", "store"],
+                        visible: this.$page.user_details.IsAdmin
+                    },
+                    {
                         title: "Settings",
                         link_type: "javascript_link",
                         link_function: "appSettings",
-                        // route: "app-settings",
                         icon: ["fas", "cog"],
                         visible: this.$page.user_details.IsAdmin
                     }
@@ -247,6 +254,15 @@ export default {
             this.setPopperOpen(true);
 
             this.$modal.show(AppSettings, {}, {
+                width: '50%',
+                height: '80%'
+            });
+        },
+
+        storeSettings() {
+            this.setPopperOpen(true);
+
+            this.$modal.show(StoreSettings, {}, {
                 width: '50%',
                 height: '80%'
             });

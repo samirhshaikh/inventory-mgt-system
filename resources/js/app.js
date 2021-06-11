@@ -17,6 +17,7 @@ import vSelect from 'vue-select';
 import 'vue-popperjs/dist/vue-popper.css';
 import DatePicker from 'v-calendar/lib/components/date-picker.umd';
 import VueMask from 'v-mask';
+import VuePdfApp from "vue-pdf-app";
 
 //Start: Fontawesome
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -48,7 +49,8 @@ import {
     faMagic,
     faPen,
     faTrash,
-    faFileAlt
+    faFileAlt,
+    faStore
 } from '@fortawesome/free-solid-svg-icons';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -79,7 +81,8 @@ library.add([
     faMagic,
     faPen,
     faTrash,
-    faFileAlt
+    faFileAlt,
+    faStore
 ]);
 
 Vue.component('FA', FontAwesomeIcon);
@@ -122,6 +125,7 @@ Vue.use(VueMask);
 Vue.component('vue-google-autocomplete', VueGoogleAutocomplete);
 Vue.component('v-select', vSelect);
 Vue.component('date-picker', DatePicker);
+Vue.component("vue-pdf-app", VuePdfApp);
 
 Vue.prototype.phonestock = {
     STATUS_IN_STOCK: "In Stock",

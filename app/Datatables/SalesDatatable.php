@@ -48,7 +48,7 @@ class SalesDatatable extends BaseDatatable
         ],
         [
             'name' => 'Total',
-            'key' => 'childs',
+            'key' => 'children',
             'enabled' => true,
             'th' => 'text-left sticky',
             'td' => 'text-left',

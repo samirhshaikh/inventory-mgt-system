@@ -7,12 +7,16 @@ use App\Models\Purchase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
+use Illuminate\Database\Eloquent\Builder;
 
 class PurchasesController extends BaseDatatableController
 {
-    public function getData(Request $request)
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function getData(Request $request): array
     {
-//        DB::enableQueryLog();
         $table = new PurchasesDatatable();
 
         $order_by = $request->get('order_by', '') == ''
@@ -43,10 +47,16 @@ class PurchasesController extends BaseDatatableController
             $records = $records->whereIn('Purchase.Id', $invoice_ids);
         }
 
+        //Get total records
+        $all_records = $records->addSelect(DB::raw('COUNT(*) as Record_Count'))
+            ->get()
+            ->first()
+        ;
+
         switch ($order_by) {
             case 'IMEI':
                 break;
-            case 'childs':
+            case 'children':
                 $records = $records->addSelect(DB::raw('*, SUM(PhoneStock.Cost) as Total_Cost'))
                     ->leftJoin('PhoneStock', 'PhoneStock.InvoiceId', '=', 'Purchase.Id')
                     ->groupBy('Purchase.Id')
@@ -59,19 +69,23 @@ class PurchasesController extends BaseDatatableController
                 $records = $records->orderBy($order_by, $order_direction);
         }
 
-//        $records = $records->get()->all();
-//        dd(DB::getQueryLog());
+        $records = $records->select('Purchase.*');
 
         return $this->prepareRecordsOutput(
             $table,
             $records,
+            $all_records['Record_Count'],
             (int)$request->get('page_no', 1),
             $request->get('search_text', ''),
             (int)$request->get('get_all_records', 0)
         );
     }
 
-    public function getDataUsingJoin(Request $request)
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function getDataUsingJoin(Request $request): array
     {
         $table = new PurchasesDatatable();
 
@@ -124,6 +138,12 @@ class PurchasesController extends BaseDatatableController
             $records = $this->prepareAdvancedSearch($records, json_decode($request->get('search_data')));
         }
 
+        //Get total records
+        $all_records = $records->addSelect(DB::raw('COUNT(*) as Record_Count'))
+            ->get()
+            ->first()
+        ;
+
         //If ordering on child records, then add the InvoiceNo as primary order by
         if ($order_by === "phones") {
             $records = $records->orderBy("InvoiceNo", "ASC");
@@ -131,16 +151,23 @@ class PurchasesController extends BaseDatatableController
 
         $records = $records->orderBy($order_by, $order_direction);
 
+        $records = $records->select('Purchase.*');
+
         return $this->prepareRecordsOutput(
             $table,
             $records,
+            $all_records['Record_Count'],
             (int)$request->get('page_no', 1),
             $request->get('search_text', ''),
             (int)$request->get('get_all_records', 0)
         );
     }
 
-    public function getInvoiceIds(Request $request)
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function getInvoiceIds(Request $request): array
     {
         $records = Purchase::selectRaw('Purchase.Id');
 
@@ -189,7 +216,12 @@ class PurchasesController extends BaseDatatableController
         return $records->pluck('Id')->all();
     }
 
-    protected function prepareAdvancedSearch($model, $search_data = [])
+    /**
+     * @param $model
+     * @param array $search_data
+     * @return Builder
+     */
+    protected function prepareAdvancedSearch($model, $search_data = []): Builder
     {
         foreach ($search_data as $column => $search_text) {
             if ($search_text == '' || is_null($search_text)) {

@@ -58,15 +58,15 @@ class PurchaseService
          * If no error is found then perform the operation.
          */
 
-        if (count($request->get('childs', [])) == 0) {
+        if (count($request->get('children', [])) == 0) {
             throw new InvalidDataException;
         }
 
         //Check whether the phones marked for deletion are having any reference in other tables or not.
         if (
             $request->get('operation', 'add') == 'edit' && //Delete is only applicable in existing purchases
-            count($request->get('deleted_childs', [])) &&
-            $this->phoneFoundInForeignTable($request->get('deleted_childs')) //Checking in reference tables
+            count($request->get('children_to_delete', [])) &&
+            $this->phoneFoundInForeignTable($request->get('children_to_delete')) //Checking in reference tables
         ) {
             throw new ReferenceException;
         }
@@ -74,7 +74,7 @@ class PurchaseService
         $phonestock_service = new PhoneStockService();
 
         //Check for duplicate imei
-        foreach ($request->get('childs', []) as $row) {
+        foreach ($request->get('children', []) as $row) {
             if ($phonestock_service->isDuplicateIMEI($row['IMEI'], $row['Id'] ?? 0)) {
                 throw new DuplicateIMEIException;
             }
@@ -91,9 +91,9 @@ class PurchaseService
         //Now delete the child phones
         if (
             $request->get('operation', 'add') == 'edit' &&
-            count($request->get('deleted_childs', []))
+            count($request->get('children_to_delete', []))
         ) {
-            foreach ($request->get('deleted_childs', []) as $row) {
+            foreach ($request->get('children_to_delete', []) as $row) {
                 PhoneStock::where('Id', $row['Id'])->delete();
             }
         }
@@ -120,7 +120,7 @@ class PurchaseService
         }
 
         //Create/Update records in phonestock table
-        return $phonestock_service->save($record->Id, $request->get('childs', []));
+        return $phonestock_service->save($record->Id, $request->get('children', []));
     }
 
     /**

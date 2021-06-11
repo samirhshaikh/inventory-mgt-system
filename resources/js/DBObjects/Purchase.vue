@@ -614,7 +614,7 @@ export default {
                 Network: "Unlocked"
             },
             rows: [],
-            deleted_childs: [],
+            children_to_delete: [],
 
             saving_data: false,
             checking_duplicate_imei: false,
@@ -737,7 +737,6 @@ export default {
             dark_mode: state => state.framework.dark_mode,
             expanded_sidebar: state => state.framework.expanded_sidebar,
             local_settings: state => state.local_settings,
-            store_settings: state => state.store_settings,
             refresh_suppliers: state => state.framework.refresh_suppliers,
             refresh_handset_models: state => state.framework.refresh_handset_models,
             refresh_handset_manufacturers: state => state.framework.refresh_handset_manufacturers,
@@ -765,7 +764,7 @@ export default {
                         this.row = _.cloneDeep(record);
 
                         //Assign a random id to the child row.
-                        _.forEach(record.childs, (child_row, key) => {
+                        _.forEach(record.children, (child_row, key) => {
                             child_row["row_id"] = helper_functions.getRandomId();
                             this.rows.push(child_row);
                         });
@@ -802,7 +801,7 @@ export default {
                 if (object["row_id"] != row_id) {
                     rows.push(_.cloneDeep(object));
                 } else if (Object.keys(object).indexOf("Id") >= 0 && object["Id"] != "") {
-                    this.deleted_childs.push(object);
+                    this.children_to_delete.push(object);
                 }
             });
 
@@ -896,8 +895,8 @@ export default {
             }
 
             this.row["operation"] = this.edit_id == "" ? "add" : "edit";
-            this.row["childs"] = this.rows;
-            this.row["deleted_childs"] = this.deleted_childs;
+            this.row["children"] = this.rows;
+            this.row["children_to_delete"] = this.children_to_delete;
 
             //save the user
             this.saving_data = true;

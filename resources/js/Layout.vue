@@ -56,12 +56,22 @@ export default {
     data() {
         return {
             restoreState: {
-                framework: {method: 'framework/setFrameworkFromAppSettings', payload: this.$page.app_settings},
+                framework: {
+                    method: 'framework/setFrameworkFromAppSettings',
+                    payload: this.$page.app_settings
+                },
+                app_settings: {
+                    method: 'app_settings/setAppSettingsFromAppSettings',
+                    payload: this.$page.app_settings
+                },
                 store_settings: {
                     method: 'store_settings/setStoreSettingsFromAppSettings',
                     payload: this.$page.app_settings
                 },
-                datatable: {method: 'datatable/setDatatableFromAppSetting', payload: this.$page.app_settings}
+                datatable: {
+                    method: 'datatable/setDatatableFromAppSetting',
+                    payload: this.$page.app_settings
+                }
             },
             width: 0
         };
@@ -74,6 +84,7 @@ export default {
         }
 
         _.forEach(this.restoreState, (data, key) => {
+            console.log(data);
             // Check whether the app_settings (data.payload) contains the state we want to restore
             if (Object.keys(data.payload).indexOf(key) >= 0) {
                 this.$store.commit(data.method, data.payload[key]);

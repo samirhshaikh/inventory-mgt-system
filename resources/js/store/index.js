@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import 'es6-promise/auto';
 import dbSettings from '../Helpers/dbSettings';
 import framework from './modules/framework';
+import app_settings from './modules/app_settings';
 import store_settings from './modules/store_settings';
 import local_settings from './modules/local_settings';
 import datatable from './modules/datatable';
@@ -17,6 +18,7 @@ export default new Vuex.Store({
 
     modules: {
         framework,
+        app_settings,
         store_settings,
         local_settings,
         datatable,

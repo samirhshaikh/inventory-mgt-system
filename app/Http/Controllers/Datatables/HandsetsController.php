@@ -9,7 +9,11 @@ use Illuminate\Support\Arr;
 
 class HandsetsController extends BaseDatatableController
 {
-    public function getData(Request $request)
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function getData(Request $request): array
     {
         $table = new HandsetsDatatable();
 

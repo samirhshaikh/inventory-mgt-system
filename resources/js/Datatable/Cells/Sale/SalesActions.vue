@@ -42,6 +42,8 @@ import { mapActions } from "vuex";
 import Confirm from "../../../components/Confirm.vue";
 import {datatable_cell} from "../datatable_cell";
 import {notifications} from "../../../Helpers/notifications";
+import Invoice from "./Invoice";
+import helper_functions from "../../../Helpers/helper_functions";
 
 export default {
     mixins: [datatable_cell, notifications],
@@ -130,7 +132,24 @@ export default {
         },
 
         viewSalesInvoice() {
+            this.setPopperOpen(true);
 
+            this.$modal.show(
+                Invoice,
+                {
+                    invoice_id: String(this.row.Id)
+                },
+                {
+                    width: "90%",
+                    height: "80%"
+                },
+                {
+                    "opened": event => {
+                    },
+                    "closed": event => {
+                    }
+                }
+            );
         },
 
         ...mapActions({

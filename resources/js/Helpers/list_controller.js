@@ -49,16 +49,16 @@ export const list_controller = {
     computed: {
         ...mapState({
             local_settings: state => state.local_settings,
-            store_settings: state => state.store_settings
+            app_settings: state => state.app_settings
         })
     },
 
     mounted() {
-        this.stock_types = this.store_settings.stock_types.split(',');
-        this.networks = this.store_settings.networks.split(',');
-        this.phone_sizes = this.store_settings.phone_sizes.split(',');
-        this.stock_statuses = this.store_settings.stock_statuses.split(',');
-        this.payment_types = this.store_settings.payment_types.split(',');
+        this.stock_types = this.app_settings.stock_types.split(',');
+        this.networks = this.app_settings.networks.split(',');
+        this.phone_sizes = this.app_settings.phone_sizes.split(',');
+        this.stock_statuses = this.app_settings.stock_statuses.split(',');
+        this.payment_types = this.app_settings.payment_types.split(',');
 
         this.load_suppliers();
 

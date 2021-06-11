@@ -6,10 +6,16 @@ use App\Datatables\PhoneStockDatatable;
 use App\Models\PhoneStock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class PhoneStockController extends BaseDatatableController
 {
-    public function getData(Request $request)
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function getData(Request $request): array
     {
         $table = new PhoneStockDatatable();
 
@@ -24,10 +30,10 @@ class PhoneStockController extends BaseDatatableController
             $order_by = 'PhoneStock.UpdatedDate';
         }
 
-        $records = PhoneStock::selectRaw('PhoneStock.*, ManufactureMaster.Name, ColorMaster.Name, modelmaster.Name')
+        $records = PhoneStock::selectRaw('PhoneStock.*, ManufactureMaster.Name, ColorMaster.Name, ModelMaster.Name')
             ->leftJoin('ManufactureMaster', 'ManufactureMaster.Id', '=', 'MakeId')
             ->leftJoin('ColorMaster', 'ColorMaster.Id', '=', 'ColorId')
-            ->leftJoin('modelmaster', 'modelmaster.Id', '=', 'ModelId');
+            ->leftJoin('ModelMaster', 'ModelMaster.Id', '=', 'ModelId');
 
         if ($request->get("available_stock_only", 0)) {
             $records = $records->whereRaw('PhoneStock.Status != "Sold"');
@@ -40,7 +46,7 @@ class PhoneStockController extends BaseDatatableController
                 'IMEI',
                 'ManufactureMaster.Name',
                 'ColorMaster.Name',
-                'modelmaster.Name',
+                'ModelMaster.Name',
                 'Size',
                 'Cost',
                 'StockType',
@@ -56,18 +62,29 @@ class PhoneStockController extends BaseDatatableController
             $records = $this->prepareAdvancedSearch($records, json_decode($request->get('search_data')));
         }
 
+        //Get total records
+        $all_records = $records->addSelect(DB::raw('COUNT(*) as Record_Count'))
+            ->get()
+            ->first()
+        ;
+
         $records = $records->orderBy($order_by, $order_direction);
 
         return $this->prepareRecordsOutput(
             $table,
             $records,
+            $all_records['Record_Count'],
             (int)$request->get('page_no', 1),
             $request->get('search_text', ''),
             (int)$request->get('get_all_records', 0)
         );
     }
 
-    public function getAvailablePhoneData(Request $request)
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function getAvailablePhoneData(Request $request): array
     {
         $request->merge([
             "available_stock_only" => 1,
@@ -77,7 +94,12 @@ class PhoneStockController extends BaseDatatableController
         return $this->getData($request);
     }
 
-    protected function prepareAdvancedSearch($model, $search_data = [])
+    /**
+     * @param $model
+     * @param array $search_data
+     * @return Builder
+     */
+    protected function prepareAdvancedSearch($model, $search_data = []): Builder
     {
         foreach ($search_data as $column => $search_text) {
             if ($search_text == '' || is_null($search_text)) {
@@ -89,7 +111,7 @@ class PhoneStockController extends BaseDatatableController
                     $model = $this->prepareAdvancedSearchQuery($model, 'ManufactureMaster.Name', $search_text);
                     break;
                 case 'model':
-                    $model = $this->prepareAdvancedSearchQuery($model, 'modelmaster.Name', $search_text);
+                    $model = $this->prepareAdvancedSearchQuery($model, 'ModelMaster.Name', $search_text);
                     break;
                 case 'color':
                     $model = $this->prepareAdvancedSearchQuery($model, 'ColorMaster.Name', $search_text);

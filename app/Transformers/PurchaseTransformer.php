@@ -29,14 +29,14 @@ class PurchaseTransformer extends TransformerAbstract
             }
         }
 
-        $return['childs'] = [];
+        $return['children'] = [];
         if ($model->relationLoaded('purchases')) {
             if ($model->purchases) {
                 foreach ($model->purchases as $key => $value) {
                     $child = $value->transform();
                     $child['_level'] = 1;
 
-                    $return['childs'][] = $child;
+                    $return['children'][] = $child;
                 }
             }
         }

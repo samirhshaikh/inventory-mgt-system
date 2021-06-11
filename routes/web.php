@@ -105,6 +105,7 @@ Route::group(['prefix' => 'sale'], function ($router) {
     $router->post('delete', 'DBObjects\SalesController@delete')->name('sale.delete');
     $router->post('return-item', 'DBObjects\SalesController@returnItem')->name('sale.return-item');
     $router->get('get-next-invoice-no', 'DBObjects\SalesController@getNextInvoiceNo')->name('sale.return-item');
+    $router->get('get-pdf-invoice', 'DBObjects\SalesController@getPDFInvoice')->name('sale.get-pdf-invoice');
 });
 
 Route::get('/app-settings', 'PagesController@appSettings')->name('app-settings');

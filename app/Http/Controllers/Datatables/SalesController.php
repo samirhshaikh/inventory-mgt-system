@@ -7,10 +7,15 @@ use App\Models\Sales;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
+use Illuminate\Database\Eloquent\Builder;
 
 class SalesController extends BaseDatatableController
 {
-    public function getData(Request $request)
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function getData(Request $request): array
     {
 //        DB::enableQueryLog();
         $table = new SalesDatatable();
@@ -35,18 +40,24 @@ class SalesController extends BaseDatatableController
 
         $records = $records->leftjoin('Customer_Sales', 'Customer_Sales.Id', '=', 'CustomerId');
 
-        $records = $records->with(['sales' => function ($query) {
-            $query->orderBy('IMEI', 'ASC');
-        }]);
-
         if (!is_null($invoice_ids)) {
             $records = $records->whereIn('Sales.Id', $invoice_ids);
         }
 
+        //Get total records
+        $all_records = $records->addSelect(DB::raw('COUNT(*) as Record_Count'))
+            ->get()
+            ->first()
+        ;
+
+        $records = $records->with(['sales' => function ($query) {
+            $query->orderBy('IMEI', 'ASC');
+        }]);
+
         switch ($order_by) {
             case 'IMEI':
                 break;
-            case 'childs':
+            case 'children':
                 $records = $records->addSelect(DB::raw('*, SUM(SalesStock.Cost) as Total_Cost'))
                     ->leftJoin('SalesStock', 'SalesStock.InvoiceId', '=', 'Sales.Id')
                     ->groupBy('Sales.Id')
@@ -70,13 +81,18 @@ class SalesController extends BaseDatatableController
         return $this->prepareRecordsOutput(
             $table,
             $records,
+            $all_records['Record_Count'],
             (int)$request->get('page_no', 1),
             $request->get('search_text', ''),
             (int)$request->get('get_all_records', 0)
         );
     }
 
-    public function getInvoiceIds(Request $request)
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function getInvoiceIds(Request $request): array
     {
         $records = Sales::selectRaw('Sales.Id');
 
@@ -127,7 +143,12 @@ class SalesController extends BaseDatatableController
         return $records->pluck('Id')->all();
     }
 
-    protected function prepareAdvancedSearch($model, $search_data = [])
+    /**
+     * @param $model
+     * @param array $search_data
+     * @return Builder
+     */
+    protected function prepareAdvancedSearch($model, $search_data = []): Builder
     {
         foreach ($search_data as $column => $search_text) {
             if ($search_text == '' || is_null($search_text)) {

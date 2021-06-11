@@ -9,6 +9,9 @@ const dbSettings = store => {
         "framework/setPagesize": {
             refresh: true
         },
+        "app_settings/setAppSettings": {
+            refresh: false
+        },
         "store_settings/setStoreSettings": {
             refresh: false
         },
@@ -27,6 +30,7 @@ const dbSettings = store => {
                 .post("/storeAppSettings", {
                     framework: state.framework,
                     datatable: datatable,
+                    app_settings: state.app_settings,
                     store_settings: state.store_settings
                 })
                 .then(

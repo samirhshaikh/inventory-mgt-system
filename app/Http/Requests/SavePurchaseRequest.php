@@ -22,7 +22,7 @@ class SavePurchaseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'childs' => 'required|array|min:1',
+            'children' => 'required|array|min:1',
             'SupplierId' => 'required'
         ];
     }
@@ -35,8 +35,8 @@ class SavePurchaseRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'childs.required' => 'Items are required',
-            'childs.min' => 'Atleast one item is required',
+            'children.required' => 'Items are required',
+            'children.min' => 'Atleast one item is required',
             'SupplierId.required' => 'Supplier is required',
         ];
     }

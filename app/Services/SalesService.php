@@ -74,11 +74,11 @@ class SalesService
         //Now delete the child phones
         if (
             $request->get('operation', 'add') == 'edit' &&
-            count($request->get('deleted_childs', []))
+            count($request->get('children_to_delete', []))
         ) {
             $phonestock_service = new PhoneStockService();
 
-            foreach ($request->get('deleted_childs', []) as $row) {
+            foreach ($request->get('children_to_delete', []) as $row) {
                 $phone = SalesStock::where('Id', $row['Id'])
                     ->get();
                 if ($phone->count()) {
@@ -125,7 +125,7 @@ class SalesService
         $salesstock_service = new SalesStockService();
 
         //Create/Update records in salesstock table
-        return $salesstock_service->save($record->Id, $request->get('childs', []));
+        return $salesstock_service->save($record->Id, $request->get('children', []));
     }
 
     /**

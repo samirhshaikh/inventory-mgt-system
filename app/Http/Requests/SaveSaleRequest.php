@@ -24,7 +24,7 @@ class SaveSaleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'childs' => 'required|array|min:1',
+            'children' => 'required|array|min:1',
             'CustomerId' => 'required',
             'InvoiceDate' => 'required',
             'PaymentMethod' => 'required',
@@ -39,8 +39,8 @@ class SaveSaleRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'childs.required' => 'Items are required',
-            'childs.min' => 'Atleast one item is required',
+            'children.required' => 'Items are required',
+            'children.min' => 'Atleast one item is required',
             'CustomerId.required' => 'Customer Id is required',
             'InvoiceDate.required' => 'Invoice Date is required',
             'PaymentMethod.required' => 'Payment Method is required',

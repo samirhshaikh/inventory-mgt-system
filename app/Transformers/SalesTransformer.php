@@ -36,14 +36,14 @@ class SalesTransformer extends TransformerAbstract
             }
         }
 
-        $return['childs'] = [];
+        $return['children'] = [];
         if ($model->relationLoaded('sales')) {
             if ($model->sales) {
                 foreach ($model->sales as $key => $value) {
                     $child = $value->transform();
                     $child['_level'] = 1;
 
-                    $return['childs'][] = $child;
+                    $return['children'][] = $child;
                 }
             }
         }

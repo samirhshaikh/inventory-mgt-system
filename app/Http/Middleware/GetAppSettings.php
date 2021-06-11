@@ -13,7 +13,7 @@ class GetAppSettings
 
     /**
      * Handle an incoming request
-     * 
+     *
      * @param \Illuminate\Http\Request $request
      * @param \Closure $next
      * @param string|null $guard
@@ -43,6 +43,11 @@ class GetAppSettings
         //Initialise with empty value
         if (!array_key_exists('framework', $payload)) {
             $payload['framework'] = [];
+        }
+
+        //Initialise with empty value
+        if (!array_key_exists('app_settings', $payload)) {
+            $payload['app_settings'] = [];
         }
 
         //Initialise with empty value

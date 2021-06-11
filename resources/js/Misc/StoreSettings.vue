@@ -21,7 +21,7 @@
                             'text-product-color': !dark_mode
                         }"
                     >
-                        Application Settings
+                        Store Settings
                     </h1>
                     <div
                         class="float-right flex justify-end mr-2 text-white w-64"
@@ -38,7 +38,11 @@
                             @click.native="save"
                             icon="check"
                             split="border-white"
-                            class="bg-green-600 ml-1"
+                            class="ml-1"
+                            :class="{
+                                'bg-green-600': valid_data,
+                                'bg-gray-600 text-gray-500 cursor-not-allowed': !valid_data
+                            }"
                         >
                             Save
                         </Button>
@@ -50,21 +54,23 @@
                         <div class="w-full px-3">
                             <label
                                 class="block uppercase tracking-wide text-gray-700 text-sm font-semibold mb-2"
-                                for="stock_types"
+                                for="business_name"
                             >
-                                Stock Types
+                                Business Name
                             </label>
-                            <textarea
+                            <input
                                 class="block w-full generic_input"
-                                id="stock_types"
-                                v-model.trim="stock_types"
-                            ></textarea>
+                                id="business_name"
+                                type="text"
+                                v-model.trim="business_name"
+                            />
+
                             <p
-                                class="text-red-500 text-xs italic mb-2"
+                                class="form_field_message"
                                 :class="{
                                     hidden:
-                                        stock_types != '' &&
-                                        stock_types != null
+                                        business_name != '' &&
+                                        business_name != null
                                 }"
                             >
                                 Required
@@ -76,21 +82,22 @@
                         <div class="w-full px-3">
                             <label
                                 class="block uppercase tracking-wide text-gray-700 text-sm font-semibold mb-2"
-                                for="networks"
+                                for="address"
                             >
-                                Networks
+                                Address
                             </label>
                             <textarea
                                 class="block w-full generic_input"
-                                id="networks"
-                                v-model.trim="networks"
+                                id="address"
+                                v-model.trim="store_address"
                             ></textarea>
+
                             <p
-                                class="text-red-500 text-xs italic mb-2"
+                                class="form_field_message"
                                 :class="{
                                     hidden:
-                                        networks != '' &&
-                                        networks != null
+                                        store_address != '' &&
+                                        store_address != null
                                 }"
                             >
                                 Required
@@ -102,25 +109,16 @@
                         <div class="w-full px-3">
                             <label
                                 class="block uppercase tracking-wide text-gray-700 text-sm font-semibold mb-2"
-                                for="phone_sizes"
+                                for="phone"
                             >
-                                Phone Sizes
+                                Phone
                             </label>
-                            <textarea
+                            <input
                                 class="block w-full generic_input"
-                                id="phone_sizes"
-                                v-model.trim="phone_sizes"
-                            ></textarea>
-                            <p
-                                class="text-red-500 text-xs italic mb-2"
-                                :class="{
-                                    hidden:
-                                        phone_sizes != '' &&
-                                        phone_sizes != null
-                                }"
-                            >
-                                Required
-                            </p>
+                                id="phone"
+                                type="text"
+                                v-model.trim="phone"
+                            />
                         </div>
                     </div>
 
@@ -128,50 +126,25 @@
                         <div class="w-full px-3">
                             <label
                                 class="block uppercase tracking-wide text-gray-700 text-sm font-semibold mb-2"
-                                for="stock_statuses"
+                                for="phone"
                             >
-                                Stock Status
+                                Email
                             </label>
-                            <textarea
+                            <input
                                 class="block w-full generic_input"
-                                id="stock_statuses"
-                                v-model.trim="stock_statuses"
-                            ></textarea>
-                            <p
-                                class="text-red-500 text-xs italic mb-2"
-                                :class="{
-                                    hidden:
-                                        stock_statuses != '' &&
-                                        stock_statuses != null
-                                }"
-                            >
-                                Required
-                            </p>
-                        </div>
-                    </div>
+                                id="email"
+                                type="text"
+                                v-model.trim="email"
+                            />
 
-                    <div class="flex flex-wrap -mx-3 mb-5">
-                        <div class="w-full px-3">
-                            <label
-                                class="block uppercase tracking-wide text-gray-700 text-sm font-semibold mb-2"
-                                for="payment_types"
-                            >
-                                Payment Types
-                            </label>
-                            <textarea
-                                class="block w-full generic_input"
-                                id="payment_types"
-                                v-model.trim="payment_types"
-                            ></textarea>
                             <p
-                                class="text-red-500 text-xs italic mb-2"
+                                class="form_field_message"
                                 :class="{
                                     hidden:
-                                        payment_types != '' &&
-                                        payment_types != null
+                                        valid_email
                                 }"
                             >
-                                Required
+                                Valid email required
                             </p>
                         </div>
                     </div>
@@ -183,52 +156,70 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import helper_functions from "../Helpers/helper_functions";
 
 export default {
     data() {
         return {
-            stock_types: "",
-            networks: "",
-            phone_sizes: "",
-            stock_statuses: "",
-            payment_types: "",
+            business_name: "",
+            store_address: "",
+            phone: "",
+            email: "",
         }
     },
 
     computed: {
+        valid_data() {
+            if (
+                this.business_name == "" ||
+                this.store_address == null ||
+                !this.valid_email
+            ) {
+                return false;
+            }
+
+            return true;
+        },
+
+        valid_email() {
+            return this.email === '' || helper_functions.validEmail(this.email)
+        },
+
         ...mapState({
-            app_settings: state => state.app_settings,
+            store_settings: state => state.store_settings,
             dark_mode: state => state.framework.dark_mode,
             expanded_sidebar: state => state.framework.expanded_sidebar
         })
     },
 
     mounted() {
-        this.stock_types = this.app_settings.stock_types;
-        this.networks = this.app_settings.networks;
-        this.phone_sizes = this.app_settings.phone_sizes;
-        this.stock_statuses = this.app_settings.stock_statuses;
-        this.payment_types = this.app_settings.payment_types;
+        this.business_name = this.store_settings.name;
+        this.store_address = this.store_settings.address;
+        this.phone = this.store_settings.phone;
+        this.email = this.store_settings.email;
     },
 
     methods: {
         save() {
+            if (!this.valid_data) {
+                return false;
+            }
+
             let settings = {
-                stock_types: this.stock_types,
-                networks: this.networks,
-                phone_sizes: this.phone_sizes,
-                stock_statuses: this.stock_statuses,
-                payment_types: this.payment_types
+                name: this.business_name,
+                address: this.store_address,
+                phone: this.phone,
+                email: this.email
             };
             // console.log(settings);
 
-            this.setAppSettings(settings);
+            this.setStoreSettings(settings);
 
             this.$modal.hide(this.$parent.name)
         },
 
         ...mapActions({
-			setAppSettings: "app_settings/setAppSettings"
+            setStoreSettings: "store_settings/setStoreSettings"
         })
     }
 };

@@ -6,10 +6,15 @@ use App\Datatables\HandsetModelsDatatable;
 use App\Models\HandsetModels;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class HandsetModelsController extends BaseDatatableController
 {
-    public function getData(Request $request)
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function getData(Request $request): array
     {
         $table = new HandsetModelsDatatable;
 
@@ -32,11 +37,18 @@ class HandsetModelsController extends BaseDatatableController
             $records = $this->prepareSearch($records, $fields_to_search, $request->get('search_text'));
         }
 
+        //Get total records
+        $all_records = $records->addSelect(DB::raw('COUNT(*) as Record_Count'))
+            ->get()
+            ->first()
+        ;
+
         $records = $records->orderBy($order_by, $order_direction);
 
         return $this->prepareRecordsOutput(
             $table,
             $records,
+            $all_records['Record_Count'],
             (int)$request->get('page_no', 1),
             $request->get('search_text', ''),
             (int)$request->get('get_all_records', 0)

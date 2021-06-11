@@ -15,7 +15,7 @@ export const datatable_cell = {
         expanded_row_id: {
             type: Number,
             default: 0
-        },
+        }
     },
 
     data() {

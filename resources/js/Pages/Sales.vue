@@ -75,10 +75,11 @@ import loading from "@/Misc/Loading.vue";
 import Sale from "../DBObjects/Sale.vue";
 import {list_controller} from "../Helpers/list_controller";
 import {datatable_common} from "../Helpers/datatable_common";
+import {common_functions} from "../Helpers/common_functions";
 import SearchParameters from "../components/Search/SearchParameters";
 
 export default {
-    mixins: [list_controller, datatable_common],
+    mixins: [list_controller, datatable_common, common_functions],
 
     props: {
         child_columns: {
@@ -211,14 +212,8 @@ export default {
                 {
                     edit_id: "",
                     options: this.options,
-                    columns: this.columns
-                },
-                {
-                    width: "90%",
-                    height: "80%"
-                },
-                {
-                    "closed": event => {
+                    columns: this.columns,
+                    submitRecordSaved: (invoice_id) => {
                         this.setTableMetaData({
                             columns: this.columns,
                             options: this.options
@@ -226,6 +221,18 @@ export default {
 
                         this.setActiveTab(this.options.id);
                         this.setTabToRefresh(this.options.id);
+
+                        //Open Print Invoice dialog
+                        this.viewSalesInvoice(invoice_id);
+                    }
+                },
+                {
+                    width: "90%",
+                    height: "80%"
+                },
+                {
+                    "closed": event => {
+
                     }
                 }
             );

@@ -25,9 +25,10 @@
 import Sale from "../../../DBObjects/Sale.vue";
 import { mapActions } from "vuex";
 import {datatable_cell} from "../datatable_cell";
+import {common_functions} from "../../../Helpers/common_functions";
 
 export default {
-    mixins: [datatable_cell],
+    mixins: [datatable_cell, common_functions],
 
     methods: {
         sellItem() {
@@ -50,7 +51,7 @@ export default {
         },
 
         viewSalesInvoice() {
-
+            // this.viewSalesInvoice();
         },
 
         ...mapActions({

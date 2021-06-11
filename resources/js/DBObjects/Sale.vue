@@ -143,7 +143,7 @@
                                         label="Size"
                                         v-model="row['PaymentMethod']"
                                         :options="payment_types"
-                                        class="w-32 generic_vs_select"
+                                        class="w-40 generic_vs_select"
                                         :class="{
                                             required_field: row['PaymentMethod'] == '' || row['PaymentMethod'] == null
                                         }"
@@ -414,6 +414,9 @@ export default {
             type: String,
             default: ""
         },
+        submitRecordSaved: {
+            type: Function
+        }
     },
 
     mixins: [list_controller, notifications],
@@ -700,7 +703,7 @@ export default {
 
             this.row["operation"] = this.edit_id == "" ? "add" : "edit";
             this.row["children"] = this.rows;
-            this.row["deleted_childs"] = this.deleted_childs;
+            this.row["children_to_delete"] = this.children_to_delete;
 
             //save the user
             this.saving_data = true;
@@ -716,6 +719,13 @@ export default {
                         });
 
                         this.refreshData(this.options.id);
+
+                        const handler = this.submitRecordSaved;
+                        if (typeof handler === "function") {
+                            handler(response.data.response.id);
+
+                            this.$modal.hide(this.$parent.name);
+                        }
                     }
 
                     this.saving_data = false;

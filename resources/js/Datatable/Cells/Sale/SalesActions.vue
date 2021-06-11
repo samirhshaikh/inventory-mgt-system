@@ -1,7 +1,7 @@
 <template>
     <div class="flex">
         <Button
-            @click.native="viewSalesInvoice"
+            @click.native="viewSalesInvoice(row.Id)"
             icon="file-alt"
             split="border-white"
             class="text-white bg-green-600"
@@ -42,11 +42,11 @@ import { mapActions } from "vuex";
 import Confirm from "../../../components/Confirm.vue";
 import {datatable_cell} from "../datatable_cell";
 import {notifications} from "../../../Helpers/notifications";
+import {common_functions} from "../../../Helpers/common_functions";
 import Invoice from "./Invoice";
-import helper_functions from "../../../Helpers/helper_functions";
 
 export default {
-    mixins: [datatable_cell, notifications],
+    mixins: [datatable_cell, notifications, common_functions],
 
     methods: {
         edit() {
@@ -127,27 +127,6 @@ export default {
                 {
                     width: "350px",
                     height: "auto"
-                }
-            );
-        },
-
-        viewSalesInvoice() {
-            this.setPopperOpen(true);
-
-            this.$modal.show(
-                Invoice,
-                {
-                    invoice_id: String(this.row.Id)
-                },
-                {
-                    width: "90%",
-                    height: "80%"
-                },
-                {
-                    "opened": event => {
-                    },
-                    "closed": event => {
-                    }
                 }
             );
         },

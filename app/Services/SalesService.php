@@ -125,7 +125,9 @@ class SalesService
         $salesstock_service = new SalesStockService();
 
         //Create/Update records in salesstock table
-        return $salesstock_service->save($record->Id, $request->get('children', []));
+        $salesstock_service->save($record->Id, $request->get('children', []));
+
+        return $record->Id;
     }
 
     /**

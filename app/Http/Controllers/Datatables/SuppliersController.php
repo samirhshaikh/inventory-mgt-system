@@ -46,10 +46,10 @@ class SuppliersController extends BaseDatatableController
             $records = $this->prepareAdvancedSearch($records, json_decode($request->get('search_data')));
         }
 
+        $records = $records->orderBy($order_by, $order_direction);
+
         //Get total records
         $total_records = $this->getTotalRecords(clone $records);
-
-        $records = $records->orderBy($order_by, $order_direction);
 
         return $this->prepareRecordsOutput(
             $table,

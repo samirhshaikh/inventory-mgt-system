@@ -222,7 +222,6 @@ export default {
             if (typeof handler === "function") {
                 handler(this.selected_records);
 
-                console.log(['recordpicker', this.$parent.name]);
                 this.$modal.hide(this.$parent.name);
             }
         },

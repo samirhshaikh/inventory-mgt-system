@@ -931,7 +931,7 @@ export default {
                             text: this.formatMessage(error.response.data.message, this.options.record_name)
                         });
 
-                        _.forIn(this.deleted_childs, (object, key) => {
+                        _.forIn(this.children_to_delete, (object, key) => {
                             this.rows.push(_.clone(object))
                         });
                     }

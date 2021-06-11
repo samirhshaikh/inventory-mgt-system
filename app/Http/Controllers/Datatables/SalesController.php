@@ -175,6 +175,8 @@ class SalesController extends BaseDatatableController
                     $model = $this->prepareAdvancedSearchQuery($model, ['InvoiceNo', $this->getInvoiceSearchString()], $search_text);
                     break;
                 case 'IMEI':
+                    $model = $this->prepareAdvancedSearchQuery($model, 'SalesStock.IMEI', $search_text);
+                    break;
                 case 'Cost':
                     $model = $this->prepareAdvancedSearchQuery($model, 'Sales.' . $column, $search_text);
                     break;

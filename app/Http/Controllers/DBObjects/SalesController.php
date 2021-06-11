@@ -43,10 +43,9 @@ class SalesController extends BaseController
         $sales_service = new SalesService();
 
         try {
-            $records_count = $sales_service->save($request);
-            //start here. Need to see whether the record is correctly saved or not
+            $invoice_id = $sales_service->save($request);
 
-            return $this->sendOK(['records_count' => $records_count], self::RECORD_SAVED);
+            return $this->sendOK(['records_count' => 1, 'id' => $invoice_id], self::RECORD_SAVED);
         } catch (RecordNotFoundException $e) {
             return $this->sendError(self::RECORD_NO_FOUND, [],JsonResponse::HTTP_NOT_FOUND);
         } catch (InvalidDataException $e) {

@@ -6,7 +6,6 @@ use App\Datatables\HandsetColorsDatatable;
 use App\Models\HandsetColors;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
 
 class HandsetColorsController extends BaseDatatableController
 {
@@ -38,17 +37,14 @@ class HandsetColorsController extends BaseDatatableController
         }
 
         //Get total records
-        $all_records = $records->addSelect(DB::raw('COUNT(*) as Record_Count'))
-            ->get()
-            ->first()
-        ;
+        $total_records = $this->getTotalRecords(clone $records);
 
         $records = $records->orderBy($order_by, $order_direction);
 
         return $this->prepareRecordsOutput(
             $table,
             $records,
-            $all_records['Record_Count'],
+            $total_records,
             (int)$request->get('page_no', 1),
             $request->get('search_text', ''),
             (int)$request->get('get_all_records', 0)

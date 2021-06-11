@@ -48,10 +48,7 @@ class PurchasesController extends BaseDatatableController
         }
 
         //Get total records
-        $all_records = $records->addSelect(DB::raw('COUNT(*) as Record_Count'))
-            ->get()
-            ->first()
-        ;
+        $total_records = $this->getTotalRecords(clone $records);
 
         switch ($order_by) {
             case 'IMEI':
@@ -74,7 +71,7 @@ class PurchasesController extends BaseDatatableController
         return $this->prepareRecordsOutput(
             $table,
             $records,
-            $all_records['Record_Count'],
+            $total_records,
             (int)$request->get('page_no', 1),
             $request->get('search_text', ''),
             (int)$request->get('get_all_records', 0)
@@ -139,10 +136,7 @@ class PurchasesController extends BaseDatatableController
         }
 
         //Get total records
-        $all_records = $records->addSelect(DB::raw('COUNT(*) as Record_Count'))
-            ->get()
-            ->first()
-        ;
+        $total_records = $this->getTotalRecords(clone $records);
 
         //If ordering on child records, then add the InvoiceNo as primary order by
         if ($order_by === "phones") {
@@ -156,7 +150,7 @@ class PurchasesController extends BaseDatatableController
         return $this->prepareRecordsOutput(
             $table,
             $records,
-            $all_records['Record_Count'],
+            $total_records,
             (int)$request->get('page_no', 1),
             $request->get('search_text', ''),
             (int)$request->get('get_all_records', 0)

@@ -45,10 +45,7 @@ class SalesController extends BaseDatatableController
         }
 
         //Get total records
-        $all_records = $records->addSelect(DB::raw('COUNT(*) as Record_Count'))
-            ->get()
-            ->first()
-        ;
+        $total_records = $this->getTotalRecords(clone $records);
 
         $records = $records->with(['sales' => function ($query) {
             $query->orderBy('IMEI', 'ASC');
@@ -81,7 +78,7 @@ class SalesController extends BaseDatatableController
         return $this->prepareRecordsOutput(
             $table,
             $records,
-            $all_records['Record_Count'],
+            $total_records,
             (int)$request->get('page_no', 1),
             $request->get('search_text', ''),
             (int)$request->get('get_all_records', 0)

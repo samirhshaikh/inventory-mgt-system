@@ -155,6 +155,24 @@ class BaseDatatableController extends BaseController
         return false;
     }
 
+    /**
+     * @param Builder $records
+     * @return int
+     */
+    protected function getTotalRecords(Builder $records): int
+    {
+        try {
+            $all_records = $records->addSelect(DB::raw('COUNT(*) as Record_Count'))
+                ->get()
+                ->first()
+            ;
+
+            return $all_records['Record_Count'];
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
+
     protected function getSql($model)
     {
         $replace = function ($sql, $bindings) {

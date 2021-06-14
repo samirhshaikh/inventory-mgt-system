@@ -70,7 +70,7 @@ class SalesController extends BaseDatatableController
                 $records = $records->orderBy($order_by, $order_direction);
         }
 
-        $records = $records->select('Sales.*');
+        $records = $records->addSelect('Sales.*');
 
 //        $records = $records->get()->all();
 //        dd(DB::getQueryLog());

@@ -23,6 +23,7 @@
 import ReturnItem from "../../../DBObjects/ReturnItem";
 import {datatable_cell} from "../datatable_cell";
 import {notifications} from "../../../Helpers/notifications";
+import {mapActions} from "vuex";
 
 export default {
     mixins: [datatable_cell, notifications],
@@ -41,9 +42,8 @@ export default {
                     SalesInvoiceId: this.parent_row["Id"],
                     SalesInvoiceNo: this.parent_row["InvoiceNo"],
                     IMEI: this.row["IMEI"],
-                    refresh: (id) => {
-                        console.log(['SalePhoneActions', id]);
-                        this.$emit("returnItem", id);
+                    refresh: (IMEI) => {
+                        this.$emit("returnItem", IMEI);
                     }
                 },
                 {
@@ -52,6 +52,11 @@ export default {
                 }
             );
         },
+
+        ...mapActions({
+            refreshData: "framework/refreshData",
+            addError: 'errors/addError'
+        })
     }
 }
 </script>

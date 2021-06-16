@@ -62,6 +62,7 @@ Route::group(['prefix' => 'handsets'], function ($router) {
 Route::get('/users', 'PagesController@users')->name('users');
 Route::group(['prefix' => 'users'], function ($router) {
     $router->post('change-active-status', 'DBObjects\UsersController@changeActiveStatus')->name('users.change-active-status');
+    $router->get('change-active-status', 'DBObjects\UsersController@changeActiveStatus')->name('users.change-active-status');
     $router->post('change-admin-status', 'DBObjects\UsersController@changeAdminStatus')->name('users.change-admin-status');
     $router->post('save', 'DBObjects\UsersController@save')->name('users.save');
     $router->get('get-single', 'DBObjects\UsersController@getSingle')->name('users.get-single');
@@ -104,7 +105,6 @@ Route::group(['prefix' => 'sale'], function ($router) {
     $router->get('get-single', 'DBObjects\SalesController@getSingle')->name('sale.get-single');
     $router->post('delete', 'DBObjects\SalesController@delete')->name('sale.delete');
     $router->post('return-item', 'DBObjects\SalesController@returnItem')->name('sale.return-item');
-    $router->get('get-next-invoice-no', 'DBObjects\SalesController@getNextInvoiceNo')->name('sale.return-item');
     $router->get('get-pdf-invoice', 'DBObjects\SalesController@getPDFInvoice')->name('sale.get-pdf-invoice');
 });
 

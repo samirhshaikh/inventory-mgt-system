@@ -378,7 +378,6 @@
                             :columns="selected_products_columns"
                             :options="selected_products_options"
                             :source_data="rows"
-                            :parent_row="row"
                             v-bind:load_data_from_server="false"
                             :current_row_id="current_row_id"
                             @editRecord="editRecord"
@@ -636,25 +635,28 @@ export default {
             this.rows = _.cloneDeep(rows);
         },
 
-        returnItem(row_id) {
-            //Remove the row from Sale
+        returnItem(IMEI) {
+            console.log(['Sale', IMEI]);
+
             let rows = [];
 
             _.forIn(this.rows, (object, key) => {
-                if (object["row_id"] != row_id) {
-                    rows.push(_.cloneDeep(object));
+                if (object["IMEI"] == IMEI) {
+                    object['Returned'] = 1;
                 }
+
+                rows.push(_.cloneDeep(object));
             });
 
             this.rows = _.cloneDeep(rows);
 
-            //If there are no more rows in the Invoice that mean the Invoice must have been removed.
-            //So close the popup and refresh the Sales Page.
-            if (this.rows.length === 0) {
-                this.refreshData(this.options.id);
-
-                this.$modal.hide(this.$parent.name);
-            }
+            // //If there are no more rows in the Invoice that mean the Invoice must have been removed.
+            // //So close the popup and refresh the Sales Page.
+            // if (this.rows.length === 0) {
+            //     this.refreshData(this.options.id);
+            //
+            //     this.$modal.hide(this.$parent.name);
+            // }
         },
 
         dateSelected(date) {

@@ -8,6 +8,7 @@ use App\Exceptions\RecordNotFoundException;
 use App\Exceptions\ReferenceException;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\SaveUserRequest;
+use App\Http\Requests\UserNameRequest;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,10 +16,10 @@ use Illuminate\Http\Request;
 class UsersController extends BaseController
 {
     /**
-     * @param Request $request
+     * @param UserNameRequest $request
      * @return JsonResponse
      */
-    public function changeActiveStatus(Request $request): JsonResponse
+    public function changeActiveStatus(UserNameRequest $request): JsonResponse
     {
         $user_service = new UserService();
 

@@ -18,6 +18,12 @@
         >
             Return
         </Button>
+        <span
+            class="text-red-700 ml-2"
+            :class="{
+                hidden: row['Returned'] == 0
+            }"
+        >Item Returned</span>
         <Button
             @click.native="removeRecord"
             class="text-white bg-red-400 ml-2"
@@ -35,7 +41,7 @@
 import Confirm from "../../../components/Confirm.vue";
 import ReturnItem from "../../../DBObjects/ReturnItem";
 import {datatable_cell} from "../datatable_cell";
-import Purchase from "../../../DBObjects/Purchase";
+import {mapActions} from "vuex";
 
 export default {
     mixins: [datatable_cell],
@@ -82,8 +88,8 @@ export default {
                     SalesInvoiceId: this.parent_row["Id"],
                     SalesInvoiceNo: this.parent_row["InvoiceNo"],
                     IMEI: this.row["IMEI"],
-                    refresh: () => {
-                        this.$emit("returnItem", this.row["row_id"]);
+                    refresh: (IMEI) => {
+                        this.$emit("returnItem", IMEI);
                     }
                 },
                 {
@@ -91,7 +97,12 @@ export default {
                     height: "500px"
                 }
             );
-        }
+        },
+
+        ...mapActions({
+            refreshData: "framework/refreshData",
+            addError: 'errors/addError'
+        })
     }
 };
 </script>

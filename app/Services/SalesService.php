@@ -193,7 +193,6 @@ class SalesService
 
                 $sale_stock->Returned = true;
                 $sale_stock->ReturnedDate = Carbon::createFromFormat('d-M-Y', $request->get('ReturnedDate'))->toDateTimeString();
-                $sale_stock->Comments = $request->get('Comments');
                 $sale_stock->save();
             }
 
@@ -202,7 +201,7 @@ class SalesService
             $stocklog_service->add(
                 $request->get('IMEI'),
                 StockLog::ACTIVITY_RETURNED,
-                $request->get('Comments')
+                $request->get('Comments') ?? ''
             );
 
             return true;

@@ -477,9 +477,27 @@ export default {
             this.$emit('setExpandedRowId', row_id);
         },
 
-        returnItem(row_id) {
-            console.log(["Datatable", row_id]);
-            this.$emit('returnItem', row_id);
+        returnItem(IMEI) {
+            this.$emit('returnItem', IMEI);
+
+            let rows = [];
+
+            _.forIn(this.data, (object, key) => {
+                let children = [];
+
+                _.forIn(object["children"], (child_object, child_key) => {
+                    if (child_object["IMEI"] == IMEI) {
+                        child_object['Returned'] = 1;
+                    }
+
+                    children.push(_.cloneDeep(child_object));
+                });
+                object["children"] = _.cloneDeep(children);
+
+                rows.push(_.cloneDeep(object));
+            });
+
+            this.data = _.cloneDeep(rows);
         },
 
         toggleLoading() {

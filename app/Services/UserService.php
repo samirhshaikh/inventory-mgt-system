@@ -6,8 +6,8 @@ use App\Exceptions\DuplicateNameException;
 use App\Exceptions\NotEnoughRightsException;
 use App\Exceptions\RecordNotFoundException;
 use App\Exceptions\ReferenceException;
-use App\Http\Requests\IdRequest;
 use App\Http\Requests\SaveUserRequest;
+use App\Http\Requests\UserNameRequest;
 use App\Models\User;
 use App\Traits\TableActions;
 use Illuminate\Http\Request;
@@ -35,12 +35,12 @@ class UserService
     }
 
     /**
-     * @param IdRequest $request
+     * @param UserNameRequest $request
      * @return bool
      * @throws NotEnoughRightsException
      * @throws RecordNotFoundException
      */
-    public function changeActiveStatus(IdRequest $request): bool
+    public function changeActiveStatus(UserNameRequest $request): bool
     {
         $user = User::where('UserName', $request->get('Id'))
             ->get()

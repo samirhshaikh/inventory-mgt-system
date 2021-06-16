@@ -228,7 +228,7 @@ export default {
                             text: "Item returned successfully."
                         });
 
-                        this.refresh(this.SalesInvoiceId);
+                        this.refresh(this.IMEI);
 
                         this.$modal.hide(this.$parent.name);
                     } else {

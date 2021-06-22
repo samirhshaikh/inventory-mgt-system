@@ -9,13 +9,49 @@ use App\Exceptions\ReferenceException;
 use App\Http\Requests\SaveUserRequest;
 use App\Http\Requests\UserNameRequest;
 use App\Models\User;
+use App\Traits\SearchTrait;
 use App\Traits\TableActions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
-    use TableActions;
+    use TableActions, SearchTrait;
+
+    /**
+     * @param string $order_by
+     * @param string $order_direction
+     * @param string $search_text
+     * @return array
+     */
+    public function getAll(
+        string $order_by,
+        string $order_direction,
+        string $search_text = ''
+    ): array
+    {
+        $records = new User();
+
+        if ($search_text != '') {
+            $fields_to_search = [
+                'UserName',
+                'DATE_FORMAT(CreatedDate, "%d-%b-%Y")',
+                'DATE_FORMAT(UpdatedDate, "%d-%b-%Y")'
+            ];
+
+            $records = $this->prepareSearch($records, $fields_to_search, $search_text);
+        }
+
+        $records = $records->orderBy($order_by, $order_direction);
+
+        //Get total records
+        $total_records = $this->getTotalRecords(clone $records);
+
+        return [
+            'total_records' => $total_records,
+            'records' => $records
+        ];
+    }
 
     /**
      * @param Request $request

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Datatables;
 
 use App\Datatables\UsersDatatable;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
@@ -24,22 +25,13 @@ class UsersController extends BaseDatatableController
             ? session('app_settings.datatable.sorting.users.direction', Arr::get($table->options(), 'sorting.direction'))
             : 'asc';
 
-        $records = new User();
+        $user_service = new UserService();
 
-        if ($request->get('search_text', '') != '') {
-            $fields_to_search = [
-                'UserName',
-                'DATE_FORMAT(CreatedDate, "%d-%b-%Y")',
-                'DATE_FORMAT(UpdatedDate, "%d-%b-%Y")'
-            ];
-
-            $records = $this->prepareSearch($records, $fields_to_search, $request->get('search_text'));
-        }
-
-        $records = $records->orderBy($order_by, $order_direction);
-
-        //Get total records
-        $total_records = $this->getTotalRecords(clone $records);
+        list('total_records' => $total_records, 'records' => $records) = $user_service->getAll(
+            $order_by,
+            $order_direction,
+            $request->get('search_text', '') ?? ''
+        );
 
         return $this->prepareRecordsOutput(
             $table,

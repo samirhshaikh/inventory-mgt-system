@@ -5,6 +5,8 @@ namespace App\Traits;
 use App\Exceptions\RecordNotFoundException;
 use App\Http\Requests\IdRequest;
 use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 trait TableActions
 {
@@ -59,5 +61,23 @@ trait TableActions
         }
 
         return false;
+    }
+
+    /**
+     * @param Builder $records
+     * @return int
+     */
+    protected function getTotalRecords(Builder $records): int
+    {
+        try {
+            $all_records = $records->addSelect(DB::raw('COUNT(*) as Record_Count'))
+                ->get()
+                ->first()
+            ;
+
+            return $all_records['Record_Count'];
+        } catch (\Exception $e) {
+            return 0;
+        }
     }
 }

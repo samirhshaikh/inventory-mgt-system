@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Datatables;
 
 use App\Datatables\HandsetManufacturersDatatable;
 use App\Models\HandsetManufacturers;
+use App\Services\ObjectTypeNameService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
@@ -24,22 +25,13 @@ class HandsetManufacturersController extends BaseDatatableController
             ? session('app_settings.datatable.sorting.handset_manufacturers.direction', Arr::get($table->options(), 'sorting.direction'))
             : 'asc';
 
-        $records = new HandsetManufacturers();
+        $object_type_name_service = new ObjectTypeNameService(new HandsetManufacturers, 'ColorId');
 
-        if ($request->get('search_text', '') != '') {
-            $fields_to_search = [
-                'Name',
-                'DATE_FORMAT(CreatedDate, "%d-%b-%Y")',
-                'DATE_FORMAT(UpdatedDate, "%d-%b-%Y")'
-            ];
-
-            $records = $this->prepareSearch($records, $fields_to_search, $request->get('search_text'));
-        }
-
-        $records = $records->orderBy($order_by, $order_direction);
-
-        //Get total records
-        $total_records = $this->getTotalRecords(clone $records);
+        list('total_records' => $total_records, 'records' => $records) = $object_type_name_service->getAll(
+            $order_by,
+            $order_direction,
+            $request->get('search_text', '') ?? ''
+        );
 
         return $this->prepareRecordsOutput(
             $table,

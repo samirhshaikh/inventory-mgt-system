@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Datatables;
 
 use App\Datatables\PhoneStockDatatable;
 use App\Models\PhoneStock;
+use App\Services\PhoneStockService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,42 +30,16 @@ class PhoneStockController extends BaseDatatableController
             $order_by = 'PhoneStock.UpdatedDate';
         }
 
-        $records = PhoneStock::selectRaw('PhoneStock.*, ManufactureMaster.Name, ColorMaster.Name, ModelMaster.Name')
-            ->leftJoin('ManufactureMaster', 'ManufactureMaster.Id', '=', 'MakeId')
-            ->leftJoin('ColorMaster', 'ColorMaster.Id', '=', 'ColorId')
-            ->leftJoin('ModelMaster', 'ModelMaster.Id', '=', 'ModelId');
+        $phonestock_service = new PhoneStockService();
 
-        if ($request->get("available_stock_only", 0)) {
-            $records = $records->whereRaw('PhoneStock.Status != "Sold"');
-        }
-
-        $search_type = $request->get('search_type', 'simple');
-
-        if ($search_type === 'simple' && $request->get('search_text', '') != '') {
-            $fields_to_search = [
-                'IMEI',
-                'ManufactureMaster.Name',
-                'ColorMaster.Name',
-                'ModelMaster.Name',
-                'Size',
-                'Cost',
-                'StockType',
-                'ModelNo',
-                'Network',
-                'Status',
-                'DATE_FORMAT(PhoneStock.CreatedDate, "%d-%b-%Y")',
-                'DATE_FORMAT(PhoneStock.UpdatedDate, "%d-%b-%Y")'
-            ];
-
-            $records = $this->prepareSearch($records, $fields_to_search, $request->get('search_text'), 'AND');
-        } else if ($search_type === 'advanced' && count(json_decode($request->get('search_data', '{}')))) {
-            $records = $this->prepareAdvancedSearch($records, json_decode($request->get('search_data')));
-        }
-
-        $records = $records->orderBy($order_by, $order_direction);
-
-        //Get total records
-        $total_records = $this->getTotalRecords(clone $records);
+        list('total_records' => $total_records, 'records' => $records) = $phonestock_service->getAll(
+            $order_by,
+            $order_direction,
+            $request->get('search_type', 'simple') ?? 'simple',
+            $request->get('search_text', '') ?? '',
+            $request->get('search_data', '{}') ?? '{}',
+            $request->get('available_stock_only', 0) != 0
+        );
 
         return $this->prepareRecordsOutput(
             $table,
@@ -88,45 +63,5 @@ class PhoneStockController extends BaseDatatableController
         ]);
 
         return $this->getData($request);
-    }
-
-    /**
-     * @param $model
-     * @param array $search_data
-     * @return Builder
-     */
-    protected function prepareAdvancedSearch($model, $search_data = []): Builder
-    {
-        foreach ($search_data as $column => $search_text) {
-            if ($search_text == '' || is_null($search_text)) {
-                continue;
-            }
-
-            switch ($column) {
-                case 'make':
-                    $model = $this->prepareAdvancedSearchQuery($model, 'ManufactureMaster.Name', $search_text);
-                    break;
-                case 'model':
-                    $model = $this->prepareAdvancedSearchQuery($model, 'ModelMaster.Name', $search_text);
-                    break;
-                case 'color':
-                    $model = $this->prepareAdvancedSearchQuery($model, 'ColorMaster.Name', $search_text);
-                    break;
-                case 'IMEI':
-                case 'StockType':
-                case 'Status':
-                case 'Size':
-                case 'Network':
-                case 'ModelNo':
-                case 'Cost':
-                    $model = $this->prepareAdvancedSearchQuery($model, $column, $search_text);
-                    break;
-                case 'UpdatedDate':
-                    $model = $this->prepareAdvancedSearchQuery($model, ['DATE_FORMAT(PhoneStock.CreatedDate, "%d-%b-%Y")', 'DATE_FORMAT(PhoneStock.UpdatedDate, "%d-%b-%Y")'], $search_text, 'exact_match');
-                    break;
-            }
-        }
-
-        return $model;
     }
 }

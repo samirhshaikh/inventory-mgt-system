@@ -10,12 +10,185 @@ use App\Http\Requests\SavePurchaseRequest;
 use App\Http\Requests\IdRequest;
 use App\Models\PhoneStock;
 use App\Models\Purchase;
+use App\Traits\SearchTrait;
 use App\Traits\TableActions;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class PurchaseService
 {
-    use TableActions;
+    use TableActions, SearchTrait;
+
+    /**
+     * @param string $order_by
+     * @param string $order_direction
+     * @param string $search_type
+     * @param string $search_text
+     * @param string $search_data
+     * @return array
+     */
+    public function getAll(
+        string $order_by,
+        string $order_direction,
+        string $search_type = 'simple',
+        string $search_text = '',
+        string $search_data = '{}'
+    ): array
+    {
+        $invoice_ids = null;
+        if (
+            ($search_type === 'simple' && $search_text != '') ||
+            ($search_type === 'advanced' && $this->searchDataPresent($search_data))
+        ) {
+            $invoice_ids = $this->getInvoiceIds($search_type, $search_text, $search_data);
+        }
+
+        $records = new Purchase();
+
+        $records = $records->with('supplier');
+
+        $records = $records->with(['purchases' => function ($query) {
+            $query->orderBy('IMEI', 'ASC');
+        }]);
+
+        if (!is_null($invoice_ids)) {
+            $records = $records->whereIn('Purchase.Id', $invoice_ids);
+        }
+
+        //Get total records
+        $total_records = $this->getTotalRecords(clone $records);
+
+        switch ($order_by) {
+            case 'IMEI':
+                break;
+            case 'children':
+                $records = $records->addSelect(DB::raw('*, SUM(PhoneStock.Cost) as Total_Cost'))
+                    ->leftJoin('PhoneStock', 'PhoneStock.InvoiceId', '=', 'Purchase.Id')
+                    ->groupBy('Purchase.Id')
+                    ->orderBy('Total_Cost', $order_direction);
+                break;
+            case 'supplier.SupplierName':
+                $records = $records->leftJoin('Supplier', 'Supplier.Id', '=', 'SupplierId');
+                break;
+            default:
+                $records = $records->orderBy($order_by, $order_direction);
+        }
+
+        $records = $records->select('Purchase.*');
+
+        return [
+            'total_records' => $total_records,
+            'records' => $records
+        ];
+    }
+
+    /**
+     * @param string $search_type
+     * @param string $search_text
+     * @param string $search_data
+     * @return array
+     */
+    private function getInvoiceIds(string $search_type, string $search_text = '', string $search_data = '{}'): array
+    {
+        try {
+            $records = Purchase::selectRaw('Purchase.Id');
+
+            if (
+                ($search_type === 'simple' && $search_text != '') ||
+                ($search_type === 'advanced' && $this->searchDataPresent($search_data))
+            ) {
+                $records = $records
+                    ->join('Supplier', 'Supplier.Id', '=', 'SupplierId')
+                    ->join('PhoneStock', 'PhoneStock.InvoiceId', '=', 'Purchase.Id')
+                    ->join('ManufactureMaster', 'ManufactureMaster.Id', '=', 'MakeId')
+                    ->join('ColorMaster', 'ColorMaster.Id', '=', 'ColorId')
+                    ->join('ModelMaster', 'ModelMaster.Id', '=', 'ModelId');
+            }
+
+            if ($search_type === 'simple' && $search_text != '') {
+                $fields_to_search = [
+                    'InvoiceNo',
+                    'DATE_FORMAT(InvoiceDate, "%d-%b-%Y")',
+                    'Supplier.SupplierName',
+                    'IMEI',
+                    'ManufactureMaster.Name',
+                    'ColorMaster.Name',
+                    'ModelMaster.Name',
+                    'Size',
+                    'Cost',
+                    'StockType',
+                    'ModelNo',
+                    'Network',
+                    'Purchase.Comments',
+                    'Status',
+                    'DATE_FORMAT(Purchase.CreatedDate, "%d-%b-%Y")',
+                    'DATE_FORMAT(Purchase.UpdatedDate, "%d-%b-%Y")'
+                ];
+
+                $records = $this->prepareSearch($records, $fields_to_search, $search_text);
+            } else if ($search_type === 'advanced' && $this->searchDataPresent($search_data)) {
+                $records = $this->prepareAdvancedSearch($records, json_decode($search_data));
+            }
+
+            $records = $records->orderBy('Purchase.Id', 'ASC')
+                ->get();
+
+            return $records->pluck('Id')->all();
+        } catch (\Exception $e) {
+            return [''];
+        }
+    }
+
+    /**
+     * @param $model
+     * @param array $search_data
+     * @return Builder
+     */
+    private function prepareAdvancedSearch($model, $search_data = []): Builder
+    {
+        foreach ($search_data as $column => $search_text) {
+            if ($search_text == '' || is_null($search_text)) {
+                continue;
+            }
+
+            switch ($column) {
+                case 'supplier':
+                    $model = $this->prepareAdvancedSearchQuery($model, 'Supplier.SupplierName', $search_text);
+                    break;
+                case 'InvoiceDate':
+                    $model = $this->prepareAdvancedSearchQuery($model, 'DATE_FORMAT(InvoiceDate, "%d-%b-%Y")', $search_text, 'exact_match');
+                    break;
+                case 'make':
+                    $model = $this->prepareAdvancedSearchQuery($model, 'ManufactureMaster.Name', $search_text);
+                    break;
+                case 'model':
+                    $model = $this->prepareAdvancedSearchQuery($model, 'ModelMaster.Name', $search_text);
+                    break;
+                case 'color':
+                    $model = $this->prepareAdvancedSearchQuery($model, 'ColorMaster.Name', $search_text);
+                    break;
+                case 'phones':
+                    $model = $this->prepareAdvancedSearchQuery($model, 'PhoneStock.IMEI', $search_text);
+                    break;
+                case 'IMEI':
+                case 'InvoiceNo':
+                case 'StockType':
+                case 'Status':
+                case 'Size':
+                case 'Network':
+                case 'ModelNo':
+                case 'Cost':
+                    $model = $this->prepareAdvancedSearchQuery($model, $column, $search_text);
+                    break;
+                case 'UpdatedDate':
+                    $model = $this->prepareAdvancedSearchQuery($model, ['DATE_FORMAT(Purchase.CreatedDate, "%d-%b-%Y")', 'DATE_FORMAT(Purchase.UpdatedDate, "%d-%b-%Y")'], $search_text, 'exact_match');
+                    break;
+            }
+        }
+
+        return $model;
+    }
 
     /**
      * @param IdRequest $request

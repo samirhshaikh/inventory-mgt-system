@@ -9,10 +9,214 @@ use App\Http\Requests\SaveSaleRequest;
 use App\Models\Sales;
 use App\Models\SalesStock;
 use App\Models\StockLog;
+use App\Traits\SearchTrait;
+use App\Traits\TableActions;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class SalesService
 {
+    use TableActions, SearchTrait;
+
+    /**
+     * @param string $order_by
+     * @param string $order_direction
+     * @param string $search_type
+     * @param string $search_text
+     * @param string $search_data
+     * @return array
+     */
+    public function getAll(
+        string $order_by,
+        string $order_direction,
+        string $search_type = 'simple',
+        string $search_text = '',
+        string $search_data = '{}'
+    ): array
+    {
+//        DB::enableQueryLog();
+
+        $invoice_ids = null;
+        if (
+            ($search_type === 'simple' && $search_text != '') ||
+            ($search_type === 'advanced' && $this->searchDataPresent($search_data))
+        ) {
+            $invoice_ids = $this->getInvoiceIds($search_type, $search_text, $search_data);
+        }
+
+        $records = new Sales();
+
+        $records = $records->leftjoin('Customer_Sales', 'Customer_Sales.Id', '=', 'CustomerId');
+
+        if (!is_null($invoice_ids)) {
+            $records = $records->whereIn('Sales.Id', $invoice_ids);
+        }
+
+        //Get total records
+        $total_records = $this->getTotalRecords(clone $records);
+
+        $records = $records->with(['sales' => function ($query) {
+            $query->orderBy('IMEI', 'ASC');
+        }]);
+
+        switch ($order_by) {
+            case 'IMEI':
+                break;
+            case 'children':
+                $records = $records->addSelect(DB::raw('SUM(CASE WHEN Return = 0 THEN 0 ELSE SalesStock.Cost) as Total_Cost'))
+                    ->leftJoin('SalesStock', 'SalesStock.InvoiceId', '=', 'Sales.Id')
+                    ->groupBy('Sales.Id')
+                    ->orderBy('Total_Cost', $order_direction);
+                break;
+            case 'customer.CustomerName':
+                $records = $records->leftJoin('Customer_Sales', 'Customer_Sales.Id', '=', 'CustomerId');
+                break;
+            case 'UpdatedDate':
+                $records = $records->orderBy('Sales.UpdatedDate', $order_direction);
+                break;
+            default:
+                $records = $records->orderBy($order_by, $order_direction);
+        }
+
+        $records = $records->addSelect('Sales.*');
+
+//        $records = $records->get()->all();
+//        dd(DB::getQueryLog());
+
+        return [
+            'total_records' => $total_records,
+            'records' => $records
+        ];
+    }
+
+    /**
+     * @param string $search_type
+     * @param string $search_text
+     * @param string $search_data
+     * @return array
+     */
+    private function getInvoiceIds(string $search_type, string $search_text = '', string $search_data = '{}'): array
+    {
+        try {
+            $records = Sales::selectRaw('Sales.Id');
+
+            if (
+                ($search_type === 'simple' && $search_text != '') ||
+                ($search_type === 'advanced' && $this->searchDataPresent($search_data))
+            ) {
+                $records = $records
+                    ->leftjoin('Customer_Sales', 'Customer_Sales.Id', '=', 'CustomerId')
+                    ->join('SalesStock', 'SalesStock.InvoiceId', '=', 'Sales.Id')
+                    ->join('PhoneStock', 'PhoneStock.IMEI', '=', 'SalesStock.IMEI')
+                    ->join('ManufactureMaster', 'ManufactureMaster.Id', '=', 'MakeId')
+                    ->join('ColorMaster', 'ColorMaster.Id', '=', 'ColorId')
+                    ->join('ModelMaster', 'ModelMaster.Id', '=', 'ModelId');
+            }
+
+            if ($search_type === 'simple' && $search_text != '') {
+                $fields_to_search = [
+                    $this->getInvoiceSearchString(),
+                    'InvoiceNo',
+                    'DATE_FORMAT(InvoiceDate, "%d-%b-%Y")',
+                    'Customer_Sales.CustomerName',
+                    'SalesStock.IMEI',
+                    'ManufactureMaster.Name',
+                    'ColorMaster.Name',
+                    'ModelMaster.Name',
+                    'Size',
+                    'SalesStock.Cost',
+                    'ModelNo',
+                    'Network',
+                    'Sales.Comments',
+                    'DATE_FORMAT(Sales.CreatedDate, "%d-%b-%Y")',
+                    'DATE_FORMAT(Sales.UpdatedDate, "%d-%b-%Y")'
+                ];
+
+                $records = $this->prepareSearch($records, $fields_to_search, $search_text);
+            } else if ($search_type === 'advanced' && $this->searchDataPresent($search_data)) {
+                $records = $this->prepareAdvancedSearch($records, json_decode($search_data));
+
+//            dd($this->getSql($records));
+            }
+
+            $records = $records->orderBy('Sales.Id', 'ASC')
+                ->get();
+
+            return $records->pluck('Id')->all();
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param $model
+     * @param array $search_data
+     * @return Builder
+     */
+    private function prepareAdvancedSearch($model, $search_data = []): Builder
+    {
+        foreach ($search_data as $column => $search_text) {
+            if ($search_text == '' || is_null($search_text)) {
+                continue;
+            }
+
+            switch ($column) {
+                case 'customer':
+                    $model = $this->prepareAdvancedSearchQuery($model, 'Customer_Sales.CustomerName', $search_text);
+                    break;
+                case 'contact':
+                    $model = $this->prepareAdvancedSearchQuery($model, ['Customer_Sales.ContactNo1', 'Customer_Sales.ContactNo2'], $search_text);
+                    break;
+                case 'InvoiceDate':
+                    $model = $this->prepareAdvancedSearchQuery($model, 'DATE_FORMAT(Sales.InvoiceDate, "%d-%b-%Y")', $search_text, 'exact_match');
+                    break;
+                case 'manufacturer':
+                    $model = $this->prepareAdvancedSearchQuery($model, 'ManufactureMaster.Name', $search_text);
+                    break;
+                case 'model':
+                    $model = $this->prepareAdvancedSearchQuery($model, 'ModelMaster.Name', $search_text);
+                    break;
+                case 'color':
+                    $model = $this->prepareAdvancedSearchQuery($model, 'ColorMaster.Name', $search_text);
+                    break;
+                case 'InvoiceNo':
+                    $model = $this->prepareAdvancedSearchQuery($model, ['InvoiceNo', $this->getInvoiceSearchString()], $search_text);
+                    break;
+                case 'IMEI':
+                    $model = $this->prepareAdvancedSearchQuery($model, 'SalesStock.IMEI', $search_text);
+                    break;
+                case 'Cost':
+                    $model = $this->prepareAdvancedSearchQuery($model, 'Sales.' . $column, $search_text);
+                    break;
+                case 'PaymentMethod':
+                    $model = $this->prepareAdvancedSearchQuery($model, 'Sales.' . $column, $search_text, 'exact_match');
+                    break;
+                case 'Size':
+                case 'Network':
+                case 'ModelNo':
+                    $model = $this->prepareAdvancedSearchQuery($model, 'SalesStock.' . $column, $search_text);
+                    break;
+                case 'UpdatedDate':
+                    $model = $this->prepareAdvancedSearchQuery($model, ['DATE_FORMAT(Sales.CreatedDate, "%d-%b-%Y")', 'DATE_FORMAT(Sales.UpdatedDate, "%d-%b-%Y")'], $search_text, 'exact_match');
+                    break;
+            }
+        }
+
+        return $model;
+    }
+
+    /**
+     * For new invoice number we have a different format. INV-YYYY-MM-DD-XXXX where XXXX represents a four digit invoice number with leading zeros.
+     * We need to special mysql string to get that in search
+     *
+     * @return string
+     */
+    private function getInvoiceSearchString(): string
+    {
+        return 'IF(InvoiceNo REGEXP "^-?[0-9]+$", CONCAT("INV-", DATE_FORMAT(InvoiceDate, "%Y-%m-%d"), "-", LPAD(InvoiceNo, 4, "0")), "")';
+    }
+
     /**
      * @param IdRequest $request
      * @return mixed

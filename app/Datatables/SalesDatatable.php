@@ -175,6 +175,11 @@ class SalesDatatable extends BaseDatatable
         return $this->options;
     }
 
+    /**
+     * @param array $row
+     * @param string $rowKey
+     * @return array|mixed
+     */
     public function rowTransformer(array $row, string $rowKey)
     {
         $row = parent::rowTransformer($row, $rowKey);

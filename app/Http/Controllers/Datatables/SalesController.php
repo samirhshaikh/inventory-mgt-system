@@ -55,7 +55,7 @@ class SalesController extends BaseDatatableController
             case 'IMEI':
                 break;
             case 'children':
-                $records = $records->addSelect(DB::raw('SUM(SalesStock.Cost) as Total_Cost'))
+                $records = $records->addSelect(DB::raw('SUM(CASE WHEN Return = 0 THEN 0 ELSE SalesStock.Cost) as Total_Cost'))
                     ->leftJoin('SalesStock', 'SalesStock.InvoiceId', '=', 'Sales.Id')
                     ->groupBy('Sales.Id')
                     ->orderBy('Total_Cost', $order_direction);

@@ -10,11 +10,11 @@
             Return
         </Button>
         <span
-            class="text-red-700"
+            class="text-red-700 leading-normal"
             :class="{
                 hidden: row['Returned'] == 0
             }"
-        >Item Returned</span>
+        >Returned</span>
     </div>
 
 </template>

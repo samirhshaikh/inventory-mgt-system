@@ -2,31 +2,16 @@
     <div class="flex">
         <Button
             @click.native="edit"
-            class="text-white bg-green-600"
+            class="text-white bg-green-600 mr-2"
             :class="{
-                hidden: !$page.user_details.IsAdmin || row['row_id'] == current_row_id
+                hidden: !$page.user_details.IsAdmin || row['row_id'] == current_row_id || row['Returned']
             }"
         >
             Edit
         </Button>
         <Button
-            @click.native="returnItem"
-            class="text-white bg-red-400 ml-2"
-            :class="{
-                hidden: !$page.user_details.IsAdmin || !row.hasOwnProperty('Id') || row['Returned']
-            }"
-        >
-            Return
-        </Button>
-        <span
-            class="text-red-700 ml-2"
-            :class="{
-                hidden: row['Returned'] == 0
-            }"
-        >Item Returned</span>
-        <Button
             @click.native="removeRecord"
-            class="text-white bg-red-400 ml-2"
+            class="text-white bg-red-400 mr-2"
             :class="{
                 hidden: !$page.user_details.IsAdmin || row['row_id'] == current_row_id
             }"
@@ -34,6 +19,21 @@
         >
             Delete
         </Button>
+        <Button
+            @click.native="returnItem"
+            class="text-white bg-red-400"
+            :class="{
+                hidden: !$page.user_details.IsAdmin || !row.hasOwnProperty('Id') || row['Returned']
+            }"
+        >
+            Return
+        </Button>
+        <span
+            class="text-red-700 leading-normal"
+            :class="{
+                hidden: row['Returned'] == 0
+            }"
+        >Returned</span>
     </div>
 </template>
 

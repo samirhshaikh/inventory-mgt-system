@@ -45,7 +45,7 @@
                                 'bg-gray-600 text-gray-500 cursor-not-allowed': !valid_data
                             }"
                         >
-                            Save All
+                            Save
                         </Button>
                     </div>
                 </div>
@@ -380,6 +380,7 @@
                             :source_data="rows"
                             v-bind:load_data_from_server="false"
                             :current_row_id="current_row_id"
+                            :parent_row="row"
                             @editRecord="editRecord"
                             @removeRecord="removeRecord"
                             @returnItem="returnItem"
@@ -649,14 +650,6 @@ export default {
             });
 
             this.rows = _.cloneDeep(rows);
-
-            // //If there are no more rows in the Invoice that mean the Invoice must have been removed.
-            // //So close the popup and refresh the Sales Page.
-            // if (this.rows.length === 0) {
-            //     this.refreshData(this.options.id);
-            //
-            //     this.$modal.hide(this.$parent.name);
-            // }
         },
 
         dateSelected(date) {
@@ -857,6 +850,7 @@ export default {
                             this.rows.push({
                                 IMEI: data["IMEI"],
                                 Cost: data["Cost"],
+                                Returned: 0,
                                 Discount: "",
                                 row_id: helper_functions.getRandomId(),
                                 phone_details: data

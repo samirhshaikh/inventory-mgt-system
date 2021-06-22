@@ -116,6 +116,7 @@
                             :current_row_id="current_row_id"
                             :selected_records="selected_records"
                             :expanded_row_id="expanded_row_id"
+                            :parent_row="parent_row"
                             @editRecord="editRecord"
                             @removeRecord="removeRecord"
                             @selectRecord="selectRecord"
@@ -256,6 +257,10 @@ export default {
             default: ""
         },
         selected_records: {
+            type: Object,
+            default: () => ({})
+        },
+        parent_row: {
             type: Object,
             default: () => ({})
         }

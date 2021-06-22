@@ -136,10 +136,19 @@ class SalesController extends BaseController
         $total = 0;
         $items = [];
         foreach ($invoice['children'] ?? [] as $child) {
+            if ($child['Returned']) {
+                continue;
+            }
+
             $price = number_format($child['Cost'], 2);
 
             $child_total = number_format($price * $child['Qty'], 2);
-            $total += $child_total;
+
+            if (!$child['Returned']) {
+                $total += $child_total;
+            }
+
+            $returned = $child['Returned'] ? '<br><font color="red">Returned</font>' : '';
 
             $item = <<<EOT
 <tr>
@@ -153,6 +162,7 @@ class SalesController extends BaseController
         {$child['phone_details']['Network']}
         <br>
         IMEI: {$child['phone_details']['IMEI']}
+        {$returned}
     </td>
     <td style="text-align: right;">&#163; {$price}</td>
     <td style="text-align: right;">&#163; {$child_total}</td>
@@ -198,13 +208,13 @@ EOT;
             </td>
             <td style="text-align: right;">
                 <div style="float: right;">
-                    <table style="width: 280px;">
+                    <table style="width: 290px;">
                         <tr>
                             <td style="width: 110px; font-weight: bold;">Invoice No.</td>
                             <td>{$invoice['InvoiceNo']}</td>
                         </tr>
                         <tr>
-                            <td style="width: 100px; font-weight: bold;">Date</td>
+                            <td style="font-weight: bold;">Date</td>
                             <td>{$invoice['InvoiceDate']}</td>
                         </tr>
                     </table>

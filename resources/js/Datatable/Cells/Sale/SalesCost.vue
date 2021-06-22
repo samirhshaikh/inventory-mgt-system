@@ -15,8 +15,10 @@ export default {
         data() {
             let total_cost = 0;
             _.forEach(this.row[this.column], (row, key) => {
-                total_cost += parseFloat(row['Cost']);
-            })
+                if (!row['Returned']) {
+                    total_cost += parseFloat(row['Cost']);
+                }
+            });
 
             return total_cost > 0 ? "£" + helper_functions.number_format(total_cost, 2) : "";
         }

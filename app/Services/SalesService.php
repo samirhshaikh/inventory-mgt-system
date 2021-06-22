@@ -22,27 +22,13 @@ class SalesService
     {
         $record = Sales::where('Sales.Id', $request->get('Id'))
             ->with('customer')
-            ->with('sales')
-            ->where('Id', $request->get('Id'))
-            ->get();
+            ->where('Id', $request->get('Id'));
 
-//        $record = Sales::selectRaw('Sales.*,
-//        Customer.CustomerName as customer,
-//        Customer.ContactNo1 as ContactNo1,
-//        Customer.ContactNo2 as ContactNo2,
-//        PhoneStock.Id as PhoneStockId,
-//        ManufactureMaster.Name as manufacturer,
-//        ColorMaster.Name as color,
-//        ModelMaster.Name as model')
-//            ->where('Sales.Id', $request->get('Id'))
-//            ->join('salesstock', 'InvoiceId', 'Sales.Id')
-//            ->leftJoin('Customer', 'Customer.Id', '=', 'CustomerId')
-//            ->leftJoin('PhoneStock', 'PhoneStock.IMEI', '=', 'salesstock.IMEI')
-//            ->leftJoin('ManufactureMaster', 'ManufactureMaster.Id', '=', 'MakeId')
-//            ->leftJoin('ColorMaster', 'ColorMaster.Id', '=', 'ColorId')
-//            ->leftJoin('ModelMaster', 'ModelMaster.Id', '=', 'ModelId')
-//            ->get()
-//        ;
+        $record = $record->with(['sales' => function ($query) {
+            $query->orderBy('IMEI', 'ASC');
+        }]);
+
+        $record = $record->get();
 
         if ($record->count()) {
             return $record->map->transform()->first();

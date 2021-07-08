@@ -6,6 +6,7 @@ use App\Exceptions\DuplicateNameException;
 use App\Exceptions\NotEnoughRightsException;
 use App\Exceptions\RecordNotFoundException;
 use App\Exceptions\ReferenceException;
+use App\Http\Requests\IdStringRequest;
 use App\Http\Requests\SaveUserRequest;
 use App\Http\Requests\UserNameRequest;
 use App\Models\User;
@@ -54,11 +55,11 @@ class UserService
     }
 
     /**
-     * @param Request $request
+     * @param UserNameRequest $request
      * @return mixed
      * @throws RecordNotFoundException
      */
-    public function getSingle(Request $request)
+    public function getSingle(UserNameRequest $request)
     {
         $user = User::where('UserName', $request->get('username'))
             ->get();
@@ -71,12 +72,12 @@ class UserService
     }
 
     /**
-     * @param UserNameRequest $request
+     * @param IdStringRequest $request
      * @return bool
      * @throws NotEnoughRightsException
      * @throws RecordNotFoundException
      */
-    public function changeActiveStatus(UserNameRequest $request): bool
+    public function changeActiveStatus(IdStringRequest $request): bool
     {
         $user = User::where('UserName', $request->get('Id'))
             ->get()
@@ -98,12 +99,12 @@ class UserService
     }
 
     /**
-     * @param Request $request
+     * @param IdStringRequest $request
      * @return bool
      * @throws NotEnoughRightsException
      * @throws RecordNotFoundException
      */
-    public function changeAdminStatus(Request $request): bool
+    public function changeAdminStatus(IdStringRequest $request): bool
     {
         $user = User::where('UserName', $request->get('Id'))
             ->get()
@@ -157,20 +158,20 @@ class UserService
         }
 
         $user->UpdatedBy = session('user_details.UserName');
-        $user->IsAdmin = $request->get('IsAdmin');
-        $user->IsActive = $request->get('IsActive');
+        $user->IsAdmin = $request->get('IsAdmin', false);
+        $user->IsActive = $request->get('IsActive', false);
         $user->save();
 
         return $request->get('UserName');
     }
 
     /**
-     * @param Request $request
+     * @param UserNameRequest $request
      * @return bool
      * @throws RecordNotFoundException
      * @throws ReferenceException
      */
-    public function delete(Request $request): bool
+    public function delete(UserNameRequest $request): bool
     {
         //Check whether the record exist or not
         $user = User::where('UserName', $request->get('username'));
@@ -191,11 +192,11 @@ class UserService
     }
 
     /**
-     * @param Request $request
+     * @param UserNameRequest $request
      * @return bool
      * @throws DuplicateNameException
      */
-    public function checkDuplicateName(Request $request): bool
+    public function checkDuplicateName(UserNameRequest $request): bool
     {
         if ($this->isDuplicateName($request->get('username'))) {
             throw new DuplicateNameException;

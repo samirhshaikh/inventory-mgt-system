@@ -7,6 +7,7 @@ use App\Exceptions\NotEnoughRightsException;
 use App\Exceptions\RecordNotFoundException;
 use App\Exceptions\ReferenceException;
 use App\Http\Controllers\BaseController;
+use App\Http\Requests\IdStringRequest;
 use App\Http\Requests\SaveUserRequest;
 use App\Http\Requests\UserNameRequest;
 use App\Services\UserService;
@@ -16,10 +17,10 @@ use Illuminate\Http\Request;
 class UsersController extends BaseController
 {
     /**
-     * @param UserNameRequest $request
+     * @param IdStringRequest $request
      * @return JsonResponse
      */
-    public function changeActiveStatus(UserNameRequest $request): JsonResponse
+    public function changeActiveStatus(IdStringRequest $request): JsonResponse
     {
         $user_service = new UserService();
 
@@ -35,10 +36,10 @@ class UsersController extends BaseController
     }
 
     /**
-     * @param Request $request
+     * @param IdStringRequest $request
      * @return JsonResponse
      */
-    public function changeAdminStatus(Request $request): JsonResponse
+    public function changeAdminStatus(IdStringRequest $request): JsonResponse
     {
         $user_service = new UserService();
 
@@ -54,10 +55,10 @@ class UsersController extends BaseController
     }
 
     /**
-     * @param Request $request
+     * @param UserNameRequest $request
      * @return JsonResponse
      */
-    public function getSingle(Request $request): JsonResponse
+    public function getSingle(UserNameRequest $request): JsonResponse
     {
         $user_service = new UserService();
 
@@ -95,10 +96,10 @@ class UsersController extends BaseController
     }
 
     /**
-     * @param Request $request
+     * @param UserNameRequest $request
      * @return JsonResponse
      */
-    public function delete(Request $request): JsonResponse
+    public function delete(UserNameRequest $request): JsonResponse
     {
         $user_service = new UserService();
 
@@ -114,10 +115,10 @@ class UsersController extends BaseController
     }
 
     /**
-     * @param Request $request
+     * @param UserNameRequest $request
      * @return JsonResponse
      */
-    public function checkDuplicateName(Request $request): JsonResponse
+    public function checkDuplicateName(UserNameRequest $request): JsonResponse
     {
         $user_service = new UserService();
 

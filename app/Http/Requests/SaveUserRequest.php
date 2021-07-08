@@ -24,8 +24,8 @@ class SaveUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'UserName' => 'required|string|max:20',
-            'Password' => 'required|string|max:20'
+            'UserName' => 'required|string',
+            'Password' => 'required|string'
         ];
     }
 
@@ -39,8 +39,8 @@ class SaveUserRequest extends FormRequest
         return [
             'UserName.required' => 'Username is required',
             'Password.required' => 'Password is required',
-            'UserName.max' => 'Username cannot be more than 20 characters long',
-            'Password.max' => 'Password cannot be more than 20 characters long'
+//            'UserName.max' => 'Username cannot be more than 20 characters long',
+//            'Password.max' => 'Password cannot be more than 20 characters long'
         ];
     }
 }

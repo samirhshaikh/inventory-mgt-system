@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-class UserNameRequest extends FormRequest
+class IdStringRequest extends FormRequest
 {
     /**
      * Determine if the user is authorised to make this request
@@ -22,7 +22,7 @@ class UserNameRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'required|string'
+            'Id' => 'required'
         ];
     }
 
@@ -34,7 +34,7 @@ class UserNameRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'username.required' => 'Username be empty'
+            'Id.required' => 'Id cannot be empty'
         ];
     }
 }

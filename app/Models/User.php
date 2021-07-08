@@ -5,11 +5,13 @@ use App\Traits\CompositeKeysTrait;
 use App\Transformers\UserTransformer;
 use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends BaseModel implements Authenticatable, JWTSubject {
     use AuthenticatableTrait;
     use CompositeKeysTrait;
+    use HasFactory;
 
     protected $connection = 'mysql';
     protected $table = 'User';

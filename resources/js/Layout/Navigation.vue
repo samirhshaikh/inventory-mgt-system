@@ -100,13 +100,6 @@ export default {
                         route: "dashboard",
                         icon: ["fas", "home"],
                         visible: true
-                    },
-                    {
-                        title: "Search",
-                        link_type: "route",
-                        route: "search",
-                        icon: ["fas", "search"],
-                        visible: true
                     }
                 ],
                 Main: [

@@ -62,7 +62,6 @@ Route::group(['prefix' => 'handsets'], function ($router) {
 Route::get('/users', 'PagesController@users')->name('users');
 Route::group(['prefix' => 'users'], function ($router) {
     $router->post('change-active-status', 'DBObjects\UsersController@changeActiveStatus')->name('users.change-active-status');
-    $router->get('change-active-status', 'DBObjects\UsersController@changeActiveStatus')->name('users.change-active-status');
     $router->post('change-admin-status', 'DBObjects\UsersController@changeAdminStatus')->name('users.change-admin-status');
     $router->post('save', 'DBObjects\UsersController@save')->name('users.save');
     $router->get('get-single', 'DBObjects\UsersController@getSingle')->name('users.get-single');

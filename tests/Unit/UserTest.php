@@ -29,7 +29,7 @@ class UserTest extends TestCase
         User::where('username', $this->user['username'])->delete();
     }
 
-    /** @test */
+    /** @test **/
     public function testChangeActiveStatus()
     {
         //Failure
@@ -50,7 +50,7 @@ class UserTest extends TestCase
         ;
     }
 
-    /** @test */
+    /** @test **/
     public function testChangeAdminStatus()
     {
         //Failure

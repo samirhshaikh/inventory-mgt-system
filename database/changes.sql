@@ -104,18 +104,18 @@ ALTER TABLE salesstock CHANGE COLUMN CreatedBy CreatedBy VARCHAR(250) NULL DEFAU
 CREATE TABLE stock_log (
   `Id` INT NOT NULL AUTO_INCREMENT,
   `IMEI` VARCHAR(50) NOT NULL,
-  `LogDate` DATETIME NOT NULL,
+  `LogDate` DATETIME,
   `Comments` TEXT NULL,
   `Activity` VARCHAR(45) NOT NULL DEFAULT 'Sold',
-  `CreatedDate` datetime NOT NULL,
-  `CreatedBy` varchar(250) NOT NULL,
-  `UpdatedDate` datetime NOT NULL,
-  `UpdatedBy` varchar(250) NOT NULL,
+  `CreatedDate` datetime,
+  `CreatedBy` varchar(250),
+  `UpdatedDate` datetime,
+  `UpdatedBy` varchar(250),
   PRIMARY KEY (`Id`), INDEX (`IMEI` ASC));
 INSERT INTO stock_log
-(SELECT '', IMEI, UpdatedDate,  '', 'Sold', CreatedDate, CreatedBy, UpdatedDate, UpdatedBy from salesstock Order By CreatedDate)
+(SELECT 0, IMEI, COALESCE(UpdatedDate, CreatedDate),  '', 'Sold', CreatedDate, CreatedBy, COALESCE(UpdatedDate, CreatedDate), COALESCE(UpdatedBy, CreatedBy) from salesstock Order By CreatedDate)
 UNION
-(SELECT '', IMEI, UpdatedDate,  '', Status, UpdatedDate, UpdatedBy, UpdatedDate, UpdatedBy FROM phonestock where Status in ('Returned', 'Rejected') Order By UpdatedDate);
+(SELECT 0, IMEI, COALESCE(UpdatedDate, CreatedDate),  '', Status, CreatedDate, CreatedBy, COALESCE(UpdatedDate, CreatedDate), COALESCE(UpdatedBy, CreatedBy) FROM phonestock where Status in ('Returned', 'Rejected') Order By UpdatedDate);
 UPDATE stock_log SET UpdatedBy = CreatedBy where UpdatedBy = '';
 
 ALTER TABLE AdHocReceipt MODIFY CreatedDate DATETIME, MODIFY UpdatedDate DATETIME;

@@ -19,9 +19,9 @@ class SalesStockTransformer extends TransformerAbstract
             'Discount' => $model->Discount ? number_format($model->Discount, 2) : '',
             'Returned' => $model->Returned,
             'ReturnedDate' => empty($model->ReturnedDate) ? '' : $model->ReturnedDate->format('d-M-Y'),
-            'CreatedDate' => $model->CreatedDate->format('d-M-Y h:i A'),
+            'CreatedDate' => empty($model->CreatedDate) ? '' : $model->CreatedDate->format('d-M-Y h:i A'),
             'CreatedBy' => $model->CreatedBy,
-            'UpdatedDate' => $model->UpdatedDate->format('d-M-Y h:i A'),
+            'UpdatedDate' => is_null($model->UpdatedDate) ? (empty($model->CreatedDate) ? '' : $model->CreatedDate->format('d-M-Y h:i A')) : $model->UpdatedDate->format('d-M-Y h:i A'),
             'UpdatedBy' => empty($model->UpdatedBy) ? $model->CreatedBy : $model->UpdatedBy
         ];
 

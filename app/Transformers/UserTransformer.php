@@ -14,9 +14,9 @@ class UserTransformer extends TransformerAbstract
             'Password' => '***',
             'IsAdmin' => boolval($model->IsAdmin),
             'IsActive' => boolval($model->IsActive),
-            'CreatedDate' => $model->CreatedDate->format('d-M-Y h:i A'),
+            'CreatedDate' => empty($model->CreatedDate) ? '' : $model->CreatedDate->format('d-M-Y h:i A'),
             'CreatedBy' => $model->CreatedBy,
-            'UpdatedDate' => $model->UpdatedDate->format('d-M-Y h:i A'),
+            'UpdatedDate' => is_null($model->UpdatedDate) ? (empty($model->CreatedDate) ? '' : $model->CreatedDate->format('d-M-Y h:i A')) : $model->UpdatedDate->format('d-M-Y h:i A'),
             'UpdatedBy' => empty($model->UpdatedBy) ? $model->CreatedBy : $model->UpdatedBy
         ];
     }

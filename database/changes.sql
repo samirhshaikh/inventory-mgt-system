@@ -1,4 +1,4 @@
-CREATE TABLE AppSettings (
+CREATE TABLE App_Settings (
   UserName varchar(20) NOT NULL,
   State varchar(20) NOT NULL,
   Payload text,

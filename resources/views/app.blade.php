@@ -19,36 +19,5 @@
 
 <script src="{{ str_replace('8080//', '8080/', mix('js/app.js')) }}" data-turbolinks-suppress-warning="false"></script>
 
-<style>
-    .generic_vs_select .vs__search::placeholder,
-    .generic_vs_select .vs__dropdown-toggle,
-    .generic_vs_select .vs__dropdown-menu {
-        @apply
-        .bg-gray-200
-        .text-gray-700
-        .border
-        .border-gray-400
-        .text-sm
-    }
-
-    .generic_vs_select .vs__clear,
-    .generic_vs_select .vs__open-indicator {
-        @apply
-        .bg-gray-200
-    }
-
-    .required_field,
-    .required_field:focus,
-    .required_field .vs__search::placeholder,
-    .required_field .vs__dropdown-toggle,
-    .required_field .vs__dropdown-menu {
-        @apply .border-red-300
-    }
-
-    .vs__search, .vs__search:focus {
-        line-height: 23px;
-    }
-</style>
-
 </body>
 </html>

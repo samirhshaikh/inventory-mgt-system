@@ -77,9 +77,15 @@
                                                 required_field: row['CustomerId'] == '' || row['CustomerId'] == null
                                             }"
                                         ></v-select>
-                                        <button class="p-1" @click="addCustomer">
-                                            <FA :icon="['fas', 'plus']" class="ml-1"></FA>
-                                        </button>
+
+                                        <Button
+                                            @click.native="addCustomer"
+                                            icon="plus"
+                                            split="border-white"
+                                            class="ml-1 bg-green-600 text-white"
+                                        >
+                                            New
+                                        </Button>
                                     </div>
                                     <Loading v-else/>
                                 </div>

@@ -23,4 +23,5 @@ mix
             ignored: /node_modules/
         }
     })
-    .purgeCss();
+    .purgeCss()
+;

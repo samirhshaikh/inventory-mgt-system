@@ -77,9 +77,15 @@
                                                 required_field: row['SupplierId'] == '' || row['SupplierId'] == null
                                             }"
                                         ></v-select>
-                                        <button class="p-1" @click="addSupplier">
-                                            <FA :icon="['fas', 'plus']" class="ml-1"></FA>
-                                        </button>
+
+                                        <Button
+                                            @click.native="addSupplier"
+                                            icon="plus"
+                                            split="border-white"
+                                            class="ml-1 bg-green-600 text-white"
+                                        >
+                                            New Supplier
+                                        </Button>
                                     </div>
                                     <Loading v-else/>
                                 </div>
@@ -274,9 +280,15 @@
                                                 required_field: child_row['manufacturer']['Id'] == '' || child_row['manufacturer']['Id'] == null
                                             }"
                                         ></v-select>
-                                        <button class="p-1" @click="addHandsetManufacturer">
-                                            <FA :icon="['fas', 'plus']" class="ml-1"></FA>
-                                        </button>
+
+                                        <Button
+                                            @click.native="addHandsetManufacturer"
+                                            icon="plus"
+                                            split="border-white"
+                                            class="ml-1 bg-green-600 text-white"
+                                        >
+                                            New
+                                        </Button>
                                     </div>
 
                                     <Loading v-else />
@@ -305,9 +317,15 @@
                                             required_field: child_row['model']['Id'] == '' || child_row['model']['Id'] == null
                                         }"
                                         ></v-select>
-                                        <button class="p-1" @click="addHandsetModel">
-                                            <FA :icon="['fas', 'plus']" class="ml-1"></FA>
-                                        </button>
+
+                                        <Button
+                                            @click.native="addHandsetModel"
+                                            icon="plus"
+                                            split="border-white"
+                                            class="ml-1 bg-green-600 text-white"
+                                        >
+                                            New
+                                        </Button>
                                     </div>
                                     <Loading v-else/>
                                 </div>
@@ -337,9 +355,15 @@
                                                 required_field: child_row['color']['Id'] == '' || child_row['color']['Id'] == null
                                             }"
                                         ></v-select>
-                                        <button class="p-1" @click="addHandsetColor">
-                                            <FA :icon="['fas', 'plus']" class="ml-1"></FA>
-                                        </button>
+
+                                        <Button
+                                            @click.native="addHandsetColor"
+                                            icon="plus"
+                                            split="border-white"
+                                            class="ml-1 bg-green-600 text-white"
+                                        >
+                                            New
+                                        </Button>
                                     </div>
                                     <Loading v-else/>
                                 </div>
@@ -367,7 +391,7 @@
                                 </div>
                             </div>
 
-                            <div class="flex flex-wrap -mx-3 form_field_container">
+                            <div class="flex flex-wrap -mx-3 form_field_container border-b border-product-color-lighter pb-5">
                                 <div class="w-full md:w-1/2 px-3">
                                     <label
                                         class="block form_field_label"
@@ -390,26 +414,6 @@
                                     ></v-select>
                                 </div>
 
-                                <div class="w-full md:w-1/2 px-3">
-                                    <label
-                                        class="block form_field_label"
-                                        :class="{
-                                            'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
-                                            }"
-                                    >
-                                        Model No
-                                    </label>
-                                    <input
-                                        class="w-48 generic_input"
-                                        type="text"
-                                        v-model.trim="child_row['ModelNo']"
-                                        autocomplete="off"
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="flex flex-wrap -mx-3 form_field_container border-b border-product-color-lighter pb-5">
                                 <div class="w-full md:w-1/2 px-3">
                                     <label
                                         class="block form_field_label"
@@ -878,7 +882,6 @@ export default {
             // this.child_row["color"]["Name"] = "";
             // this.child_row["Size"] = "";
             // this.child_row["Network"] = "Unlocked";
-            this.child_row["ModelNo"] = "";
             // this.child_row["Cost"] = "";
             this.child_row["IsActive"] = 1;
 

@@ -173,12 +173,6 @@ export default {
                     class: "w-48"
                 },
                 {
-                    key: "ModelNo",
-                    label: "Model No",
-                    type: "string",
-                    class: "w-48"
-                },
-                {
                     key: "Cost",
                     label: "Cost",
                     type: "currency",

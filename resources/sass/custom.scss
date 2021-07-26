@@ -85,9 +85,6 @@ button:focus {
     }
 }
 
-.generic_vs_select {
-
-}
 .generic_vs_select .vs__search::placeholder,
 .generic_vs_select .vs__dropdown-toggle,
 .generic_vs_select .vs__dropdown-menu {
@@ -106,7 +103,7 @@ button:focus {
 }
 
 .required_field,
-.required_field:focus, .required_field:focus, .required_field:focus
+.required_field:focus,
 .required_field .vs__search::placeholder,
 .required_field .vs__dropdown-toggle,
 .required_field .vs__dropdown-menu {

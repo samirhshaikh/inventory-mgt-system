@@ -85,19 +85,11 @@ button:focus {
     }
 }
 
-/* purgecss ignore */
-.generic_vs_select .vs__search::placeholder,
-.generic_vs_select .vs__dropdown-toggle,
-.generic_vs_select .vs__dropdown-menu {
-    @apply
-    .bg-gray-200
-    .text-gray-700
-    .border
-    .border-gray-400
-    .text-sm
+/*! purgecss start ignore */
+.generic_vs_select .vs__search::placeholder, .generic_vs_select .vs__dropdown-toggle, .generic_vs_select .vs__dropdown-menu {
+    @apply .bg-gray-200 .text-gray-700 .border .border-gray-400 .text-sm
 }
 
-/* purgecss ignore */
 .generic_vs_select .vs__clear,
 .generic_vs_select .vs__open-indicator {
     @apply
@@ -112,7 +104,7 @@ button:focus {
     @apply .border-red-300
 }
 
-/* purgecss ignore */
 .vs__search, .vs__search:focus {
     line-height: 23px;
 }
+/*! purgecss end ignore */

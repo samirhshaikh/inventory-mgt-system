@@ -1,11 +1,17 @@
 const { colors } = require("tailwindcss/defaultTheme");
 
 module.exports = {
-    purge: [
-        "./resources/views/**/*.blade.php",
-        "./resources/js/**/*.vue",
-        "./resources/sass/**/*.scss"
-    ],
+    purge: {
+        content: [
+            "./resources/views/**/*.blade.php",
+            "./resources/js/**/*.vue",
+            // "./resources/sass/**/*.scss"
+        ],
+        safelist: [
+            'generic_vs_select',
+            'vs__search'
+        ]
+    },
     theme: {
         extend: {
             colors: {

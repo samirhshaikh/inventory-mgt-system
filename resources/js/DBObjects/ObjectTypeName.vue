@@ -70,6 +70,7 @@
                                     v-on:blur="isDuplicateName"
                                     maxlength="255"
                                     autocomplete="off"
+                                    ref="input_name"
                                     :class="{
                                         required_field: name_validation_message != ''
                                     }"
@@ -267,11 +268,19 @@ export default {
                         this.row = _.cloneDeep(record);
 
                         this.loading = false;
+
+                        this.$nextTick(() => {
+                            this.$refs.input_name.focus();
+                        });
                     },
                     error => {
                         this.loading = false;
                     }
                 );
+        } else {
+            this.$nextTick(() => {
+                this.$refs.input_name.focus();
+            });
         }
     },
 

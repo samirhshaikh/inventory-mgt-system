@@ -17,6 +17,7 @@
                 <div class="mr-2 flex flex-row">
                     <SearchBar
                         :placeholder_text="options.record_name + 's'"
+                        :focus_on_search_bar="focus_on_search_bar"
                         v-if="options.enable_search"
                         class="mr-1"
                         @searchData="searchData"
@@ -75,6 +76,12 @@ export default {
         })
     },
 
+    data() {
+        return {
+            focus_on_search_bar: false
+        }
+    },
+
     computed: {
         ...mapState({
             dark_mode: state => state.framework.dark_mode
@@ -103,6 +110,11 @@ export default {
                 {
                     width: "650px",
                     height: "600px"
+                },
+                {
+                    "closed": event => {
+                        this.focus_on_search_bar = true;
+                    }
                 }
             );
         },

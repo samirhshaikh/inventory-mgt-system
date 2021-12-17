@@ -68,6 +68,7 @@
                                 v-model.trim="row['SupplierName']"
                                 maxlength="255"
                                 autocomplete="off"
+                                ref="supplier_name"
                                 :class="{
                                     required_field: row['SupplierName'] == '' || row['SupplierName'] == null
                                 }"
@@ -355,11 +356,19 @@ export default {
                         this.row = _.cloneDeep(record);
 
                         this.loading = false;
+
+                        this.$nextTick(() => {
+                            this.$refs.supplier_name.focus();
+                        });
                     },
                     error => {
                         this.loading = false;
                     }
                 );
+        } else {
+            this.$nextTick(() => {
+                this.$refs.supplier_name.focus();
+            });
         }
     },
 

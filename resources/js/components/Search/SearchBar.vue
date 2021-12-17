@@ -80,6 +80,10 @@ export default {
         advanced_search: {
             type: Boolean,
             default: true
+        },
+        focus_on_search_bar: {
+            type: Boolean,
+            default: false
         }
     },
 
@@ -99,6 +103,12 @@ export default {
         ...mapState({
             dark_mode: state => state.framework.dark_mode
         })
+    },
+
+    mounted() {
+        this.$nextTick(() => {
+            this.openSearchBar();
+        });
     },
 
     methods: {
@@ -173,6 +183,15 @@ export default {
             setPopperOpen: "local_settings/setPopperOpen",
             addError: 'errors/addError'
         })
+    },
+
+    watch: {
+        focus_on_search_bar: function (new_value) {
+            console.log(new_value);
+            if (new_value) {
+                this.openSearchBar();
+            }
+        }
     }
 };
 </script>

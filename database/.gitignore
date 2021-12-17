@@ -1,2 +1,4 @@
+/Importe*
 *.sqlite
 *.sqlite-journal
+ims.sql

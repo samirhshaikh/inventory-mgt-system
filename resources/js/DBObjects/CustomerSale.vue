@@ -65,12 +65,13 @@
                             <input
                                 class="w-72 generic_input"
                                 type="text"
-                                v-model.trim="row['CustomerName']"
+                                v-model.trim="row['customer_name']"
                                 maxlength="255"
                                 :class="{
                                     required_field: row['CustomerName'] == '' || row['CustomerName'] == null
                                 }"
                                 autocomplete="off"
+                                ref="customer_name"
                             />
                         </div>
                     </div>
@@ -355,11 +356,19 @@ export default {
                         this.row = _.cloneDeep(record);
 
                         this.loading = false;
+
+                        this.$nextTick(() => {
+                            this.$refs.customer_name.focus();
+                        });
                     },
                     error => {
                         this.loading = false;
                     }
                 );
+        } else {
+            this.$nextTick(() => {
+                this.$refs.customer_name.focus();
+            });
         }
     },
 

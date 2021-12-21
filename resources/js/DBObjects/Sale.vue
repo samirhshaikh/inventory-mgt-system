@@ -70,6 +70,8 @@
                                         :enable_add="true"
                                         :enable_edit="true"
                                         @onOptionSelected="onCustomerSelected"
+                                        @onDataLoadComplete="customerSalesLoaded"
+                                        ref="customer_sales_picker"
                                     />
                                 </div>
 
@@ -439,6 +441,7 @@ export default {
             checking_duplicate_imei: false,
             duplicate_imei: false,
             loading: false,
+            customer_sales_loaded: false,
 
             add_record_title: "Add",
             current_row_id: "",
@@ -597,12 +600,6 @@ export default {
             this.add_record_title = "Add";
 
             this.child_row["row_id"] = helper_functions.getRandomId();
-
-            // this.$nextTick(() => {
-            //     if (!this.loading_customer_sales) {
-            //         this.$refs.customer_id.$el.querySelector('input').focus()
-            //     }
-            // });
         }
     },
 
@@ -871,6 +868,15 @@ export default {
 
         onCustomerSelected(value) {
             this.row["CustomerId"] = value;
+        },
+
+        customerSalesLoaded() {
+            if (!this.edit_id && !this.customer_sales_loaded) {
+                this.$nextTick(() => {
+                    this.$refs.customer_sales_picker.$refs.customer_id.$el.querySelector('input').focus();
+                    this.customer_sales_loaded = true;
+                });
+            }
         },
 
         ...mapActions({

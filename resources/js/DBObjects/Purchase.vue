@@ -76,6 +76,7 @@
                                             :class="{
                                                 required_field: row['SupplierId'] == '' || row['SupplierId'] == null
                                             }"
+                                            ref="supplier_picker"
                                         ></v-select>
 
                                         <Button
@@ -774,6 +775,10 @@ export default {
                         });
 
                         this.loading = false;
+
+                        this.$nextTick(() => {
+                            this.$refs.imei.focus();
+                        });
                     },
                     error => {
                         this.loading = false;
@@ -784,6 +789,11 @@ export default {
 
             this.child_row["row_id"] = helper_functions.getRandomId();
             this.current_row_id = _.clone(this.child_row["row_id"]);
+
+            this.$nextTick(() => {
+                this.$refs.supplier_picker.$el.querySelector('input').focus();
+                this.customer_sales_loaded = true;
+            });
         }
     },
 

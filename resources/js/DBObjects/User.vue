@@ -72,6 +72,7 @@
                                     :class="{
                                         required_field: name_validation_message != ''
                                     }"
+                                    ref="user_name"
                                 />
 
                                 <Loading
@@ -387,6 +388,10 @@ export default {
                         this.loading = false;
                     }
                 );
+        } else {
+            this.$nextTick(() => {
+                this.$refs.user_name.focus();
+            });
         }
     },
 

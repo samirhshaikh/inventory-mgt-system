@@ -122,11 +122,15 @@ export default {
                         }
 
                         this.loading_customer_sales = false;
+
+                        this.$emit('onDataLoadComplete', true);
                     },
                     error => {
                         this.addError(error);
 
                         this.loading_customer_sales = false;
+
+                        this.$emit('onDataLoadComplete', true);
                     }
                 );
         },

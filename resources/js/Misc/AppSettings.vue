@@ -58,6 +58,7 @@
                                 class="block w-full generic_input"
                                 id="stock_types"
                                 v-model.trim="stock_types"
+                                ref="stock_types"
                             ></textarea>
                             <p
                                 class="text-red-500 text-xs italic mb-2"
@@ -209,6 +210,10 @@ export default {
         this.phone_sizes = this.app_settings.phone_sizes;
         this.stock_statuses = this.app_settings.stock_statuses;
         this.payment_types = this.app_settings.payment_types;
+
+        this.$nextTick(() => {
+            this.$refs.stock_types.focus();
+        });
     },
 
     methods: {

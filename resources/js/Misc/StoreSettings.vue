@@ -63,6 +63,7 @@
                                 id="business_name"
                                 type="text"
                                 v-model.trim="business_name"
+                                ref="business_name"
                             />
 
                             <p
@@ -197,6 +198,10 @@ export default {
         this.store_address = this.store_settings.address;
         this.phone = this.store_settings.phone;
         this.email = this.store_settings.email;
+
+        this.$nextTick(() => {
+            this.$refs.business_name.focus();
+        });
     },
 
     methods: {

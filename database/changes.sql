@@ -51,6 +51,10 @@ ALTER TABLE Customer_Sales MODIFY CreatedDate DATETIME, MODIFY UpdatedDate DATET
 ALTER TABLE Customer_Sales CHANGE COLUMN Id Id INT(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE Customer_Sales CHANGE COLUMN CreatedBy CreatedBy VARCHAR(250) NULL DEFAULT NULL, CHANGE COLUMN UpdatedBy UpdatedBy VARCHAR(250) NULL DEFAULT NULL;
 ALTER TABLE Customer_Sales CHANGE COLUMN Comments Comments TEXT NULL DEFAULT NULL;
+ALTER TABLE Customer_Sales CHANGE COLUMN `CustomerName` `CustomerName` VARCHAR(350) NULL DEFAULT 'Unknown';
+UPDATE Customer_Sales SET CustomerName = 'Unknown' where CustomerName = '';
+Update Customer_Sales set CustomerName = trim(CustomerName) where CustomerName like ' %';
+
 
 ALTER TABLE Supplier MODIFY CreatedDate DATETIME, MODIFY UpdatedDate DATETIME;
 -- UPDATE Supplier SET UpdatedDate = CreatedDate WHERE UpdatedDate = 0 OR UpdatedDate = '' OR UpdatedDate IS NULL;

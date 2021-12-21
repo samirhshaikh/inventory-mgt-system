@@ -101,9 +101,8 @@ export default {
             return [
                 {
                     key: "customer",
-                    label: "Customer Name",
+                    label: "Customer",
                     type: "string",
-                    data: this.customers_simple,
                     class: "w-60"
                 },
                 {

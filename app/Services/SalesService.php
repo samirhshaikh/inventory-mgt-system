@@ -120,6 +120,8 @@ class SalesService
                     'InvoiceNo',
                     'DATE_FORMAT(InvoiceDate, "%d-%b-%Y")',
                     'Customer_Sales.CustomerName',
+                    'Customer_Sales.ContactNo1',
+                    'Customer_Sales.ContactNo2',
                     'SalesStock.IMEI',
                     'ManufactureMaster.Name',
                     'ColorMaster.Name',
@@ -163,7 +165,7 @@ class SalesService
 
             switch ($column) {
                 case 'customer':
-                    $model = $this->prepareAdvancedSearchQuery($model, 'Customer_Sales.CustomerName', $search_text);
+                    $model = $this->prepareAdvancedSearchQuery($model, ['Customer_Sales.CustomerName', 'Customer_Sales.ContactNo1', 'Customer_Sales.ContactNo2'], $search_text);
                     break;
                 case 'contact':
                     $model = $this->prepareAdvancedSearchQuery($model, ['Customer_Sales.ContactNo1', 'Customer_Sales.ContactNo2'], $search_text);

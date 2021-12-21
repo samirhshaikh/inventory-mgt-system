@@ -42,7 +42,7 @@ export default {
 
             this.$modal.show(
                 Customer,
-                {
+                 {
                     edit_id: String(this.row.Id),
                     options: this.options
                 },

@@ -64,30 +64,13 @@
                                     >
                                         Customer
                                     </label>
-                                    <div class="flex flex-row items-center" v-if="!loading_customer_sales">
-                                        <v-select
-                                            :value="row['CustomerId']"
-                                            label="CustomerName"
-                                            v-model="row['CustomerId']"
-                                            :reduce="customer => customer.Id"
-                                            :options="customer_sales"
-                                            class="w-72 generic_vs_select"
-                                            v-if="!loading_customer_sales"
-                                            :class="{
-                                                required_field: row['CustomerId'] == '' || row['CustomerId'] == null
-                                            }"
-                                        ></v-select>
-
-                                        <Button
-                                            @click.native="addCustomer"
-                                            icon="plus"
-                                            split="border-white"
-                                            class="ml-1 bg-green-600 text-white"
-                                        >
-                                            New
-                                        </Button>
-                                    </div>
-                                    <Loading v-else/>
+                                    <CustomerSalesPicker
+                                        :selected_value="row['CustomerId']"
+                                        :required_field="row['CustomerId'] == '' || row['CustomerId'] == null"
+                                        :enable_add="true"
+                                        :enable_edit="true"
+                                        @onOptionSelected="onCustomerSelected"
+                                    />
                                 </div>
 
                                 <div class="text-white px-3 mt-5">
@@ -248,7 +231,9 @@
                                 </div>
                             </div>
 
-                            <div class="flex flex-wrap -mx-3 form_field_container border-b border-product-color-lighter pb-5" v-if="current_row_id != ''">
+                            <div
+                                class="flex flex-wrap -mx-3 form_field_container border-b border-product-color-lighter pb-5"
+                                v-if="current_row_id != ''">
                                 <div class="w-full md:w-1/2 px-3">
                                     <label
                                         class="block form_field_label"
@@ -524,7 +509,7 @@ export default {
                     th: "",
                     type: "AddSaleActions"
                 }
-            ]
+            ],
         };
     },
 
@@ -565,10 +550,6 @@ export default {
             dark_mode: state => state.framework.dark_mode,
             expanded_sidebar: state => state.framework.expanded_sidebar,
             local_settings: state => state.local_settings,
-            refresh_customer_sales: state => state.framework.refresh_customer_sales,
-            refresh_handset_models: state => state.framework.refresh_handset_models,
-            refresh_handset_manufacturers: state => state.framework.refresh_handset_manufacturers,
-            refresh_handset_colors: state => state.framework.refresh_handset_colors
         })
     },
 
@@ -616,6 +597,12 @@ export default {
             this.add_record_title = "Add";
 
             this.child_row["row_id"] = helper_functions.getRandomId();
+
+            // this.$nextTick(() => {
+            //     if (!this.loading_customer_sales) {
+            //         this.$refs.customer_id.$el.querySelector('input').focus()
+            //     }
+            // });
         }
     },
 
@@ -882,6 +869,10 @@ export default {
             );
         },
 
+        onCustomerSelected(value) {
+            this.row["CustomerId"] = value;
+        },
+
         ...mapActions({
             setTableMetaData: 'datatable/setTableMetaData',
             setActiveTab: 'local_settings/setActiveTab',
@@ -892,11 +883,5 @@ export default {
             addError: "errors/addError"
         })
     },
-
-    watch: {
-        refresh_customer_sales: function () {
-            this.load_customer_sales();
-        }
-    }
 };
 </script>

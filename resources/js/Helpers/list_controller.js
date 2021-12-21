@@ -24,19 +24,16 @@ export const list_controller = {
             loading_handset_colors: false,
             loading_handset_models: false,
             loading_handset_manufacturers: false,
-            loading_customer_sales: false,
 
             suppliers: [],
             handset_colors: [],
             handset_models: [],
             handset_manufacturers: [],
-            customer_sales: [],
 
             suppliers_simple: [],
             handset_colors_simple: [],
             handset_models_simple: [],
             handset_manufacturers_simple: [],
-            customers_simple: [],
 
             stock_types: [],
             networks: [],
@@ -67,8 +64,6 @@ export const list_controller = {
         this.load_handset_models();
 
         this.load_handset_manufacturers();
-
-        this.load_customer_sales();
     },
 
     methods: {
@@ -115,53 +110,6 @@ export const list_controller = {
             _.forEach(this.suppliers, (data, key) => {
                 if (!this.suppliers_simple.includes(data["SupplierName"])) {
                     this.suppliers_simple.push(data["SupplierName"]);
-                }
-            });
-        },
-
-        load_customer_sales() {
-            if (
-                this.local_settings.cached_data.hasOwnProperty("customer_sales") &&
-                this.local_settings.cached_data["customer_sales"].length
-            ) {
-                this.customer_sales = this.local_settings.cached_data["customer_sales"];
-                this.load_customers_simple();
-            } else {
-                this.loading_customer_sales = true;
-
-                axios
-                    .get(route("datatable.customer_sales.data"), {
-                        params: {
-                            get_all_records: 1,
-                            order_by: 'CustomerName'
-                        }
-                    })
-                    .then(response => {
-                        this.customer_sales = response.data.rows;
-
-                        this.setCachedData({
-                            key: "customer_sales",
-                            data: response.data.rows
-                        });
-
-                        this.loading_customer_sales = false;
-
-                        this.load_customers_simple();
-                    },
-                    error => {
-                        this.addError(error);
-
-                        this.loading_customer_sales = false;
-                    }
-                );
-            }
-        },
-
-        load_customers_simple() {
-            this.customers_simple = [];
-            _.forEach(this.customer_sales, (data, key) => {
-                if (!this.customers_simple.includes(data["CustomerName"])) {
-                    this.customers_simple.push(data["CustomerName"]);
                 }
             });
         },
@@ -317,30 +265,6 @@ export const list_controller = {
                     options: {
                         id: "suppliers",
                         record_name: "Supplier",
-                        cache_data: true
-                    }
-                },
-                {
-                    width: "750px",
-                    height: "600px"
-                },
-                {
-                    "closed": event => {
-                    }
-                }
-            );
-        },
-
-        addCustomer() {
-            this.setPopperOpen(true);
-
-            this.$modal.show(
-                Customer,
-                {
-                    edit_id: "",
-                    options: {
-                        id: "customer_sales",
-                        record_name: "Customer",
                         cache_data: true
                     }
                 },

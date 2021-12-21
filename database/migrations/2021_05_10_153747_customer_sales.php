@@ -11,7 +11,7 @@ class CreateCustomerSalesTable extends Migration
         Schema::create('customer_sales', function (Blueprint $table) {
 
             $table->increments(Id);
-            $table->string('CustomerName',350)->nullable()->default('NULL');
+            $table->string('CustomerName',350)->nullable()->default('Unknown');
             $table->string('ContactNo1',50)->nullable()->default('NULL');
             $table->string('ContactNo2',50)->nullable()->default('NULL');
             $table->string('City',100)->nullable()->default('NULL');

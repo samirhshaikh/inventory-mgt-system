@@ -102,7 +102,15 @@
                                 @input="updateTimer"
                                 v-model="column_data[column.key]"
                                 v-if="!loading_suppliers && column.type == 'list'"
-                            ></v-select>
+                                :filterable="false"
+                            >
+                                <template v-slot:option="option">
+                                    <strong>{{ option[column.label] }}</strong>
+                                    <p v-if="option.ContactNo1 || option.ContactNo2" class="m-0 p-0">
+                                        {{ option.ContactNo1 ? option.ContactNo1 : option.ContactNo2 }}
+                                    </p>
+                                </template>
+                            </v-select>
                         </div>
                     </div>
                 </form>

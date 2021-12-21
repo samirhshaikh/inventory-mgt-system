@@ -111,6 +111,8 @@ class PurchaseService
                     'InvoiceNo',
                     'DATE_FORMAT(InvoiceDate, "%d-%b-%Y")',
                     'Supplier.SupplierName',
+                    'Supplier.ContactNo1',
+                    'Supplier.ContactNo2',
                     'IMEI',
                     'ManufactureMaster.Name',
                     'ColorMaster.Name',

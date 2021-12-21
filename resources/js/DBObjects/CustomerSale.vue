@@ -65,13 +65,13 @@
                             <input
                                 class="w-72 generic_input"
                                 type="text"
-                                v-model.trim="row['customer_name']"
+                                v-model.trim="row['CustomerName']"
                                 maxlength="255"
                                 :class="{
                                     required_field: row['CustomerName'] == '' || row['CustomerName'] == null
                                 }"
                                 autocomplete="off"
-                                ref="customer_name"
+                                ref="CustomerName"
                             />
                         </div>
                     </div>
@@ -300,6 +300,9 @@ export default {
         edit_id: {
             type: String,
             default: ""
+        },
+        customerSaved: {
+            type: Function
         }
     },
 
@@ -318,7 +321,7 @@ export default {
         valid_data() {
             if (
                 this.row_keys.indexOf("CustomerName") < 0 ||
-                this.row["CustomerName"] == ""
+                    this.row["CustomerName"] == ""
             ) {
                 return false;
             }
@@ -358,7 +361,7 @@ export default {
                         this.loading = false;
 
                         this.$nextTick(() => {
-                            this.$refs.customer_name.focus();
+                            this.$refs.CustomerName.focus();
                         });
                     },
                     error => {
@@ -367,7 +370,7 @@ export default {
                 );
         } else {
             this.$nextTick(() => {
-                this.$refs.customer_name.focus();
+                this.$refs.CustomerName.focus();
             });
         }
     },
@@ -420,6 +423,11 @@ export default {
                         this.refreshData(this.options.id);
 
                         this.refreshCustomerSales();
+
+                        const handler = this.customerSaved;
+                        if (typeof handler === "function") {
+                            handler(response.data.response.id);
+                        }
                     }
 
                     this.saving_data = false;

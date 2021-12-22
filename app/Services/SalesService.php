@@ -6,6 +6,7 @@ use App\Exceptions\RecordNotFoundException;
 use App\Http\Requests\IdRequest;
 use App\Http\Requests\ReturnItemRequest;
 use App\Http\Requests\SaveSaleRequest;
+use App\Models\PhoneStock;
 use App\Models\Sales;
 use App\Models\SalesStock;
 use App\Models\StockLog;

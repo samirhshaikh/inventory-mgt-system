@@ -9,15 +9,6 @@
         >
             Sell
         </Button>
-        <Button
-            @click.native="viewSalesInvoice"
-            class="text-white bg-green-600 ml-2"
-            :class="{
-                hidden: !$page.user_details.IsAdmin || row.Status != this.phonestock.STATUS_SOLD
-            }"
-        >
-            Invoice
-        </Button>
     </div>
 </template>
 
@@ -37,11 +28,21 @@ export default {
             this.$modal.show(
                 Sale,
                 {
-                    edit_id: String(this.row.Id),
-                    options: this.options,
+                    edit_id: "",
+                    options: {
+                        id: "sales",
+                        record_name: "Sale",
+                    },
                     phones: [
-                        this.row.IMEI
-                    ]
+                        this.row.Id
+                    ],
+                    submitRecordSaved: (invoice_id) => {
+                        this.setActiveTab(this.options.id);
+                        this.setTabToRefresh(this.options.id);
+
+                        //Open Print Invoice dialog
+                        this.viewSalesInvoice(invoice_id);
+                    }
                 },
                 {
                     width: "90%",
@@ -50,11 +51,10 @@ export default {
             );
         },
 
-        viewSalesInvoice() {
-            // this.viewSalesInvoice();
-        },
-
         ...mapActions({
+            setTableMetaData: 'datatable/setTableMetaData',
+            setActiveTab: 'local_settings/setActiveTab',
+            setTabToRefresh: "framework/setTabToRefresh",
             refreshData: "framework/refreshData",
             setPopperOpen: "local_settings/setPopperOpen",
             addError: "errors/addError"

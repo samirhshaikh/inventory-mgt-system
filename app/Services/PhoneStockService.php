@@ -122,12 +122,11 @@ class PhoneStockService
      */
     public function getSingle(IdRequest $request)
     {
-        $record = PhoneStock::selectRaw('PhoneStock.*, Supplier.SupplierName as supplier, ManufactureMaster.Name as manufacturer, ColorMaster.Name as color, modelmaster.Name as model')
+        $record = PhoneStock::selectRaw('PhoneStock.*, ManufactureMaster.Name, ColorMaster.Name, ModelMaster.Name')
             ->where('PhoneStock.Id', $request->get('Id'))
-            ->join('Supplier', 'Supplier.Id', '=', 'SupplierId')
-            ->join('ManufactureMaster', 'ManufactureMaster.Id', '=', 'MakeId')
-            ->join('ColorMaster', 'ColorMaster.Id', '=', 'ColorId')
-            ->join('modelmaster', 'modelmaster.Id', '=', 'ModelId')
+            ->leftJoin('ManufactureMaster', 'ManufactureMaster.Id', '=', 'MakeId')
+            ->leftJoin('ColorMaster', 'ColorMaster.Id', '=', 'ColorId')
+            ->leftJoin('ModelMaster', 'ModelMaster.Id', '=', 'ModelId')
             ->get();
 
         if ($record->count()) {
@@ -225,7 +224,7 @@ class PhoneStockService
      * @return bool
      * @throws RecordNotFoundException
      */
-    public function changePhoneAvailabilityStatus($imei, $status = PhoneStock::STATUS_IN_STOCK): bool
+    public function changePhoneAvailabilityStatus(string $imei, string $status = PhoneStock::STATUS_IN_STOCK): bool
     {
         $record = PhoneStock::where('IMEI', $imei)
             ->get();

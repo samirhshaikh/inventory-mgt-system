@@ -10,24 +10,6 @@
             Edit
         </Button>
         <Button
-            @click.native="sellItem"
-            class="text-white bg-green-600 ml-2"
-            :class="{
-                hidden: !$page.user_details.IsAdmin || row['Id'] == '' || row.Status == this.phonestock.STATUS_SOLD
-            }"
-        >
-            Sell
-        </Button>
-        <Button
-            @click.native="viewSalesInvoice"
-            class="text-white bg-green-600 ml-2"
-            :class="{
-                hidden: !$page.user_details.IsAdmin || row['Id'] == '' || row.Status != this.phonestock.STATUS_SOLD
-            }"
-        >
-            Invoice
-        </Button>
-        <Button
             @click.native="removeRecord"
             class="text-white bg-red-400 ml-2"
             :class="{

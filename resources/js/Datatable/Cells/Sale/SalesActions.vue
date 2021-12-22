@@ -56,14 +56,8 @@ export default {
                 Sale,
                 {
                     edit_id: String(this.row.Id),
-                    options: this.options
-                },
-                {
-                    width: "90%",
-                    height: "80%"
-                },
-                {
-                    "closed": event => {
+                    options: this.options,
+                    submitRecordSaved: (invoice_id) => {
                         this.setTableMetaData({
                             columns: this.columns,
                             options: this.options
@@ -71,8 +65,15 @@ export default {
 
                         this.setActiveTab(this.options.id);
                         this.setTabToRefresh(this.options.id);
+
+                        //Open Print Invoice dialog
+                        this.viewSalesInvoice(invoice_id);
                     }
-                }
+                },
+                {
+                    width: "90%",
+                    height: "80%"
+                },
             );
         },
 

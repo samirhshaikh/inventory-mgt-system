@@ -409,6 +409,10 @@ export default {
         },
         submitRecordSaved: {
             type: Function
+        },
+        phones: {
+            type: Array,
+            default: () => ([])
         }
     },
 
@@ -600,6 +604,42 @@ export default {
             this.add_record_title = "Add";
 
             this.child_row["row_id"] = helper_functions.getRandomId();
+
+            if (this.phones.length) {
+                this.loading = true;
+                axios
+                    .post(route("phonestock.get-single"), {
+                        Id: this.phones.pop()
+                    })
+                    .then(response => {
+                        if (response.data.message == "OK") {
+                            let child_row = response.data.response.record;
+                            child_row["Id"] = "";
+                            child_row["phone_details"] = _.clone(child_row);
+                            child_row["row_id"] = helper_functions.getRandomId();
+                            child_row["Returned"] = false;
+                            this.rows.push(child_row);
+                        } else {
+                            this.$notify({
+                                group: "messages",
+                                title: "Error",
+                                type: "error",
+                                text: this.formatMessage("unknown_error", this.options.record_name)
+                            });
+                        }
+
+                        this.loading = false;
+                    })
+                    .catch(error => {
+                        this.$notify({
+                            group: "messages",
+                            title: "Error",
+                            type: "error",
+                            text: this.formatMessage(error.response.data.message, this.options.record_name)
+                        });
+                        this.loading = false;
+                    });
+            }
         }
     },
 
@@ -695,51 +735,53 @@ export default {
 
             axios
                 .post(route("sale.save"), this.row)
-                .then(response => {
-                    if (response.data.message == "record_saved") {
-                        this.$notify({
-                            group: "messages",
-                            title: "Success",
-                            text: response.data.response.records_count + " " + this.options.record_name + (response.data.response.records_count > 1 ? "s" : "") + " saved successfully."
-                        });
+                .then(
+                    response => {
+                        if (response.data.message == "record_saved") {
+                            this.$notify({
+                                group: "messages",
+                                title: "Success",
+                                text: response.data.response.records_count + " " + this.options.record_name + (response.data.response.records_count > 1 ? "s" : "") + " saved successfully."
+                            });
 
-                        this.refreshData(this.options.id);
+                            this.refreshData(this.options.id);
 
-                        const handler = this.submitRecordSaved;
-                        if (typeof handler === "function") {
-                            handler(response.data.response.id);
+                            const handler = this.submitRecordSaved;
+                            if (typeof handler === "function") {
+                                handler(response.data.response.id);
 
-                            this.$modal.hide(this.$parent.name);
+                                this.$modal.hide(this.$parent.name);
+                            }
+                        }
+
+                        this.saving_data = false;
+
+                        this.$modal.hide(this.$parent.name);
+                    },
+                    error => {
+                        this.saving_data = false;
+
+                        if (error.response.data.message == "record_not_found") {
+                            this.$notify({
+                                group: "messages",
+                                title: "Error",
+                                type: "error",
+                                text: this.formatMessage(error.response.data, this.options.record_name)
+                            });
+                        } else {
+                            this.$notify({
+                                group: "messages",
+                                title: "Error",
+                                type: "error",
+                                text: this.formatMessage(error.response.data.message, this.options.record_name)
+                            });
+
+                            _.forIn(this.children_to_delete, (object, key) => {
+                                this.rows.push(_.clone(object))
+                            });
                         }
                     }
-
-                    this.saving_data = false;
-
-                    this.$modal.hide(this.$parent.name);
-                })
-                .catch(error => {
-                    this.saving_data = false;
-
-                    if (error.response.data.message == "record_not_found") {
-                        this.$notify({
-                            group: "messages",
-                            title: "Error",
-                            type: "error",
-                            text: this.formatMessage(error.response.data, this.options.record_name)
-                        });
-                    } else {
-                        this.$notify({
-                            group: "messages",
-                            title: "Error",
-                            type: "error",
-                            text: this.formatMessage(error.response.data.message, this.options.record_name)
-                        });
-
-                        _.forIn(this.children_to_delete, (object, key) => {
-                            this.rows.push(_.clone(object))
-                        });
-                    }
-                });
+                );
         },
 
         selectPhoneStock() {

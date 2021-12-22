@@ -25,6 +25,7 @@
             :class="{
                 hidden: !$page.user_details.IsAdmin || !row.hasOwnProperty('Id') || row['Returned']
             }"
+            v-if="typeof row.SalesInvoiceId !== 'undefined'"
         >
             Return
         </Button>

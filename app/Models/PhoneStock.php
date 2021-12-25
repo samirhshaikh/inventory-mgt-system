@@ -4,6 +4,9 @@ namespace App\Models;
 
 use App\Traits\CompositeKeysTrait;
 use App\Transformers\PhoneStockTransformer;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class PhoneStock extends BaseModel {
     use CompositeKeysTrait;
@@ -22,23 +25,45 @@ class PhoneStock extends BaseModel {
     const STATUS_IN_STOCK = 'In Stock';
     const STATUS_SOLD = 'Sold';
 
-    public function manufacturer() {
+    /**
+     * @return HasOne
+     */
+    public function manufacturer(): HasOne {
         return $this->hasOne(HandsetManufacturers::class, 'Id', 'MakeId');
     }
 
-    public function model() {
+    /**
+     * @return HasOne
+     */
+    public function model(): HasOne {
         return $this->hasOne(HandsetModels::class, 'Id', 'ModelId');
     }
 
-    public function color() {
+    /**
+     * @return HasOne
+     */
+    public function color(): HasOne {
         return $this->hasOne(HandsetColors::class, 'Id', 'ColorId');
     }
 
-    public function sales() {
-        return $this->hasOne(Sales::class, 'IMEI', 'IMEI');
+    /**
+     * @return HasOne
+     */
+    public function sales(): HasOne {
+        return $this->hasOne(Sales::class, 'Id', 'InvoiceId');
     }
 
-    public function stock_log() {
+    /**
+     * @return HasMany
+     */
+    public function stock_log(): HasMany {
         return $this->hasMany(StockLog::class, 'IMEI', 'IMEI');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function purchase(): BelongsTo {
+        return $this->belongsTo(Purchase::class, 'InvoiceId', 'Id');
     }
 }

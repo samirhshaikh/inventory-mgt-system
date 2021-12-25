@@ -10,6 +10,7 @@ use App\Http\Requests\SavePurchaseRequest;
 use App\Http\Requests\IdRequest;
 use App\Models\PhoneStock;
 use App\Models\Purchase;
+use App\Models\TradeIn;
 use App\Traits\SearchTrait;
 use App\Traits\TableActions;
 use Carbon\Carbon;
@@ -220,13 +221,13 @@ class PurchaseService
 
     /**
      * @param SavePurchaseRequest $request
-     * @return int
+     * @return array
      * @throws DuplicateIMEIException
      * @throws InvalidDataException
      * @throws RecordNotFoundException
      * @throws ReferenceException
      */
-    public function save(SavePurchaseRequest $request): int
+    public function save(SavePurchaseRequest $request): array
     {
         /*
          * First we will check for any errors. If yes then return the error code.
@@ -295,7 +296,12 @@ class PurchaseService
         }
 
         //Create/Update records in phonestock table
-        return $phonestock_service->save($record->Id, $request->get('children', []));
+        $records_count = $phonestock_service->save($record->Id, $request->get('children', []));
+
+        return [
+            'id' => $record->Id,
+            'records_count' => $records_count
+        ];
     }
 
     /**
@@ -312,19 +318,16 @@ class PurchaseService
         if ($invoice->count()) {
             $invoice = $invoice->first();
 
+            if ($this->foreignReferenceFound(['TradeIn'], 'PurchaseInvoiceId', $request->get('Id'))) {
+                throw new ReferenceException;
+            }
+
             //Get all the phones in this invoice
             $phones = PhoneStock::where('InvoiceId', $invoice->Id)->get();
             if ($phones->count()) {
                 $tables_to_check = ['SalesStock'];
                 foreach ($phones as $phone) {
                     if ($this->foreignReferenceFound($tables_to_check, 'IMEI', $phone->IMEI)) {
-                        throw new ReferenceException;
-                    }
-                }
-
-                $tables_to_check = ['TradedDetails'];
-                foreach ($phones as $phone) {
-                    if ($this->foreignReferenceFound($tables_to_check, 'PhoneStockId', $phone->Id)) {
                         throw new ReferenceException;
                     }
                 }
@@ -351,13 +354,6 @@ class PurchaseService
         $tables_to_check = ['SalesStock'];
         foreach ($phone_ids as $phone_id) {
             if ($this->foreignReferenceFound($tables_to_check, 'IMEI', $phone_id)) {
-                return true;
-            }
-        }
-
-        $tables_to_check = ['TradedDetails'];
-        foreach ($phone_ids as $phone_id) {
-            if ($this->foreignReferenceFound($tables_to_check, 'PhoneStockId', $phone_id)) {
                 return true;
             }
         }

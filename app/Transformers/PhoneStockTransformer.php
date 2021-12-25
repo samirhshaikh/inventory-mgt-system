@@ -58,6 +58,12 @@ class PhoneStockTransformer extends TransformerAbstract
             }
         }
 
+        if ($model->relationLoaded('purchase')) {
+            if ($model->purchase) {
+                $return['purchase'] = $model->purchase->transform();
+            }
+        }
+
         return $return;
     }
 }

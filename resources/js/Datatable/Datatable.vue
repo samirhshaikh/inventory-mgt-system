@@ -334,17 +334,24 @@ export default {
 
         if (this.load_data_from_server) {
             this.getData();
+
+            if (
+                typeof this.options === "undefined" ||
+                typeof this.options.url === "undefined"
+            ) {
+                this.error = true;
+                return;
+            }
         } else {
             this.data = this.source_data;
             this.totals = [];
-        }
 
-        if (
-            typeof this.options === "undefined" ||
-            typeof this.options.url === "undefined"
-        ) {
-            this.error = true;
-            return;
+            if (
+                typeof this.options === "undefined"
+            ) {
+                this.error = true;
+                return;
+            }
         }
     },
 

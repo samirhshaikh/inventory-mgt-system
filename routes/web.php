@@ -107,6 +107,10 @@ Route::group(['prefix' => 'sale'], function ($router) {
     $router->get('get-pdf-invoice', 'DBObjects\SalesController@getPDFInvoice')->name('sale.get-pdf-invoice');
 });
 
+Route::group(['prefix' => 'tradein'], function ($router) {
+    $router->post('delete', 'TradeInController@delete')->name('tradein.delete');
+});
+
 Route::get('/app-settings', 'PagesController@appSettings')->name('app-settings');
 
 Route::group(['prefix' => 'datatables'], function ($router) {

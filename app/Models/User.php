@@ -36,7 +36,11 @@ class User extends BaseModel implements Authenticatable, JWTSubject {
     {
         return $this->getAuthIdentifierName();
     }
-    public function getJWTCustomClaims()
+
+    /**
+     * @return array
+     */
+    public function getJWTCustomClaims(): array
     {
         return [];
     }

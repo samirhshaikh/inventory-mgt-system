@@ -136,9 +136,9 @@ class SalesController extends BaseController
         $total = 0;
         $items = [];
         foreach ($invoice['children'] ?? [] as $child) {
-            if ($child['Returned']) {
-                continue;
-            }
+//            if ($child['Returned']) {
+//                continue;
+//            }
 
             $price = number_format($child['Cost'], 2);
 
@@ -172,7 +172,47 @@ EOT;
             $items[] = $item;
         }
 
+        $tradein_items = [];
+        if (Arr::get($invoice, 'tradein.purchase.children', [])) {
+            $tradein_items[] = <<<EOT
+<tr>
+    <td colspan="2"></td>
+    <td colspan="3"><strong>Exchange:</strong></td>
+</tr>
+EOT;
+
+            foreach(Arr::get($invoice, 'tradein.purchase.children', []) as $child) {
+                $qty = 1;
+
+                $price = number_format($child['Cost'], 2);
+
+                $child_total = number_format($price * $qty, 2);
+                $total -= $child_total;
+
+                $item = <<<EOT
+<tr class="tradein_items">
+    <td>{$qty}</td>
+    <td>{$child['StockType']}</td>
+    <td>
+        {$child['manufacturer']['Name']} {$child['model']['Name']} {$child['Size']}
+        <br>
+        {$child['color']['Name']}
+        <br>
+        {$child['Network']}
+        <br>
+        IMEI: {$child['IMEI']}
+    </td>
+    <td style="text-align: right;">&#163; {$price}</td>
+    <td style="text-align: right;">&#163; {$child_total}</td>
+</tr>
+EOT;
+
+                $tradein_items[] = $item;
+            }
+        }
+
         $items = join('', $items);
+        $tradein_items = join('', $tradein_items);
 
         $body = <<<EOT
 <html xmlns="http://www.w3.org/1999/html">
@@ -185,6 +225,7 @@ EOT;
     .invoice_items_table tbody tr td {background: #ffffff; font-size: 16px; padding: 5px 3px; border-bottom: 1px solid #b0b0b0;}
     .invoice_items_table tbody tr:last-child td {border-bottom: 1px solid #000000;}
     .invoice_items_table tfoot tr td {background: #8cc9e0; font-size: 16px; padding: 5px 3px;}
+    .invoice_items_table .tradein_items td {background: #f9eaec;}
     </style>
     <br>
     <table style="width: 100%;">
@@ -272,6 +313,7 @@ EOT;
         </thead>
         <tbody>
             {$items}
+            {$tradein_items}
         </tbody>
         <tfoot>
             <tr>

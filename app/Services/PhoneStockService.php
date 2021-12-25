@@ -200,17 +200,10 @@ class PhoneStockService
         if ($record->get()->count()) {
             $record = $record->first();
 
-            $tables_to_check = ['Sales'];
+            $tables_to_check = ['SalesStock'];
             if ($this->foreignReferenceFound($tables_to_check, 'IMEI', $record->IMEI)) {
                 throw new ReferenceException;
             }
-
-            $tables_to_check = ['TradedDetails'];
-            if ($this->foreignReferenceFound($tables_to_check, 'PhoneStockId', $request->get('Id'))) {
-                throw new ReferenceException;
-            }
-
-            $record->delete();
 
             return true;
         } else {

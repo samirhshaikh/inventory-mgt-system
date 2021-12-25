@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Traits\CompositeKeysTrait;
 use App\Transformers\PurchaseTransformer;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Purchase extends BaseModel
 {
@@ -24,11 +26,17 @@ class Purchase extends BaseModel
         'InvoiceDate'
     ];
 
-    public function supplier() {
+    /**
+     * @return HasOne
+     */
+    public function supplier(): HasOne {
         return $this->hasOne(Suppliers::class, 'Id', 'SupplierId');
     }
 
-    public function purchases() {
+    /**
+     * @return HasMany
+     */
+    public function purchases(): HasMany {
         return $this->hasMany(PhoneStock::class, 'InvoiceId', 'Id')
             ->with('manufacturer')
             ->with('model')

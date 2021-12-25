@@ -55,7 +55,6 @@ ALTER TABLE Customer_Sales CHANGE COLUMN `CustomerName` `CustomerName` VARCHAR(3
 UPDATE Customer_Sales SET CustomerName = 'Unknown' where CustomerName = '';
 Update Customer_Sales set CustomerName = trim(CustomerName) where CustomerName like ' %';
 
-
 ALTER TABLE Supplier MODIFY CreatedDate DATETIME, MODIFY UpdatedDate DATETIME;
 -- UPDATE Supplier SET UpdatedDate = CreatedDate WHERE UpdatedDate = 0 OR UpdatedDate = '' OR UpdatedDate IS NULL;
 ALTER TABLE Supplier CHANGE COLUMN Id Id INT(11) NOT NULL AUTO_INCREMENT;
@@ -70,7 +69,7 @@ ALTER TABLE PhoneStock CHANGE COLUMN CreatedBy CreatedBy VARCHAR(250) NULL DEFAU
 ALTER TABLE PhoneStock CHANGE COLUMN Comments Comments TEXT NULL DEFAULT NULL;
 ALTER TABLE PhoneStock ADD COLUMN InvoiceId INT NULL AFTER Id;
 
-CREATE TABLE Purchase (
+CREATE TABLE Purchase (10
   `Id` INT NOT NULL AUTO_INCREMENT,
   `InvoiceNo` VARCHAR(50) NULL,
   `InvoiceDate` DATETIME NOT NULL,
@@ -122,6 +121,14 @@ INSERT INTO stock_log
 UNION
 (SELECT 0, IMEI, COALESCE(UpdatedDate, CreatedDate),  '', Status, CreatedDate, CreatedBy, COALESCE(UpdatedDate, CreatedDate), COALESCE(UpdatedBy, CreatedBy) FROM phonestock where Status in ('Returned', 'Rejected') Order By UpdatedDate);
 UPDATE stock_log SET UpdatedBy = CreatedBy where UpdatedBy = '';
+
+ALTER TABLE `TradedDetails` RENAME TO tradein;
+ALTER TABLE tradein MODIFY CreatedDate DATETIME;
+ALTER TABLE tradein CHANGE COLUMN CreatedBy CreatedBy VARCHAR(250) NULL DEFAULT NULL;
+ALTER TABLE tradein ADD COLUMN `UpdatedDate` DATETIME NULL DEFAULT NULL AFTER `CreatedBy`, ADD COLUMN `UpdatedBy` VARCHAR(250) NULL DEFAULT NULL AFTER `UpdatedDate`,
+CHANGE COLUMN `InvoiceId` `SalesInvoiceId` INT(11) NOT NULL DEFAULT '0', CHANGE COLUMN `PhoneStockId` `PurchaseInvoiceId` INT(11) NOT NULL DEFAULT '0';
+UPDATE tradein SET UpdatedBy = CreatedBy;
+UPDATE tradein SET UpdatedDate = CreatedDate;
 
 ALTER TABLE AdHocReceipt MODIFY CreatedDate DATETIME, MODIFY UpdatedDate DATETIME;
 -- UPDATE AdHocReceipt SET UpdatedDate = CreatedDate WHERE UpdatedDate = 0 OR UpdatedDate = '' OR UpdatedDate IS NULL;

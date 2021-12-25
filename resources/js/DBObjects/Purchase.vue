@@ -582,6 +582,9 @@ export default {
             type: String,
             default: ""
         },
+        submitRecordSaved: {
+            type: Function
+        },
     },
 
     mixins: [list_controller, notifications],
@@ -916,39 +919,48 @@ export default {
 
             axios
                 .post(route("purchase.save"), this.row)
-                .then(response => {
-                    if (response.data.message == "record_saved") {
-                        this.$notify({
-                            group: "messages",
-                            title: "Success",
-                            text: response.data.response.records_count + " " + this.options.record_name + (response.data.response.records_count > 1 ? "s" : "") + " saved successfully."
-                        });
+                .then(
+                    response => {
+                        if (response.data.message == "record_saved") {
+                            this.$notify({
+                                group: "messages",
+                                title: "Success",
+                                text: response.data.response.records_count + " " + this.options.record_name + (response.data.response.records_count > 1 ? "s" : "") + " saved successfully."
+                            });
 
-                        this.refreshData(this.options.id);
+                            this.refreshData(this.options.id);
+
+                            const handler = this.submitRecordSaved;
+                            if (typeof handler === "function") {
+                                handler(response.data.response.id);
+
+                                this.$modal.hide(this.$parent.name);
+                            }
+                        }
+
+                        this.saving_data = false;
+
+                        this.$modal.hide(this.$parent.name);
+                    },
+                    error => {
+                        this.saving_data = false;
+
+                        if (error.response.data.message == "duplicate_imei") {
+                            this.duplicate_imei = true;
+                        } else {
+                            this.$notify({
+                                group: "messages",
+                                title: "Error",
+                                type: "error",
+                                text: this.formatMessage(error.response.data.message, this.options.record_name)
+                            });
+
+                            _.forIn(this.children_to_delete, (object, key) => {
+                                this.rows.push(_.clone(object))
+                            });
+                        }
                     }
-
-                    this.saving_data = false;
-
-                    this.$modal.hide(this.$parent.name);
-                })
-                .catch(error => {
-                    this.saving_data = false;
-
-                    if (error.response.data.message == "duplicate_imei") {
-                        this.duplicate_imei = true;
-                    } else {
-                        this.$notify({
-                            group: "messages",
-                            title: "Error",
-                            type: "error",
-                            text: this.formatMessage(error.response.data.message, this.options.record_name)
-                        });
-
-                        _.forIn(this.children_to_delete, (object, key) => {
-                            this.rows.push(_.clone(object))
-                        });
-                    }
-                });
+                )
         },
 
         isDuplicateIMEI() {
@@ -979,20 +991,22 @@ export default {
                     Id: this.child_row["Id"],
                     IMEI: this.child_row["IMEI"]
                 })
-                .then(response => {
-                    this.checking_duplicate_imei = false;
+                .then(
+                    response => {
+                        this.checking_duplicate_imei = false;
 
-                    this.duplicate_imei = false;
+                        this.duplicate_imei = false;
 
-                    this.checking_duplicate_imei = false;
-                })
-                .catch(error => {
-                    this.checking_duplicate_imei = false;
+                        this.checking_duplicate_imei = false;
+                    },
+                    error => {
+                        this.checking_duplicate_imei = false;
 
-                    if (error.response.data.message == "duplicate_imei") {
-                        this.duplicate_imei = true;
+                        if (error.response.data.message == "duplicate_imei") {
+                            this.duplicate_imei = true;
+                        }
                     }
-                });
+                )
         },
 
         ...mapActions({

@@ -10,10 +10,12 @@ use App\Models\PhoneStock;
 use App\Models\Sales;
 use App\Models\SalesStock;
 use App\Models\StockLog;
+use App\Models\TradeIn;
 use App\Traits\SearchTrait;
 use App\Traits\TableActions;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class SalesService
@@ -60,6 +62,8 @@ class SalesService
         $records = $records->with(['sales' => function ($query) {
             $query->orderBy('IMEI', 'ASC');
         }]);
+
+        $records = $records->with('tradein');
 
         switch ($order_by) {
             case 'IMEI':
@@ -235,6 +239,8 @@ class SalesService
             $query->orderBy('IMEI', 'ASC');
         }]);
 
+        $records = $record->with('tradein');
+
         $record = $record->get();
 
         if ($record->count()) {
@@ -320,6 +326,15 @@ class SalesService
         //Create/Update records in salesstock table
         $salesstock_service->save($record->Id, $request->get('children', []));
 
+        //Add the record in tradein
+        if ($request->get('tradein', [])) {
+            $tradein_data = $request->get('tradein');
+            if ($tradein_data['PurchaseInvoiceId']) {
+                $tradein_service  = new TradeInService();
+                $tradein_service->save($record->Id, $tradein_data['PurchaseInvoiceId']);
+            }
+        }
+
         return $record->Id;
     }
 
@@ -357,6 +372,8 @@ class SalesService
             }
 
             Sales::where('Id', $request->get('Id'))->delete();
+
+            TradeIn::where('SalesInvoiceId', $request->get('Id'))->delete();
 
             return true;
         } else {

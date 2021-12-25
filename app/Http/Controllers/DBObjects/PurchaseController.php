@@ -41,9 +41,9 @@ class PurchaseController extends BaseController
         $purchase_service = new PurchaseService();
 
         try {
-            $records_count = $purchase_service->save($request);
+            $response = $purchase_service->save($request);
 
-            return $this->sendOK(['records_count' => $records_count], self::RECORD_SAVED);
+            return $this->sendOK($response, self::RECORD_SAVED);
         } catch (RecordNotFoundException $e) {
             return $this->sendError(self::RECORD_NO_FOUND, [],JsonResponse::HTTP_NOT_FOUND);
         } catch (InvalidDataException $e) {

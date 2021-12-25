@@ -48,6 +48,12 @@ class SalesTransformer extends TransformerAbstract
             }
         }
 
+        if ($model->relationLoaded('tradein')) {
+            if ($model->tradein) {
+                $return['tradein'] = $model->tradein->transform();
+            }
+        }
+
         return $return;
     }
 

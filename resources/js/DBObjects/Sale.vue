@@ -326,18 +326,18 @@
                                     <label
                                         class="block form_field_label"
                                         :class="{
-                                        'text-gray-700': !dark_mode,
-                                        'text-white': dark_mode
-                                    }"
+                                            'text-gray-700': !dark_mode,
+                                            'text-white': dark_mode
+                                        }"
                                     >
                                         Updated By
                                     </label>
                                     <label
                                         class="block form_value_label"
                                         :class="{
-                                    'text-gray-600': !dark_mode,
-                                    'text-product-color-lighter': dark_mode
-                                }"
+                                            'text-gray-600': !dark_mode,
+                                            'text-product-color-lighter': dark_mode
+                                        }"
                                     >
                                         {{ getColumnValue("UpdatedBy") }}
                                     </label>
@@ -346,20 +346,191 @@
                                     <label
                                         class="block form_field_label"
                                         :class="{
-                                    'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
-                                }"
+                                            'text-gray-700': !dark_mode,
+                                            'text-white': dark_mode
+                                        }"
                                     >
                                         Updated Date
                                     </label>
                                     <label
                                         class="block form_value_label"
                                         :class="{
-                                    'text-gray-600': !dark_mode,
-                                    'text-product-color-lighter': dark_mode
-                                }"
+                                            'text-gray-600': !dark_mode,
+                                            'text-product-color-lighter': dark_mode
+                                        }"
                                     >
                                         {{ getColumnValue("UpdatedDate") }}
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div
+                                class="flex justify-between border-b border-product-color-lighter mb-4 pb-1"
+                                :class="{
+                                    'border-product-color-lighter': dark_mode,
+                                    'border-product-color': !dark_mode
+                                }"
+                            >
+                                <h1
+                                    class="text-base pt-2 ml-1"
+                                    :class="{
+                                        'text-product-color-lighter': dark_mode,
+                                        'text-product-color': !dark_mode
+                                    }"
+                                >
+                                    Trade In Details
+                                </h1>
+                                <div
+                                    class="float-right flex justify-end mr-2 text-white"
+                                >
+                                    <Button
+                                        @click.native="tradeInPhone"
+                                        :icon="tradeInAvailable ? 'pen' : 'plus'"
+                                        split="border-white"
+                                        class="ml-1 bg-green-600"
+                                    >
+                                        Trade In Phone
+                                    </Button>
+                                    <Button
+                                        @click.native="removeTradeInPhone"
+                                        icon="trash"
+                                        split="border-white"
+                                        class="ml-1 bg-red-600"
+                                        v-if="tradeInAvailable"
+                                    >
+                                        {{ deleting_tradein_record ? "Deleting" : "Delete" }}
+                                    </Button>
+                                </div>
+                            </div>
+                            <div v-if="tradeInAvailable">
+                                <div
+                                    v-for="(item, key) in row.tradein.purchase.children"
+                                    :class="{
+                                        'border-t border-gray-300 pt-5': key > 0
+                                    }"
+                                >
+                                    <div class="flex flex-wrap -mx-3 form_field_container">
+                                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                            <label
+                                                class="block form_field_label"
+                                                :class="{
+                                                    'text-gray-700': !dark_mode,
+                                                    'text-white': dark_mode
+                                                }"
+                                            >
+                                                IMEI
+                                            </label>
+                                            <label
+                                                class="block form_value_label"
+                                                :class="{
+                                                'text-gray-600': !dark_mode,
+                                                'text-product-color-lighter': dark_mode
+                                            }"
+                                            >
+                                                {{ item.IMEI }}
+                                            </label>
+                                        </div>
+
+                                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0" >
+                                            <label
+                                                class="block form_field_label"
+                                                :class="{
+                                                    'text-gray-700': !dark_mode,
+                                                    'text-white': dark_mode
+                                                }"
+                                            >
+                                                Phone
+                                            </label>
+                                            <label
+                                                class="block form_value_label"
+                                                :class="{
+                                                    'text-gray-600': !dark_mode,
+                                                    'text-product-color-lighter': dark_mode
+                                                }"
+                                            >
+                                                {{ item.manufacturer.Name }} - {{ item.model.Name }} - {{ item.color.Name }}
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-wrap -mx-3 form_field_container">
+                                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                            <label
+                                                class="block form_field_label"
+                                                :class="{
+                                                    'text-gray-700': !dark_mode,
+                                                    'text-white': dark_mode
+                                                }"
+                                            >
+                                                Size
+                                            </label>
+                                            <label
+                                                class="block form_value_label"
+                                                :class="{
+                                                    'text-gray-600': !dark_mode,
+                                                    'text-product-color-lighter': dark_mode
+                                                }"
+                                            >
+                                                {{ item.Size }}
+                                            </label>
+                                        </div>
+
+                                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                            <label
+                                                class="block form_field_label"
+                                                :class="{
+                                                'text-gray-700': !dark_mode,
+                                                'text-white': dark_mode
+                                            }"
+                                            >
+                                                Cost
+                                            </label>
+                                            <label
+                                                class="block form_value_label"
+                                                :class="{
+                                                'text-gray-600': !dark_mode,
+                                                'text-product-color-lighter': dark_mode
+                                            }"
+                                            >
+                                                £{{ item.Cost }}
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-wrap -mx-3 form_field_container">
+                                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                            <label
+                                                class="block form_field_label"
+                                                :class="{
+                                                'text-gray-700': !dark_mode,
+                                                'text-white': dark_mode
+                                            }"
+                                            >
+                                                StockType
+                                            </label>
+                                            <label
+                                                class="block form_value_label"
+                                                :class="{
+                                                'text-gray-600': !dark_mode,
+                                                'text-product-color-lighter': dark_mode
+                                            }"
+                                            >
+                                                {{ item.StockType }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap -mx-3 form_field_container" v-else>
+                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0" >
+                                    <label
+                                        class="block form_value_label"
+                                        :class="{
+                                            'text-gray-700': !dark_mode,
+                                            'text-white': dark_mode
+                                        }"
+                                    >
+                                        No Trade In with this sale.
                                     </label>
                                 </div>
                             </div>
@@ -396,6 +567,8 @@ import {list_controller} from "../Helpers/list_controller";
 import RecordPicker from "../components/Datatable/RecordPicker";
 import {notifications} from "../Helpers/notifications";
 import moment from "moment";
+import Purchase from "./Purchase";
+import Confirm from "../components/Confirm";
 
 export default {
     props: {
@@ -432,6 +605,10 @@ export default {
                 PaymentMethod: "Cash",
                 VAT: 0,
                 InvoiceDate: moment().format("D-MMM-YYYY"),
+                tradein: {
+                    PurchaseInvoiceId: '',
+                    purchase: null
+                }
             },
             child_row: {
                 IMEI: "",
@@ -449,6 +626,8 @@ export default {
 
             add_record_title: "Add",
             current_row_id: "",
+
+            deleting_tradein_record: false,
 
             selected_products_options: {
                 enable_search: true,
@@ -551,6 +730,10 @@ export default {
 
         child_row_keys() {
             return Object.keys(this.child_row);
+        },
+
+        tradeInAvailable() {
+            return (this.row?.tradein?.PurchaseInvoiceId??'') != ''
         },
 
         ...mapState({
@@ -919,6 +1102,109 @@ export default {
                     this.customer_sales_loaded = true;
                 });
             }
+        },
+
+        tradeInPhone() {
+            const purchase_id = this.row?.tradein?.PurchaseInvoiceId??'';
+
+            this.setPopperOpen(true);
+
+            this.$modal.show(
+                Purchase,
+                {
+                    edit_id: purchase_id ? String(purchase_id) : '',
+                    options: {
+                        id: "purchases",
+                        child_record_name: "Phone",
+                        record_name: "Purchase",
+                        enable_search: false,
+                        pagination: false,
+                        primary_key: "Id",
+                        sorting: {
+                            default: "UpdatedDate",
+                            direction: "desc",
+                            enabled: false
+                        }
+                    },
+                    submitRecordSaved: (purchase_invoice_id) => {
+                        axios
+                            .get(route("purchase.get-single"), {
+                                params: {
+                                    Id: purchase_invoice_id
+                                }
+                            })
+                            .then(
+                                response => {
+                                    let record = response.data.response.record;
+
+                                    this.$set(this.row, 'tradein', {
+                                        "PurchaseInvoiceId": purchase_invoice_id,
+                                        "purchase": _.cloneDeep(record)
+                                    });
+                                },
+                                error => {}
+                            );
+                    }
+                },
+                {
+                    width: "90%",
+                    height: "90%"
+                }
+            );
+        },
+
+        removeTradeInPhone() {
+            this.$modal.show(
+                Confirm,
+                {
+                    title: "Delete Trade In",
+                    text:
+                        "Are you sure you want to delete this Trade In?",
+                    yes_handler: () => {
+                        this.deleting_tradein_record = true;
+
+                        axios
+                            .post(route("tradein.delete"), {
+                                purchase_id: this.row.tradein.PurchaseInvoiceId
+                            })
+                            .then(response => {
+                                if (response.data.message == "record_deleted") {
+                                    this.$notify({
+                                        group: "messages",
+                                        title: "Success",
+                                        text: this.formatMessage(response.data.message, "Trade In")
+                                    });
+
+                                    this.row.tradein.PurchaseInvoiceId = '';
+                                    this.row.tradein.purchase = null;
+                                } else {
+                                    this.$notify({
+                                        group: "messages",
+                                        title: "Error",
+                                        type: "error",
+                                        text: this.formatMessage("unknown_error", this.options.record_name)
+                                    });
+                                }
+
+                                this.deleting_tradein_record = false;
+                            })
+                            .catch(error => {
+                                this.deleting_tradein_record = false;
+
+                                this.$notify({
+                                    group: "messages",
+                                    title: "Error",
+                                    type: "error",
+                                    text: this.formatMessage(error.response.data.message, this.options.record_name)
+                                });
+                            });
+                    }
+                },
+                {
+                    width: "350px",
+                    height: "auto"
+                }
+            );
         },
 
         ...mapActions({

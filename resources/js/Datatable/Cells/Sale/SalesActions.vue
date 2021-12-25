@@ -4,7 +4,7 @@
             @click.native="viewSalesInvoice(row.Id)"
             icon="file-alt"
             split="border-white"
-            class="text-white bg-green-600"
+            class="text-white bg-green-600 mr-2"
             :class="{
                 hidden: !$page.user_details.IsAdmin
             }"
@@ -15,7 +15,7 @@
             @click.native="edit"
             icon="pen"
             split="border-white"
-            class="text-white bg-green-600 ml-2"
+            class="text-white bg-green-600 mr-2"
             :class="{
                 hidden: !$page.user_details.IsAdmin
             }"
@@ -23,7 +23,7 @@
         >
         <Button
             @click.native="remove"
-            class="text-white bg-red-400 ml-2"
+            class="text-white bg-red-400 mr-2"
             :class="{
                 hidden: !$page.user_details.IsAdmin
             }"

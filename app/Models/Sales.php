@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Traits\CompositeKeysTrait;
 use App\Transformers\SalesTransformer;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Sales extends BaseModel {
     use CompositeKeysTrait;
@@ -23,12 +25,26 @@ class Sales extends BaseModel {
         'InvoiceDate'
     ];
 
-    public function customer() {
+    /**
+     * @return HasOne
+     */
+    public function customer(): HasOne {
         return $this->hasOne(CustomerSales::class, 'Id', 'CustomerId');
     }
 
-    public function sales() {
+    /**
+     * @return HasMany
+     */
+    public function sales(): HasMany {
         return $this->hasMany(SalesStock::class, 'InvoiceId', 'Id')
             ->with('phone');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function tradein(): HasOne {
+        return $this->hasOne(TradeIn::class, 'SalesInvoiceId', 'Id')
+            ->with('purchase');
     }
 }

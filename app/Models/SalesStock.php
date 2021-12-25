@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\CompositeKeysTrait;
 use App\Transformers\SalesStockTransformer;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 
 class SalesStock extends BaseModel
@@ -25,7 +26,10 @@ class SalesStock extends BaseModel
         'ReturnedDate'
     ];
 
-    public function phone() {
+    /**
+     * @return HasOne
+     */
+    public function phone(): HasOne {
         return $this->hasOne(PhoneStock::class, 'IMEI', 'IMEI')
             ->with('manufacturer')
             ->with('model')

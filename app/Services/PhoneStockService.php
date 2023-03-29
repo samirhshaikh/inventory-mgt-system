@@ -274,4 +274,14 @@ class PhoneStockService
 
         return $record->count() ? true : false;
     }
+
+    public function getPhonesStatsForStatus()
+    {
+        $records = PhoneStock::selectRaw('Status, COUNT(*) as stock_total, SUM(Cost) as cost_total')
+            ->groupBy('Status')
+            ->orderBy('Status')
+            ->get();
+
+        return $records->all();
+    }
 }

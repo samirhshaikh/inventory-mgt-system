@@ -50,7 +50,8 @@ import {
     faPen,
     faTrash,
     faFileAlt,
-    faStore
+    faStore,
+    faRedoAlt
 } from '@fortawesome/free-solid-svg-icons';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -82,7 +83,8 @@ library.add([
     faPen,
     faTrash,
     faFileAlt,
-    faStore
+    faStore,
+    faRedoAlt
 ]);
 
 Vue.component('FA', FontAwesomeIcon);

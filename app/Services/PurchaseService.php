@@ -10,7 +10,6 @@ use App\Http\Requests\SavePurchaseRequest;
 use App\Http\Requests\IdRequest;
 use App\Models\PhoneStock;
 use App\Models\Purchase;
-use App\Models\TradeIn;
 use App\Traits\SearchTrait;
 use App\Traits\TableActions;
 use Carbon\Carbon;
@@ -359,5 +358,23 @@ class PurchaseService
         }
 
         return false;
+    }
+
+    public function getPurchaseForPeriod($start = '', $end = '')
+    {
+        $record = Purchase::selectRaw('SUM(Cost) as total')
+            ->join('PhoneStock', 'PhoneStock.InvoiceId', '=', 'Purchase.Id');
+
+        if ($start) {
+            $record = $record->whereRaw(sprintf('DATE(InvoiceDate) >= "%s"', $start));
+        }
+
+        if ($end) {
+            $record = $record->whereRaw(sprintf('DATE(InvoiceDate) <= "%s"', $end));
+        }
+
+        $record = $record->get()->first();
+
+        return $record->total??0;
     }
 }

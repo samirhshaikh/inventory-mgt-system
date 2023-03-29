@@ -1,0 +1,5 @@
+1. Done: Focus on search on list page
+2. Done: Focus on first field in add/edit page
+4. Done. Remove Sell action from Purchase details line items (It is not working as well)
+5. Done: Sales > Customer > Need mobile number search. Display Name and Mobile Number. Update button to update customer details. Will open a popup just like New.
+6. Done. Sales > Trade In Phone. Save it in purchase and keep a link with Sales.

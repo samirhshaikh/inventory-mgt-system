@@ -434,4 +434,22 @@ class SalesService
 
         return $record->count() + 1;
     }
+
+    public function getSalesForPeriod($start = '', $end = '')
+    {
+        $record = Sales::selectRaw('SUM(Cost) as total')
+            ->join('SalesStock', 'SalesStock.InvoiceId', '=', 'Sales.Id');
+
+        if ($start) {
+            $record = $record->whereRaw(sprintf('DATE(InvoiceDate) >= "%s"', $start));
+        }
+
+        if ($end) {
+            $record = $record->whereRaw(sprintf('DATE(InvoiceDate) <= "%s"', $end));
+        }
+
+        $record = $record->get()->first();
+
+        return $record->total??0;
+    }
 }

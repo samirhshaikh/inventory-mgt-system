@@ -111,6 +111,10 @@ Route::group(['prefix' => 'tradein'], function ($router) {
     $router->post('delete', 'TradeInController@delete')->name('tradein.delete');
 });
 
+Route::group(['prefix' => 'dashboard'], function ($router) {
+    $router->get('get-stats', 'DashboardController@getStats')->name('dashboard.get-stats');
+});
+
 Route::get('/app-settings', 'PagesController@appSettings')->name('app-settings');
 
 Route::group(['prefix' => 'datatables'], function ($router) {

@@ -86,9 +86,6 @@ class SalesService
 
         $records = $records->addSelect('Sales.*');
 
-//        $records = $records->get()->all();
-//        dd(DB::getQueryLog());
-
         return [
             'total_records' => $total_records,
             'records' => $records

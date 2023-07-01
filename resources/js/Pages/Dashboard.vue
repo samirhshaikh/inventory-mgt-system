@@ -37,6 +37,7 @@
                 <div class="flex flex-row justify-between w-full">
                     <bar-chart
                         :chartdata="stockChartData"
+                        :options="chartOptions"
                         class="w-1/2"
                     />
 
@@ -85,7 +86,7 @@ export default {
                         display: true,
                         text: 'Inventory'
                     }
-                }
+                },
             }
         };
     },
@@ -110,7 +111,6 @@ export default {
                 .get(route("dashboard.get-stats"))
                 .then(
                     response => {
-                        console.log(response.data.response);
                         this.stockChartData = {
                             labels: Object.keys(response.data.response.inventory.stock),
                             datasets: [
@@ -137,6 +137,7 @@ export default {
                                 }
                             ],
                         };
+
                         this.loading = false;
                     },
                     error => {

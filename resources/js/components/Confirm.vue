@@ -40,32 +40,32 @@ export default {
     props: {
         title: {
             type: String,
-            default: "Confirm"
+            default: "Confirm",
         },
         text: {
             type: String,
             default: "",
-            required: true
+            required: true,
         },
         no_button: {
             type: Object,
             default: () => ({
                 title: "No",
                 icon: "times",
-                icon_class: "bg-red-600"
-            })
+                icon_class: "bg-red-600",
+            }),
         },
         yes_button: {
             type: Object,
             default: () => ({
                 title: "Yes",
                 icon: "check",
-                icon_class: "bg-green-600"
-            })
+                icon_class: "bg-green-600",
+            }),
         },
         yes_handler: {
-            type: Function
-        }
+            type: Function,
+        },
     },
 
     methods: {
@@ -80,7 +80,7 @@ export default {
 
                 this.$modal.hide(this.$parent.name);
             }
-        }
-    }
+        },
+    },
 };
 </script>

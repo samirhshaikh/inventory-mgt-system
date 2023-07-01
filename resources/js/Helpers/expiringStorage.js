@@ -1,8 +1,6 @@
 class ExpiringStorage {
     get(key) {
-        const cached = JSON.parse(
-            localStorage.getItem(key)
-        );
+        const cached = JSON.parse(localStorage.getItem(key));
 
         if (!cached) {
             return null;
@@ -20,7 +18,7 @@ class ExpiringStorage {
     set(key, value, lifeTimeInMinutes) {
         const currentTime = new Date().getTime();
         const expires = new Date(currentTime + lifeTimeInMinutes * 60000);
-        localStorage.setItem(key, JSON.stringify({value, expires}));
+        localStorage.setItem(key, JSON.stringify({ value, expires }));
     }
 }
 

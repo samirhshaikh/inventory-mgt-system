@@ -39,19 +39,22 @@ class ObjectTypeNameService
     public function getAll(
         string $order_by,
         string $order_direction,
-        string $search_text = ''
-    ): array
-    {
+        string $search_text = ""
+    ): array {
         $records = $this->model;
 
-        if ($search_text != '') {
+        if ($search_text != "") {
             $fields_to_search = [
-                'Name',
+                "Name",
                 'DATE_FORMAT(CreatedDate, "%d-%b-%Y")',
-                'DATE_FORMAT(UpdatedDate, "%d-%b-%Y")'
+                'DATE_FORMAT(UpdatedDate, "%d-%b-%Y")',
             ];
 
-            $records = $this->prepareSearch($records, $fields_to_search, $search_text);
+            $records = $this->prepareSearch(
+                $records,
+                $fields_to_search,
+                $search_text
+            );
         }
 
         $records = $records->orderBy($order_by, $order_direction);
@@ -60,8 +63,8 @@ class ObjectTypeNameService
         $total_records = $this->getTotalRecords(clone $records);
 
         return [
-            'total_records' => $total_records,
-            'records' => $records
+            "total_records" => $total_records,
+            "records" => $records,
         ];
     }
 
@@ -72,13 +75,12 @@ class ObjectTypeNameService
      */
     public function getSingle(IdRequest $request)
     {
-        $record = $this->model::where('Id', $request->get('Id'))
-            ->get();
+        $record = $this->model::where("Id", $request->get("Id"))->get();
 
         if ($record->count()) {
             return $record->map->transform()->first();
         } else {
-            throw new RecordNotFoundException;
+            throw new RecordNotFoundException();
         }
     }
 
@@ -92,7 +94,7 @@ class ObjectTypeNameService
         try {
             return $this->changeRecordStatus($this->model, $request);
         } catch (RecordNotFoundException $e) {
-            throw new RecordNotFoundException;
+            throw new RecordNotFoundException();
         }
     }
 
@@ -105,32 +107,36 @@ class ObjectTypeNameService
     public function save(SaveObjectTypeNameRequest $request): int
     {
         //Check for duplicate name
-        if ($this->isDuplicateName($request->get('Name'), $request->get('Id', 0))) {
+        if (
+            $this->isDuplicateName(
+                $request->get("Name"),
+                $request->get("Id", 0)
+            )
+        ) {
             throw new DuplicateNameException();
         }
 
-        $record = $this->model::where('Id', $request->get('Id'))
-            ->get();
+        $record = $this->model::where("Id", $request->get("Id"))->get();
 
-        if ($request->get('operation', 'add') == 'edit') {
+        if ($request->get("operation", "add") == "edit") {
             if (!$record->count()) {
-                throw new RecordNotFoundException;
+                throw new RecordNotFoundException();
             }
 
             $record = $record->first();
         } else {
             $record = $this->model;
 
-            $record->CreatedBy = session('user_details.UserName');
+            $record->CreatedBy = session("user_details.UserName");
             $record->IsActive = 1;
         }
 
-        $record->Name = $request->get('Name');
-        $record->UpdatedBy = session('user_details.UserName');
+        $record->Name = $request->get("Name");
+        $record->UpdatedBy = session("user_details.UserName");
         $record->save();
 
-        return $request->get('operation', 'add') == 'edit'
-            ? $request->get('Id')
+        return $request->get("operation", "add") == "edit"
+            ? $request->get("Id")
             : $this->model::lastInsertId();
     }
 
@@ -143,22 +149,26 @@ class ObjectTypeNameService
     public function delete(IdRequest $request): bool
     {
         //Check whether the record exist or not
-        $record = $this->model::where('Id', $request->get('Id'))
-            ->get();
+        $record = $this->model::where("Id", $request->get("Id"))->get();
 
         if ($record->count()) {
             //Check whether the record is used as a reference in other tables.
-            $tables_to_check = ['PhoneStock', 'Handsets'];    //'Repair'
-            if ($this->foreignReferenceFound($tables_to_check, $this->id_column, $request->get('Id'))) {
-                throw new ReferenceException;
+            $tables_to_check = ["PhoneStock", "Handsets"]; //'Repair'
+            if (
+                $this->foreignReferenceFound(
+                    $tables_to_check,
+                    $this->id_column,
+                    $request->get("Id")
+                )
+            ) {
+                throw new ReferenceException();
             }
 
-            $this->model::where('Id', $request->get('Id'))
-                ->delete();
+            $this->model::where("Id", $request->get("Id"))->delete();
 
             return true;
         } else {
-            throw new RecordNotFoundException;
+            throw new RecordNotFoundException();
         }
     }
 
@@ -169,8 +179,13 @@ class ObjectTypeNameService
      */
     public function checkDuplicateName(Request $request): bool
     {
-        if ($this->isDuplicateName($request->get('Name'), $request->get('Id', 0))) {
-            throw new DuplicateNameException;
+        if (
+            $this->isDuplicateName(
+                $request->get("Name"),
+                $request->get("Id", 0)
+            )
+        ) {
+            throw new DuplicateNameException();
         } else {
             return false;
         }
@@ -185,17 +200,19 @@ class ObjectTypeNameService
     {
         //Check whether the record exists or not
         if (!empty($id)) {
-            $record = $this->model::where('Id', $id)->get();
+            $record = $this->model::where("Id", $id)->get();
 
             if (!$record->count()) {
                 return false;
             }
         }
 
-        $record = $this->model::whereRaw('LOWER(Name) = ?', [strtolower($name)]);
+        $record = $this->model::whereRaw("LOWER(Name) = ?", [
+            strtolower($name),
+        ]);
 
         if (!empty($id)) {
-            $record = $record->where('id', '!=', $id);
+            $record = $record->where("id", "!=", $id);
         }
 
         $record = $record->get();

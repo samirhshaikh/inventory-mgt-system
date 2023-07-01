@@ -4,16 +4,15 @@
 
 export default {
     getRandomId() {
-        return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        return (
+            Math.random().toString(36).substring(2, 15) +
+            Math.random().toString(36).substring(2, 15)
+        );
     },
 
-    searchJsonObjects(
-        json_object,
-        search_field,
-        search_val,
-        return_first
-    ) {
-        return_first = typeof return_first === "undefined" ? true : return_first;
+    searchJsonObjects(json_object, search_field, search_val, return_first) {
+        return_first =
+            typeof return_first === "undefined" ? true : return_first;
 
         let results = [];
 
@@ -24,7 +23,7 @@ export default {
                         return json_object[i];
                     }
 
-                    results.push(json_object[i])
+                    results.push(json_object[i]);
                 }
             }
         } else {
@@ -42,17 +41,20 @@ export default {
         return results;
     },
 
-    validEmail (email) {
-        var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    validEmail(email) {
+        var re =
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(email);
     },
 
     downloadFile(data, filename, mime) {
         // It is necessary to create a new blob object with mime-type explicitly set
         // otherwise only Chrome works like it should
-        const blob = new Blob([data], {type: mime || 'application/octet-stream'});
+        const blob = new Blob([data], {
+            type: mime || "application/octet-stream",
+        });
 
-        if (typeof window.navigator.msSaveBlob !== 'undefined') {
+        if (typeof window.navigator.msSaveBlob !== "undefined") {
             // IE doesn't allow using a blob object directly as link href.
             // Workaround for "HTML7007: One or more blob URLs were
             // revoked by closing the blob for which they were created.
@@ -65,20 +67,21 @@ export default {
 
         // Other browsers
         // Create a link pointing to the ObjectURL containing the blob
-        const blobURL = window.URL && window.URL.createObjectURL
-            ? window.URL.createObjectURL(blob)
-            : window.webkitURL.createObjectURL(blob);
-        const tempLink = document.createElement('a');
-        tempLink.style.display = 'none';
+        const blobURL =
+            window.URL && window.URL.createObjectURL
+                ? window.URL.createObjectURL(blob)
+                : window.webkitURL.createObjectURL(blob);
+        const tempLink = document.createElement("a");
+        tempLink.style.display = "none";
         tempLink.href = blobURL;
-        tempLink.setAttribute('download', filename);
+        tempLink.setAttribute("download", filename);
 
         // Safari thinks _blank anchor are pop ups. We only want to set _blank
         // target if the browser does not support the HTML5 download attribute.
         // This allows you to download files in desktop safari if pop up blocking
         // is enabled.
-        if (typeof tempLink.download === 'undefined') {
-            tempLink.setAttribute('target', '_blank');
+        if (typeof tempLink.download === "undefined") {
+            tempLink.setAttribute("target", "_blank");
         }
 
         document.body.appendChild(tempLink);
@@ -96,7 +99,8 @@ export default {
         return arr == null ? -1 : arr.indexOf(elem, i);
     },
 
-    number_format(number, decimals, decPoint, thousandsSep) { // eslint-disable-line camelcase
+    number_format(number, decimals, decPoint, thousandsSep) {
+        // eslint-disable-line camelcase
         //  discuss at: https://locutus.io/php/number_format/
         // original by: Jonas Raoni Soares Silva (https://www.jsfromhell.com)
         // improved by: Kevin van Zonneveld (https://kvz.io)
@@ -146,33 +150,39 @@ export default {
         //  returns 13: '100 050.00'
         //  example 14: number_format(1e-8, 8, '.', '')
         //  returns 14: '0.00000001'
-        number = (number + '').replace(/[^0-9+\-Ee.]/g, '')
-        const n = !isFinite(+number) ? 0 : +number
-        const prec = !isFinite(+decimals) ? 0 : Math.abs(decimals)
-        const sep = (typeof thousandsSep === 'undefined') ? ',' : thousandsSep
-        const dec = (typeof decPoint === 'undefined') ? '.' : decPoint
-        let s = ''
+        number = (number + "").replace(/[^0-9+\-Ee.]/g, "");
+        const n = !isFinite(+number) ? 0 : +number;
+        const prec = !isFinite(+decimals) ? 0 : Math.abs(decimals);
+        const sep = typeof thousandsSep === "undefined" ? "," : thousandsSep;
+        const dec = typeof decPoint === "undefined" ? "." : decPoint;
+        let s = "";
         const toFixedFix = function (n, prec) {
-            if (('' + n).indexOf('e') === -1) {
-                return +(Math.round(n + 'e+' + prec) + 'e-' + prec)
+            if (("" + n).indexOf("e") === -1) {
+                return +(Math.round(n + "e+" + prec) + "e-" + prec);
             } else {
-                const arr = ('' + n).split('e')
-                let sig = ''
+                const arr = ("" + n).split("e");
+                let sig = "";
                 if (+arr[1] + prec > 0) {
-                    sig = '+'
+                    sig = "+";
                 }
-                return (+(Math.round(+arr[0] + 'e' + sig + (+arr[1] + prec)) + 'e-' + prec)).toFixed(prec)
+                return (+(
+                    Math.round(+arr[0] + "e" + sig + (+arr[1] + prec)) +
+                    "e-" +
+                    prec
+                )).toFixed(prec);
             }
-        }
+        };
         // @todo: for IE parseFloat(0.55).toFixed(0) = 0;
-        s = (prec ? toFixedFix(n, prec).toString() : '' + Math.round(n)).split('.')
+        s = (prec ? toFixedFix(n, prec).toString() : "" + Math.round(n)).split(
+            "."
+        );
         if (s[0].length > 3) {
-            s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep)
+            s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
         }
-        if ((s[1] || '').length < prec) {
-            s[1] = s[1] || ''
-            s[1] += new Array(prec - s[1].length + 1).join('0')
+        if ((s[1] || "").length < prec) {
+            s[1] = s[1] || "";
+            s[1] += new Array(prec - s[1].length + 1).join("0");
         }
-        return s.join(dec)
-    }
-}
+        return s.join(dec);
+    },
+};

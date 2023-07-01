@@ -5,14 +5,14 @@
 </template>
 
 <script>
-import {datatable_cell} from "./datatable_cell";
+import { datatable_cell } from "./datatable_cell";
 
 export default {
     mixins: [datatable_cell],
 
     computed: {
         data() {
-            if (this.column == '') {
+            if (this.column == "") {
                 return this.row;
             } else {
                 return this.row[this.column];
@@ -36,7 +36,7 @@ export default {
             }
 
             return phone_details.join(" - ");
-        }
-    }
-}
+        },
+    },
+};
 </script>

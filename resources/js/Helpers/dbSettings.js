@@ -1,45 +1,48 @@
-const dbSettings = store => {
+const dbSettings = (store) => {
     let mutationsToPersist = {
         "framework/setSidebar": {
-            refresh: false
+            refresh: false,
         },
         "framework/setDarkmode": {
-            refresh: false
+            refresh: false,
         },
         "framework/setPagesize": {
-            refresh: true
+            refresh: true,
         },
         "app_settings/setAppSettings": {
-            refresh: false
+            refresh: false,
         },
         "store_settings/setStoreSettings": {
-            refresh: false
+            refresh: false,
         },
         "datatable/setSorting": {
-            refresh: true
-        }
+            refresh: true,
+        },
     };
 
     //called when store is initialized
     store.subscribe((mutation, state) => {
         if (Object.keys(mutationsToPersist).includes(mutation.type)) {
             let datatable = _.cloneDeep(state.datatable);
-            _.set(datatable, 'meta', {});
+            _.set(datatable, "meta", {});
 
             axios
                 .post("/storeAppSettings", {
                     framework: state.framework,
                     datatable: datatable,
                     app_settings: state.app_settings,
-                    store_settings: state.store_settings
+                    store_settings: state.store_settings,
                 })
                 .then(
-                    response => {
+                    (response) => {
                         if (mutationsToPersist[mutation.type].refresh) {
-                            store.commit('framework/refreshData', state.local_settings.active_tab);
+                            store.commit(
+                                "framework/refreshData",
+                                state.local_settings.active_tab
+                            );
                         }
                     },
-                    error => {}
+                    (error) => {}
                 );
         }
     });

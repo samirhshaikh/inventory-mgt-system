@@ -7,8 +7,8 @@ const state = {
     popper_open: false,
     popper_active_tab: null,
     cached_data: {},
-    is_IE_11: !!window.MSInputMethodContext && !!document.documentMode
-}
+    is_IE_11: !!window.MSInputMethodContext && !!document.documentMode,
+};
 
 const getters = {
     active_tab: (state) => {
@@ -25,30 +25,30 @@ const getters = {
 
     cached_data: (state) => {
         return state.cached_data;
-    }
-}
+    },
+};
 
 const actions = {
     setActiveTab({ commit }, payload) {
-        commit('setActiveTab', payload);
+        commit("setActiveTab", payload);
     },
 
     setPopperOpen({ commit }, payload) {
-        commit('setPopperOpen', payload);
+        commit("setPopperOpen", payload);
     },
 
     setPopperActiveTab({ commit }, payload) {
-        commit('setPopperActiveTab', payload);
+        commit("setPopperActiveTab", payload);
     },
 
-    setCachedData({commit}, payload) {
-        commit('setCachedData', payload)
+    setCachedData({ commit }, payload) {
+        commit("setCachedData", payload);
     },
 
-    resetCachedData({commit}, key) {
-        commit('resetCachedData', key)
-    }
-}
+    resetCachedData({ commit }, key) {
+        commit("resetCachedData", key);
+    },
+};
 
 const mutations = {
     setActiveTab(state, tab) {
@@ -71,13 +71,13 @@ const mutations = {
         if (state.cached_data.hasOwnProperty(key)) {
             state.cached_data[key] = [];
         }
-    }
-}
+    },
+};
 
 export default {
     namespaced: true,
     state,
     getters,
     actions,
-    mutations
-}
+    mutations,
+};

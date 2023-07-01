@@ -6,7 +6,7 @@
             split="border-white"
             class="text-white bg-green-600 mr-2"
             :class="{
-                hidden: !$page.user_details.IsAdmin
+                hidden: !$page.user_details.IsAdmin,
             }"
         >
             Invoice
@@ -17,15 +17,15 @@
             split="border-white"
             class="text-white bg-green-600 mr-2"
             :class="{
-                hidden: !$page.user_details.IsAdmin
+                hidden: !$page.user_details.IsAdmin,
             }"
-        >Edit</Button
+            >Edit</Button
         >
         <Button
             @click.native="remove"
             class="text-white bg-red-400 mr-2"
             :class="{
-                hidden: !$page.user_details.IsAdmin
+                hidden: !$page.user_details.IsAdmin,
             }"
             :icon="deleting_record ? 'sync-alt' : 'trash'"
             :icon_class="deleting_record ? 'fa-spin' : ''"
@@ -40,9 +40,9 @@
 import Sale from "../../../DBObjects/Sale.vue";
 import { mapActions } from "vuex";
 import Confirm from "../../../components/Confirm.vue";
-import {datatable_cell} from "../datatable_cell";
-import {notifications} from "../../../Helpers/notifications";
-import {common_functions} from "../../../Helpers/common_functions";
+import { datatable_cell } from "../datatable_cell";
+import { notifications } from "../../../Helpers/notifications";
+import { common_functions } from "../../../Helpers/common_functions";
 import Invoice from "./Invoice";
 
 export default {
@@ -60,7 +60,7 @@ export default {
                     submitRecordSaved: (invoice_id) => {
                         this.setTableMetaData({
                             columns: this.columns,
-                            options: this.options
+                            options: this.options,
                         });
 
                         this.setActiveTab(this.options.id);
@@ -68,12 +68,12 @@ export default {
 
                         //Open Print Invoice dialog
                         this.viewSalesInvoice(invoice_id);
-                    }
+                    },
                 },
                 {
                     width: "90%",
-                    height: "80%"
-                },
+                    height: "80%",
+                }
             );
         },
 
@@ -91,14 +91,17 @@ export default {
 
                         axios
                             .post(route("sale.delete"), {
-                                Id: this.row.Id
+                                Id: this.row.Id,
                             })
-                            .then(response => {
+                            .then((response) => {
                                 if (response.data.message == "record_deleted") {
                                     this.$notify({
                                         group: "messages",
                                         title: "Success",
-                                        text: this.formatMessage(response.data.message, this.options.record_name)
+                                        text: this.formatMessage(
+                                            response.data.message,
+                                            this.options.record_name
+                                        ),
                                     });
 
                                     this.refreshData(this.options.id);
@@ -107,39 +110,45 @@ export default {
                                         group: "messages",
                                         title: "Error",
                                         type: "error",
-                                        text: this.formatMessage("unknown_error", this.options.record_name)
+                                        text: this.formatMessage(
+                                            "unknown_error",
+                                            this.options.record_name
+                                        ),
                                     });
                                 }
 
                                 this.deleting_record = false;
                             })
-                            .catch(error => {
+                            .catch((error) => {
                                 this.deleting_record = false;
 
                                 this.$notify({
                                     group: "messages",
                                     title: "Error",
                                     type: "error",
-                                    text: this.formatMessage(error.response.data.message, this.options.record_name)
+                                    text: this.formatMessage(
+                                        error.response.data.message,
+                                        this.options.record_name
+                                    ),
                                 });
                             });
-                    }
+                    },
                 },
                 {
                     width: "350px",
-                    height: "auto"
+                    height: "auto",
                 }
             );
         },
 
         ...mapActions({
-            setTableMetaData: 'datatable/setTableMetaData',
-            setActiveTab: 'local_settings/setActiveTab',
-            setTabToRefresh: 'framework/setTabToRefresh',
+            setTableMetaData: "datatable/setTableMetaData",
+            setActiveTab: "local_settings/setActiveTab",
+            setTabToRefresh: "framework/setTabToRefresh",
             refreshData: "framework/refreshData",
             setPopperOpen: "local_settings/setPopperOpen",
-            addError: "errors/addError"
-        })
-    }
+            addError: "errors/addError",
+        }),
+    },
 };
 </script>

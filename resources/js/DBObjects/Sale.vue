@@ -2,7 +2,7 @@
     <div
         class="flex h-full border border-product-color"
         :class="{
-            'bg-gray-700 text-white': dark_mode
+            'bg-gray-700 text-white': dark_mode,
         }"
     >
         <div class="flex-grow flex flex-col justify-between">
@@ -11,14 +11,14 @@
                     class="flex border-b border-product-color-lighter mb-4 pb-1"
                     :class="{
                         'border-product-color-lighter': dark_mode,
-                        'border-product-color': !dark_mode
+                        'border-product-color': !dark_mode,
                     }"
                 >
                     <h1
                         class="text-base md:text-xl pt-2 ml-1 w-full"
                         :class="{
                             'text-product-color-lighter': dark_mode,
-                            'text-product-color': !dark_mode
+                            'text-product-color': !dark_mode,
                         }"
                     >
                         {{ options.record_name }} Details
@@ -42,7 +42,8 @@
                             class="ml-1"
                             :class="{
                                 'bg-green-600': valid_data,
-                                'bg-gray-600 text-gray-500 cursor-not-allowed': !valid_data
+                                'bg-gray-600 text-gray-500 cursor-not-allowed':
+                                    !valid_data,
                             }"
                         >
                             Save
@@ -51,42 +52,51 @@
                 </div>
 
                 <div class="flex flex-row" v-if="!loading">
-                    <div class="w-1/2 border-r border-product-color-lighter pr-4">
+                    <div
+                        class="w-1/2 border-r border-product-color-lighter pr-4"
+                    >
                         <form class="pl-2" autocomplete="off" @submit.prevent>
-                            <div class="flex -mx-3 justify-between items-start form_field_container">
+                            <div
+                                class="flex -mx-3 justify-between items-start form_field_container"
+                            >
                                 <div class="px-3">
                                     <label
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Customer
                                     </label>
                                     <CustomerSalesPicker
                                         :selected_value="row['CustomerId']"
-                                        :required_field="row['CustomerId'] == '' || row['CustomerId'] == null"
+                                        :required_field="
+                                            row['CustomerId'] == '' ||
+                                            row['CustomerId'] == null
+                                        "
                                         :enable_add="true"
                                         :enable_edit="true"
                                         @onOptionSelected="onCustomerSelected"
-                                        @onDataLoadComplete="customerSalesLoaded"
+                                        @onDataLoadComplete="
+                                            customerSalesLoaded
+                                        "
                                         ref="customer_sales_picker"
                                     />
                                 </div>
 
-                                <div class="text-white px-3 mt-5">
-
-                                </div>
+                                <div class="text-white px-3 mt-5"></div>
                             </div>
 
-                            <div class="flex flex-wrap -mx-3 form_field_container">
+                            <div
+                                class="flex flex-wrap -mx-3 form_field_container"
+                            >
                                 <div class="w-full md:w-1/2 px-3">
                                     <label
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Invoice Date
@@ -105,25 +115,36 @@
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Invoice No
                                     </label>
                                     <div class="flex flex-row items-center">
-                                        <span v-if="row_keys.indexOf('Id') < 0 || row['Id'] == 0 || row['Id'] == ''">Auto Generated</span>
-                                        <span v-else>{{ row["InvoiceNo"] }}</span>
+                                        <span
+                                            v-if="
+                                                row_keys.indexOf('Id') < 0 ||
+                                                row['Id'] == 0 ||
+                                                row['Id'] == ''
+                                            "
+                                            >Auto Generated</span
+                                        >
+                                        <span v-else>{{
+                                            row["InvoiceNo"]
+                                        }}</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="flex flex-wrap -mx-3 form_field_container">
+                            <div
+                                class="flex flex-wrap -mx-3 form_field_container"
+                            >
                                 <div class="w-full md:w-1/2 px-3">
                                     <label
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Payment Type
@@ -136,7 +157,9 @@
                                         :options="payment_types"
                                         class="w-40 generic_vs_select"
                                         :class="{
-                                            required_field: row['PaymentMethod'] == '' || row['PaymentMethod'] == null
+                                            required_field:
+                                                row['PaymentMethod'] == '' ||
+                                                row['PaymentMethod'] == null,
                                         }"
                                     ></v-select>
                                 </div>
@@ -146,7 +169,7 @@
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         VAT
@@ -167,21 +190,19 @@
                                 class="flex justify-between border-b border-product-color-lighter mb-4 pb-1"
                                 :class="{
                                     'border-product-color-lighter': dark_mode,
-                                    'border-product-color': !dark_mode
+                                    'border-product-color': !dark_mode,
                                 }"
                             >
                                 <h1
                                     class="text-base pt-2 ml-1"
                                     :class="{
                                         'text-product-color-lighter': dark_mode,
-                                        'text-product-color': !dark_mode
+                                        'text-product-color': !dark_mode,
                                     }"
                                 >
                                     Phone Details
                                 </h1>
-                                <div
-                                    class="mr-2 text-white"
-                                >
+                                <div class="mr-2 text-white">
                                     <Button
                                         @click.native="updateRecord"
                                         icon="plus"
@@ -189,7 +210,8 @@
                                         class="ml-1"
                                         :class="{
                                             'bg-green-600': valid_phone_data,
-                                            'bg-gray-600 text-gray-500 cursor-not-allowed': !valid_phone_data
+                                            'bg-gray-600 text-gray-500 cursor-not-allowed':
+                                                !valid_phone_data,
                                         }"
                                         v-if="current_row_id != ''"
                                     >
@@ -207,14 +229,17 @@
                                 </div>
                             </div>
 
-                            <div class="flex flex-wrap -mx-3 form_field_container" v-if="current_row_id != ''">
+                            <div
+                                class="flex flex-wrap -mx-3 form_field_container"
+                                v-if="current_row_id != ''"
+                            >
                                 <div class="w-full px-3 mb-6 md:mb-0">
                                     <label
                                         class="block form_field_label"
                                         :class="{
-                                        'text-gray-700': !dark_mode,
-                                        'text-white': dark_mode
-                                    }"
+                                            'text-gray-700': !dark_mode,
+                                            'text-white': dark_mode,
+                                        }"
                                     >
                                         IMEI
                                     </label>
@@ -222,50 +247,55 @@
                                         <label
                                             class="block form_value_label"
                                             :class="{
-                                            'text-gray-600': !dark_mode,
-                                            'text-product-color-lighter': dark_mode
-                                        }"
+                                                'text-gray-600': !dark_mode,
+                                                'text-product-color-lighter':
+                                                    dark_mode,
+                                            }"
                                         >
                                             {{ child_row["IMEI"] }}
                                         </label>
-
                                     </div>
                                 </div>
                             </div>
 
                             <div
                                 class="flex flex-wrap -mx-3 form_field_container border-b border-product-color-lighter pb-5"
-                                v-if="current_row_id != ''">
+                                v-if="current_row_id != ''"
+                            >
                                 <div class="w-full md:w-1/2 px-3">
                                     <label
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Cost
                                     </label>
                                     £<input
-                                    class="w-32 generic_input ml-1"
-                                    type="number"
-                                    v-model.number="child_row['Cost']"
-                                    autocomplete="off"
-                                    :class="{
-                                        required_field: child_row['Cost'] == '' || child_row['Cost'] == null
-                                    }"
-                                    ref="cost"
-                                />
+                                        class="w-32 generic_input ml-1"
+                                        type="number"
+                                        v-model.number="child_row['Cost']"
+                                        autocomplete="off"
+                                        :class="{
+                                            required_field:
+                                                child_row['Cost'] == '' ||
+                                                child_row['Cost'] == null,
+                                        }"
+                                        ref="cost"
+                                    />
                                 </div>
                             </div>
 
-                            <div class="flex flex-wrap -mx-3 form_field_container">
+                            <div
+                                class="flex flex-wrap -mx-3 form_field_container"
+                            >
                                 <div class="w-full px-3">
                                     <label
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Comments
@@ -278,13 +308,16 @@
                                 </div>
                             </div>
 
-                            <div class="flex flex-wrap -mx-3 form_field_container" v-if="edit_id != ''">
+                            <div
+                                class="flex flex-wrap -mx-3 form_field_container"
+                                v-if="edit_id != ''"
+                            >
                                 <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                     <label
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Created By
@@ -293,7 +326,8 @@
                                         class="block form_value_label"
                                         :class="{
                                             'text-gray-600': !dark_mode,
-                                            'text-product-color-lighter': dark_mode
+                                            'text-product-color-lighter':
+                                                dark_mode,
                                         }"
                                     >
                                         {{ getColumnValue("CreatedBy") }}
@@ -304,7 +338,7 @@
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Creation Date
@@ -313,7 +347,8 @@
                                         class="block form_value_label"
                                         :class="{
                                             'text-gray-600': !dark_mode,
-                                            'text-product-color-lighter': dark_mode
+                                            'text-product-color-lighter':
+                                                dark_mode,
                                         }"
                                     >
                                         {{ getColumnValue("CreatedDate") }}
@@ -321,13 +356,16 @@
                                 </div>
                             </div>
 
-                            <div class="flex flex-wrap -mx-3 form_field_container" v-if="edit_id != ''">
+                            <div
+                                class="flex flex-wrap -mx-3 form_field_container"
+                                v-if="edit_id != ''"
+                            >
                                 <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                     <label
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Updated By
@@ -336,7 +374,8 @@
                                         class="block form_value_label"
                                         :class="{
                                             'text-gray-600': !dark_mode,
-                                            'text-product-color-lighter': dark_mode
+                                            'text-product-color-lighter':
+                                                dark_mode,
                                         }"
                                     >
                                         {{ getColumnValue("UpdatedBy") }}
@@ -347,7 +386,7 @@
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Updated Date
@@ -356,7 +395,8 @@
                                         class="block form_value_label"
                                         :class="{
                                             'text-gray-600': !dark_mode,
-                                            'text-product-color-lighter': dark_mode
+                                            'text-product-color-lighter':
+                                                dark_mode,
                                         }"
                                     >
                                         {{ getColumnValue("UpdatedDate") }}
@@ -368,14 +408,14 @@
                                 class="flex justify-between border-b border-product-color-lighter mb-4 pb-1"
                                 :class="{
                                     'border-product-color-lighter': dark_mode,
-                                    'border-product-color': !dark_mode
+                                    'border-product-color': !dark_mode,
                                 }"
                             >
                                 <h1
                                     class="text-base pt-2 ml-1"
                                     :class="{
                                         'text-product-color-lighter': dark_mode,
-                                        'text-product-color': !dark_mode
+                                        'text-product-color': !dark_mode,
                                     }"
                                 >
                                     Trade In Details
@@ -385,7 +425,9 @@
                                 >
                                     <Button
                                         @click.native="tradeInPhone"
-                                        :icon="tradeInAvailable ? 'pen' : 'plus'"
+                                        :icon="
+                                            tradeInAvailable ? 'pen' : 'plus'
+                                        "
                                         split="border-white"
                                         class="ml-1 bg-green-600"
                                     >
@@ -398,24 +440,34 @@
                                         class="ml-1 bg-red-600"
                                         v-if="tradeInAvailable"
                                     >
-                                        {{ deleting_tradein_record ? "Deleting" : "Delete" }}
+                                        {{
+                                            deleting_tradein_record
+                                                ? "Deleting"
+                                                : "Delete"
+                                        }}
                                     </Button>
                                 </div>
                             </div>
                             <div v-if="tradeInAvailable">
                                 <div
-                                    v-for="(item, key) in row.tradein.purchase.children"
+                                    v-for="(item, key) in row.tradein.purchase
+                                        .children"
                                     :class="{
-                                        'border-t border-gray-300 pt-5': key > 0
+                                        'border-t border-gray-300 pt-5':
+                                            key > 0,
                                     }"
                                 >
-                                    <div class="flex flex-wrap -mx-3 form_field_container">
-                                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                    <div
+                                        class="flex flex-wrap -mx-3 form_field_container"
+                                    >
+                                        <div
+                                            class="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+                                        >
                                             <label
                                                 class="block form_field_label"
                                                 :class="{
                                                     'text-gray-700': !dark_mode,
-                                                    'text-white': dark_mode
+                                                    'text-white': dark_mode,
                                                 }"
                                             >
                                                 IMEI
@@ -423,20 +475,23 @@
                                             <label
                                                 class="block form_value_label"
                                                 :class="{
-                                                'text-gray-600': !dark_mode,
-                                                'text-product-color-lighter': dark_mode
-                                            }"
+                                                    'text-gray-600': !dark_mode,
+                                                    'text-product-color-lighter':
+                                                        dark_mode,
+                                                }"
                                             >
                                                 {{ item.IMEI }}
                                             </label>
                                         </div>
 
-                                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0" >
+                                        <div
+                                            class="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+                                        >
                                             <label
                                                 class="block form_field_label"
                                                 :class="{
                                                     'text-gray-700': !dark_mode,
-                                                    'text-white': dark_mode
+                                                    'text-white': dark_mode,
                                                 }"
                                             >
                                                 Phone
@@ -445,21 +500,28 @@
                                                 class="block form_value_label"
                                                 :class="{
                                                     'text-gray-600': !dark_mode,
-                                                    'text-product-color-lighter': dark_mode
+                                                    'text-product-color-lighter':
+                                                        dark_mode,
                                                 }"
                                             >
-                                                {{ item.manufacturer.Name }} - {{ item.model.Name }} - {{ item.color.Name }}
+                                                {{ item.manufacturer.Name }} -
+                                                {{ item.model.Name }} -
+                                                {{ item.color.Name }}
                                             </label>
                                         </div>
                                     </div>
 
-                                    <div class="flex flex-wrap -mx-3 form_field_container">
-                                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                    <div
+                                        class="flex flex-wrap -mx-3 form_field_container"
+                                    >
+                                        <div
+                                            class="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+                                        >
                                             <label
                                                 class="block form_field_label"
                                                 :class="{
                                                     'text-gray-700': !dark_mode,
-                                                    'text-white': dark_mode
+                                                    'text-white': dark_mode,
                                                 }"
                                             >
                                                 Size
@@ -468,52 +530,61 @@
                                                 class="block form_value_label"
                                                 :class="{
                                                     'text-gray-600': !dark_mode,
-                                                    'text-product-color-lighter': dark_mode
+                                                    'text-product-color-lighter':
+                                                        dark_mode,
                                                 }"
                                             >
                                                 {{ item.Size }}
                                             </label>
                                         </div>
 
-                                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                        <div
+                                            class="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+                                        >
                                             <label
                                                 class="block form_field_label"
                                                 :class="{
-                                                'text-gray-700': !dark_mode,
-                                                'text-white': dark_mode
-                                            }"
+                                                    'text-gray-700': !dark_mode,
+                                                    'text-white': dark_mode,
+                                                }"
                                             >
                                                 Cost
                                             </label>
                                             <label
                                                 class="block form_value_label"
                                                 :class="{
-                                                'text-gray-600': !dark_mode,
-                                                'text-product-color-lighter': dark_mode
-                                            }"
+                                                    'text-gray-600': !dark_mode,
+                                                    'text-product-color-lighter':
+                                                        dark_mode,
+                                                }"
                                             >
                                                 £{{ item.Cost }}
                                             </label>
                                         </div>
                                     </div>
 
-                                    <div class="flex flex-wrap -mx-3 form_field_container">
-                                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                    <div
+                                        class="flex flex-wrap -mx-3 form_field_container"
+                                    >
+                                        <div
+                                            class="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+                                        >
                                             <label
                                                 class="block form_field_label"
                                                 :class="{
-                                                'text-gray-700': !dark_mode,
-                                                'text-white': dark_mode
-                                            }"
+                                                    'text-gray-700': !dark_mode,
+                                                    'text-white': dark_mode,
+                                                }"
                                             >
                                                 StockType
                                             </label>
                                             <label
                                                 class="block form_value_label"
                                                 :class="{
-                                                'text-gray-600': !dark_mode,
-                                                'text-product-color-lighter': dark_mode
-                                            }"
+                                                    'text-gray-600': !dark_mode,
+                                                    'text-product-color-lighter':
+                                                        dark_mode,
+                                                }"
                                             >
                                                 {{ item.StockType }}
                                             </label>
@@ -521,13 +592,16 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="flex flex-wrap -mx-3 form_field_container" v-else>
-                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0" >
+                            <div
+                                class="flex flex-wrap -mx-3 form_field_container"
+                                v-else
+                            >
+                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                     <label
                                         class="block form_value_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         No Trade In with this sale.
@@ -552,20 +626,20 @@
                     </div>
                 </div>
 
-                <Loading v-else/>
+                <Loading v-else />
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import {mapState, mapActions} from "vuex";
+import { mapState, mapActions } from "vuex";
 import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
 import helper_functions from "../Helpers/helper_functions";
-import {list_controller} from "../Helpers/list_controller";
+import { list_controller } from "../Helpers/list_controller";
 import RecordPicker from "../components/Datatable/RecordPicker";
-import {notifications} from "../Helpers/notifications";
+import { notifications } from "../Helpers/notifications";
 import moment from "moment";
 import Purchase from "./Purchase";
 import Confirm from "../components/Confirm";
@@ -574,19 +648,19 @@ export default {
     props: {
         options: {
             type: Object,
-            default: () => ({})
+            default: () => ({}),
         },
         edit_id: {
             type: String,
-            default: ""
+            default: "",
         },
         submitRecordSaved: {
-            type: Function
+            type: Function,
         },
         phones: {
             type: Array,
-            default: () => ([])
-        }
+            default: () => [],
+        },
     },
 
     mixins: [list_controller, notifications],
@@ -594,8 +668,8 @@ export default {
     components: {
         SaleItemsDatatable: lazyLoadComponent({
             componentFactory: () => import("@/Datatable/Datatable"),
-            loading: loading
-        })
+            loading: loading,
+        }),
     },
 
     data() {
@@ -606,14 +680,14 @@ export default {
                 VAT: 0,
                 InvoiceDate: moment().format("D-MMM-YYYY"),
                 tradein: {
-                    PurchaseInvoiceId: '',
-                    purchase: null
-                }
+                    PurchaseInvoiceId: "",
+                    purchase: null,
+                },
             },
             child_row: {
                 IMEI: "",
                 Cost: "",
-                Discount: ""
+                Discount: "",
             },
             rows: [],
             children_to_delete: [],
@@ -638,9 +712,9 @@ export default {
                 record_name: "Phone",
                 sorting: {
                     enabled: true,
-                    default: 'IMEI',
-                    direction: 'asc'
-                }
+                    default: "IMEI",
+                    direction: "asc",
+                },
             },
             selected_products_columns: [
                 {
@@ -651,7 +725,7 @@ export default {
                     searching: false,
                     sorting: false,
                     td: "text-left break-words",
-                    th: "text-left"
+                    th: "text-left",
                 },
                 {
                     enabled: true,
@@ -662,7 +736,7 @@ export default {
                     sorting: false,
                     type: "Phone",
                     td: "text-left",
-                    th: "text-left break-words"
+                    th: "text-left break-words",
                 },
                 {
                     enabled: true,
@@ -672,7 +746,7 @@ export default {
                     searching: false,
                     sorting: false,
                     td: "text-left",
-                    th: "text-left break-words"
+                    th: "text-left break-words",
                 },
                 {
                     enabled: true,
@@ -683,7 +757,7 @@ export default {
                     sorting: false,
                     type: "Float",
                     td: "text-left",
-                    th: "text-left break-words"
+                    th: "text-left break-words",
                 },
                 {
                     enabled: true,
@@ -693,8 +767,8 @@ export default {
                     searching: false,
                     sorting: false,
                     th: "",
-                    type: "AddSaleActions"
-                }
+                    type: "AddSaleActions",
+                },
             ],
         };
     },
@@ -703,10 +777,16 @@ export default {
         valid_data() {
             if (
                 this.rows.length == 0 ||
-                this.row_keys.indexOf("InvoiceDate") < 0 || this.row["InvoiceDate"] == "" ||
-                this.row_keys.indexOf("CustomerId") < 0 || this.row["CustomerId"] == "" || this.row["CustomerId"] == null ||
-                this.row_keys.indexOf("PaymentMethod") < 0 || this.row["PaymentMethod"] == "" || this.row["PaymentMethod"] == null ||
-                (this.row_keys.indexOf("VAT") >= 0 && parseFloat(this.row["VAT"]) < 0)
+                this.row_keys.indexOf("InvoiceDate") < 0 ||
+                this.row["InvoiceDate"] == "" ||
+                this.row_keys.indexOf("CustomerId") < 0 ||
+                this.row["CustomerId"] == "" ||
+                this.row["CustomerId"] == null ||
+                this.row_keys.indexOf("PaymentMethod") < 0 ||
+                this.row["PaymentMethod"] == "" ||
+                this.row["PaymentMethod"] == null ||
+                (this.row_keys.indexOf("VAT") >= 0 &&
+                    parseFloat(this.row["VAT"]) < 0)
             ) {
                 return false;
             }
@@ -716,7 +796,9 @@ export default {
 
         valid_phone_data() {
             if (
-                this.child_row_keys.indexOf("Cost") < 0 || this.child_row["Cost"] == "" || parseFloat(this.child_row["Cost"]) == 0
+                this.child_row_keys.indexOf("Cost") < 0 ||
+                this.child_row["Cost"] == "" ||
+                parseFloat(this.child_row["Cost"]) == 0
             ) {
                 return false;
             }
@@ -733,20 +815,20 @@ export default {
         },
 
         tradeInAvailable() {
-            return (this.row?.tradein?.PurchaseInvoiceId??'') != ''
+            return (this.row?.tradein?.PurchaseInvoiceId ?? "") != "";
         },
 
         ...mapState({
-            dark_mode: state => state.framework.dark_mode,
-            expanded_sidebar: state => state.framework.expanded_sidebar,
-            local_settings: state => state.local_settings,
-        })
+            dark_mode: (state) => state.framework.dark_mode,
+            expanded_sidebar: (state) => state.framework.expanded_sidebar,
+            local_settings: (state) => state.local_settings,
+        }),
     },
 
     created() {
         this.setTableMetaData({
             columns: this.selected_products_columns,
-            options: this.selected_products_options
+            options: this.selected_products_options,
         });
 
         this.setActiveTab(this.selected_products_options.id);
@@ -762,24 +844,25 @@ export default {
             axios
                 .get(route("sale.get-single"), {
                     params: {
-                        Id: this.edit_id
-                    }
+                        Id: this.edit_id,
+                    },
                 })
                 .then(
-                    response => {
+                    (response) => {
                         let record = response.data.response.record;
 
                         this.row = _.cloneDeep(record);
 
                         //Assign a random id to the child row.
                         _.forEach(record.children, (child_row, key) => {
-                            child_row["row_id"] = helper_functions.getRandomId();
+                            child_row["row_id"] =
+                                helper_functions.getRandomId();
                             this.rows.push(child_row);
                         });
 
                         this.loading = false;
                     },
-                    error => {
+                    (error) => {
                         this.loading = false;
                     }
                 );
@@ -792,14 +875,15 @@ export default {
                 this.loading = true;
                 axios
                     .post(route("phonestock.get-single"), {
-                        Id: this.phones.pop()
+                        Id: this.phones.pop(),
                     })
-                    .then(response => {
+                    .then((response) => {
                         if (response.data.message == "OK") {
                             let child_row = response.data.response.record;
                             child_row["Id"] = "";
                             child_row["phone_details"] = _.clone(child_row);
-                            child_row["row_id"] = helper_functions.getRandomId();
+                            child_row["row_id"] =
+                                helper_functions.getRandomId();
                             child_row["Returned"] = false;
                             this.rows.push(child_row);
                         } else {
@@ -807,18 +891,24 @@ export default {
                                 group: "messages",
                                 title: "Error",
                                 type: "error",
-                                text: this.formatMessage("unknown_error", this.options.record_name)
+                                text: this.formatMessage(
+                                    "unknown_error",
+                                    this.options.record_name
+                                ),
                             });
                         }
 
                         this.loading = false;
                     })
-                    .catch(error => {
+                    .catch((error) => {
                         this.$notify({
                             group: "messages",
                             title: "Error",
                             type: "error",
-                            text: this.formatMessage(error.response.data.message, this.options.record_name)
+                            text: this.formatMessage(
+                                error.response.data.message,
+                                this.options.record_name
+                            ),
                         });
                         this.loading = false;
                     });
@@ -841,7 +931,10 @@ export default {
             _.forIn(this.rows, (object, key) => {
                 if (object["row_id"] != row_id) {
                     rows.push(_.cloneDeep(object));
-                } else if (Object.keys(object).indexOf("Id") >= 0 && object["Id"] != "") {
+                } else if (
+                    Object.keys(object).indexOf("Id") >= 0 &&
+                    object["Id"] != ""
+                ) {
                     this.children_to_delete.push(object);
                 }
             });
@@ -850,13 +943,13 @@ export default {
         },
 
         returnItem(IMEI) {
-            console.log(['Sale', IMEI]);
+            console.log(["Sale", IMEI]);
 
             let rows = [];
 
             _.forIn(this.rows, (object, key) => {
                 if (object["IMEI"] == IMEI) {
-                    object['Returned'] = 1;
+                    object["Returned"] = 1;
                 }
 
                 rows.push(_.cloneDeep(object));
@@ -866,15 +959,15 @@ export default {
         },
 
         dateSelected(date) {
-            if (date != '' && date != null) {
-                this.row['InvoiceDate'] = date;
+            if (date != "" && date != null) {
+                this.row["InvoiceDate"] = date;
             } else {
-                this.row['InvoiceDate'] = "";
+                this.row["InvoiceDate"] = "";
             }
         },
 
         clearDate(key) {
-            this.row['InvoiceDate'] = "";
+            this.row["InvoiceDate"] = "";
         },
 
         getColumnValue(column) {
@@ -916,55 +1009,66 @@ export default {
             //save the user
             this.saving_data = true;
 
-            axios
-                .post(route("sale.save"), this.row)
-                .then(
-                    response => {
-                        if (response.data.message == "record_saved") {
-                            this.$notify({
-                                group: "messages",
-                                title: "Success",
-                                text: response.data.response.records_count + " " + this.options.record_name + (response.data.response.records_count > 1 ? "s" : "") + " saved successfully."
-                            });
+            axios.post(route("sale.save"), this.row).then(
+                (response) => {
+                    if (response.data.message == "record_saved") {
+                        this.$notify({
+                            group: "messages",
+                            title: "Success",
+                            text:
+                                response.data.response.records_count +
+                                " " +
+                                this.options.record_name +
+                                (response.data.response.records_count > 1
+                                    ? "s"
+                                    : "") +
+                                " saved successfully.",
+                        });
 
-                            this.refreshData(this.options.id);
+                        this.refreshData(this.options.id);
 
-                            const handler = this.submitRecordSaved;
-                            if (typeof handler === "function") {
-                                handler(response.data.response.id);
+                        const handler = this.submitRecordSaved;
+                        if (typeof handler === "function") {
+                            handler(response.data.response.id);
 
-                                this.$modal.hide(this.$parent.name);
-                            }
-                        }
-
-                        this.saving_data = false;
-
-                        this.$modal.hide(this.$parent.name);
-                    },
-                    error => {
-                        this.saving_data = false;
-
-                        if (error.response.data.message == "record_not_found") {
-                            this.$notify({
-                                group: "messages",
-                                title: "Error",
-                                type: "error",
-                                text: this.formatMessage(error.response.data, this.options.record_name)
-                            });
-                        } else {
-                            this.$notify({
-                                group: "messages",
-                                title: "Error",
-                                type: "error",
-                                text: this.formatMessage(error.response.data.message, this.options.record_name)
-                            });
-
-                            _.forIn(this.children_to_delete, (object, key) => {
-                                this.rows.push(_.clone(object))
-                            });
+                            this.$modal.hide(this.$parent.name);
                         }
                     }
-                );
+
+                    this.saving_data = false;
+
+                    this.$modal.hide(this.$parent.name);
+                },
+                (error) => {
+                    this.saving_data = false;
+
+                    if (error.response.data.message == "record_not_found") {
+                        this.$notify({
+                            group: "messages",
+                            title: "Error",
+                            type: "error",
+                            text: this.formatMessage(
+                                error.response.data,
+                                this.options.record_name
+                            ),
+                        });
+                    } else {
+                        this.$notify({
+                            group: "messages",
+                            title: "Error",
+                            type: "error",
+                            text: this.formatMessage(
+                                error.response.data.message,
+                                this.options.record_name
+                            ),
+                        });
+
+                        _.forIn(this.children_to_delete, (object, key) => {
+                            this.rows.push(_.clone(object));
+                        });
+                    }
+                }
+            );
         },
 
         selectPhoneStock() {
@@ -982,7 +1086,7 @@ export default {
                             searching: false,
                             sorting: false,
                             td: "text-left break-words",
-                            th: "text-left"
+                            th: "text-left",
                         },
                         {
                             enabled: true,
@@ -993,7 +1097,7 @@ export default {
                             sorting: false,
                             type: "Phone",
                             td: "text-left",
-                            th: "text-left break-words"
+                            th: "text-left break-words",
                         },
                         {
                             enabled: true,
@@ -1003,7 +1107,7 @@ export default {
                             searching: false,
                             sorting: false,
                             td: "text-left",
-                            th: "text-left break-words"
+                            th: "text-left break-words",
                         },
                         {
                             enabled: true,
@@ -1014,7 +1118,7 @@ export default {
                             sorting: false,
                             type: "Float",
                             td: "text-left",
-                            th: "text-left break-words"
+                            th: "text-left break-words",
                         },
                         {
                             enabled: true,
@@ -1024,7 +1128,7 @@ export default {
                             searching: false,
                             sorting: false,
                             td: "text-left",
-                            th: "text-left break-words"
+                            th: "text-left break-words",
                         },
                         {
                             enabled: true,
@@ -1034,7 +1138,7 @@ export default {
                             searching: false,
                             sorting: false,
                             td: "text-left",
-                            th: "text-left break-words"
+                            th: "text-left break-words",
                         },
                         {
                             enabled: true,
@@ -1044,21 +1148,21 @@ export default {
                             searching: false,
                             sorting: false,
                             th: "",
-                            type: "RecordPickerActions"
-                        }
+                            type: "RecordPickerActions",
+                        },
                     ],
                     options: {
                         enable_search: true,
-                        url: route('datatable.phonestock.available'),
+                        url: route("datatable.phonestock.available"),
                         id: "phonestock_record_picker",
                         pagination: true,
                         primary_key: "Id",
                         record_name: "Phone",
                         sorting: {
                             enabled: true,
-                            default: 'IMEI',
-                            direction: 'asc'
-                        }
+                            default: "IMEI",
+                            direction: "asc",
+                        },
                     },
                     submitRecordsSelected: (selected_records) => {
                         _.forEach(selected_records, (data, key) => {
@@ -1068,25 +1172,25 @@ export default {
                                 Returned: 0,
                                 Discount: "",
                                 row_id: helper_functions.getRandomId(),
-                                phone_details: data
+                                phone_details: data,
                             });
                         });
-                    }
+                    },
                 },
                 {
                     width: "85%",
-                    height: "600px"
+                    height: "600px",
                 },
                 {
-                    "closed": event => {
+                    closed: (event) => {
                         this.setTableMetaData({
                             columns: this.selected_products_columns,
-                            options: this.selected_products_options
+                            options: this.selected_products_options,
                         });
 
                         this.setActiveTab(this.selected_products_options.id);
                         this.setTabToRefresh(this.selected_products_options.id);
-                    }
+                    },
                 }
             );
         },
@@ -1098,21 +1202,23 @@ export default {
         customerSalesLoaded() {
             if (!this.edit_id && !this.customer_sales_loaded) {
                 this.$nextTick(() => {
-                    this.$refs.customer_sales_picker.$refs.customer_id.$el.querySelector('input').focus();
+                    this.$refs.customer_sales_picker.$refs.customer_id.$el
+                        .querySelector("input")
+                        .focus();
                     this.customer_sales_loaded = true;
                 });
             }
         },
 
         tradeInPhone() {
-            const purchase_id = this.row?.tradein?.PurchaseInvoiceId??'';
+            const purchase_id = this.row?.tradein?.PurchaseInvoiceId ?? "";
 
             this.setPopperOpen(true);
 
             this.$modal.show(
                 Purchase,
                 {
-                    edit_id: purchase_id ? String(purchase_id) : '',
+                    edit_id: purchase_id ? String(purchase_id) : "",
                     options: {
                         id: "purchases",
                         child_record_name: "Phone",
@@ -1123,32 +1229,32 @@ export default {
                         sorting: {
                             default: "UpdatedDate",
                             direction: "desc",
-                            enabled: false
-                        }
+                            enabled: false,
+                        },
                     },
                     submitRecordSaved: (purchase_invoice_id) => {
                         axios
                             .get(route("purchase.get-single"), {
                                 params: {
-                                    Id: purchase_invoice_id
-                                }
+                                    Id: purchase_invoice_id,
+                                },
                             })
                             .then(
-                                response => {
+                                (response) => {
                                     let record = response.data.response.record;
 
-                                    this.$set(this.row, 'tradein', {
-                                        "PurchaseInvoiceId": purchase_invoice_id,
-                                        "purchase": _.cloneDeep(record)
+                                    this.$set(this.row, "tradein", {
+                                        PurchaseInvoiceId: purchase_invoice_id,
+                                        purchase: _.cloneDeep(record),
                                     });
                                 },
-                                error => {}
+                                (error) => {}
                             );
-                    }
+                    },
                 },
                 {
                     width: "90%",
-                    height: "90%"
+                    height: "90%",
                 }
             );
         },
@@ -1158,64 +1264,72 @@ export default {
                 Confirm,
                 {
                     title: "Delete Trade In",
-                    text:
-                        "Are you sure you want to delete this Trade In?",
+                    text: "Are you sure you want to delete this Trade In?",
                     yes_handler: () => {
                         this.deleting_tradein_record = true;
 
                         axios
                             .post(route("tradein.delete"), {
-                                purchase_id: this.row.tradein.PurchaseInvoiceId
+                                purchase_id: this.row.tradein.PurchaseInvoiceId,
                             })
-                            .then(response => {
+                            .then((response) => {
                                 if (response.data.message == "record_deleted") {
                                     this.$notify({
                                         group: "messages",
                                         title: "Success",
-                                        text: this.formatMessage(response.data.message, "Trade In")
+                                        text: this.formatMessage(
+                                            response.data.message,
+                                            "Trade In"
+                                        ),
                                     });
 
-                                    this.row.tradein.PurchaseInvoiceId = '';
+                                    this.row.tradein.PurchaseInvoiceId = "";
                                     this.row.tradein.purchase = null;
                                 } else {
                                     this.$notify({
                                         group: "messages",
                                         title: "Error",
                                         type: "error",
-                                        text: this.formatMessage("unknown_error", this.options.record_name)
+                                        text: this.formatMessage(
+                                            "unknown_error",
+                                            this.options.record_name
+                                        ),
                                     });
                                 }
 
                                 this.deleting_tradein_record = false;
                             })
-                            .catch(error => {
+                            .catch((error) => {
                                 this.deleting_tradein_record = false;
 
                                 this.$notify({
                                     group: "messages",
                                     title: "Error",
                                     type: "error",
-                                    text: this.formatMessage(error.response.data.message, this.options.record_name)
+                                    text: this.formatMessage(
+                                        error.response.data.message,
+                                        this.options.record_name
+                                    ),
                                 });
                             });
-                    }
+                    },
                 },
                 {
                     width: "350px",
-                    height: "auto"
+                    height: "auto",
                 }
             );
         },
 
         ...mapActions({
-            setTableMetaData: 'datatable/setTableMetaData',
-            setActiveTab: 'local_settings/setActiveTab',
-            setPopperOpen: 'local_settings/setPopperOpen',
+            setTableMetaData: "datatable/setTableMetaData",
+            setActiveTab: "local_settings/setActiveTab",
+            setPopperOpen: "local_settings/setPopperOpen",
             refreshData: "framework/refreshData",
             setTabToRefresh: "framework/setTabToRefresh",
             setCachedData: "local_settings/setCachedData",
-            addError: "errors/addError"
-        })
+            addError: "errors/addError",
+        }),
     },
 };
 </script>

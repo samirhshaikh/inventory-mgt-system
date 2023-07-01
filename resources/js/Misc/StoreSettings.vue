@@ -2,7 +2,7 @@
     <div
         class="flex h-full border border-product-color"
         :class="{
-            'bg-gray-700 text-white': dark_mode
+            'bg-gray-700 text-white': dark_mode,
         }"
     >
         <div class="flex-grow flex flex-col justify-between">
@@ -11,14 +11,14 @@
                     class="flex border-b border-product-color-lighter mb-4 pb-1"
                     :class="{
                         'border-product-color-lighter': dark_mode,
-                        'border-product-color': !dark_mode
+                        'border-product-color': !dark_mode,
                     }"
                 >
                     <h1
                         class="text-xl pt-2 ml-1 w-full"
                         :class="{
                             'text-product-color-lighter': dark_mode,
-                            'text-product-color': !dark_mode
+                            'text-product-color': !dark_mode,
                         }"
                     >
                         Store Settings
@@ -41,7 +41,8 @@
                             class="ml-1"
                             :class="{
                                 'bg-green-600': valid_data,
-                                'bg-gray-600 text-gray-500 cursor-not-allowed': !valid_data
+                                'bg-gray-600 text-gray-500 cursor-not-allowed':
+                                    !valid_data,
                             }"
                         >
                             Save
@@ -71,7 +72,7 @@
                                 :class="{
                                     hidden:
                                         business_name != '' &&
-                                        business_name != null
+                                        business_name != null,
                                 }"
                             >
                                 Required
@@ -98,7 +99,7 @@
                                 :class="{
                                     hidden:
                                         store_address != '' &&
-                                        store_address != null
+                                        store_address != null,
                                 }"
                             >
                                 Required
@@ -141,8 +142,7 @@
                             <p
                                 class="form_field_message"
                                 :class="{
-                                    hidden:
-                                        valid_email
+                                    hidden: valid_email,
                                 }"
                             >
                                 Valid email required
@@ -166,7 +166,7 @@ export default {
             store_address: "",
             phone: "",
             email: "",
-        }
+        };
     },
 
     computed: {
@@ -183,14 +183,14 @@ export default {
         },
 
         valid_email() {
-            return this.email === '' || helper_functions.validEmail(this.email)
+            return this.email === "" || helper_functions.validEmail(this.email);
         },
 
         ...mapState({
-            store_settings: state => state.store_settings,
-            dark_mode: state => state.framework.dark_mode,
-            expanded_sidebar: state => state.framework.expanded_sidebar
-        })
+            store_settings: (state) => state.store_settings,
+            dark_mode: (state) => state.framework.dark_mode,
+            expanded_sidebar: (state) => state.framework.expanded_sidebar,
+        }),
     },
 
     mounted() {
@@ -214,18 +214,18 @@ export default {
                 name: this.business_name,
                 address: this.store_address,
                 phone: this.phone,
-                email: this.email
+                email: this.email,
             };
             // console.log(settings);
 
             this.setStoreSettings(settings);
 
-            this.$modal.hide(this.$parent.name)
+            this.$modal.hide(this.$parent.name);
         },
 
         ...mapActions({
-            setStoreSettings: "store_settings/setStoreSettings"
-        })
-    }
+            setStoreSettings: "store_settings/setStoreSettings",
+        }),
+    },
 };
 </script>

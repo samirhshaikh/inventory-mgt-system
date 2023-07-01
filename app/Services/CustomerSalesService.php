@@ -26,29 +26,38 @@ class CustomerSalesService
     public function getAll(
         string $order_by,
         string $order_direction,
-        string $search_type = 'simple',
-        string $search_text = '',
-        string $search_data = '{}'
-    ): array
-    {
+        string $search_type = "simple",
+        string $search_text = "",
+        string $search_data = "{}"
+    ): array {
         $records = new CustomerSales();
 
-        if ($search_type === 'simple' && $search_text != '') {
+        if ($search_type === "simple" && $search_text != "") {
             $columns_to_search = [
-                'CustomerName',
-                'ContactNo1',
-                'ContactNo2',
-                'Address',
-                'City',
-                'Balance',
-                'Comments',
+                "CustomerName",
+                "ContactNo1",
+                "ContactNo2",
+                "Address",
+                "City",
+                "Balance",
+                "Comments",
                 'DATE_FORMAT(CreatedDate, "%d-%b-%Y")',
-                'DATE_FORMAT(UpdatedDate, "%d-%b-%Y")'
+                'DATE_FORMAT(UpdatedDate, "%d-%b-%Y")',
             ];
 
-            $records = $this->prepareSearch($records, $columns_to_search, $search_text);
-        } else if ($search_type === 'advanced' && $this->searchDataPresent($search_data)) {
-            $records = $this->prepareAdvancedSearch($records, json_decode($search_data));
+            $records = $this->prepareSearch(
+                $records,
+                $columns_to_search,
+                $search_text
+            );
+        } elseif (
+            $search_type === "advanced" &&
+            $this->searchDataPresent($search_data)
+        ) {
+            $records = $this->prepareAdvancedSearch(
+                $records,
+                json_decode($search_data)
+            );
         }
 
         $records = $records->orderBy($order_by, $order_direction);
@@ -57,8 +66,8 @@ class CustomerSalesService
         $total_records = $this->getTotalRecords(clone $records);
 
         return [
-            'total_records' => $total_records,
-            'records' => $records
+            "total_records" => $total_records,
+            "records" => $records,
         ];
     }
 
@@ -70,19 +79,35 @@ class CustomerSalesService
     private function prepareAdvancedSearch($model, $search_data = []): Builder
     {
         foreach ($search_data as $column => $search_text) {
-            if ($search_text == '' || is_null($search_text)) {
+            if ($search_text == "" || is_null($search_text)) {
                 continue;
             }
 
             switch ($column) {
-                case 'CustomerName':
-                    $model = $this->prepareAdvancedSearchQuery($model, $column, $search_text);
+                case "CustomerName":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        $column,
+                        $search_text
+                    );
                     break;
-                case 'ContactNo':
-                    $model = $this->prepareAdvancedSearchQuery($model, ['ContactNo1', 'ContactNo2'], $search_text);
+                case "ContactNo":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        ["ContactNo1", "ContactNo2"],
+                        $search_text
+                    );
                     break;
-                case 'UpdatedDate':
-                    $model = $this->prepareAdvancedSearchQuery($model, ['DATE_FORMAT(CreatedDate, "%d-%b-%Y")', 'DATE_FORMAT(UpdatedDate, "%d-%b-%Y")'], $search_text, 'exact_match');
+                case "UpdatedDate":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        [
+                            'DATE_FORMAT(CreatedDate, "%d-%b-%Y")',
+                            'DATE_FORMAT(UpdatedDate, "%d-%b-%Y")',
+                        ],
+                        $search_text,
+                        "exact_match"
+                    );
                     break;
             }
         }
@@ -97,13 +122,12 @@ class CustomerSalesService
      */
     public function getSingle(IdRequest $request)
     {
-        $record = CustomerSales::where('Id', $request->get('Id'))
-            ->get();
+        $record = CustomerSales::where("Id", $request->get("Id"))->get();
 
         if ($record->count()) {
             return $record->map->transform()->first();
         } else {
-            throw new RecordNotFoundException;
+            throw new RecordNotFoundException();
         }
     }
 
@@ -115,9 +139,9 @@ class CustomerSalesService
     public function changeActiveStatus(IdRequest $request): bool
     {
         try {
-            return $this->changeRecordStatus(new CustomerSales, $request);
+            return $this->changeRecordStatus(new CustomerSales(), $request);
         } catch (RecordNotFoundException $e) {
-            throw new RecordNotFoundException;
+            throw new RecordNotFoundException();
         }
     }
 
@@ -128,32 +152,31 @@ class CustomerSalesService
      */
     public function save(SaveCustomerSalesRequest $request): int
     {
-        $record = CustomerSales::where('Id', $request->get('Id'))
-            ->get();
+        $record = CustomerSales::where("Id", $request->get("Id"))->get();
 
-        if ($request->get('operation', 'add') == 'edit') {
+        if ($request->get("operation", "add") == "edit") {
             if (!$record->count()) {
-                throw new RecordNotFoundException;
+                throw new RecordNotFoundException();
             }
 
             $record = $record->first();
         } else {
-            $record = new CustomerSales;
+            $record = new CustomerSales();
 
-            $record->CreatedBy = session('user_details.UserName');
+            $record->CreatedBy = session("user_details.UserName");
         }
 
-        $record->CustomerName = $request->get('CustomerName');
-        $record->ContactNo1 = $request->get('ContactNo1');
-        $record->ContactNo2 = $request->get('ContactNo2');
-        $record->Comments = $request->get('Comments');
-        $record->Balance = number_format($request->get('Balance'), 2);
-        $record->UpdatedBy = session('user_details.UserName');
-        $record->IsActive = $request->get('IsActive');
+        $record->CustomerName = $request->get("CustomerName");
+        $record->ContactNo1 = $request->get("ContactNo1");
+        $record->ContactNo2 = $request->get("ContactNo2");
+        $record->Comments = $request->get("Comments");
+        $record->Balance = number_format($request->get("Balance"), 2);
+        $record->UpdatedBy = session("user_details.UserName");
+        $record->IsActive = $request->get("IsActive");
         $record->save();
 
-        return $request->get('operation', 'add') == 'edit'
-            ? $request->get('Id')
+        return $request->get("operation", "add") == "edit"
+            ? $request->get("Id")
             : CustomerSales::lastInsertId();
     }
 
@@ -166,19 +189,25 @@ class CustomerSalesService
     public function delete(IdRequest $request): bool
     {
         //Check whether the record exist or not
-        $record = CustomerSales::where('Id', $request->get('Id'));
+        $record = CustomerSales::where("Id", $request->get("Id"));
 
         if ($record->get()->count()) {
-            $tables_to_check = ['Sales'];
-            if ($this->foreignReferenceFound($tables_to_check, 'CustomerId', $request->get('Id'))) {
-                throw new ReferenceException;
+            $tables_to_check = ["Sales"];
+            if (
+                $this->foreignReferenceFound(
+                    $tables_to_check,
+                    "CustomerId",
+                    $request->get("Id")
+                )
+            ) {
+                throw new ReferenceException();
             }
 
             $record->delete();
 
             return true;
         } else {
-            throw new RecordNotFoundException;
+            throw new RecordNotFoundException();
         }
     }
 }

@@ -5,7 +5,7 @@
                 class="flex items-stretch datatable_header"
                 :class="{
                     'border-product-color-lighter bg-white': !dark_mode,
-                    'border-product-color bg-gray-800': dark_mode
+                    'border-product-color bg-gray-800': dark_mode,
                 }"
             >
                 <h1
@@ -69,7 +69,7 @@ import { mapState, mapActions } from "vuex";
 import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
 import Supplier from "../DBObjects/Supplier.vue";
-import {datatable_common} from "../Helpers/datatable_common";
+import { datatable_common } from "../Helpers/datatable_common";
 
 export default {
     mixins: [datatable_common],
@@ -77,8 +77,8 @@ export default {
     components: {
         SuppliersDatatable: lazyLoadComponent({
             componentFactory: () => import("@/Datatable/Datatable"),
-            loading: loading
-        })
+            loading: loading,
+        }),
     },
 
     computed: {
@@ -88,38 +88,38 @@ export default {
                     key: "SupplierName",
                     label: "Supplier Name",
                     type: "string",
-                    class: "w-60"
+                    class: "w-60",
                 },
                 {
                     key: "ContactNo",
                     label: "Contact No",
                     type: "string",
-                    class: "w-48"
+                    class: "w-48",
                 },
                 {
                     key: "CurrentBalance",
                     label: "Balance",
                     type: "currency",
-                    class: "w-32"
+                    class: "w-32",
                 },
                 {
                     key: "UpdatedDate",
                     label: "Created/Updated Date",
                     type: "date",
-                    class: "w-32"
-                }
+                    class: "w-32",
+                },
             ];
         },
 
         ...mapState({
-            dark_mode: state => state.framework.dark_mode
-        })
+            dark_mode: (state) => state.framework.dark_mode,
+        }),
     },
 
     created() {
         this.setTableMetaData({
             columns: this.columns,
-            options: this.options
+            options: this.options,
         });
 
         this.setActiveTab(this.options.id);
@@ -133,21 +133,21 @@ export default {
                 Supplier,
                 {
                     edit_id: "",
-                    options: this.options
+                    options: this.options,
                 },
                 {
                     width: "750px",
-                    height: "600px"
+                    height: "600px",
                 }
             );
         },
 
         ...mapActions({
-            setTableMetaData: 'datatable/setTableMetaData',
-            setActiveTab: 'local_settings/setActiveTab',
+            setTableMetaData: "datatable/setTableMetaData",
+            setActiveTab: "local_settings/setActiveTab",
             setPopperOpen: "local_settings/setPopperOpen",
-            addError: 'errors/addError'
-        })
+            addError: "errors/addError",
+        }),
     },
 };
 </script>

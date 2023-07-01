@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
-class HandsetColors extends ObjectTypeName {
-    protected $table = 'ColorMaster';
+class HandsetColors extends ObjectTypeName
+{
+    protected $table = "ColorMaster";
 }

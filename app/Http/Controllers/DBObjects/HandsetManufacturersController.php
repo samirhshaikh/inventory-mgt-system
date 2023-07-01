@@ -8,16 +8,16 @@ class HandsetManufacturersController extends ObjectTypeNameController
 {
     protected function getModel()
     {
-        return new HandsetManufacturers;
+        return new HandsetManufacturers();
     }
 
     protected function getRecordName()
     {
-        return 'Manufacturer';
+        return "Manufacturer";
     }
 
     protected function getColumnIdInReferenceTables()
     {
-        return 'MakeId';
+        return "MakeId";
     }
 }

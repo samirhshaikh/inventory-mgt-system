@@ -27,11 +27,19 @@ class UsersController extends BaseController
         try {
             $user_service->changeActiveStatus($request);
 
-            return $this->sendOK([], 'status_changed');
+            return $this->sendOK([], "status_changed");
         } catch (NotEnoughRightsException $e) {
-            return $this->sendError('not_enough_rights', [], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError(
+                "not_enough_rights",
+                [],
+                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+            );
         } catch (RecordNotFoundException $e) {
-            return $this->sendError('User not found.', [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                "User not found.",
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         }
     }
 
@@ -46,11 +54,19 @@ class UsersController extends BaseController
         try {
             $user_service->changeAdminStatus($request);
 
-            return $this->sendOK([], 'status_changed');
+            return $this->sendOK([], "status_changed");
         } catch (NotEnoughRightsException $e) {
-            return $this->sendError('not_enough_rights', [], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError(
+                "not_enough_rights",
+                [],
+                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+            );
         } catch (RecordNotFoundException $e) {
-            return $this->sendError('User not found.', [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                "User not found.",
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         }
     }
 
@@ -64,11 +80,15 @@ class UsersController extends BaseController
 
         try {
             $response = [];
-            $response['record'] = $user_service->getSingle($request);
+            $response["record"] = $user_service->getSingle($request);
 
             return $this->sendOK($response);
         } catch (RecordNotFoundException $e) {
-            return $this->sendError('User not found.', [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                "User not found.",
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         }
     }
 
@@ -83,13 +103,24 @@ class UsersController extends BaseController
         try {
             $username = $user_service->save($request);
 
-            return $this->sendOK([
-                'username' => $username
-            ], self::RECORD_SAVED);
+            return $this->sendOK(
+                [
+                    "username" => $username,
+                ],
+                self::RECORD_SAVED
+            );
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         } catch (DuplicateNameException $e) {
-            return $this->sendError(self::DUPLICATE_NAME, [], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError(
+                self::DUPLICATE_NAME,
+                [],
+                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+            );
         }
 
         return $this->sendOK([], self::RECORD_SAVED);
@@ -108,9 +139,17 @@ class UsersController extends BaseController
 
             return $this->sendOK([], self::RECORD_DELETED);
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         } catch (ReferenceException $e) {
-            return $this->sendError(self::RECORD_REFERENCE_FOUND, [], JsonResponse::HTTP_FORBIDDEN);
+            return $this->sendError(
+                self::RECORD_REFERENCE_FOUND,
+                [],
+                JsonResponse::HTTP_FORBIDDEN
+            );
         }
     }
 
@@ -127,7 +166,11 @@ class UsersController extends BaseController
 
             return $this->sendOK([]);
         } catch (DuplicateNameException $e) {
-            return $this->sendError(self::DUPLICATE_NAME, [], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError(
+                self::DUPLICATE_NAME,
+                [],
+                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+            );
         }
     }
 }

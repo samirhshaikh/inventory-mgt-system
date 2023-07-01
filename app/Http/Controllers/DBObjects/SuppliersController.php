@@ -23,9 +23,13 @@ class SuppliersController extends BaseController
         try {
             $suppliers_service->changeActiveStatus($request);
 
-            return $this->sendOK([], 'status_changed');
+            return $this->sendOK([], "status_changed");
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         }
     }
 
@@ -39,11 +43,15 @@ class SuppliersController extends BaseController
 
         try {
             $response = [];
-            $response['record'] = $suppliers_service->getSingle($request);
+            $response["record"] = $suppliers_service->getSingle($request);
 
             return $this->sendOK($response);
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         }
     }
 
@@ -58,11 +66,18 @@ class SuppliersController extends BaseController
         try {
             $id = $suppliers_service->save($request);
 
-            return $this->sendOK([
-                'id' => $id
-            ], self::RECORD_SAVED);
+            return $this->sendOK(
+                [
+                    "id" => $id,
+                ],
+                self::RECORD_SAVED
+            );
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         }
     }
 
@@ -79,9 +94,17 @@ class SuppliersController extends BaseController
 
             return $this->sendOK([], self::RECORD_DELETED);
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         } catch (ReferenceException $e) {
-            return $this->sendError(self::RECORD_REFERENCE_FOUND, [], JsonResponse::HTTP_FORBIDDEN);
+            return $this->sendError(
+                self::RECORD_REFERENCE_FOUND,
+                [],
+                JsonResponse::HTTP_FORBIDDEN
+            );
         }
     }
 }

@@ -2,7 +2,7 @@
     <div
         class="flex h-full border border-product-color"
         :class="{
-            'bg-gray-700 text-white': dark_mode
+            'bg-gray-700 text-white': dark_mode,
         }"
     >
         <div class="flex-grow flex flex-col justify-between">
@@ -11,14 +11,14 @@
                     class="flex border-b border-product-color-lighter mb-4 pb-1"
                     :class="{
                         'border-product-color-lighter': dark_mode,
-                        'border-product-color': !dark_mode
+                        'border-product-color': !dark_mode,
                     }"
                 >
                     <h1
                         class="text-sm md:text-xl pt-2 ml-1 w-full"
                         :class="{
                             'text-product-color-lighter': dark_mode,
-                            'text-product-color': !dark_mode
+                            'text-product-color': !dark_mode,
                         }"
                     >
                         {{ options.record_name }} Details
@@ -42,7 +42,8 @@
                             class="ml-1"
                             :class="{
                                 'bg-green-600': valid_data,
-                                'bg-gray-600 text-gray-500 cursor-not-allowed': !valid_data
+                                'bg-gray-600 text-gray-500 cursor-not-allowed':
+                                    !valid_data,
                             }"
                         >
                             Save
@@ -57,7 +58,7 @@
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Name
@@ -72,7 +73,8 @@
                                     autocomplete="off"
                                     ref="input_name"
                                     :class="{
-                                        required_field: name_validation_message != ''
+                                        required_field:
+                                            name_validation_message != '',
                                     }"
                                 />
 
@@ -86,7 +88,9 @@
                             <p
                                 class="form_field_message"
                                 :class="{
-                                    hidden: name_validation_message == '' || name_validation_message == 'Required'
+                                    hidden:
+                                        name_validation_message == '' ||
+                                        name_validation_message == 'Required',
                                 }"
                             >
                                 {{ name_validation_message }}
@@ -94,13 +98,16 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-wrap -mx-3 form_field_container" v-if="edit_id != ''">
+                    <div
+                        class="flex flex-wrap -mx-3 form_field_container"
+                        v-if="edit_id != ''"
+                    >
                         <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <label
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Created By
@@ -109,7 +116,7 @@
                                 class="block form_value_label"
                                 :class="{
                                     'text-gray-600': !dark_mode,
-                                    'text-product-color-lighter': dark_mode
+                                    'text-product-color-lighter': dark_mode,
                                 }"
                             >
                                 {{ row["CreatedBy"] }}
@@ -120,7 +127,7 @@
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Creation Date
@@ -129,7 +136,7 @@
                                 class="block form_value_label"
                                 :class="{
                                     'text-gray-600': !dark_mode,
-                                    'text-product-color-lighter': dark_mode
+                                    'text-product-color-lighter': dark_mode,
                                 }"
                             >
                                 {{ row["CreatedDate"] }}
@@ -137,13 +144,16 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-wrap -mx-3 form_field_container" v-if="edit_id != ''">
+                    <div
+                        class="flex flex-wrap -mx-3 form_field_container"
+                        v-if="edit_id != ''"
+                    >
                         <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <label
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Updated By
@@ -152,7 +162,7 @@
                                 class="block form_value_label"
                                 :class="{
                                     'text-gray-600': !dark_mode,
-                                    'text-product-color-lighter': dark_mode
+                                    'text-product-color-lighter': dark_mode,
                                 }"
                             >
                                 {{ row["UpdatedBy"] }}
@@ -163,7 +173,7 @@
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Updated Date
@@ -172,7 +182,7 @@
                                 class="block form_value_label"
                                 :class="{
                                     'text-gray-600': !dark_mode,
-                                    'text-product-color-lighter': dark_mode
+                                    'text-product-color-lighter': dark_mode,
                                 }"
                             >
                                 {{ row["UpdatedDate"] }}
@@ -191,7 +201,7 @@
 import { mapState, mapActions } from "vuex";
 import moment from "moment";
 import Button from "../components/Button";
-import {notifications} from "../Helpers/notifications";
+import { notifications } from "../Helpers/notifications";
 
 export default {
     mixins: [notifications],
@@ -199,12 +209,12 @@ export default {
     props: {
         options: {
             type: Object,
-            default: () => ({})
+            default: () => ({}),
         },
         edit_id: {
             type: String,
-            default: ""
-        }
+            default: "",
+        },
     },
 
     data() {
@@ -214,7 +224,7 @@ export default {
             saving_data: false,
             checking_duplicate_name: false,
             duplicate_name: false,
-            loading: false
+            loading: false,
         };
     },
 
@@ -245,9 +255,9 @@ export default {
         },
 
         ...mapState({
-            dark_mode: state => state.framework.dark_mode,
-            expanded_sidebar: state => state.framework.expanded_sidebar
-        })
+            dark_mode: (state) => state.framework.dark_mode,
+            expanded_sidebar: (state) => state.framework.expanded_sidebar,
+        }),
     },
 
     mounted() {
@@ -258,11 +268,11 @@ export default {
             axios
                 .get(this.options.routes["get-single"], {
                     params: {
-                        Id: this.edit_id
-                    }
+                        Id: this.edit_id,
+                    },
                 })
                 .then(
-                    response => {
+                    (response) => {
                         let record = response.data.response.record;
 
                         this.row = _.cloneDeep(record);
@@ -273,7 +283,7 @@ export default {
                             this.$refs.input_name.focus();
                         });
                     },
-                    error => {
+                    (error) => {
                         this.loading = false;
                     }
                 );
@@ -297,12 +307,18 @@ export default {
 
             axios
                 .post(this.options.routes["save"], this.row)
-                .then(response => {
+                .then((response) => {
                     if (response.data.message == "record_saved") {
                         this.$notify({
                             group: "messages",
                             title: "Success",
-                            text: this.options.record_name + " " + (this.row["operation"] == "add" ? "added" : "edited") + " successfully."
+                            text:
+                                this.options.record_name +
+                                " " +
+                                (this.row["operation"] == "add"
+                                    ? "added"
+                                    : "edited") +
+                                " successfully.",
                         });
 
                         //Reset the cache
@@ -332,7 +348,7 @@ export default {
 
                     this.$modal.hide(this.$parent.name);
                 })
-                .catch(error => {
+                .catch((error) => {
                     this.saving_data = false;
 
                     if (error.response.data.message == "record_not_found") {
@@ -340,9 +356,14 @@ export default {
                             group: "messages",
                             title: "Error",
                             type: "error",
-                            text: this.formatMessage(error.response.data.message, this.options.record_name)
+                            text: this.formatMessage(
+                                error.response.data.message,
+                                this.options.record_name
+                            ),
                         });
-                    } else if (error.response.data.message == "duplicate_name") {
+                    } else if (
+                        error.response.data.message == "duplicate_name"
+                    ) {
                         this.duplicate_name = true;
                     }
                 });
@@ -359,16 +380,16 @@ export default {
             axios
                 .post(this.options.routes["check-duplicate-name"], {
                     Id: this.row["Id"],
-                    Name: this.row["Name"]
+                    Name: this.row["Name"],
                 })
-                .then(response => {
+                .then((response) => {
                     this.checking_duplicate_name = false;
 
                     this.duplicate_name = false;
 
                     this.checking_duplicate_name = false;
                 })
-                .catch(error => {
+                .catch((error) => {
                     this.checking_duplicate_name = false;
 
                     if (error.response.data.message == "duplicate_name") {
@@ -381,10 +402,11 @@ export default {
             refreshData: "framework/refreshData",
             resetCachedData: "local_settings/resetCachedData",
             refreshHandsetModels: "framework/refreshHandsetModels",
-            refreshHandsetManufacturers: "framework/refreshHandsetManufacturers",
+            refreshHandsetManufacturers:
+                "framework/refreshHandsetManufacturers",
             refreshHandsetColors: "framework/refreshHandsetColors",
-            addError: "errors/addError"
-        })
-    }
+            addError: "errors/addError",
+        }),
+    },
 };
 </script>

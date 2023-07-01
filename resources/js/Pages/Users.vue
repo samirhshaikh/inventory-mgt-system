@@ -5,7 +5,7 @@
                 class="flex items-stretch datatable_header"
                 :class="{
                     'border-product-color-lighter bg-white': !dark_mode,
-                    'border-product-color bg-gray-800': dark_mode
+                    'border-product-color bg-gray-800': dark_mode,
                 }"
             >
                 <h1
@@ -62,7 +62,7 @@ import { mapState, mapActions } from "vuex";
 import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
 import User from "../DBObjects/User.vue";
-import {datatable_common} from "../Helpers/datatable_common";
+import { datatable_common } from "../Helpers/datatable_common";
 
 export default {
     mixins: [datatable_common],
@@ -70,20 +70,20 @@ export default {
     components: {
         UsersDatatable: lazyLoadComponent({
             componentFactory: () => import("@/Datatable/Datatable"),
-            loading: loading
-        })
+            loading: loading,
+        }),
     },
 
     computed: {
         ...mapState({
-            dark_mode: state => state.framework.dark_mode
-        })
+            dark_mode: (state) => state.framework.dark_mode,
+        }),
     },
 
     created() {
         this.setTableMetaData({
             columns: this.columns,
-            options: this.options
+            options: this.options,
         });
 
         this.setActiveTab(this.options.id);
@@ -97,11 +97,11 @@ export default {
                 User,
                 {
                     edit_id: "",
-                    options: this.options
+                    options: this.options,
                 },
                 {
                     width: "650px",
-                    height: "600px"
+                    height: "600px",
                 }
             );
         },
@@ -110,8 +110,8 @@ export default {
             setTableMetaData: "datatable/setTableMetaData",
             setActiveTab: "local_settings/setActiveTab",
             setPopperOpen: "local_settings/setPopperOpen",
-            addError: "errors/addError"
-        })
-    }
+            addError: "errors/addError",
+        }),
+    },
 };
 </script>

@@ -26,11 +26,15 @@ class SalesController extends BaseController
         $sales_service = new SalesService();
         try {
             $response = [];
-            $response['record'] = $sales_service->getSingleSales($request);
+            $response["record"] = $sales_service->getSingleSales($request);
 
             return $this->sendOK($response);
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         }
     }
 
@@ -45,11 +49,22 @@ class SalesController extends BaseController
         try {
             $invoice_id = $sales_service->save($request);
 
-            return $this->sendOK(['records_count' => 1, 'id' => $invoice_id], self::RECORD_SAVED);
+            return $this->sendOK(
+                ["records_count" => 1, "id" => $invoice_id],
+                self::RECORD_SAVED
+            );
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [],JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         } catch (InvalidDataException $e) {
-            return $this->sendError(self::INVALID_DATA, [], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError(
+                self::INVALID_DATA,
+                [],
+                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+            );
         }
     }
 
@@ -66,7 +81,11 @@ class SalesController extends BaseController
 
             return $this->sendOK([], self::RECORD_DELETED);
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         }
     }
 
@@ -83,7 +102,11 @@ class SalesController extends BaseController
 
             return $this->sendOK([], self::RECORD_SAVED);
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         }
     }
 
@@ -106,62 +129,75 @@ class SalesController extends BaseController
         try {
             $invoice = $sales_service->getSingleSales($request);
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         }
 
-        $pdf = new Pdf;
+        $pdf = new Pdf();
 
-        $customer_name = Arr::get($invoice, 'customer.CustomerName', '');
+        $customer_name = Arr::get($invoice, "customer.CustomerName", "");
 
         $customer_address = [];
-        $customer_address[] = Arr::get($invoice, 'customer.Address', '');
-        $customer_address[] = Arr::get($invoice, 'customer.City', '');
+        $customer_address[] = Arr::get($invoice, "customer.Address", "");
+        $customer_address[] = Arr::get($invoice, "customer.City", "");
 
         $customer_address = array_filter($customer_address);
-        $customer_address = join('<br>', $customer_address);
+        $customer_address = join("<br>", $customer_address);
 
         $store_details = [];
-        $store_details[] = session('app_settings.store_settings.name', 'Store Name');
-        if (session('app_settings.store_settings.address', '')) {
-            $store_details[] = nl2br(session('app_settings.store_settings.address'));
+        $store_details[] = session(
+            "app_settings.store_settings.name",
+            "Store Name"
+        );
+        if (session("app_settings.store_settings.address", "")) {
+            $store_details[] = nl2br(
+                session("app_settings.store_settings.address")
+            );
         }
-        if (session('app_settings.store_settings.phone', '')) {
-            $store_details[] = 'Tel. No: ' . session('app_settings.store_settings.phone');
+        if (session("app_settings.store_settings.phone", "")) {
+            $store_details[] =
+                "Tel. No: " . session("app_settings.store_settings.phone");
         }
-        if (session('app_settings.store_settings.email', '')) {
-            $store_details[] = 'Email: ' . session('app_settings.store_settings.email');
+        if (session("app_settings.store_settings.email", "")) {
+            $store_details[] =
+                "Email: " . session("app_settings.store_settings.email");
         }
-        $store_details = join('<br>', $store_details);
+        $store_details = join("<br>", $store_details);
 
         $total = 0;
         $items = [];
-        foreach ($invoice['children'] ?? [] as $child) {
-//            if ($child['Returned']) {
-//                continue;
-//            }
+        foreach ($invoice["children"] ?? [] as $child) {
+            //            if ($child['Returned']) {
+            //                continue;
+            //            }
 
-            $price = number_format($child['Cost'], 2);
+            $price = number_format($child["Cost"], 2);
 
-            $child_total = number_format($price * $child['Qty'], 2);
+            $child_total = number_format($price * $child["Qty"], 2);
 
-            if (!$child['Returned']) {
+            if (!$child["Returned"]) {
                 $total += $child_total;
             }
 
-            $returned = $child['Returned'] ? '<br><font color="red">Returned</font>' : '';
+            $returned = $child["Returned"]
+                ? '<br><font color="red">Returned</font>'
+                : "";
 
             $item = <<<EOT
 <tr>
-    <td>{$child['Qty']}</td>
-    <td>{$child['phone_details']['StockType']}</td>
+    <td>{$child["Qty"]}</td>
+    <td>{$child["phone_details"]["StockType"]}</td>
     <td>
-        {$child['phone_details']['manufacturer']['Name']} {$child['phone_details']['model']['Name']} {$child['phone_details']['Size']}
+        {$child["phone_details"]["manufacturer"]["Name"]} {$child["phone_details"]["model"]["Name"]} {$child["phone_details"]["Size"]}
         <br>
-        {$child['phone_details']['color']['Name']}
+        {$child["phone_details"]["color"]["Name"]}
         <br>
-        {$child['phone_details']['Network']}
+        {$child["phone_details"]["Network"]}
         <br>
-        IMEI: {$child['phone_details']['IMEI']}
+        IMEI: {$child["phone_details"]["IMEI"]}
         {$returned}
     </td>
     <td style="text-align: right;">&#163; {$price}</td>
@@ -173,7 +209,7 @@ EOT;
         }
 
         $tradein_items = [];
-        if (Arr::get($invoice, 'tradein.purchase.children', [])) {
+        if (Arr::get($invoice, "tradein.purchase.children", [])) {
             $tradein_items[] = <<<EOT
 <tr>
     <td colspan="2"></td>
@@ -181,10 +217,13 @@ EOT;
 </tr>
 EOT;
 
-            foreach(Arr::get($invoice, 'tradein.purchase.children', []) as $child) {
+            foreach (
+                Arr::get($invoice, "tradein.purchase.children", [])
+                as $child
+            ) {
                 $qty = 1;
 
-                $price = number_format($child['Cost'], 2);
+                $price = number_format($child["Cost"], 2);
 
                 $child_total = number_format($price * $qty, 2);
                 $total -= $child_total;
@@ -192,15 +231,15 @@ EOT;
                 $item = <<<EOT
 <tr class="tradein_items">
     <td>{$qty}</td>
-    <td>{$child['StockType']}</td>
+    <td>{$child["StockType"]}</td>
     <td>
-        {$child['manufacturer']['Name']} {$child['model']['Name']} {$child['Size']}
+        {$child["manufacturer"]["Name"]} {$child["model"]["Name"]} {$child["Size"]}
         <br>
-        {$child['color']['Name']}
+        {$child["color"]["Name"]}
         <br>
-        {$child['Network']}
+        {$child["Network"]}
         <br>
-        IMEI: {$child['IMEI']}
+        IMEI: {$child["IMEI"]}
     </td>
     <td style="text-align: right;">&#163; {$price}</td>
     <td style="text-align: right;">&#163; {$child_total}</td>
@@ -211,8 +250,8 @@ EOT;
             }
         }
 
-        $items = join('', $items);
-        $tradein_items = join('', $tradein_items);
+        $items = join("", $items);
+        $tradein_items = join("", $tradein_items);
 
         $body = <<<EOT
 <html xmlns="http://www.w3.org/1999/html">
@@ -252,11 +291,11 @@ EOT;
                     <table style="width: 290px;">
                         <tr>
                             <td style="width: 110px; font-weight: bold;">Invoice No.</td>
-                            <td>{$invoice['InvoiceNo']}</td>
+                            <td>{$invoice["InvoiceNo"]}</td>
                         </tr>
                         <tr>
                             <td style="font-weight: bold;">Date</td>
-                            <td>{$invoice['InvoiceDate']}</td>
+                            <td>{$invoice["InvoiceDate"]}</td>
                         </tr>
                     </table>
                 </div>
@@ -290,7 +329,7 @@ EOT;
 
                     <tr>
                         <td>Payment Type:</td>
-                        <td>{$invoice['PaymentMethod']}</td>
+                        <td>{$invoice["PaymentMethod"]}</td>
                     </tr>
                 </table>
             </td>
@@ -376,17 +415,17 @@ EOT;
 
         $pdf->addPage($body);
 
-        $filename = 'Invoice_' . $request->get('Id') . '.pdf';
+        $filename = "Invoice_" . $request->get("Id") . ".pdf";
 
         // Save the PDF
-        if (!$pdf->saveAs(storage_path('app/public/' . $filename))) {
+        if (!$pdf->saveAs(storage_path("app/public/" . $filename))) {
             return $this->sendError($pdf->getError());
         }
 
         if (!$pdf->send()) {
-            return $this->sendError('File not found.');
+            return $this->sendError("File not found.");
         }
 
-        Storage::disk('public')->delete($filename);
+        Storage::disk("public")->delete($filename);
     }
 }

@@ -24,11 +24,17 @@ class PurchaseController extends BaseController
 
         try {
             $response = [];
-            $response['record'] = $purchase_service->getSinglePurchase($request);
+            $response["record"] = $purchase_service->getSinglePurchase(
+                $request
+            );
 
             return $this->sendOK($response);
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [],JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         }
     }
 
@@ -45,13 +51,29 @@ class PurchaseController extends BaseController
 
             return $this->sendOK($response, self::RECORD_SAVED);
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [],JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         } catch (InvalidDataException $e) {
-            return $this->sendError(self::INVALID_DATA, [], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError(
+                self::INVALID_DATA,
+                [],
+                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+            );
         } catch (ReferenceException $e) {
-            return $this->sendError(self::RECORD_REFERENCE_FOUND, [], JsonResponse::HTTP_FORBIDDEN);
+            return $this->sendError(
+                self::RECORD_REFERENCE_FOUND,
+                [],
+                JsonResponse::HTTP_FORBIDDEN
+            );
         } catch (DuplicateIMEIException $e) {
-            return $this->sendError(self::DUPLICATE_IMEI, [], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError(
+                self::DUPLICATE_IMEI,
+                [],
+                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+            );
         }
     }
 
@@ -68,9 +90,17 @@ class PurchaseController extends BaseController
 
             return $this->sendOK([], self::RECORD_DELETED);
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         } catch (ReferenceException $e) {
-            return $this->sendError(self::RECORD_REFERENCE_FOUND, [], JsonResponse::HTTP_FORBIDDEN);
+            return $this->sendError(
+                self::RECORD_REFERENCE_FOUND,
+                [],
+                JsonResponse::HTTP_FORBIDDEN
+            );
         }
     }
 }

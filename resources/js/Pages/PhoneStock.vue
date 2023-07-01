@@ -5,7 +5,7 @@
                 class="flex items-stretch datatable_header"
                 :class="{
                     'border-product-color-lighter bg-white': !dark_mode,
-                    'border-product-color bg-gray-800': dark_mode
+                    'border-product-color bg-gray-800': dark_mode,
                 }"
             >
                 <h1
@@ -66,12 +66,12 @@
 </template>
 
 <script>
-import {mapState, mapActions} from "vuex";
+import { mapState, mapActions } from "vuex";
 import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
 import PhoneStock from "../DBObjects/Purchase.vue";
-import {list_controller} from "../Helpers/list_controller";
-import {datatable_common} from "../Helpers/datatable_common";
+import { list_controller } from "../Helpers/list_controller";
+import { datatable_common } from "../Helpers/datatable_common";
 import SearchParameters from "../components/Search/SearchParameters";
 
 export default {
@@ -81,8 +81,8 @@ export default {
         SearchParameters,
         PhoneStockDatatable: lazyLoadComponent({
             componentFactory: () => import("@/Datatable/Datatable"),
-            loading: loading
-        })
+            loading: loading,
+        }),
     },
 
     computed: {
@@ -93,99 +93,99 @@ export default {
                     label: "Supplier Name",
                     type: "list",
                     data: this.suppliers_simple,
-                    class: "w-60"
+                    class: "w-60",
                 },
                 {
                     key: "InvoiceDate",
                     label: "Invoice Date",
                     type: "date",
-                    class: "w-32"
+                    class: "w-32",
                 },
                 {
                     key: "InvoiceNo",
                     label: "Invoice No",
                     type: "string",
-                    class: "w-32"
+                    class: "w-32",
                 },
                 {
                     key: "IMEI",
                     label: "IMEI",
                     type: "string",
-                    class: "w-52"
+                    class: "w-52",
                 },
                 {
                     key: "StockType",
                     label: "Stock Type",
                     type: "list",
                     data: this.stock_types,
-                    class: "w-32"
+                    class: "w-32",
                 },
                 {
                     key: "Status",
                     label: "Stock Status",
                     type: "list",
                     data: this.stock_statuses,
-                    class: "w-48"
+                    class: "w-48",
                 },
                 {
                     key: "make",
                     label: "Make",
                     type: "list",
                     data: this.handset_manufacturers_simple,
-                    class: "w-48"
+                    class: "w-48",
                 },
                 {
                     key: "model",
                     label: "Model",
                     type: "list",
                     data: this.handset_models_simple,
-                    class: "w-60"
+                    class: "w-60",
                 },
                 {
                     key: "color",
                     label: "Color",
                     type: "list",
                     data: this.handset_colors_simple,
-                    class: "w-64"
+                    class: "w-64",
                 },
                 {
                     key: "Size",
                     label: "Size",
                     type: "list",
                     data: this.phone_sizes,
-                    class: "w-32"
+                    class: "w-32",
                 },
                 {
                     key: "Network",
                     label: "Network",
                     type: "list",
                     data: this.networks,
-                    class: "w-48"
+                    class: "w-48",
                 },
                 {
                     key: "Cost",
                     label: "Cost",
                     type: "currency",
-                    class: "w-32"
+                    class: "w-32",
                 },
                 {
                     key: "UpdatedDate",
                     label: "Created/Updated Date",
                     type: "date",
-                    class: "w-32"
-                }
+                    class: "w-32",
+                },
             ];
         },
 
         ...mapState({
-            dark_mode: state => state.framework.dark_mode
-        })
+            dark_mode: (state) => state.framework.dark_mode,
+        }),
     },
 
     created() {
         this.setTableMetaData({
             columns: this.columns,
-            options: this.options
+            options: this.options,
         });
 
         this.setActiveTab(this.options.id);
@@ -200,21 +200,21 @@ export default {
                 {
                     edit_id: "",
                     options: this.options,
-                    columns: this.columns
+                    columns: this.columns,
                 },
                 {
                     width: "90%",
-                    height: "80%"
+                    height: "80%",
                 }
             );
         },
 
         ...mapActions({
-            setTableMetaData: 'datatable/setTableMetaData',
-            setActiveTab: 'local_settings/setActiveTab',
+            setTableMetaData: "datatable/setTableMetaData",
+            setActiveTab: "local_settings/setActiveTab",
             setPopperOpen: "local_settings/setPopperOpen",
-            addError: 'errors/addError'
-        })
-    }
+            addError: "errors/addError",
+        }),
+    },
 };
 </script>

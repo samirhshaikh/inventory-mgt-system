@@ -2,7 +2,7 @@
     <div
         class="flex h-full border border-product-color"
         :class="{
-            'bg-gray-700 text-white': dark_mode
+            'bg-gray-700 text-white': dark_mode,
         }"
     >
         <div class="flex-grow flex flex-col justify-between">
@@ -11,14 +11,14 @@
                     class="flex border-b border-product-color-lighter mb-4 pb-1"
                     :class="{
                         'border-product-color-lighter': dark_mode,
-                        'border-product-color': !dark_mode
+                        'border-product-color': !dark_mode,
                     }"
                 >
                     <h1
                         class="text-base md:text-xl pt-2 ml-1 w-full"
                         :class="{
                             'text-product-color-lighter': dark_mode,
-                            'text-product-color': !dark_mode
+                            'text-product-color': !dark_mode,
                         }"
                     >
                         Search {{ options.record_name }}
@@ -49,8 +49,12 @@
                             split="border-white"
                             class="text-white ml-1"
                             :class="{
-                                'bg-green-600': timer && Object.keys(selected_records).length,
-                                'bg-gray-600 text-gray-500 cursor-not-allowed': timer && !Object.keys(selected_records).length
+                                'bg-green-600':
+                                    timer &&
+                                    Object.keys(selected_records).length,
+                                'bg-gray-600 text-gray-500 cursor-not-allowed':
+                                    timer &&
+                                    !Object.keys(selected_records).length,
                             }"
                         >
                             Submit
@@ -92,12 +96,12 @@
 </template>
 
 <script>
-import {mapActions, mapState} from "vuex";
+import { mapActions, mapState } from "vuex";
 import SearchParameters from "../Search/SearchParameters";
 import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
-import {list_controller} from "../../Helpers/list_controller";
-import {datatable_common} from "../../Helpers/datatable_common";
+import { list_controller } from "../../Helpers/list_controller";
+import { datatable_common } from "../../Helpers/datatable_common";
 import moment from "moment";
 
 export default {
@@ -105,23 +109,23 @@ export default {
 
     props: {
         submitRecordsSelected: {
-            type: Function
-        }
+            type: Function,
+        },
     },
 
     components: {
         SearchParameters,
         Datatable: lazyLoadComponent({
             componentFactory: () => import("@/Datatable/Datatable"),
-            loading: loading
-        })
+            loading: loading,
+        }),
     },
 
     data() {
         return {
             selected_records: {},
-            timer: moment().format()
-        }
+            timer: moment().format(),
+        };
     },
 
     computed: {
@@ -131,68 +135,68 @@ export default {
                     key: "IMEI",
                     label: "IMEI",
                     type: "string",
-                    class: "w-52"
+                    class: "w-52",
                 },
                 {
                     key: "make",
                     label: "Make",
                     type: "list",
                     data: this.handset_manufacturers_simple,
-                    class: "w-48"
+                    class: "w-48",
                 },
                 {
                     key: "model",
                     label: "Model",
                     type: "list",
                     data: this.handset_models_simple,
-                    class: "w-60"
+                    class: "w-60",
                 },
                 {
                     key: "color",
                     label: "Color",
                     type: "list",
                     data: this.handset_colors_simple,
-                    class: "w-64"
+                    class: "w-64",
                 },
                 {
                     key: "Size",
                     label: "Size",
                     type: "list",
                     data: this.phone_sizes,
-                    class: "w-32"
+                    class: "w-32",
                 },
                 {
                     key: "Network",
                     label: "Network",
                     type: "list",
                     data: this.networks,
-                    class: "w-48"
+                    class: "w-48",
                 },
                 {
                     key: "Cost",
                     label: "Cost",
                     type: "currency",
-                    class: "w-32"
+                    class: "w-32",
                 },
                 {
                     key: "UpdatedDate",
                     label: "Created/Updated Date",
                     type: "date",
-                    class: "w-32"
-                }
+                    class: "w-32",
+                },
             ];
         },
 
         ...mapState({
-            dark_mode: state => state.framework.dark_mode,
-            local_settings: state => state.local_settings
-        })
+            dark_mode: (state) => state.framework.dark_mode,
+            local_settings: (state) => state.local_settings,
+        }),
     },
 
     created() {
         this.setTableMetaData({
             columns: this.columns,
-            options: this.options
+            options: this.options,
         });
 
         this.setActiveTab(this.options.id);
@@ -225,11 +229,11 @@ export default {
         },
 
         ...mapActions({
-            setTableMetaData: 'datatable/setTableMetaData',
-            setActiveTab: 'local_settings/setActiveTab',
+            setTableMetaData: "datatable/setTableMetaData",
+            setActiveTab: "local_settings/setActiveTab",
             setPopperOpen: "local_settings/setPopperOpen",
-            addError: 'errors/addError'
-        })
-    }
-}
+            addError: "errors/addError",
+        }),
+    },
+};
 </script>

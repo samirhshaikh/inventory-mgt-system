@@ -15,7 +15,9 @@
                         :value="inputValue"
                         v-on="inputEvents"
                         :class="{
-                            required_field: required_field && (date_value == '' || date_value == null)
+                            required_field:
+                                required_field &&
+                                (date_value == '' || date_value == null),
                         }"
                     />
                     <button
@@ -31,7 +33,7 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 import moment from "moment";
 
 export default {
@@ -40,34 +42,34 @@ export default {
     props: {
         start_date_value: {
             type: String,
-            default: ""
+            default: "",
         },
         required_field: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
 
     data() {
         return {
             masks: {
-                input: "DD-MMM-YYYY"
+                input: "DD-MMM-YYYY",
             },
             attributes: [
                 {
-                    key: 'today',
+                    key: "today",
                     highlight: true,
-                    dates: new Date()
-                }
+                    dates: new Date(),
+                },
             ],
-            date_value: ""
-        }
+            date_value: "",
+        };
     },
 
     computed: {
         ...mapState({
-            dark_mode: state => state.framework.dark_mode
-        })
+            dark_mode: (state) => state.framework.dark_mode,
+        }),
     },
 
     mounted() {
@@ -82,7 +84,7 @@ export default {
         },
 
         dateSelected(date) {
-            if (date != '' && date != null) {
+            if (date != "" && date != null) {
                 this.date_value = moment(date).format("D-MMM-YYYY");
             } else {
                 this.date_value = "";
@@ -90,6 +92,6 @@ export default {
 
             this.$emit("dateSelected", this.date_value);
         },
-    }
-}
+    },
+};
 </script>

@@ -18,30 +18,30 @@ class PagesController extends Controller
 {
     public function index()
     {
-        if (!session('user', false)) {
-            return redirect('login');
+        if (!session("user", false)) {
+            return redirect("login");
         } else {
-            return redirect('dashboard');
+            return redirect("dashboard");
         }
     }
 
     public function login()
     {
-        return Inertia::render('Pages/Login', []);
+        return Inertia::render("Pages/Login", []);
     }
 
     public function dashboard()
     {
-        return Inertia::render('Pages/Dashboard', []);
+        return Inertia::render("Pages/Dashboard", []);
     }
 
     public function handsetColors()
     {
         $table = new HandsetColorsDatatable();
 
-        return Inertia::render('Pages/ObjectTypeName', [
-            'columns' => $table->columns,
-            'options' => $table->options
+        return Inertia::render("Pages/ObjectTypeName", [
+            "columns" => $table->columns,
+            "options" => $table->options,
         ]);
     }
 
@@ -49,9 +49,9 @@ class PagesController extends Controller
     {
         $table = new HandsetModelsDatatable();
 
-        return Inertia::render('Pages/ObjectTypeName', [
-            'columns' => $table->columns,
-            'options' => $table->options
+        return Inertia::render("Pages/ObjectTypeName", [
+            "columns" => $table->columns,
+            "options" => $table->options,
         ]);
     }
 
@@ -59,9 +59,9 @@ class PagesController extends Controller
     {
         $table = new HandsetManufacturersDatatable();
 
-        return Inertia::render('Pages/ObjectTypeName', [
-            'columns' => $table->columns,
-            'options' => $table->options
+        return Inertia::render("Pages/ObjectTypeName", [
+            "columns" => $table->columns,
+            "options" => $table->options,
         ]);
     }
 
@@ -69,9 +69,9 @@ class PagesController extends Controller
     {
         $table = new PhoneStockDatatable();
 
-        return Inertia::render('Pages/PhoneStock', [
-            'columns' => $table->columns,
-            'options' => $table->options
+        return Inertia::render("Pages/PhoneStock", [
+            "columns" => $table->columns,
+            "options" => $table->options,
         ]);
     }
 
@@ -79,10 +79,10 @@ class PagesController extends Controller
     {
         $table = new PurchasesDatatable();
 
-        return Inertia::render('Pages/Purchases', [
-            'columns' => $table->columns,
-            'child_columns' => $table->child_columns,
-            'options' => $table->options
+        return Inertia::render("Pages/Purchases", [
+            "columns" => $table->columns,
+            "child_columns" => $table->child_columns,
+            "options" => $table->options,
         ]);
     }
 
@@ -90,10 +90,10 @@ class PagesController extends Controller
     {
         $table = new SalesDatatable();
 
-        return Inertia::render('Pages/Sales', [
-            'columns' => $table->columns,
-            'child_columns' => $table->child_columns,
-            'options' => $table->options
+        return Inertia::render("Pages/Sales", [
+            "columns" => $table->columns,
+            "child_columns" => $table->child_columns,
+            "options" => $table->options,
         ]);
     }
 
@@ -101,9 +101,9 @@ class PagesController extends Controller
     {
         $table = new CustomerSalesDatatable();
 
-        return Inertia::render('Pages/CustomerSales', [
-            'columns' => $table->columns,
-            'options' => $table->options
+        return Inertia::render("Pages/CustomerSales", [
+            "columns" => $table->columns,
+            "options" => $table->options,
         ]);
     }
 
@@ -111,9 +111,9 @@ class PagesController extends Controller
     {
         $table = new SuppliersDatatable();
 
-        return Inertia::render('Pages/Suppliers', [
-            'columns' => $table->columns,
-            'options' => $table->options
+        return Inertia::render("Pages/Suppliers", [
+            "columns" => $table->columns,
+            "options" => $table->options,
         ]);
     }
 
@@ -121,9 +121,9 @@ class PagesController extends Controller
     {
         $table = new HandsetsDatatable();
 
-        return Inertia::render('Pages/Handsets', [
-            'columns' => $table->columns,
-            'options' => $table->options
+        return Inertia::render("Pages/Handsets", [
+            "columns" => $table->columns,
+            "options" => $table->options,
         ]);
     }
 
@@ -131,9 +131,9 @@ class PagesController extends Controller
     {
         $table = new UsersDatatable();
 
-        return Inertia::render('Pages/Users', [
-            'columns' => $table->columns,
-            'options' => $table->options
+        return Inertia::render("Pages/Users", [
+            "columns" => $table->columns,
+            "options" => $table->options,
         ]);
     }
 }

@@ -3,12 +3,12 @@
         <v-select
             :value="customer_id"
             label="CustomerName"
-            :reduce="customer => customer.Id"
+            :reduce="(customer) => customer.Id"
             :options="customer_sales"
             class="w-72 generic_vs_select"
             :loading="loading_customer_sales"
             :class="{
-                required_field: required_field
+                required_field: required_field,
             }"
             ref="customer_id"
             :filterable="false"
@@ -17,8 +17,15 @@
         >
             <template v-slot:option="option">
                 <strong>{{ option.CustomerName }}</strong>
-                <p v-if="option.ContactNo1 || option.ContactNo2" class="m-0 p-0">
-                    {{ option.ContactNo1 ? option.ContactNo1 : option.ContactNo2 }}
+                <p
+                    v-if="option.ContactNo1 || option.ContactNo2"
+                    class="m-0 p-0"
+                >
+                    {{
+                        option.ContactNo1
+                            ? option.ContactNo1
+                            : option.ContactNo2
+                    }}
                 </p>
             </template>
         </v-select>
@@ -45,7 +52,7 @@
 </template>
 
 <script>
-import {mapState, mapActions} from "vuex";
+import { mapState, mapActions } from "vuex";
 import Customer from "../DBObjects/CustomerSale";
 import helper_functions from "../Helpers/helper_functions";
 
@@ -53,10 +60,10 @@ export default {
     name: "CustomerSalesPicker",
 
     props: {
-        selected_value: '',
+        selected_value: "",
         required_field: false,
         enable_add: false,
-        enable_edit: false
+        enable_edit: false,
     },
 
     data() {
@@ -64,15 +71,17 @@ export default {
             loading_customer_sales: false,
             customer_id: this.selected_value,
             customer_sales: [],
-        }
+        };
     },
 
     computed: {
-        refresh_customer_sales: state => state.framework.refresh_customer_sales,
+        refresh_customer_sales: (state) =>
+            state.framework.refresh_customer_sales,
 
         ...mapState({
-            refresh_customer_sales: state => state.framework.refresh_customer_sales,
-        })
+            refresh_customer_sales: (state) =>
+                state.framework.refresh_customer_sales,
+        }),
     },
 
     mounted() {
@@ -81,11 +90,11 @@ export default {
 
     methods: {
         onSearch(query) {
-            this.loadData(query)
+            this.loadData(query);
         },
 
         onOptionSelected(value) {
-            this.$emit('onOptionSelected', value);
+            this.$emit("onOptionSelected", value);
         },
 
         loadData(query) {
@@ -94,43 +103,46 @@ export default {
             axios
                 .get(route("datatable.customer_sales.data"), {
                     params: {
-                        get_all_records: typeof query === 'undefined' ? 0 : 1,
-                        order_by: 'CustomerName',
-                        search_text: typeof query === 'undefined' ? '' : query
-                    }
+                        get_all_records: typeof query === "undefined" ? 0 : 1,
+                        order_by: "CustomerName",
+                        search_text: typeof query === "undefined" ? "" : query,
+                    },
                 })
                 .then(
-                    response => {
+                    (response) => {
                         this.customer_sales = response.data.rows;
 
                         if (this.customer_id && !query) {
-                            const object = helper_functions.searchJsonObjects(this.customer_sales, "Id", this.customer_id);
+                            const object = helper_functions.searchJsonObjects(
+                                this.customer_sales,
+                                "Id",
+                                this.customer_id
+                            );
                             if (!Object.keys(object).length) {
                                 axios
                                     .get(route("customer_sales.get-single"), {
                                         params: {
-                                            Id: this.customer_id
-                                        }
-                                    })
-                                    .then(
-                                        response => {
-                                            let record = response.data.response.record;
-                                            this.customer_sales.push(record);
+                                            Id: this.customer_id,
                                         },
-                                    );
+                                    })
+                                    .then((response) => {
+                                        let record =
+                                            response.data.response.record;
+                                        this.customer_sales.push(record);
+                                    });
                             }
                         }
 
                         this.loading_customer_sales = false;
 
-                        this.$emit('onDataLoadComplete', true);
+                        this.$emit("onDataLoadComplete", true);
                     },
-                    error => {
+                    (error) => {
                         this.addError(error);
 
                         this.loading_customer_sales = false;
 
-                        this.$emit('onDataLoadComplete', true);
+                        this.$emit("onDataLoadComplete", true);
                     }
                 );
         },
@@ -145,20 +157,19 @@ export default {
                     options: {
                         id: "customer_sales",
                         record_name: "Customer",
-                        cache_data: true
+                        cache_data: true,
                     },
                     customerSaved: (id) => {
                         this.customer_id = id;
-                        this.$emit('onOptionSelected', id);
-                    }
+                        this.$emit("onOptionSelected", id);
+                    },
                 },
                 {
                     width: "750px",
-                    height: "600px"
+                    height: "600px",
                 },
                 {
-                    "closed": event => {
-                    }
+                    closed: (event) => {},
                 }
             );
         },
@@ -173,22 +184,21 @@ export default {
                     options: {
                         id: "customer_sales",
                         record_name: "Customer",
-                        cache_data: true
+                        cache_data: true,
                     },
-                    customerSaved: (id) => {
-                    }
+                    customerSaved: (id) => {},
                 },
                 {
                     width: "750px",
-                    height: "600px"
+                    height: "600px",
                 }
             );
         },
 
         ...mapActions({
-            setPopperOpen: 'local_settings/setPopperOpen',
-            addError: "errors/addError"
-        })
+            setPopperOpen: "local_settings/setPopperOpen",
+            addError: "errors/addError",
+        }),
     },
 
     watch: {
@@ -196,9 +206,9 @@ export default {
             this.loadData();
         },
 
-        selected_value: function(new_value) {
+        selected_value: function (new_value) {
             this.customer_id = new_value;
-        }
-    }
-}
+        },
+    },
+};
 </script>

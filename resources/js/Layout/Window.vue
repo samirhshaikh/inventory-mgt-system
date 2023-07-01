@@ -1,6 +1,4 @@
-<template>
-
-</template>
+<template></template>
 
 <script>
 export default {
@@ -10,18 +8,18 @@ export default {
         return {
             window: {
                 width: 0,
-                height: 0
-            }
+                height: 0,
+            },
         };
     },
 
     created() {
-        window.addEventListener('resize', this.handleResize);
+        window.addEventListener("resize", this.handleResize);
         this.handleResize();
     },
 
     destroyed() {
-        window.removeEventListener('resize', this.handleResize);
+        window.removeEventListener("resize", this.handleResize);
     },
 
     methods: {
@@ -30,11 +28,9 @@ export default {
             this.window.height = window.innerHeight;
 
             this.$emit("resizeWindow", this.window.width);
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

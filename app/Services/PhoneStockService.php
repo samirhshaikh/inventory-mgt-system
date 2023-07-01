@@ -28,40 +28,57 @@ class PhoneStockService
     public function getAll(
         string $order_by,
         string $order_direction,
-        string $search_type = 'simple',
-        string $search_text = '',
-        string $search_data = '{}',
+        string $search_type = "simple",
+        string $search_text = "",
+        string $search_data = "{}",
         bool $available_stock_only = false
-    ): array
-    {
-        $records = PhoneStock::selectRaw('PhoneStock.*, ManufactureMaster.Name, ColorMaster.Name, ModelMaster.Name')
-            ->leftJoin('ManufactureMaster', 'ManufactureMaster.Id', '=', 'MakeId')
-            ->leftJoin('ColorMaster', 'ColorMaster.Id', '=', 'ColorId')
-            ->leftJoin('ModelMaster', 'ModelMaster.Id', '=', 'ModelId');
+    ): array {
+        $records = PhoneStock::selectRaw(
+            "PhoneStock.*, ManufactureMaster.Name, ColorMaster.Name, ModelMaster.Name"
+        )
+            ->leftJoin(
+                "ManufactureMaster",
+                "ManufactureMaster.Id",
+                "=",
+                "MakeId"
+            )
+            ->leftJoin("ColorMaster", "ColorMaster.Id", "=", "ColorId")
+            ->leftJoin("ModelMaster", "ModelMaster.Id", "=", "ModelId");
 
         if ($available_stock_only) {
             $records = $records->whereRaw('PhoneStock.Status != "Sold"');
         }
 
-        if ($search_type === 'simple' && $search_text != '') {
+        if ($search_type === "simple" && $search_text != "") {
             $fields_to_search = [
-                'IMEI',
-                'ManufactureMaster.Name',
-                'ColorMaster.Name',
-                'ModelMaster.Name',
-                'Size',
-                'Cost',
-                'StockType',
-                'ModelNo',
-                'Network',
-                'Status',
+                "IMEI",
+                "ManufactureMaster.Name",
+                "ColorMaster.Name",
+                "ModelMaster.Name",
+                "Size",
+                "Cost",
+                "StockType",
+                "ModelNo",
+                "Network",
+                "Status",
                 'DATE_FORMAT(PhoneStock.CreatedDate, "%d-%b-%Y")',
-                'DATE_FORMAT(PhoneStock.UpdatedDate, "%d-%b-%Y")'
+                'DATE_FORMAT(PhoneStock.UpdatedDate, "%d-%b-%Y")',
             ];
 
-            $records = $this->prepareSearch($records, $fields_to_search, $search_text, 'AND');
-        } else if ($search_type === 'advanced' && $this->searchDataPresent($search_data)) {
-            $records = $this->prepareAdvancedSearch($records, json_decode($search_data));
+            $records = $this->prepareSearch(
+                $records,
+                $fields_to_search,
+                $search_text,
+                "AND"
+            );
+        } elseif (
+            $search_type === "advanced" &&
+            $this->searchDataPresent($search_data)
+        ) {
+            $records = $this->prepareAdvancedSearch(
+                $records,
+                json_decode($search_data)
+            );
         }
 
         $records = $records->orderBy($order_by, $order_direction);
@@ -70,8 +87,8 @@ class PhoneStockService
         $total_records = $this->getTotalRecords(clone $records);
 
         return [
-            'total_records' => $total_records,
-            'records' => $records
+            "total_records" => $total_records,
+            "records" => $records,
         ];
     }
 
@@ -83,31 +100,55 @@ class PhoneStockService
     private function prepareAdvancedSearch($model, $search_data = []): Builder
     {
         foreach ($search_data as $column => $search_text) {
-            if ($search_text == '' || is_null($search_text)) {
+            if ($search_text == "" || is_null($search_text)) {
                 continue;
             }
 
             switch ($column) {
-                case 'make':
-                    $model = $this->prepareAdvancedSearchQuery($model, 'ManufactureMaster.Name', $search_text);
+                case "make":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        "ManufactureMaster.Name",
+                        $search_text
+                    );
                     break;
-                case 'model':
-                    $model = $this->prepareAdvancedSearchQuery($model, 'ModelMaster.Name', $search_text);
+                case "model":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        "ModelMaster.Name",
+                        $search_text
+                    );
                     break;
-                case 'color':
-                    $model = $this->prepareAdvancedSearchQuery($model, 'ColorMaster.Name', $search_text);
+                case "color":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        "ColorMaster.Name",
+                        $search_text
+                    );
                     break;
-                case 'IMEI':
-                case 'StockType':
-                case 'Status':
-                case 'Size':
-                case 'Network':
-                case 'ModelNo':
-                case 'Cost':
-                    $model = $this->prepareAdvancedSearchQuery($model, $column, $search_text);
+                case "IMEI":
+                case "StockType":
+                case "Status":
+                case "Size":
+                case "Network":
+                case "ModelNo":
+                case "Cost":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        $column,
+                        $search_text
+                    );
                     break;
-                case 'UpdatedDate':
-                    $model = $this->prepareAdvancedSearchQuery($model, ['DATE_FORMAT(PhoneStock.CreatedDate, "%d-%b-%Y")', 'DATE_FORMAT(PhoneStock.UpdatedDate, "%d-%b-%Y")'], $search_text, 'exact_match');
+                case "UpdatedDate":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        [
+                            'DATE_FORMAT(PhoneStock.CreatedDate, "%d-%b-%Y")',
+                            'DATE_FORMAT(PhoneStock.UpdatedDate, "%d-%b-%Y")',
+                        ],
+                        $search_text,
+                        "exact_match"
+                    );
                     break;
             }
         }
@@ -122,17 +163,24 @@ class PhoneStockService
      */
     public function getSingle(IdRequest $request)
     {
-        $record = PhoneStock::selectRaw('PhoneStock.*, ManufactureMaster.Name, ColorMaster.Name, ModelMaster.Name')
-            ->where('PhoneStock.Id', $request->get('Id'))
-            ->leftJoin('ManufactureMaster', 'ManufactureMaster.Id', '=', 'MakeId')
-            ->leftJoin('ColorMaster', 'ColorMaster.Id', '=', 'ColorId')
-            ->leftJoin('ModelMaster', 'ModelMaster.Id', '=', 'ModelId')
+        $record = PhoneStock::selectRaw(
+            "PhoneStock.*, ManufactureMaster.Name, ColorMaster.Name, ModelMaster.Name"
+        )
+            ->where("PhoneStock.Id", $request->get("Id"))
+            ->leftJoin(
+                "ManufactureMaster",
+                "ManufactureMaster.Id",
+                "=",
+                "MakeId"
+            )
+            ->leftJoin("ColorMaster", "ColorMaster.Id", "=", "ColorId")
+            ->leftJoin("ModelMaster", "ModelMaster.Id", "=", "ModelId")
             ->get();
 
         if ($record->count()) {
             return $record->map->transform()->first();
         } else {
-            throw new RecordNotFoundException;
+            throw new RecordNotFoundException();
         }
     }
 
@@ -145,19 +193,20 @@ class PhoneStockService
     {
         $records_count = 0;
         foreach ($phones as $row) {
-            if ($this->isDuplicateIMEI($row['IMEI'], $row['Id'] ?? 0)) {
+            if ($this->isDuplicateIMEI($row["IMEI"], $row["Id"] ?? 0)) {
                 continue;
             }
 
             //New Record
-            if (empty($row['Id'] ?? 0)) {
-                $record = new PhoneStock;
+            if (empty($row["Id"] ?? 0)) {
+                $record = new PhoneStock();
 
                 $record->InvoiceId = $invoiceId;
-                $record->CreatedBy = session('user_details.UserName');
-            } //Edit Record
+                $record->CreatedBy = session("user_details.UserName");
+            }
+            //Edit Record
             else {
-                $record = PhoneStock::where('Id', $row['Id'])->get();
+                $record = PhoneStock::where("Id", $row["Id"])->get();
 
                 if (!$record->count()) {
                     continue;
@@ -166,17 +215,17 @@ class PhoneStockService
                 $record = $record->first();
             }
 
-            $record->IMEI = $row['IMEI'];
-            $record->MakeId = $row['manufacturer']['Id'];
-            $record->ModelId = $row['model']['Id'];
-            $record->ColorId = $row['color']['Id'];
-            $record->Size = $row['Size'];
-            $record->Cost = number_format($row['Cost'], 2);
-            $record->StockType = $row['StockType'];
-            $record->ModelNo = $row['ModelNo'] ?? '';
-            $record->Network = $row['Network'];
-            $record->Status = $row['Status'];
-            $record->UpdatedBy = session('user_details.UserName');
+            $record->IMEI = $row["IMEI"];
+            $record->MakeId = $row["manufacturer"]["Id"];
+            $record->ModelId = $row["model"]["Id"];
+            $record->ColorId = $row["color"]["Id"];
+            $record->Size = $row["Size"];
+            $record->Cost = number_format($row["Cost"], 2);
+            $record->StockType = $row["StockType"];
+            $record->ModelNo = $row["ModelNo"] ?? "";
+            $record->Network = $row["Network"];
+            $record->Status = $row["Status"];
+            $record->UpdatedBy = session("user_details.UserName");
             $record->IsActive = 1;
             $record->save();
 
@@ -195,19 +244,25 @@ class PhoneStockService
     public function delete(IdRequest $request): bool
     {
         //Check whether the record exist or not
-        $record = PhoneStock::where('Id', $request->get('Id'));
+        $record = PhoneStock::where("Id", $request->get("Id"));
 
         if ($record->get()->count()) {
             $record = $record->first();
 
-            $tables_to_check = ['SalesStock'];
-            if ($this->foreignReferenceFound($tables_to_check, 'IMEI', $record->IMEI)) {
-                throw new ReferenceException;
+            $tables_to_check = ["SalesStock"];
+            if (
+                $this->foreignReferenceFound(
+                    $tables_to_check,
+                    "IMEI",
+                    $record->IMEI
+                )
+            ) {
+                throw new ReferenceException();
             }
 
             return true;
         } else {
-            throw new RecordNotFoundException;
+            throw new RecordNotFoundException();
         }
     }
 
@@ -217,20 +272,21 @@ class PhoneStockService
      * @return bool
      * @throws RecordNotFoundException
      */
-    public function changePhoneAvailabilityStatus(string $imei, string $status = PhoneStock::STATUS_IN_STOCK): bool
-    {
-        $record = PhoneStock::where('IMEI', $imei)
-            ->get();
+    public function changePhoneAvailabilityStatus(
+        string $imei,
+        string $status = PhoneStock::STATUS_IN_STOCK
+    ): bool {
+        $record = PhoneStock::where("IMEI", $imei)->get();
 
         if ($record->count()) {
             $record = $record->first();
             $record->Status = $status;
-            $record->UpdatedBy = session('user_details.UserName');
+            $record->UpdatedBy = session("user_details.UserName");
             $record->save();
 
             return true;
         } else {
-            throw new RecordNotFoundException;
+            throw new RecordNotFoundException();
         }
     }
 
@@ -241,8 +297,13 @@ class PhoneStockService
      */
     public function checkDuplicateIMEI(IMEIRequest $request): bool
     {
-        if ($this->isDuplicateIMEI($request->get('IMEI'), $request->get('Id', 0))) {
-            throw new DuplicateIMEIException;
+        if (
+            $this->isDuplicateIMEI(
+                $request->get("IMEI"),
+                $request->get("Id", 0)
+            )
+        ) {
+            throw new DuplicateIMEIException();
         } else {
             return false;
         }
@@ -257,17 +318,17 @@ class PhoneStockService
     {
         //Check whether the record exists or not
         if (!empty($id)) {
-            $record = PhoneStock::where('Id', $id)->get();
+            $record = PhoneStock::where("Id", $id)->get();
 
             if (!$record->count()) {
                 return false;
             }
         }
 
-        $record = PhoneStock::whereRaw('LOWER(IMEI) = ?', [strtolower($imei)]);
+        $record = PhoneStock::whereRaw("LOWER(IMEI) = ?", [strtolower($imei)]);
 
         if (!empty($id)) {
-            $record = $record->where('id', '!=', $id);
+            $record = $record->where("id", "!=", $id);
         }
 
         $record = $record->get();
@@ -277,9 +338,11 @@ class PhoneStockService
 
     public function getPhonesStatsForStatus()
     {
-        $records = PhoneStock::selectRaw('Status, COUNT(*) as stock_total, SUM(Cost) as cost_total')
-            ->groupBy('Status')
-            ->orderBy('Status')
+        $records = PhoneStock::selectRaw(
+            "Status, COUNT(*) as stock_total, SUM(Cost) as cost_total"
+        )
+            ->groupBy("Status")
+            ->orderBy("Status")
             ->get();
 
         return $records->all();

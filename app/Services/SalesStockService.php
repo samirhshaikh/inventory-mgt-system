@@ -25,23 +25,27 @@ class SalesStockService
         foreach ($phones as $row) {
             try {
                 //Change the status in phonestock
-                $phonestock_service->changePhoneAvailabilityStatus($row['IMEI'], PhoneStock::STATUS_SOLD);
+                $phonestock_service->changePhoneAvailabilityStatus(
+                    $row["IMEI"],
+                    PhoneStock::STATUS_SOLD
+                );
 
                 //New Record
-                if (empty($row['Id'] ?? 0)) {
+                if (empty($row["Id"] ?? 0)) {
                     $stocklog_service = new StockLogService();
                     $stocklog_service->add(
-                        $row['IMEI'],
+                        $row["IMEI"],
                         StockLog::ACTIVITY_SOLD
                     );
 
                     $record = new SalesStock();
 
                     $record->InvoiceId = $invoiceId;
-                    $record->CreatedBy = session('user_details.UserName');
-                } //Edit Record
+                    $record->CreatedBy = session("user_details.UserName");
+                }
+                //Edit Record
                 else {
-                    $record = SalesStock::where('Id', $row['Id'])->get();
+                    $record = SalesStock::where("Id", $row["Id"])->get();
 
                     if (!$record->count()) {
                         continue;
@@ -50,11 +54,11 @@ class SalesStockService
                     $record = $record->first();
                 }
 
-                $record->IMEI = $row['IMEI'];
+                $record->IMEI = $row["IMEI"];
                 $record->Qty = 1;
-                $record->Cost = number_format($row['Cost'], 2);
-                $record->Discount = number_format($row['Discount'] ?? 0, 2);
-                $record->UpdatedBy = session('user_details.UserName');
+                $record->Cost = number_format($row["Cost"], 2);
+                $record->Discount = number_format($row["Discount"] ?? 0, 2);
+                $record->UpdatedBy = session("user_details.UserName");
                 $record->save();
 
                 $records_count++;

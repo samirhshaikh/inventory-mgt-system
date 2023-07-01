@@ -2,7 +2,7 @@
     <div
         class="flex h-full border border-product-color"
         :class="{
-            'bg-gray-800 text-white': dark_mode
+            'bg-gray-800 text-white': dark_mode,
         }"
     >
         <div
@@ -103,21 +103,21 @@ import VueJsonPretty from "vue-json-pretty";
 
 export default {
     components: {
-        VueJsonPretty
+        VueJsonPretty,
     },
 
     data() {
         return {
-            session: {}
+            session: {},
         };
     },
 
     mounted() {
         axios.get("/getDebugInfo").then(
-            response => {
+            (response) => {
                 this.session = response.data.response.session;
             },
-            error => {
+            (error) => {
                 this.error_message = "Some error occurred. Please try again.";
             }
         );
@@ -125,10 +125,10 @@ export default {
 
     computed: {
         ...mapState({
-            dark_mode: state => state.framework.dark_mode,
-            local_settings: state => state.local_settings,
-            errors: state => state.errors
-        })
-    }
+            dark_mode: (state) => state.framework.dark_mode,
+            local_settings: (state) => state.local_settings,
+            errors: (state) => state.errors,
+        }),
+    },
 };
 </script>

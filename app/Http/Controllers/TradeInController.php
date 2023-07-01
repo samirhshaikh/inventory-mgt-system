@@ -14,11 +14,15 @@ class TradeInController extends BaseController
         $tradein_service = new TradeInService();
 
         try {
-            $tradein_service->delete($request->get('purchase_id'));
+            $tradein_service->delete($request->get("purchase_id"));
 
             return $this->sendOK([], self::RECORD_DELETED);
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         }
     }
 }

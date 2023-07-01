@@ -6,42 +6,42 @@ const state = {
     sorting: {
         users: {
             column: "UpdatedDate",
-            direction: "desc"
+            direction: "desc",
         },
         handsets: {
             column: "UpdatedDate",
-            direction: "desc"
+            direction: "desc",
         },
         handset_colors: {
             column: "UpdatedDate",
-            direction: "desc"
+            direction: "desc",
         },
         handset_models: {
             column: "UpdatedDate",
-            direction: "desc"
+            direction: "desc",
         },
         phonestock: {
             column: "UpdatedDate",
-            direction: "desc"
+            direction: "desc",
         },
         suppliers: {
             column: "UpdatedDate",
-            direction: "desc"
+            direction: "desc",
         },
         sales: {
             column: "UpdatedDate",
-            direction: "desc"
+            direction: "desc",
         },
         purchase: {
             column: "UpdatedDate",
-            direction: "desc"
-        }
+            direction: "desc",
+        },
     },
-    meta: {}
+    meta: {},
 };
 
 const getters = {
-    columns_in_active_tab: state => active_tab => {
+    columns_in_active_tab: (state) => (active_tab) => {
         if (typeof state.meta[active_tab] !== "undefined") {
             return _.cloneDeep(state.meta[active_tab].columns);
         }
@@ -49,16 +49,16 @@ const getters = {
         return [];
     },
 
-    sorting: state => tab => {
+    sorting: (state) => (tab) => {
         if (state.sorting.hasOwnProperty(tab)) {
             return state.sorting[tab];
         }
 
         return {
             column: null,
-            direction: ""
+            direction: "",
         };
-    }
+    },
 };
 
 const actions = {
@@ -68,7 +68,7 @@ const actions = {
 
     setSorting({ commit }, payload) {
         commit("setSorting", payload);
-    }
+    },
 };
 
 const mutations = {
@@ -109,10 +109,10 @@ const mutations = {
         } else {
             state.sorting[payload.tab] = {
                 column: payload.column,
-                direction: 'asc'
+                direction: "asc",
             };
         }
-    }
+    },
 };
 
 export default {
@@ -120,5 +120,5 @@ export default {
     state,
     getters,
     actions,
-    mutations
+    mutations,
 };

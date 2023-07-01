@@ -8,16 +8,16 @@ class HandsetModelsController extends ObjectTypeNameController
 {
     protected function getModel()
     {
-        return new HandsetModels;
+        return new HandsetModels();
     }
 
     protected function getRecordName()
     {
-        return 'Model';
+        return "Model";
     }
 
     protected function getColumnIdInReferenceTables()
     {
-        return 'ModelId';
+        return "ModelId";
     }
 }

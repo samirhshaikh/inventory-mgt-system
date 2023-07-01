@@ -18,28 +18,42 @@ class HandsetManufacturersController extends BaseDatatableController
     {
         $table = new HandsetManufacturersDatatable();
 
-        $order_by = $request->get('order_by', '') == ''
-            ? session('app_settings.datatable.sorting.handset_manufacturers.column', Arr::get($table->options(), 'sorting.default'))
-            : $request->get('order_by');
-        $order_direction = $request->get('order_by', '') == ''
-            ? session('app_settings.datatable.sorting.handset_manufacturers.direction', Arr::get($table->options(), 'sorting.direction'))
-            : 'asc';
+        $order_by =
+            $request->get("order_by", "") == ""
+                ? session(
+                    "app_settings.datatable.sorting.handset_manufacturers.column",
+                    Arr::get($table->options(), "sorting.default")
+                )
+                : $request->get("order_by");
+        $order_direction =
+            $request->get("order_by", "") == ""
+                ? session(
+                    "app_settings.datatable.sorting.handset_manufacturers.direction",
+                    Arr::get($table->options(), "sorting.direction")
+                )
+                : "asc";
 
-        $object_type_name_service = new ObjectTypeNameService(new HandsetManufacturers, 'ColorId');
+        $object_type_name_service = new ObjectTypeNameService(
+            new HandsetManufacturers(),
+            "ColorId"
+        );
 
-        list('total_records' => $total_records, 'records' => $records) = $object_type_name_service->getAll(
+        list(
+            "total_records" => $total_records,
+            "records" => $records,
+        ) = $object_type_name_service->getAll(
             $order_by,
             $order_direction,
-            $request->get('search_text', '') ?? ''
+            $request->get("search_text", "") ?? ""
         );
 
         return $this->prepareRecordsOutput(
             $table,
             $records,
             $total_records,
-            (int)$request->get('page_no', 1),
-            $request->get('search_text', ''),
-            (int)$request->get('get_all_records', 0)
+            (int) $request->get("page_no", 1),
+            $request->get("search_text", ""),
+            (int) $request->get("get_all_records", 0)
         );
     }
 }

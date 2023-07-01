@@ -4,7 +4,9 @@
             @click.native="edit"
             class="text-white bg-green-600"
             :class="{
-                hidden: !$page.user_details.IsAdmin || row['row_id'] == current_row_id
+                hidden:
+                    !$page.user_details.IsAdmin ||
+                    row['row_id'] == current_row_id,
             }"
         >
             Edit
@@ -13,7 +15,11 @@
             @click.native="removeRecord"
             class="text-white bg-red-400 ml-2"
             :class="{
-                hidden: !$page.user_details.IsAdmin || row['Id'] == '' || row['row_id'] == current_row_id || row['Status'] == this.phonestock.STATUS_SOLD
+                hidden:
+                    !$page.user_details.IsAdmin ||
+                    row['Id'] == '' ||
+                    row['row_id'] == current_row_id ||
+                    row['Status'] == this.phonestock.STATUS_SOLD,
             }"
             split="border-white"
         >
@@ -24,7 +30,7 @@
 
 <script>
 import Confirm from "../../../components/Confirm.vue";
-import {datatable_cell} from "../datatable_cell";
+import { datatable_cell } from "../datatable_cell";
 
 export default {
     mixins: [datatable_cell],
@@ -32,13 +38,13 @@ export default {
     props: {
         current_row_id: {
             type: String,
-            default: ""
-        }
+            default: "",
+        },
     },
 
     methods: {
         edit() {
-            this.$emit('editRecord', this.row);
+            this.$emit("editRecord", this.row);
         },
 
         removeRecord() {
@@ -51,15 +57,15 @@ export default {
                         _.lowerCase(this.options.record_name) +
                         "?",
                     yes_handler: () => {
-                        this.$emit('removeRecord', this.row["row_id"]);
-                    }
+                        this.$emit("removeRecord", this.row["row_id"]);
+                    },
                 },
                 {
                     width: "350px",
-                    height: "auto"
+                    height: "auto",
                 }
             );
-        }
-    }
+        },
+    },
 };
 </script>

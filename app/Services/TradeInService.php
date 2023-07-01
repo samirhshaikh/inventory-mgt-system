@@ -14,14 +14,14 @@ class TradeInService
      */
     public function getSingleTradeIn(string $purchaseInvoiceId)
     {
-        $record = TradeIn::where('PurchaseInvoiceId', $purchaseInvoiceId)
-            ->with('purchase')
+        $record = TradeIn::where("PurchaseInvoiceId", $purchaseInvoiceId)
+            ->with("purchase")
             ->get();
 
         if ($record->count()) {
             return $record->map->transform()->first();
         } else {
-            throw new RecordNotFoundException;
+            throw new RecordNotFoundException();
         }
     }
 
@@ -51,12 +51,11 @@ class TradeInService
         try {
             $this->getSingleTradeIn($purchaseInvoiceId);
 
-            TradeIn::where('PurchaseInvoiceId', $purchaseInvoiceId)
-                ->delete();
+            TradeIn::where("PurchaseInvoiceId", $purchaseInvoiceId)->delete();
 
             return true;
         } catch (RecordNotFoundException $e) {
-            throw new RecordNotFoundException;
+            throw new RecordNotFoundException();
         }
     }
 }

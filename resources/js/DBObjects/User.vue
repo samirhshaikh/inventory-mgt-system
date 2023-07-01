@@ -2,7 +2,7 @@
     <div
         class="flex h-full border border-product-color"
         :class="{
-            'bg-gray-700 text-white': dark_mode
+            'bg-gray-700 text-white': dark_mode,
         }"
     >
         <div class="flex-grow flex flex-col justify-between">
@@ -11,14 +11,14 @@
                     class="flex border-b border-product-color-lighter mb-4 pb-1"
                     :class="{
                         'border-product-color-lighter': dark_mode,
-                        'border-product-color': !dark_mode
+                        'border-product-color': !dark_mode,
                     }"
                 >
                     <h1
                         class="text-xl pt-2 ml-1 w-full"
                         :class="{
                             'text-product-color-lighter': dark_mode,
-                            'text-product-color': !dark_mode
+                            'text-product-color': !dark_mode,
                         }"
                     >
                         User Details
@@ -42,7 +42,8 @@
                             class="ml-1"
                             :class="{
                                 'bg-green-600': valid_data,
-                                'bg-gray-600 text-gray-500 cursor-not-allowed': !valid_data
+                                'bg-gray-600 text-gray-500 cursor-not-allowed':
+                                    !valid_data,
                             }"
                         >
                             Save
@@ -57,12 +58,15 @@
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Username
                             </label>
-                            <div class="block flex flex-row" v-if="edit_id == ''">
+                            <div
+                                class="block flex flex-row"
+                                v-if="edit_id == ''"
+                            >
                                 <input
                                     class="w-48 generic_input"
                                     type="text"
@@ -70,7 +74,8 @@
                                     v-on:blur="isDuplicateName"
                                     autocomplete="off"
                                     :class="{
-                                        required_field: name_validation_message != ''
+                                        required_field:
+                                            name_validation_message != '',
                                     }"
                                     ref="user_name"
                                 />
@@ -85,7 +90,7 @@
                                 class="block form_value_label"
                                 :class="{
                                     'text-gray-600': !dark_mode,
-                                    'text-product-color-lighter': dark_mode
+                                    'text-product-color-lighter': dark_mode,
                                 }"
                                 v-else
                             >
@@ -94,7 +99,9 @@
                             <p
                                 class="form_field_message"
                                 :class="{
-                                    hidden: name_validation_message == '' || name_validation_message == 'Required'
+                                    hidden:
+                                        name_validation_message == '' ||
+                                        name_validation_message == 'Required',
                                 }"
                             >
                                 {{ name_validation_message }}
@@ -102,13 +109,16 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-wrap -mx-3 form_field_container" v-if="edit_id == ''">
+                    <div
+                        class="flex flex-wrap -mx-3 form_field_container"
+                        v-if="edit_id == ''"
+                    >
                         <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <label
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Password
@@ -120,7 +130,10 @@
                                 placeholder="******************"
                                 autocomplete="off"
                                 :class="{
-                                    required_field: (row_keys.indexOf('Password') < 0 || row['Password'] == '') && edit_id == ''
+                                    required_field:
+                                        (row_keys.indexOf('Password') < 0 ||
+                                            row['Password'] == '') &&
+                                        edit_id == '',
                                 }"
                             />
                         </div>
@@ -130,7 +143,7 @@
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Confirm Password
@@ -142,7 +155,11 @@
                                 placeholder="******************"
                                 autocomplete="off"
                                 :class="{
-                                    required_field: (row_keys.indexOf('Confirm_Password') < 0 || row['Confirm_Password'] == '') && edit_id == ''
+                                    required_field:
+                                        (row_keys.indexOf('Confirm_Password') <
+                                            0 ||
+                                            row['Confirm_Password'] == '') &&
+                                        edit_id == '',
                                 }"
                             />
                             <p
@@ -150,7 +167,7 @@
                                 :class="{
                                     hidden:
                                         row['Confirm_Password'] ==
-                                            row['Password'] && edit_id == ''
+                                            row['Password'] && edit_id == '',
                                 }"
                             >
                                 Confirm Password should match with Password
@@ -164,7 +181,7 @@
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Is Admin
@@ -181,7 +198,7 @@
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Is Active
@@ -195,13 +212,16 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-wrap -mx-3 form_field_container" v-if="edit_id != ''">
+                    <div
+                        class="flex flex-wrap -mx-3 form_field_container"
+                        v-if="edit_id != ''"
+                    >
                         <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <label
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Created By
@@ -210,7 +230,7 @@
                                 class="block form_value_label"
                                 :class="{
                                     'text-gray-600': !dark_mode,
-                                    'text-product-color-lighter': dark_mode
+                                    'text-product-color-lighter': dark_mode,
                                 }"
                             >
                                 {{ row["CreatedBy"] }}
@@ -221,7 +241,7 @@
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Creation Date
@@ -230,7 +250,7 @@
                                 class="block form_value_label"
                                 :class="{
                                     'text-gray-600': !dark_mode,
-                                    'text-product-color-lighter': dark_mode
+                                    'text-product-color-lighter': dark_mode,
                                 }"
                             >
                                 {{ row["CreatedDate"] }}
@@ -238,13 +258,16 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-wrap -mx-3 form_field_container" v-if="edit_id != ''">
+                    <div
+                        class="flex flex-wrap -mx-3 form_field_container"
+                        v-if="edit_id != ''"
+                    >
                         <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <label
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Updated By
@@ -253,7 +276,7 @@
                                 class="block form_value_label"
                                 :class="{
                                     'text-gray-600': !dark_mode,
-                                    'text-product-color-lighter': dark_mode
+                                    'text-product-color-lighter': dark_mode,
                                 }"
                             >
                                 {{ row["UpdatedBy"] }}
@@ -264,7 +287,7 @@
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Updated Date
@@ -273,7 +296,7 @@
                                 class="block form_value_label"
                                 :class="{
                                     'text-gray-600': !dark_mode,
-                                    'text-product-color-lighter': dark_mode
+                                    'text-product-color-lighter': dark_mode,
                                 }"
                             >
                                 {{ row["UpdatedDate"] }}
@@ -292,7 +315,7 @@
 import { mapState, mapActions } from "vuex";
 import moment from "moment";
 import Button from "../components/Button";
-import {notifications} from "../Helpers/notifications";
+import { notifications } from "../Helpers/notifications";
 
 export default {
     mixins: [notifications],
@@ -300,12 +323,12 @@ export default {
     props: {
         options: {
             type: Object,
-            default: () => ({})
+            default: () => ({}),
         },
         edit_id: {
             type: String,
-            default: ""
-        }
+            default: "",
+        },
     },
 
     data() {
@@ -318,7 +341,7 @@ export default {
             saving_data: false,
             checking_duplicate_name: false,
             duplicate_name: false,
-            loading: false
+            loading: false,
         };
     },
 
@@ -326,7 +349,7 @@ export default {
         valid_data() {
             if (this.edit_id == "") {
                 if (
-                    this.name_validation_message != '' ||
+                    this.name_validation_message != "" ||
                     this.row_keys.indexOf("Password") < 0 ||
                     this.row_keys.indexOf("Confirm_Password") < 0 ||
                     this.row["Password"] == "" ||
@@ -358,9 +381,9 @@ export default {
         },
 
         ...mapState({
-            dark_mode: state => state.framework.dark_mode,
-            expanded_sidebar: state => state.framework.expanded_sidebar
-        })
+            dark_mode: (state) => state.framework.dark_mode,
+            expanded_sidebar: (state) => state.framework.expanded_sidebar,
+        }),
     },
 
     mounted() {
@@ -371,11 +394,11 @@ export default {
             axios
                 .get(route("users.get-single"), {
                     params: {
-                        username: this.edit_id
-                    }
+                        username: this.edit_id,
+                    },
                 })
                 .then(
-                    response => {
+                    (response) => {
                         let record = response.data.response.record;
                         this.is_admin = record.IsAdmin;
                         this.is_active = record.IsActive;
@@ -384,7 +407,7 @@ export default {
 
                         this.loading = false;
                     },
-                    error => {
+                    (error) => {
                         this.loading = false;
                     }
                 );
@@ -418,12 +441,17 @@ export default {
 
             axios
                 .post(route("users.save"), this.row)
-                .then(response => {
+                .then((response) => {
                     if (response.data.message == "record_saved") {
                         this.$notify({
                             group: "messages",
                             title: "Success",
-                            text: "User " + (this.row["operation"] == "add" ? "added" : "edited") + " successfully."
+                            text:
+                                "User " +
+                                (this.row["operation"] == "add"
+                                    ? "added"
+                                    : "edited") +
+                                " successfully.",
                         });
 
                         this.refreshData(this.options.id);
@@ -433,7 +461,7 @@ export default {
 
                     this.$modal.hide(this.$parent.name);
                 })
-                .catch(error => {
+                .catch((error) => {
                     this.saving_data = false;
 
                     if (error.response.data.message == "record_not_found") {
@@ -441,16 +469,24 @@ export default {
                             group: "messages",
                             title: "Error",
                             type: "error",
-                            text: this.formatMessage(error.response.data, this.options.record_name)
+                            text: this.formatMessage(
+                                error.response.data,
+                                this.options.record_name
+                            ),
                         });
-                    } else if (error.response.data.message == "duplicate_name") {
+                    } else if (
+                        error.response.data.message == "duplicate_name"
+                    ) {
                         this.duplicate_name = true;
                     }
                 });
         },
 
         isDuplicateName() {
-            if (this.row_keys.indexOf("UserName") < 0 || this.row["UserName"] == "") {
+            if (
+                this.row_keys.indexOf("UserName") < 0 ||
+                this.row["UserName"] == ""
+            ) {
                 return false;
             }
 
@@ -459,32 +495,28 @@ export default {
 
             axios
                 .post(route("users.check-duplicate-name"), {
-                    username: this.row["UserName"]
+                    username: this.row["UserName"],
                 })
-                .then(
-                    response => {
-                        this.checking_duplicate_name = false;
+                .then((response) => {
+                    this.checking_duplicate_name = false;
 
-                        this.duplicate_name = false;
+                    this.duplicate_name = false;
 
-                        this.checking_duplicate_name = false;
+                    this.checking_duplicate_name = false;
+                })
+                .catch((error) => {
+                    this.checking_duplicate_name = false;
+
+                    if (error.response.data.message == "duplicate_name") {
+                        this.duplicate_name = true;
                     }
-                )
-                .catch(
-                    error => {
-                        this.checking_duplicate_name = false;
-
-                        if (error.response.data.message == "duplicate_name") {
-                            this.duplicate_name = true;
-                        }
-                    }
-                );
+                });
         },
 
         ...mapActions({
             refreshData: "framework/refreshData",
-            addError: "errors/addError"
-        })
-    }
+            addError: "errors/addError",
+        }),
+    },
 };
 </script>

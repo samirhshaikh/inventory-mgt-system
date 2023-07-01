@@ -2,7 +2,7 @@
     <div
         class="flex h-full border border-product-color"
         :class="{
-            'bg-gray-700 text-white': dark_mode
+            'bg-gray-700 text-white': dark_mode,
         }"
     >
         <div
@@ -39,7 +39,7 @@
                     class="border-b border-product-color-lighter mb-4 pb-1 text-xl"
                     :class="{
                         'text-product-color-lighter': dark_mode,
-                        'text-product-color': !dark_mode
+                        'text-product-color': !dark_mode,
                     }"
                 >
                     Settings
@@ -47,10 +47,10 @@
 
                 <div class="flex items-center">
                     <toggle-button
-                    :value="dark_mode"
-                    :labels="true"
-                    @change="toggleDarkmode()"
-                    color="#1380B6"
+                        :value="dark_mode"
+                        :labels="true"
+                        @change="toggleDarkmode()"
+                        color="#1380B6"
                     /><span class="ml-2">Dark Mode</span>
                 </div>
 
@@ -80,7 +80,7 @@ export default {
     data() {
         return {
             version: require("../../../package.json").version,
-            page_sizes: [10, 20, 30, 40, 50]
+            page_sizes: [10, 20, 30, 40, 50],
         };
     },
 
@@ -90,9 +90,9 @@ export default {
         },
 
         ...mapActions({
-            toggleDarkmode: 'framework/toggleDarkmode',
-            setPagesize: 'framework/setPagesize'
-        })
+            toggleDarkmode: "framework/toggleDarkmode",
+            setPagesize: "framework/setPagesize",
+        }),
     },
 
     computed: {
@@ -101,10 +101,10 @@ export default {
         },
 
         ...mapState({
-            dark_mode: state => state.framework.dark_mode,
-            expanded_sidebar: state => state.db.expanded_sidebar,
-            page_size: state => state.framework.page_size,
-        })
-    }
+            dark_mode: (state) => state.framework.dark_mode,
+            expanded_sidebar: (state) => state.db.expanded_sidebar,
+            page_size: (state) => state.framework.page_size,
+        }),
+    },
 };
 </script>

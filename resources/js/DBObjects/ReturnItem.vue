@@ -2,7 +2,7 @@
     <div
         class="flex h-full border border-product-color"
         :class="{
-            'bg-gray-700 text-white': dark_mode
+            'bg-gray-700 text-white': dark_mode,
         }"
     >
         <div class="flex-grow flex flex-col justify-between">
@@ -11,14 +11,14 @@
                     class="flex border-b border-product-color-lighter mb-4 pb-1"
                     :class="{
                         'border-product-color-lighter': dark_mode,
-                        'border-product-color': !dark_mode
+                        'border-product-color': !dark_mode,
                     }"
                 >
                     <h1
                         class="text-xl pt-2 ml-1 w-full"
                         :class="{
                             'text-product-color-lighter': dark_mode,
-                            'text-product-color': !dark_mode
+                            'text-product-color': !dark_mode,
                         }"
                     >
                         Return Item
@@ -42,7 +42,8 @@
                             class="ml-1"
                             :class="{
                                 'bg-green-600': valid_data,
-                                'bg-gray-600 text-gray-500 cursor-not-allowed': !valid_data
+                                'bg-gray-600 text-gray-500 cursor-not-allowed':
+                                    !valid_data,
                             }"
                         >
                             Submit
@@ -56,17 +57,17 @@
                             <label
                                 class="block form_field_label"
                                 :class="{
-                                   'text-gray-700': !dark_mode,
-                                   'text-white': dark_mode
-                               }"
+                                    'text-gray-700': !dark_mode,
+                                    'text-white': dark_mode,
+                                }"
                             >
                                 Invoice No
                             </label>
                             <label
                                 class="block form_value_label"
                                 :class="{
-                                   'text-gray-600': !dark_mode,
-                                   'text-product-color-lighter': dark_mode
+                                    'text-gray-600': !dark_mode,
+                                    'text-product-color-lighter': dark_mode,
                                 }"
                             >
                                 {{ SalesInvoiceNo }}
@@ -74,14 +75,13 @@
                         </div>
                     </div>
 
-
                     <div class="flex flex-wrap -mx-3 form_field_container">
                         <div class="w-1/2 px-3">
                             <label
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 IMEI
@@ -90,7 +90,7 @@
                                 class="block form_value_label"
                                 :class="{
                                     'text-gray-600': !dark_mode,
-                                    'text-product-color-lighter': dark_mode
+                                    'text-product-color-lighter': dark_mode,
                                 }"
                             >
                                 {{ IMEI }}
@@ -102,7 +102,7 @@
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Returned Date
@@ -123,7 +123,7 @@
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Comments
@@ -147,7 +147,7 @@
 import { mapState, mapActions } from "vuex";
 import moment from "moment";
 import Button from "../components/Button";
-import {notifications} from "../Helpers/notifications";
+import { notifications } from "../Helpers/notifications";
 
 export default {
     mixins: [notifications],
@@ -155,19 +155,19 @@ export default {
     props: {
         SalesInvoiceId: {
             type: Number,
-            required: true
+            required: true,
         },
         SalesInvoiceNo: {
             type: String,
-            required: true
+            required: true,
         },
         IMEI: {
             type: String,
-            required: true
+            required: true,
         },
         refresh: {
-            type: Function
-        }
+            type: Function,
+        },
     },
 
     data() {
@@ -176,15 +176,13 @@ export default {
             ReturnedDate: moment().format("D-MMM-YYYY"),
 
             saving_data: false,
-            loading: false
+            loading: false,
         };
     },
 
     computed: {
         valid_data() {
-            if (
-                this.ReturnedDate == ""
-            ) {
+            if (this.ReturnedDate == "") {
                 return false;
             }
 
@@ -192,14 +190,12 @@ export default {
         },
 
         ...mapState({
-            dark_mode: state => state.framework.dark_mode,
-            expanded_sidebar: state => state.framework.expanded_sidebar
-        })
+            dark_mode: (state) => state.framework.dark_mode,
+            expanded_sidebar: (state) => state.framework.expanded_sidebar,
+        }),
     },
 
-    mounted() {
-
-    },
+    mounted() {},
 
     methods: {
         save() {
@@ -218,14 +214,14 @@ export default {
 
             axios
                 .post(route("sale.return-item"), data)
-                .then(response => {
+                .then((response) => {
                     this.saving_data = false;
 
                     if (response.data.message == "record_saved") {
                         this.$notify({
                             group: "messages",
                             title: "Success",
-                            text: "Item returned successfully."
+                            text: "Item returned successfully.",
                         });
 
                         this.refresh(this.IMEI);
@@ -236,11 +232,11 @@ export default {
                             group: "messages",
                             title: "Error",
                             type: "error",
-                            text: this.formatMessage()
+                            text: this.formatMessage(),
                         });
                     }
                 })
-                .catch(error => {
+                .catch((error) => {
                     this.saving_data = false;
 
                     if (error.response.data.message == "record_not_found") {
@@ -248,21 +244,24 @@ export default {
                             group: "messages",
                             title: "Error",
                             type: "error",
-                            text: this.formatMessage(error.response.data.message, 'Item')
+                            text: this.formatMessage(
+                                error.response.data.message,
+                                "Item"
+                            ),
                         });
                     } else {
                         this.$notify({
                             group: "messages",
                             title: "Error",
                             type: "error",
-                            text: this.formatMessage()
+                            text: this.formatMessage(),
                         });
                     }
                 });
         },
 
         dateSelected(date) {
-            if (date != '' && date != null) {
+            if (date != "" && date != null) {
                 this.ReturnedDate = date;
             } else {
                 this.ReturnedDate = "";
@@ -275,8 +274,8 @@ export default {
 
         ...mapActions({
             refreshData: "framework/refreshData",
-            addError: "errors/addError"
-        })
-    }
+            addError: "errors/addError",
+        }),
+    },
 };
 </script>

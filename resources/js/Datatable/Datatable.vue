@@ -14,9 +14,11 @@
                             header.th,
                             header.td,
                             {
-                                'bg-gray-200 text-gray-700 hover:bg-gray-300': !dark_mode,
-                                'bg-gray-900 text-gray-500 hover:bg-gray-800': dark_mode
-                            }
+                                'bg-gray-200 text-gray-700 hover:bg-gray-300':
+                                    !dark_mode,
+                                'bg-gray-900 text-gray-500 hover:bg-gray-800':
+                                    dark_mode,
+                            },
                         ]"
                         :colspan="header.column_span"
                     >
@@ -25,7 +27,10 @@
                             class="flex cursor-pointer select-none"
                             @click="setTableSort(header)"
                         >
-                            <div class="mr-1" v-if="current_sorting.column == header.key">
+                            <div
+                                class="mr-1"
+                                v-if="current_sorting.column == header.key"
+                            >
                                 <FA
                                     v-if="current_sorting.direction == 'asc'"
                                     :icon="['fas', 'arrow-down']"
@@ -62,13 +67,29 @@
             </tfoot>
 
             <tbody>
-                <Row type="body" v-if="error == true || loading == true || data.length === 0">
+                <Row
+                    type="body"
+                    v-if="error == true || loading == true || data.length === 0"
+                >
                     <td :colspan="active_columns.length">
-                        <DatatableAlert type="info" v-if="loading == true">Loading...</DatatableAlert>
+                        <DatatableAlert type="info" v-if="loading == true"
+                            >Loading...</DatatableAlert
+                        >
 
-                        <DatatableAlert type="error" v-if="error == true">Some error occurred. Please try again</DatatableAlert>
+                        <DatatableAlert type="error" v-if="error == true"
+                            >Some error occurred. Please try
+                            again</DatatableAlert
+                        >
 
-                        <DatatableAlert type="info" v-if="data.length == 0 && loading == false && error == false">No rows found.</DatatableAlert>
+                        <DatatableAlert
+                            type="info"
+                            v-if="
+                                data.length == 0 &&
+                                loading == false &&
+                                error == false
+                            "
+                            >No rows found.</DatatableAlert
+                        >
                     </td>
                 </Row>
             </tbody>
@@ -80,8 +101,8 @@
                         rowClass(row),
                         {
                             'hover:bg-gray-300': !dark_mode,
-                            'hover:bg-gray-700': dark_mode
-                        }
+                            'hover:bg-gray-700': dark_mode,
+                        },
                     ]"
                     :key="row.hash"
                 >
@@ -95,8 +116,8 @@
                             cellClass(row, header),
                             {
                                 'border-gray-200': !dark_mode,
-                                'border-gray-700': dark_mode
-                            }
+                                'border-gray-700': dark_mode,
+                            },
                         ]"
                         :colspan="header.column_span"
                         :key="index"
@@ -136,9 +157,11 @@
                             child_header.th,
                             child_header.td,
                             {
-                                'bg-gray-200 text-gray-700 hover:bg-gray-300': !dark_mode,
-                                'bg-gray-900 text-gray-500 hover:bg-gray-800': dark_mode
-                            }
+                                'bg-gray-200 text-gray-700 hover:bg-gray-300':
+                                    !dark_mode,
+                                'bg-gray-900 text-gray-500 hover:bg-gray-800':
+                                    dark_mode,
+                            },
                         ]"
                         :colspan="child_header.column_span"
                     >
@@ -155,14 +178,16 @@
                         rowClass(child_row),
                         {
                             'hover:bg-gray-300': !dark_mode,
-                            'hover:bg-gray-700': dark_mode
-                        }
+                            'hover:bg-gray-700': dark_mode,
+                        },
                     ]"
                     :key="child_row.hash"
                     v-show="expanded_row_id == row.Id"
                 >
                     <td
-                        v-for="(child_header, child_index) in active_child_columns"
+                        v-for="(
+                            child_header, child_index
+                        ) in active_child_columns"
                         v-if="child_header.enabled"
                         class="px-1 lg:px-2 border-b border-gray-200 z-0"
                         :class="[
@@ -171,8 +196,8 @@
                             cellClass(child_row, child_header),
                             {
                                 'border-gray-200': !dark_mode,
-                                'border-gray-700': dark_mode
-                            }
+                                'border-gray-700': dark_mode,
+                            },
                         ]"
                         :colspan="child_header.column_span"
                         :key="child_index"
@@ -197,7 +222,6 @@
                         ></span>
                     </td>
                 </Row>
-
             </tbody>
         </table>
     </div>
@@ -210,60 +234,60 @@ export default {
     props: {
         columns: {
             type: Array,
-            default: () => ([])
+            default: () => [],
         },
         child_columns: {
             type: Array,
-            default: () => ([])
+            default: () => [],
         },
         options: {
             type: Object,
-            default: () => ({})
+            default: () => ({}),
         },
         search_text: {
             type: String,
-            default: ''
+            default: "",
         },
         page_no: {
             type: Number,
-            default: 1
+            default: 1,
         },
         source_data: {
             type: Array,
-            default: () => ([])
+            default: () => [],
         },
         load_data_from_server: {
             type: Boolean,
-            default: true
+            default: true,
         },
         current_row_id: {
             type: String,
-            default: ""
+            default: "",
         },
         expanded_row_id: {
             type: Number,
-            default: 0
+            default: 0,
         },
         advanced_search_data: {
             type: Object,
-            default: () => ({})
+            default: () => ({}),
         },
         search_type: {
             type: String,
-            default: ""
+            default: "",
         },
         update_search: {
             type: String,
-            default: ""
+            default: "",
         },
         selected_records: {
             type: Object,
-            default: () => ({})
+            default: () => ({}),
         },
         parent_row: {
             type: Object,
-            default: () => ({})
-        }
+            default: () => ({}),
+        },
     },
 
     data() {
@@ -272,23 +296,23 @@ export default {
             totals: [],
             error: false,
             data_loaded: false,
-            loading: false
+            loading: false,
         };
     },
 
     computed: {
         ...mapState({
-            dark_mode: state => state.framework.dark_mode,
-            refresh_data: state => state.framework.refresh_data,
-            datatable: state => state.datatable,
-            framework: state => state.framework,
-            local_settings: state => state.local_settings,
-            active_tab: state => state.local_settings.active_tab,
-            tab_to_refresh: state => state.framework.tab_to_refresh
+            dark_mode: (state) => state.framework.dark_mode,
+            refresh_data: (state) => state.framework.refresh_data,
+            datatable: (state) => state.datatable,
+            framework: (state) => state.framework,
+            local_settings: (state) => state.local_settings,
+            active_tab: (state) => state.local_settings.active_tab,
+            tab_to_refresh: (state) => state.framework.tab_to_refresh,
         }),
 
         ...mapGetters({
-            sorting: "datatable/sorting"
+            sorting: "datatable/sorting",
         }),
 
         all_columns() {
@@ -310,13 +334,13 @@ export default {
 
         active_columns() {
             return this.all_columns
-                .filter(item => item.enabled)
+                .filter((item) => item.enabled)
                 .sort((a, b) => a.order - b.order);
         },
 
         active_child_columns() {
             return this.child_columns
-                .filter(item => item.enabled)
+                .filter((item) => item.enabled)
                 .sort((a, b) => a.order - b.order);
         },
 
@@ -329,7 +353,7 @@ export default {
         this.setTableMetaData({
             columns: this.columns,
             child_columns: this.child_columns,
-            options: this.options
+            options: this.options,
         });
 
         if (this.load_data_from_server) {
@@ -346,9 +370,7 @@ export default {
             this.data = this.source_data;
             this.totals = [];
 
-            if (
-                typeof this.options === "undefined"
-            ) {
+            if (typeof this.options === "undefined") {
                 this.error = true;
                 return;
             }
@@ -361,7 +383,10 @@ export default {
         },
 
         getData(force_data_load) {
-            if (!this.load_data_from_server || (this.data_loaded && !force_data_load)) {
+            if (
+                !this.load_data_from_server ||
+                (this.data_loaded && !force_data_load)
+            ) {
                 return;
             }
 
@@ -385,17 +410,17 @@ export default {
 
             axios
                 .get(this.options.url, {
-                    params: data
+                    params: data,
                 })
-                .then(response => {
+                .then((response) => {
                     this.data = response.data.rows;
                     this.totals = response.data.totals || [];
                     this.toggleLoading();
 
-                    this.$emit('changeTotalReports', response.data.total_rows);
-                    this.$emit('changePageNo', response.data.page_no);
+                    this.$emit("changeTotalReports", response.data.total_rows);
+                    this.$emit("changePageNo", response.data.page_no);
                 })
-                .catch(response => {
+                .catch((response) => {
                     this.error = true;
                     this.toggleLoading();
                 });
@@ -408,7 +433,7 @@ export default {
 
             let payload = {
                 tab: this.options.id,
-                column: header.key
+                column: header.key,
             };
 
             this.setSorting(payload);
@@ -422,7 +447,7 @@ export default {
 
             let dark_theme = {
                 0: "bg-transparent",
-                1: "bg-gray-700"
+                1: "bg-gray-700",
             };
 
             let classes = [];
@@ -432,7 +457,11 @@ export default {
                     : light_theme[row._level]
             );
 
-            if (this.expanded_row_id && row._level == 0 && this.expanded_row_id != row.Id) {
+            if (
+                this.expanded_row_id &&
+                row._level == 0 &&
+                this.expanded_row_id != row.Id
+            ) {
                 classes.push("opacity-10");
             }
 
@@ -474,23 +503,23 @@ export default {
         },
 
         editRecord(row) {
-            this.$emit('editRecord', row);
+            this.$emit("editRecord", row);
         },
 
         removeRecord(row_id) {
-            this.$emit('removeRecord', row_id);
+            this.$emit("removeRecord", row_id);
         },
 
         selectRecord(row_id, select_record) {
-            this.$emit('selectRecord', row_id, select_record);
+            this.$emit("selectRecord", row_id, select_record);
         },
 
         setExpandedRowId(row_id) {
-            this.$emit('setExpandedRowId', row_id);
+            this.$emit("setExpandedRowId", row_id);
         },
 
         returnItem(IMEI) {
-            this.$emit('returnItem', IMEI);
+            this.$emit("returnItem", IMEI);
 
             let rows = [];
 
@@ -499,7 +528,7 @@ export default {
 
                 _.forIn(object["children"], (child_object, child_key) => {
                     if (child_object["IMEI"] == IMEI) {
-                        child_object['Returned'] = 1;
+                        child_object["Returned"] = 1;
                     }
 
                     children.push(_.cloneDeep(child_object));
@@ -519,38 +548,38 @@ export default {
         ...mapActions({
             setTableMetaData: "datatable/setTableMetaData",
             setSorting: "datatable/setSorting",
-            setCachedData: "local_settings/setCachedData"
-        })
+            setCachedData: "local_settings/setCachedData",
+        }),
     },
 
     watch: {
-        active_tab: function() {
+        active_tab: function () {
             if (this.active_tab == this.options.id) {
                 this.getData(true);
             }
         },
 
-        refresh_data: function() {
+        refresh_data: function () {
             if (this.tab_to_refresh === this.active_tab) {
                 this.data_loaded = false;
                 this.getData(true);
             }
         },
 
-        page_no: function(new_value, old_value) {
+        page_no: function (new_value, old_value) {
             this.setExpandedRowId(0);
             this.data_loaded = false;
             this.getData(true);
         },
 
-        source_data: function(new_value, old_value) {
+        source_data: function (new_value, old_value) {
             this.data = new_value;
         },
 
-        update_search: function(value) {
+        update_search: function (value) {
             this.data_loaded = false;
             this.getData(true);
-        }
-    }
+        },
+    },
 };
 </script>

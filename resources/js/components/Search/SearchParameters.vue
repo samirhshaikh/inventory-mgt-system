@@ -26,12 +26,12 @@ export default {
     props: {
         columns: {
             type: Array,
-            default: () => ([])
+            default: () => [],
         },
         search_data: {
             type: Object,
-            default: () => ({})
-        }
+            default: () => ({}),
+        },
     },
 
     methods: {
@@ -45,12 +45,17 @@ export default {
             let return_value = "";
             _.forEach(this.search_data, (value, key) => {
                 // console.log([column_key, value, key]);
-                if (key == column_key && value != "" && value != null && return_value == "") {
+                if (
+                    key == column_key &&
+                    value != "" &&
+                    value != null &&
+                    return_value == ""
+                ) {
                     return_value = value;
                 }
             });
             return return_value;
-        }
-    }
-}
+        },
+    },
+};
 </script>

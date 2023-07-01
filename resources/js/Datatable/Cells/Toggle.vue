@@ -11,8 +11,8 @@
 
 <script>
 import { mapActions } from "vuex";
-import {datatable_cell} from "./datatable_cell";
-import {notifications} from "../../Helpers/notifications";
+import { datatable_cell } from "./datatable_cell";
+import { notifications } from "../../Helpers/notifications";
 
 export default {
     mixins: [datatable_cell, notifications],
@@ -31,14 +31,17 @@ export default {
                 axios
                     .post(route(this.column_details["route"]), {
                         Id: _.get(this.row, this.options.primary_key),
-                        value: _.get(this.row, this.column, false) ? 1 : 0
+                        value: _.get(this.row, this.column, false) ? 1 : 0,
                     })
-                    .then(response => {
+                    .then((response) => {
                         if (response.data.message == "status_changed") {
                             this.$notify({
                                 group: "messages",
                                 title: "Success",
-                                text: this.formatMessage(response.data.message, this.options.record_name)
+                                text: this.formatMessage(
+                                    response.data.message,
+                                    this.options.record_name
+                                ),
                             });
 
                             //Reset the cache
@@ -50,7 +53,7 @@ export default {
                             }
                         }
                     })
-                    .catch(error => {
+                    .catch((error) => {
                         this.deleting_record = false;
 
                         if (error.response.data.message == "record_not_found") {
@@ -58,7 +61,10 @@ export default {
                                 group: "messages",
                                 title: "Error",
                                 type: "error",
-                                text: this.formatMessage(error.response.data.message, this.options.record_name)
+                                text: this.formatMessage(
+                                    error.response.data.message,
+                                    this.options.record_name
+                                ),
                             });
                         }
                     });
@@ -67,8 +73,8 @@ export default {
 
         ...mapActions({
             resetCachedData: "local_settings/resetCachedData",
-            addError: "errors/addError"
-        })
-    }
+            addError: "errors/addError",
+        }),
+    },
 };
 </script>

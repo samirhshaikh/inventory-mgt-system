@@ -5,7 +5,7 @@
                 class="flex items-stretch datatable_header"
                 :class="{
                     'border-product-color-lighter bg-white': !dark_mode,
-                    'border-product-color bg-gray-800': dark_mode
+                    'border-product-color bg-gray-800': dark_mode,
                 }"
             >
                 <h1
@@ -30,7 +30,7 @@
             <div
                 class="flex h-full p-8"
                 :class="{
-                    'bg-gray-700 text-white': dark_mode
+                    'bg-gray-700 text-white': dark_mode,
                 }"
                 v-if="!loading"
             >
@@ -57,14 +57,14 @@
 <script>
 import BarChart from "../components/Charts/BarChart";
 import DoughnutChart from "../components/Charts/DoughnutChart";
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 
 export default {
     name: "Dashboard",
 
     components: {
         DoughnutChart,
-        BarChart
+        BarChart,
     },
 
     props: [],
@@ -80,14 +80,14 @@ export default {
                 responsive: true,
                 plugins: {
                     legend: {
-                        position: 'bottom',
+                        position: "bottom",
                     },
                     title: {
                         display: true,
-                        text: 'Inventory'
-                    }
+                        text: "Inventory",
+                    },
                 },
-            }
+            },
         };
     },
 
@@ -97,55 +97,73 @@ export default {
 
     computed: {
         ...mapState({
-            dark_mode: state => state.framework.dark_mode,
-            expanded_sidebar: state => state.framework.expanded_sidebar,
-            local_settings: state => state.local_settings,
-        })
+            dark_mode: (state) => state.framework.dark_mode,
+            expanded_sidebar: (state) => state.framework.expanded_sidebar,
+            local_settings: (state) => state.local_settings,
+        }),
     },
 
     methods: {
         getData() {
             this.loading = true;
 
-            axios
-                .get(route("dashboard.get-stats"))
-                .then(
-                    response => {
-                        this.stockChartData = {
-                            labels: Object.keys(response.data.response.inventory.stock),
-                            datasets: [
-                                {
-                                    label: 'Stock',
-                                    data: _.map(response.data.response.inventory.stock, function(item){
+            axios.get(route("dashboard.get-stats")).then(
+                (response) => {
+                    this.stockChartData = {
+                        labels: Object.keys(
+                            response.data.response.inventory.stock
+                        ),
+                        datasets: [
+                            {
+                                label: "Stock",
+                                data: _.map(
+                                    response.data.response.inventory.stock,
+                                    function (item) {
                                         return item;
-                                    }),
-                                    backgroundColor: ['rgb(253, 64, 105)', 'rgb(54, 162, 235)', 'rgb(34, 207, 207)', 'rgb(253, 206, 96)'],
-                                }
-                            ],
-                        };
+                                    }
+                                ),
+                                backgroundColor: [
+                                    "rgb(253, 64, 105)",
+                                    "rgb(54, 162, 235)",
+                                    "rgb(34, 207, 207)",
+                                    "rgb(253, 206, 96)",
+                                ],
+                            },
+                        ],
+                    };
 
-                        this.costData = {
-                            labels: Object.keys(response.data.response.inventory.cost),
-                            datasets: [
-                                {
-                                    label: 'Stock Value',
-                                    data: _.map(response.data.response.inventory.cost, function(item){
+                    this.costData = {
+                        labels: Object.keys(
+                            response.data.response.inventory.cost
+                        ),
+                        datasets: [
+                            {
+                                label: "Stock Value",
+                                data: _.map(
+                                    response.data.response.inventory.cost,
+                                    function (item) {
                                         return item;
                                         // return new Intl.NumberFormat('en-IN', {maximumSignificantDigits: 3, maximumFractionDigits: 2}).format(item);
-                                    }),
-                                    backgroundColor: ['rgb(253, 64, 105)', 'rgb(54, 162, 235)', 'rgb(34, 207, 207)', 'rgb(253, 206, 96)'],
-                                }
-                            ],
-                        };
+                                    }
+                                ),
+                                backgroundColor: [
+                                    "rgb(253, 64, 105)",
+                                    "rgb(54, 162, 235)",
+                                    "rgb(34, 207, 207)",
+                                    "rgb(253, 206, 96)",
+                                ],
+                            },
+                        ],
+                    };
 
-                        this.loading = false;
-                    },
-                    error => {
-                        this.error = true;
-                        this.loading = false;
-                    }
-                )
+                    this.loading = false;
+                },
+                (error) => {
+                    this.error = true;
+                    this.loading = false;
+                }
+            );
         },
-    }
+    },
 };
 </script>

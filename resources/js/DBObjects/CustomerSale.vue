@@ -2,7 +2,7 @@
     <div
         class="flex h-full border border-product-color"
         :class="{
-            'bg-gray-700 text-white': dark_mode
+            'bg-gray-700 text-white': dark_mode,
         }"
     >
         <div class="flex-grow flex flex-col justify-between">
@@ -11,14 +11,14 @@
                     class="flex border-b border-product-color-lighter mb-4 pb-1"
                     :class="{
                         'border-product-color-lighter': dark_mode,
-                        'border-product-color': !dark_mode
+                        'border-product-color': !dark_mode,
                     }"
                 >
                     <h1
                         class="text-base md:text-xl pt-2 ml-1 w-full"
                         :class="{
                             'text-product-color-lighter': dark_mode,
-                            'text-product-color': !dark_mode
+                            'text-product-color': !dark_mode,
                         }"
                     >
                         {{ options.record_name }} Details
@@ -42,7 +42,8 @@
                             class="ml-1"
                             :class="{
                                 'bg-green-600': valid_data,
-                                'bg-gray-600 text-gray-500 cursor-not-allowed': !valid_data
+                                'bg-gray-600 text-gray-500 cursor-not-allowed':
+                                    !valid_data,
                             }"
                         >
                             Save
@@ -50,14 +51,19 @@
                     </div>
                 </div>
 
-                <form class="w-full pl-2" autocomplete="off" v-if="!loading" @submit.prevent>
+                <form
+                    class="w-full pl-2"
+                    autocomplete="off"
+                    v-if="!loading"
+                    @submit.prevent
+                >
                     <div class="flex flex-wrap -mx-3 form_field_container">
                         <div class="w-full px-3">
                             <label
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Name
@@ -68,7 +74,9 @@
                                 v-model.trim="row['CustomerName']"
                                 maxlength="255"
                                 :class="{
-                                    required_field: row['CustomerName'] == '' || row['CustomerName'] == null
+                                    required_field:
+                                        row['CustomerName'] == '' ||
+                                        row['CustomerName'] == null,
                                 }"
                                 autocomplete="off"
                                 ref="CustomerName"
@@ -82,7 +90,7 @@
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Contact No 1
@@ -100,7 +108,7 @@
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Contact No 2
@@ -121,7 +129,7 @@
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Address
@@ -139,17 +147,18 @@
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Balance
                             </label>
-                            £ <input
-                            class="w-32 generic_input"
-                            type="number"
-                            v-model.number="row['Balance']"
-                            autocomplete="off"
-                        />
+                            £
+                            <input
+                                class="w-32 generic_input"
+                                type="number"
+                                v-model.number="row['Balance']"
+                                autocomplete="off"
+                            />
                         </div>
                     </div>
 
@@ -158,9 +167,9 @@
                             <label
                                 class="block form_field_label"
                                 :class="{
-                                        'text-gray-700': !dark_mode,
-                                        'text-white': dark_mode
-                                    }"
+                                    'text-gray-700': !dark_mode,
+                                    'text-white': dark_mode,
+                                }"
                             >
                                 Comments
                             </label>
@@ -176,7 +185,7 @@
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Is Active
@@ -190,13 +199,16 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-wrap -mx-3 form_field_container" v-if="edit_id != ''">
+                    <div
+                        class="flex flex-wrap -mx-3 form_field_container"
+                        v-if="edit_id != ''"
+                    >
                         <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <label
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Created By
@@ -205,7 +217,7 @@
                                 class="block form_value_label"
                                 :class="{
                                     'text-gray-600': !dark_mode,
-                                    'text-product-color-lighter': dark_mode
+                                    'text-product-color-lighter': dark_mode,
                                 }"
                             >
                                 {{ getColumnValue("CreatedBy") }}
@@ -216,7 +228,7 @@
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Creation Date
@@ -225,7 +237,7 @@
                                 class="block form_value_label"
                                 :class="{
                                     'text-gray-600': !dark_mode,
-                                    'text-product-color-lighter': dark_mode
+                                    'text-product-color-lighter': dark_mode,
                                 }"
                             >
                                 {{ getColumnValue("CreatedDate") }}
@@ -233,13 +245,16 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-wrap -mx-3 form_field_container" v-if="edit_id != ''">
+                    <div
+                        class="flex flex-wrap -mx-3 form_field_container"
+                        v-if="edit_id != ''"
+                    >
                         <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <label
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Updated By
@@ -248,7 +263,7 @@
                                 class="block form_value_label"
                                 :class="{
                                     'text-gray-600': !dark_mode,
-                                    'text-product-color-lighter': dark_mode
+                                    'text-product-color-lighter': dark_mode,
                                 }"
                             >
                                 {{ getColumnValue("UpdatedBy") }}
@@ -259,7 +274,7 @@
                                 class="block form_field_label"
                                 :class="{
                                     'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode
+                                    'text-white': dark_mode,
                                 }"
                             >
                                 Updated Date
@@ -268,7 +283,7 @@
                                 class="block form_value_label"
                                 :class="{
                                     'text-gray-600': !dark_mode,
-                                    'text-product-color-lighter': dark_mode
+                                    'text-product-color-lighter': dark_mode,
                                 }"
                             >
                                 {{ getColumnValue("UpdatedDate") }}
@@ -287,7 +302,7 @@
 import { mapState, mapActions } from "vuex";
 import moment from "moment";
 import Button from "../components/Button";
-import {notifications} from "../Helpers/notifications";
+import { notifications } from "../Helpers/notifications";
 
 export default {
     mixins: [notifications],
@@ -295,15 +310,15 @@ export default {
     props: {
         options: {
             type: Object,
-            default: () => ({})
+            default: () => ({}),
         },
         edit_id: {
             type: String,
-            default: ""
+            default: "",
         },
         customerSaved: {
-            type: Function
-        }
+            type: Function,
+        },
     },
 
     data() {
@@ -313,7 +328,7 @@ export default {
             is_active: true,
 
             saving_data: false,
-            loading: false
+            loading: false,
         };
     },
 
@@ -321,7 +336,7 @@ export default {
         valid_data() {
             if (
                 this.row_keys.indexOf("CustomerName") < 0 ||
-                    this.row["CustomerName"] == ""
+                this.row["CustomerName"] == ""
             ) {
                 return false;
             }
@@ -334,10 +349,10 @@ export default {
         },
 
         ...mapState({
-            dark_mode: state => state.framework.dark_mode,
-            expanded_sidebar: state => state.framework.expanded_sidebar,
-            local_settings: state => state.local_settings
-        })
+            dark_mode: (state) => state.framework.dark_mode,
+            expanded_sidebar: (state) => state.framework.expanded_sidebar,
+            local_settings: (state) => state.local_settings,
+        }),
     },
 
     mounted() {
@@ -348,11 +363,11 @@ export default {
             axios
                 .get(route("customer_sales.get-single"), {
                     params: {
-                        Id: this.edit_id
-                    }
+                        Id: this.edit_id,
+                    },
                 })
                 .then(
-                    response => {
+                    (response) => {
                         let record = response.data.response.record;
                         this.is_active = record.IsActive;
 
@@ -364,7 +379,7 @@ export default {
                             this.$refs.CustomerName.focus();
                         });
                     },
-                    error => {
+                    (error) => {
                         this.loading = false;
                     }
                 );
@@ -398,7 +413,7 @@ export default {
 
             axios
                 .post(route("customer_sales.save"), this.row)
-                .then(response => {
+                .then((response) => {
                     if (response.data.message == "record_saved") {
                         this.$notify({
                             group: "messages",
@@ -409,7 +424,7 @@ export default {
                                 (this.row["operation"] == "add"
                                     ? "added"
                                     : "edited") +
-                                " successfully."
+                                " successfully.",
                         });
 
                         //Reset the cache
@@ -434,7 +449,7 @@ export default {
 
                     this.$modal.hide(this.$parent.name);
                 })
-                .catch(error => {
+                .catch((error) => {
                     this.saving_data = false;
 
                     if (error.response.data.message == "record_not_found") {
@@ -442,9 +457,14 @@ export default {
                             group: "messages",
                             title: "Error",
                             type: "error",
-                            text: this.formatMessage(error.response.data, this.options.record_name)
+                            text: this.formatMessage(
+                                error.response.data,
+                                this.options.record_name
+                            ),
                         });
-                    } else if (error.response.data.message == "duplicate_name") {
+                    } else if (
+                        error.response.data.message == "duplicate_name"
+                    ) {
                         this.duplicate_name = true;
                     }
                 });
@@ -461,16 +481,16 @@ export default {
             axios
                 .post(route("handsets.check-duplicate-name"), {
                     Id: this.row["Id"],
-                    Name: this.row["Name"]
+                    Name: this.row["Name"],
                 })
-                .then(response => {
+                .then((response) => {
                     this.checking_duplicate_name = false;
 
                     this.duplicate_name = false;
 
                     this.checking_duplicate_name = false;
                 })
-                .catch(error => {
+                .catch((error) => {
                     this.checking_duplicate_name = false;
 
                     if (error.response.data.message == "duplicate_name") {
@@ -484,8 +504,8 @@ export default {
             refreshCustomerSales: "framework/refreshCustomerSales",
             setCachedData: "local_settings/setCachedData",
             resetCachedData: "local_settings/resetCachedData",
-            addError: "errors/addError"
-        })
-    }
+            addError: "errors/addError",
+        }),
+    },
 };
 </script>

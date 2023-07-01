@@ -8,28 +8,31 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends BaseModel implements Authenticatable, JWTSubject {
+class User extends BaseModel implements Authenticatable, JWTSubject
+{
     use AuthenticatableTrait;
     use CompositeKeysTrait;
     use HasFactory;
 
-    protected $connection = 'mysql';
-    protected $table = 'User';
-    protected $primaryKey = ['UserName'];
+    protected $connection = "mysql";
+    protected $table = "User";
+    protected $primaryKey = ["UserName"];
     protected $transformer = UserTransformer::class;
     public $incrementing = false;
     public $timestamps = true;
     protected $guarded = [];
 
-    const CREATED_AT = 'CreatedDate';
-    const UPDATED_AT = 'UpdatedDate';
+    const CREATED_AT = "CreatedDate";
+    const UPDATED_AT = "UpdatedDate";
 
-    public function getAuthIdentifierName() {
-        return $this->getAttribute('UserName');
+    public function getAuthIdentifierName()
+    {
+        return $this->getAttribute("UserName");
     }
 
-    public function getAuthPassword() {
-        return $this->getAttribute('Password');
+    public function getAuthPassword()
+    {
+        return $this->getAttribute("Password");
     }
 
     public function getJWTIdentifier()

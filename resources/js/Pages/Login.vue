@@ -25,7 +25,7 @@
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         :class="{
                             'border-red-500':
-                                invalid_fields.indexOf('username') >= 0
+                                invalid_fields.indexOf('username') >= 0,
                         }"
                         id="username"
                         type="text"
@@ -42,7 +42,7 @@
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                         :class="{
                             'border-red-500':
-                                invalid_fields.indexOf('password') >= 0
+                                invalid_fields.indexOf('password') >= 0,
                         }"
                         id="password"
                         type="password"
@@ -87,7 +87,7 @@ export default {
             password: "",
             invalid_fields: [],
             error_message: "",
-            loading: false
+            loading: false,
         };
     },
 
@@ -101,10 +101,10 @@ export default {
                 axios
                     .post("/doLogin", {
                         username: this.username,
-                        password: this.password
+                        password: this.password,
                     })
                     .then(
-                        response => {
+                        (response) => {
                             console.log(response);
                             if (
                                 typeof response.data.error === "undefined" ||
@@ -112,8 +112,8 @@ export default {
                             ) {
                                 this.error_message = "";
 
-                                this.$inertia.replace(route('dashboard'), {
-                                    method: 'get'
+                                this.$inertia.replace(route("dashboard"), {
+                                    method: "get",
                                 });
                             } else {
                                 this.error_message = response.data.error;
@@ -122,8 +122,9 @@ export default {
 
                             this.loading = false;
                         },
-                        error => {
-                            this.error_message = 'Some error occurred. Please try again.'
+                        (error) => {
+                            this.error_message =
+                                "Some error occurred. Please try again.";
 
                             this.loading = false;
                         }
@@ -143,13 +144,13 @@ export default {
             }
 
             return this.invalid_fields.length == 0;
-        }
+        },
     },
 
     computed: {
         getYear() {
             return moment().format("YYYY");
-        }
-    }
+        },
+    },
 };
 </script>

@@ -8,27 +8,27 @@
 export default {
     props: {
         id: {
-            default: null
+            default: null,
         },
         name: {
-            required: true
+            required: true,
         },
         prefix: {
-            default: ''
+            default: "",
         },
         suffix: {
-            default: ''
+            default: "",
         },
         isDisabled: {
-            default: false
-        }
+            default: false,
+        },
     },
 
     data() {
         return {
             isActive: false,
-            isVisible: true
-        }
+            isVisible: true,
+        };
     },
 
     computed: {
@@ -37,16 +37,18 @@ export default {
         },
 
         computedId() {
-            return this.id ? this.id : this.name.toLowerCase().replace(/ /g, '-');
+            return this.id
+                ? this.id
+                : this.name.toLowerCase().replace(/ /g, "-");
         },
 
         hash() {
             if (this.isDisabled) {
-                return '#';
+                return "#";
             }
 
-            return '#' + this.computedId
-        }
-    }
-}
+            return "#" + this.computedId;
+        },
+    },
+};
 </script>

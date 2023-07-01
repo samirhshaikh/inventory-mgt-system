@@ -4,7 +4,10 @@
             @click.native="edit"
             class="text-white bg-green-600 mr-2"
             :class="{
-                hidden: !$page.user_details.IsAdmin || row['row_id'] == current_row_id || row['Returned']
+                hidden:
+                    !$page.user_details.IsAdmin ||
+                    row['row_id'] == current_row_id ||
+                    row['Returned'],
             }"
         >
             Edit
@@ -13,7 +16,9 @@
             @click.native="removeRecord"
             class="text-white bg-red-400 mr-2"
             :class="{
-                hidden: !$page.user_details.IsAdmin || row['row_id'] == current_row_id
+                hidden:
+                    !$page.user_details.IsAdmin ||
+                    row['row_id'] == current_row_id,
             }"
             split="border-white"
         >
@@ -23,7 +28,10 @@
             @click.native="returnItem"
             class="text-white bg-red-400"
             :class="{
-                hidden: !$page.user_details.IsAdmin || !row.hasOwnProperty('Id') || row['Returned']
+                hidden:
+                    !$page.user_details.IsAdmin ||
+                    !row.hasOwnProperty('Id') ||
+                    row['Returned'],
             }"
             v-if="typeof row.SalesInvoiceId !== 'undefined'"
         >
@@ -32,17 +40,18 @@
         <span
             class="text-red-700 leading-normal"
             :class="{
-                hidden: row['Returned'] == 0
+                hidden: row['Returned'] == 0,
             }"
-        >Returned</span>
+            >Returned</span
+        >
     </div>
 </template>
 
 <script>
 import Confirm from "../../../components/Confirm.vue";
 import ReturnItem from "../../../DBObjects/ReturnItem";
-import {datatable_cell} from "../datatable_cell";
-import {mapActions} from "vuex";
+import { datatable_cell } from "../datatable_cell";
+import { mapActions } from "vuex";
 
 export default {
     mixins: [datatable_cell],
@@ -50,16 +59,16 @@ export default {
     props: {
         current_row_id: {
             type: String,
-            default: ""
+            default: "",
         },
         parent_row: {
-            default: () => ({})
+            default: () => ({}),
         },
     },
 
     methods: {
         edit() {
-            this.$emit('editRecord', this.row);
+            this.$emit("editRecord", this.row);
         },
 
         removeRecord() {
@@ -72,12 +81,12 @@ export default {
                         _.lowerCase(this.options.record_name) +
                         "?",
                     yes_handler: () => {
-                        this.$emit('removeRecord', this.row["row_id"]);
-                    }
+                        this.$emit("removeRecord", this.row["row_id"]);
+                    },
                 },
                 {
                     width: "350px",
-                    height: "auto"
+                    height: "auto",
                 }
             );
         },
@@ -91,19 +100,19 @@ export default {
                     IMEI: this.row["IMEI"],
                     refresh: (IMEI) => {
                         this.$emit("returnItem", IMEI);
-                    }
+                    },
                 },
                 {
                     width: "500px",
-                    height: "500px"
+                    height: "500px",
                 }
             );
         },
 
         ...mapActions({
             refreshData: "framework/refreshData",
-            addError: 'errors/addError'
-        })
-    }
+            addError: "errors/addError",
+        }),
+    },
 };
 </script>

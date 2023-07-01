@@ -8,16 +8,16 @@ class HandsetColorsController extends ObjectTypeNameController
 {
     protected function getModel()
     {
-        return new HandsetColors;
+        return new HandsetColors();
     }
 
     protected function getRecordName()
     {
-        return 'Color';
+        return "Color";
     }
 
     protected function getColumnIdInReferenceTables()
     {
-        return 'ColorId';
+        return "ColorId";
     }
 }

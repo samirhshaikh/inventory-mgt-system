@@ -7,31 +7,29 @@
 
 <script>
 export default {
-    props: [
-        'type'
-    ],
+    props: ["type"],
 
     data() {
         return {
             alert_types: {
                 info: {
-                    title: 'Information',
-                    classes: 'bg-blue-100 border-blue-500 text-blue-700'
+                    title: "Information",
+                    classes: "bg-blue-100 border-blue-500 text-blue-700",
                 },
                 success: {
-                    title: 'Success',
-                    classes: 'bg-green-100 border-green-500 text-green-700'
+                    title: "Success",
+                    classes: "bg-green-100 border-green-500 text-green-700",
                 },
                 warning: {
-                    title: 'Warning',
-                    classes: 'bg-orange-100 border-orange-500 text-orange-700'
+                    title: "Warning",
+                    classes: "bg-orange-100 border-orange-500 text-orange-700",
                 },
                 error: {
-                    title: 'Error',
-                    classes: 'bg-red-100 border-red-500 text-red-700'
-                }
-            }
-        }
+                    title: "Error",
+                    classes: "bg-red-100 border-red-500 text-red-700",
+                },
+            },
+        };
     },
 
     computed: {
@@ -41,7 +39,7 @@ export default {
 
         title() {
             return this.alert_types[this.type].title;
-        }
-    }
-}
+        },
+    },
+};
 </script>

@@ -9,8 +9,8 @@
                 child_header.td,
                 {
                     'bg-gray-200 text-gray-700 hover:bg-gray-300': !dark_mode,
-                    'bg-gray-900 text-gray-500 hover:bg-gray-800': dark_mode
-                }
+                    'bg-gray-900 text-gray-500 hover:bg-gray-800': dark_mode,
+                },
             ]"
             :colspan="child_header.column_span"
         >
@@ -28,32 +28,32 @@ export default {
     props: {
         active_child_columns: {
             type: Array,
-            default: () => ([])
+            default: () => [],
         },
         row: {
             type: Object,
-            default: () => ({})
+            default: () => ({}),
         },
         options: {
             type: Object,
-            default: () => ({})
+            default: () => ({}),
         },
         expanded_row_id: {
             type: Number,
-            default: 0
-        }
+            default: 0,
+        },
     },
 
     computed: {
         ...mapState({
-            dark_mode: state => state.framework.dark_mode,
-            refresh_data: state => state.framework.refresh_data,
-            datatable: state => state.datatable,
-            framework: state => state.framework,
-            local_settings: state => state.local_settings,
-            active_tab: state => state.local_settings.active_tab,
-            tab_to_refresh: state => state.framework.tab_to_refresh
-        })
+            dark_mode: (state) => state.framework.dark_mode,
+            refresh_data: (state) => state.framework.refresh_data,
+            datatable: (state) => state.datatable,
+            framework: (state) => state.framework,
+            local_settings: (state) => state.local_settings,
+            active_tab: (state) => state.local_settings.active_tab,
+            tab_to_refresh: (state) => state.framework.tab_to_refresh,
+        }),
     },
 
     methods: {
@@ -69,7 +69,7 @@ export default {
 
             let dark_theme = {
                 0: "bg-transparent",
-                1: "bg-gray-700"
+                1: "bg-gray-700",
             };
 
             let classes = [];
@@ -79,7 +79,11 @@ export default {
                     : light_theme[row._level]
             );
 
-            if (this.expanded_row_id && row._level == 0 && this.expanded_row_id != row.Id) {
+            if (
+                this.expanded_row_id &&
+                row._level == 0 &&
+                this.expanded_row_id != row.Id
+            ) {
                 classes.push("opacity-10");
             }
 
@@ -121,8 +125,8 @@ export default {
         },
 
         returnItem(row_id) {
-            this.$emit('returnItem', row_id);
-        }
-    }
-}
+            this.$emit("returnItem", row_id);
+        },
+    },
+};
 </script>

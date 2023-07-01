@@ -33,62 +33,91 @@ class SalesService
     public function getAll(
         string $order_by,
         string $order_direction,
-        string $search_type = 'simple',
-        string $search_text = '',
-        string $search_data = '{}'
-    ): array
-    {
-//        DB::enableQueryLog();
+        string $search_type = "simple",
+        string $search_text = "",
+        string $search_data = "{}"
+    ): array {
+        //        DB::enableQueryLog();
 
         $invoice_ids = null;
         if (
-            ($search_type === 'simple' && $search_text != '') ||
-            ($search_type === 'advanced' && $this->searchDataPresent($search_data))
+            ($search_type === "simple" && $search_text != "") ||
+            ($search_type === "advanced" &&
+                $this->searchDataPresent($search_data))
         ) {
-            $invoice_ids = $this->getInvoiceIds($search_type, $search_text, $search_data);
+            $invoice_ids = $this->getInvoiceIds(
+                $search_type,
+                $search_text,
+                $search_data
+            );
         }
 
         $records = new Sales();
 
-        $records = $records->leftjoin('Customer_Sales', 'Customer_Sales.Id', '=', 'CustomerId');
+        $records = $records->leftjoin(
+            "Customer_Sales",
+            "Customer_Sales.Id",
+            "=",
+            "CustomerId"
+        );
 
         if (!is_null($invoice_ids)) {
-            $records = $records->whereIn('Sales.Id', $invoice_ids);
+            $records = $records->whereIn("Sales.Id", $invoice_ids);
         }
 
         //Get total records
         $total_records = $this->getTotalRecords(clone $records);
 
-        $records = $records->with(['sales' => function ($query) {
-            $query->orderBy('IMEI', 'ASC');
-        }]);
+        $records = $records->with([
+            "sales" => function ($query) {
+                $query->orderBy("IMEI", "ASC");
+            },
+        ]);
 
-        $records = $records->with('tradein');
+        $records = $records->with("tradein");
 
         switch ($order_by) {
-            case 'IMEI':
+            case "IMEI":
                 break;
-            case 'children':
-                $records = $records->addSelect(DB::raw('SUM(CASE WHEN Return = 0 THEN 0 ELSE SalesStock.Cost) as Total_Cost'))
-                    ->leftJoin('SalesStock', 'SalesStock.InvoiceId', '=', 'Sales.Id')
-                    ->groupBy('Sales.Id')
-                    ->orderBy('Total_Cost', $order_direction);
+            case "children":
+                $records = $records
+                    ->addSelect(
+                        DB::raw(
+                            "SUM(CASE WHEN Return = 0 THEN 0 ELSE SalesStock.Cost) as Total_Cost"
+                        )
+                    )
+                    ->leftJoin(
+                        "SalesStock",
+                        "SalesStock.InvoiceId",
+                        "=",
+                        "Sales.Id"
+                    )
+                    ->groupBy("Sales.Id")
+                    ->orderBy("Total_Cost", $order_direction);
                 break;
-            case 'customer.CustomerName':
-                $records = $records->leftJoin('Customer_Sales', 'Customer_Sales.Id', '=', 'CustomerId');
+            case "customer.CustomerName":
+                $records = $records->leftJoin(
+                    "Customer_Sales",
+                    "Customer_Sales.Id",
+                    "=",
+                    "CustomerId"
+                );
                 break;
-            case 'UpdatedDate':
-                $records = $records->orderBy('Sales.UpdatedDate', $order_direction);
+            case "UpdatedDate":
+                $records = $records->orderBy(
+                    "Sales.UpdatedDate",
+                    $order_direction
+                );
                 break;
             default:
                 $records = $records->orderBy($order_by, $order_direction);
         }
 
-        $records = $records->addSelect('Sales.*');
+        $records = $records->addSelect("Sales.*");
 
         return [
-            'total_records' => $total_records,
-            'records' => $records
+            "total_records" => $total_records,
+            "records" => $records,
         ];
     }
 
@@ -98,56 +127,89 @@ class SalesService
      * @param string $search_data
      * @return array
      */
-    private function getInvoiceIds(string $search_type, string $search_text = '', string $search_data = '{}'): array
-    {
+    private function getInvoiceIds(
+        string $search_type,
+        string $search_text = "",
+        string $search_data = "{}"
+    ): array {
         try {
-            $records = Sales::selectRaw('Sales.Id');
+            $records = Sales::selectRaw("Sales.Id");
 
             if (
-                ($search_type === 'simple' && $search_text != '') ||
-                ($search_type === 'advanced' && $this->searchDataPresent($search_data))
+                ($search_type === "simple" && $search_text != "") ||
+                ($search_type === "advanced" &&
+                    $this->searchDataPresent($search_data))
             ) {
                 $records = $records
-                    ->leftjoin('Customer_Sales', 'Customer_Sales.Id', '=', 'CustomerId')
-                    ->join('SalesStock', 'SalesStock.InvoiceId', '=', 'Sales.Id')
-                    ->join('PhoneStock', 'PhoneStock.IMEI', '=', 'SalesStock.IMEI')
-                    ->join('ManufactureMaster', 'ManufactureMaster.Id', '=', 'MakeId')
-                    ->join('ColorMaster', 'ColorMaster.Id', '=', 'ColorId')
-                    ->join('ModelMaster', 'ModelMaster.Id', '=', 'ModelId');
+                    ->leftjoin(
+                        "Customer_Sales",
+                        "Customer_Sales.Id",
+                        "=",
+                        "CustomerId"
+                    )
+                    ->join(
+                        "SalesStock",
+                        "SalesStock.InvoiceId",
+                        "=",
+                        "Sales.Id"
+                    )
+                    ->join(
+                        "PhoneStock",
+                        "PhoneStock.IMEI",
+                        "=",
+                        "SalesStock.IMEI"
+                    )
+                    ->join(
+                        "ManufactureMaster",
+                        "ManufactureMaster.Id",
+                        "=",
+                        "MakeId"
+                    )
+                    ->join("ColorMaster", "ColorMaster.Id", "=", "ColorId")
+                    ->join("ModelMaster", "ModelMaster.Id", "=", "ModelId");
             }
 
-            if ($search_type === 'simple' && $search_text != '') {
+            if ($search_type === "simple" && $search_text != "") {
                 $fields_to_search = [
                     $this->getInvoiceSearchString(),
-                    'InvoiceNo',
+                    "InvoiceNo",
                     'DATE_FORMAT(InvoiceDate, "%d-%b-%Y")',
-                    'Customer_Sales.CustomerName',
-                    'Customer_Sales.ContactNo1',
-                    'Customer_Sales.ContactNo2',
-                    'SalesStock.IMEI',
-                    'ManufactureMaster.Name',
-                    'ColorMaster.Name',
-                    'ModelMaster.Name',
-                    'Size',
-                    'SalesStock.Cost',
-                    'ModelNo',
-                    'Network',
-                    'Sales.Comments',
+                    "Customer_Sales.CustomerName",
+                    "Customer_Sales.ContactNo1",
+                    "Customer_Sales.ContactNo2",
+                    "SalesStock.IMEI",
+                    "ManufactureMaster.Name",
+                    "ColorMaster.Name",
+                    "ModelMaster.Name",
+                    "Size",
+                    "SalesStock.Cost",
+                    "ModelNo",
+                    "Network",
+                    "Sales.Comments",
                     'DATE_FORMAT(Sales.CreatedDate, "%d-%b-%Y")',
-                    'DATE_FORMAT(Sales.UpdatedDate, "%d-%b-%Y")'
+                    'DATE_FORMAT(Sales.UpdatedDate, "%d-%b-%Y")',
                 ];
 
-                $records = $this->prepareSearch($records, $fields_to_search, $search_text);
-            } else if ($search_type === 'advanced' && $this->searchDataPresent($search_data)) {
-                $records = $this->prepareAdvancedSearch($records, json_decode($search_data));
+                $records = $this->prepareSearch(
+                    $records,
+                    $fields_to_search,
+                    $search_text
+                );
+            } elseif (
+                $search_type === "advanced" &&
+                $this->searchDataPresent($search_data)
+            ) {
+                $records = $this->prepareAdvancedSearch(
+                    $records,
+                    json_decode($search_data)
+                );
 
-//            dd($this->getSql($records));
+                //            dd($this->getSql($records));
             }
 
-            $records = $records->orderBy('Sales.Id', 'ASC')
-                ->get();
+            $records = $records->orderBy("Sales.Id", "ASC")->get();
 
-            return $records->pluck('Id')->all();
+            return $records->pluck("Id")->all();
         } catch (\Exception $e) {
             return [];
         }
@@ -161,48 +223,109 @@ class SalesService
     private function prepareAdvancedSearch($model, $search_data = []): Builder
     {
         foreach ($search_data as $column => $search_text) {
-            if ($search_text == '' || is_null($search_text)) {
+            if ($search_text == "" || is_null($search_text)) {
                 continue;
             }
 
             switch ($column) {
-                case 'customer':
-                    $model = $this->prepareAdvancedSearchQuery($model, ['Customer_Sales.CustomerName', 'Customer_Sales.ContactNo1', 'Customer_Sales.ContactNo2'], $search_text);
+                case "customer":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        [
+                            "Customer_Sales.CustomerName",
+                            "Customer_Sales.ContactNo1",
+                            "Customer_Sales.ContactNo2",
+                        ],
+                        $search_text
+                    );
                     break;
-                case 'contact':
-                    $model = $this->prepareAdvancedSearchQuery($model, ['Customer_Sales.ContactNo1', 'Customer_Sales.ContactNo2'], $search_text);
+                case "contact":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        [
+                            "Customer_Sales.ContactNo1",
+                            "Customer_Sales.ContactNo2",
+                        ],
+                        $search_text
+                    );
                     break;
-                case 'InvoiceDate':
-                    $model = $this->prepareAdvancedSearchQuery($model, 'DATE_FORMAT(Sales.InvoiceDate, "%d-%b-%Y")', $search_text, 'exact_match');
+                case "InvoiceDate":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        'DATE_FORMAT(Sales.InvoiceDate, "%d-%b-%Y")',
+                        $search_text,
+                        "exact_match"
+                    );
                     break;
-                case 'manufacturer':
-                    $model = $this->prepareAdvancedSearchQuery($model, 'ManufactureMaster.Name', $search_text);
+                case "manufacturer":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        "ManufactureMaster.Name",
+                        $search_text
+                    );
                     break;
-                case 'model':
-                    $model = $this->prepareAdvancedSearchQuery($model, 'ModelMaster.Name', $search_text);
+                case "model":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        "ModelMaster.Name",
+                        $search_text
+                    );
                     break;
-                case 'color':
-                    $model = $this->prepareAdvancedSearchQuery($model, 'ColorMaster.Name', $search_text);
+                case "color":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        "ColorMaster.Name",
+                        $search_text
+                    );
                     break;
-                case 'InvoiceNo':
-                    $model = $this->prepareAdvancedSearchQuery($model, ['InvoiceNo', $this->getInvoiceSearchString()], $search_text);
+                case "InvoiceNo":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        ["InvoiceNo", $this->getInvoiceSearchString()],
+                        $search_text
+                    );
                     break;
-                case 'IMEI':
-                    $model = $this->prepareAdvancedSearchQuery($model, 'SalesStock.IMEI', $search_text);
+                case "IMEI":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        "SalesStock.IMEI",
+                        $search_text
+                    );
                     break;
-                case 'Cost':
-                    $model = $this->prepareAdvancedSearchQuery($model, 'Sales.' . $column, $search_text);
+                case "Cost":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        "Sales." . $column,
+                        $search_text
+                    );
                     break;
-                case 'PaymentMethod':
-                    $model = $this->prepareAdvancedSearchQuery($model, 'Sales.' . $column, $search_text, 'exact_match');
+                case "PaymentMethod":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        "Sales." . $column,
+                        $search_text,
+                        "exact_match"
+                    );
                     break;
-                case 'Size':
-                case 'Network':
-                case 'ModelNo':
-                    $model = $this->prepareAdvancedSearchQuery($model, 'SalesStock.' . $column, $search_text);
+                case "Size":
+                case "Network":
+                case "ModelNo":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        "SalesStock." . $column,
+                        $search_text
+                    );
                     break;
-                case 'UpdatedDate':
-                    $model = $this->prepareAdvancedSearchQuery($model, ['DATE_FORMAT(Sales.CreatedDate, "%d-%b-%Y")', 'DATE_FORMAT(Sales.UpdatedDate, "%d-%b-%Y")'], $search_text, 'exact_match');
+                case "UpdatedDate":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        [
+                            'DATE_FORMAT(Sales.CreatedDate, "%d-%b-%Y")',
+                            'DATE_FORMAT(Sales.UpdatedDate, "%d-%b-%Y")',
+                        ],
+                        $search_text,
+                        "exact_match"
+                    );
                     break;
             }
         }
@@ -228,22 +351,24 @@ class SalesService
      */
     public function getSingleSales(IdRequest $request)
     {
-        $record = Sales::where('Sales.Id', $request->get('Id'))
-            ->with('customer')
-            ->where('Id', $request->get('Id'));
+        $record = Sales::where("Sales.Id", $request->get("Id"))
+            ->with("customer")
+            ->where("Id", $request->get("Id"));
 
-        $record = $record->with(['sales' => function ($query) {
-            $query->orderBy('IMEI', 'ASC');
-        }]);
+        $record = $record->with([
+            "sales" => function ($query) {
+                $query->orderBy("IMEI", "ASC");
+            },
+        ]);
 
-        $records = $record->with('tradein');
+        $records = $record->with("tradein");
 
         $record = $record->get();
 
         if ($record->count()) {
             return $record->map->transform()->first();
         } else {
-            throw new RecordNotFoundException;
+            throw new RecordNotFoundException();
         }
     }
 
@@ -260,75 +385,82 @@ class SalesService
          */
 
         //Check whether the sale being edited exist or not.
-        if ($request->get('operation', 'add') == 'edit') {
-            $record = Sales::where('Id', $request->get('Id'))->get();
+        if ($request->get("operation", "add") == "edit") {
+            $record = Sales::where("Id", $request->get("Id"))->get();
             if (!$record->count()) {
-                throw new RecordNotFoundException;
+                throw new RecordNotFoundException();
             }
         }
 
         //Now delete the child phones
         if (
-            $request->get('operation', 'add') == 'edit' &&
-            count($request->get('children_to_delete', []))
+            $request->get("operation", "add") == "edit" &&
+            count($request->get("children_to_delete", []))
         ) {
             $phonestock_service = new PhoneStockService();
 
-            foreach ($request->get('children_to_delete', []) as $row) {
-                $phone = SalesStock::where('Id', $row['Id'])
-                    ->get();
+            foreach ($request->get("children_to_delete", []) as $row) {
+                $phone = SalesStock::where("Id", $row["Id"])->get();
                 if ($phone->count()) {
                     $phone = $phone->first();
 
                     //Add an entry to stock_log
                     $stocklog_service = new StockLogService();
                     $stocklog_service->add(
-                        $phone['IMEI'],
+                        $phone["IMEI"],
                         StockLog::ACTIVITY_DELETED
                     );
 
                     //Change the status in phonestock
-                    $phonestock_service->changePhoneAvailabilityStatus($row['IMEI']);
+                    $phonestock_service->changePhoneAvailabilityStatus(
+                        $row["IMEI"]
+                    );
 
-                    SalesStock::where('Id', $row['Id'])->delete();
+                    SalesStock::where("Id", $row["Id"])->delete();
                 }
             }
         }
 
         //Create new record in sales table
-        if ($request->get('operation', 'add') == 'edit') {
+        if ($request->get("operation", "add") == "edit") {
             $record = $record->first();
         } else {
             $record = new Sales();
 
             $record->InvoiceNo = $this->getNextInvoiceNo();
-            $record->CreatedBy = session('user_details.UserName');
+            $record->CreatedBy = session("user_details.UserName");
             $record->IsActive = 1;
         }
 
-        $record->InvoiceDate = Carbon::createFromFormat('d-M-Y', $request->get('InvoiceDate'))->toDateTimeString();
-        $record->CustomerId = $request->get('CustomerId');
-        $record->PaymentMethod = $request->get('PaymentMethod');
-        $record->VAT = number_format($request->get('VAT', 0), 2);
-        $record->Comments = $request->get('Comments');
-        $record->UpdatedBy = session('user_details.UserName');
+        $record->InvoiceDate = Carbon::createFromFormat(
+            "d-M-Y",
+            $request->get("InvoiceDate")
+        )->toDateTimeString();
+        $record->CustomerId = $request->get("CustomerId");
+        $record->PaymentMethod = $request->get("PaymentMethod");
+        $record->VAT = number_format($request->get("VAT", 0), 2);
+        $record->Comments = $request->get("Comments");
+        $record->UpdatedBy = session("user_details.UserName");
         $record->save();
 
-        if ($request->get('operation', 'add') == 'add') {
+        if ($request->get("operation", "add") == "add") {
             $record->Id = Sales::lastInsertId();
         }
 
         $salesstock_service = new SalesStockService();
 
         //Create/Update records in salesstock table
-        $salesstock_service->save($record->Id, $request->get('children', []));
+        $salesstock_service->save($record->Id, $request->get("children", []));
 
         //Add the record in tradein
-        if ($request->get('tradein', [])) {
-            $tradein_data = $request->get('tradein');
-            if ($tradein_data['PurchaseInvoiceId']) {
-                $tradein_service  = new TradeInService();
-                $tradein_service->save($record->Id, $tradein_data['PurchaseInvoiceId']);
+        if ($request->get("tradein", [])) {
+            $tradein_data = $request->get("tradein");
+            if ($tradein_data["PurchaseInvoiceId"]) {
+                $tradein_service = new TradeInService();
+                $tradein_service->save(
+                    $record->Id,
+                    $tradein_data["PurchaseInvoiceId"]
+                );
             }
         }
 
@@ -343,7 +475,7 @@ class SalesService
     public function delete(IdRequest $request): bool
     {
         //Check whether the record exist or not
-        $invoice = Sales::where('Id', $request->get('Id'))->get();
+        $invoice = Sales::where("Id", $request->get("Id"))->get();
 
         if ($invoice->count()) {
             $phonestock_service = new PhoneStockService();
@@ -351,30 +483,32 @@ class SalesService
             $invoice = $invoice->first();
 
             //Get all the phones in this invoice
-            $phones = SalesStock::where('InvoiceId', $invoice->Id)->get();
+            $phones = SalesStock::where("InvoiceId", $invoice->Id)->get();
             if ($phones->count()) {
                 foreach ($phones as $phone) {
                     //Add an entry to stock_log
                     $stocklog_service = new StockLogService();
                     $stocklog_service->add(
-                        $phone['IMEI'],
+                        $phone["IMEI"],
                         StockLog::ACTIVITY_DELETED
                     );
 
                     //Change the status in phonestock
-                    $phonestock_service->changePhoneAvailabilityStatus($phone['IMEI']);
+                    $phonestock_service->changePhoneAvailabilityStatus(
+                        $phone["IMEI"]
+                    );
 
-                    SalesStock::where('Id', $phone->Id)->delete();
+                    SalesStock::where("Id", $phone->Id)->delete();
                 }
             }
 
-            Sales::where('Id', $request->get('Id'))->delete();
+            Sales::where("Id", $request->get("Id"))->delete();
 
-            TradeIn::where('SalesInvoiceId', $request->get('Id'))->delete();
+            TradeIn::where("SalesInvoiceId", $request->get("Id"))->delete();
 
             return true;
         } else {
-            throw new RecordNotFoundException;
+            throw new RecordNotFoundException();
         }
     }
 
@@ -389,31 +523,39 @@ class SalesService
 
         try {
             //Change the status in phonestock
-            $phonestock_service->changePhoneAvailabilityStatus($request->get('IMEI'));
+            $phonestock_service->changePhoneAvailabilityStatus(
+                $request->get("IMEI")
+            );
 
             //Mark the entry in salesstock as returned.
-            $sale_stock = SalesStock::where('InvoiceId', $request->get('InvoiceId'))
-                ->where('IMEI', $request->get('IMEI'))
+            $sale_stock = SalesStock::where(
+                "InvoiceId",
+                $request->get("InvoiceId")
+            )
+                ->where("IMEI", $request->get("IMEI"))
                 ->get();
             if ($sale_stock->count()) {
                 $sale_stock = $sale_stock->first();
 
                 $sale_stock->Returned = true;
-                $sale_stock->ReturnedDate = Carbon::createFromFormat('d-M-Y', $request->get('ReturnedDate'))->toDateTimeString();
+                $sale_stock->ReturnedDate = Carbon::createFromFormat(
+                    "d-M-Y",
+                    $request->get("ReturnedDate")
+                )->toDateTimeString();
                 $sale_stock->save();
             }
 
             //Add an entry to stock_log
             $stocklog_service = new StockLogService();
             $stocklog_service->add(
-                $request->get('IMEI'),
+                $request->get("IMEI"),
                 StockLog::ACTIVITY_RETURNED,
-                $request->get('Comments') ?? ''
+                $request->get("Comments") ?? ""
             );
 
             return true;
         } catch (RecordNotFoundException $e) {
-            throw new RecordNotFoundException;
+            throw new RecordNotFoundException();
         }
     }
 
@@ -422,31 +564,38 @@ class SalesService
      */
     public function getNextInvoiceNo(): int
     {
-        $today = Carbon::now()->format('Y-m-d');
+        $today = Carbon::now()->format("Y-m-d");
 
-        $record = Sales::selectRaw('Sales.*')
+        $record = Sales::selectRaw("Sales.*")
             ->whereRaw('InvoiceDate LIKE "%' . $today . '%"')
-            ->get()
-        ;
+            ->get();
 
         return $record->count() + 1;
     }
 
-    public function getSalesForPeriod($start = '', $end = '')
+    public function getSalesForPeriod($start = "", $end = "")
     {
-        $record = Sales::selectRaw('SUM(Cost) as total')
-            ->join('SalesStock', 'SalesStock.InvoiceId', '=', 'Sales.Id');
+        $record = Sales::selectRaw("SUM(Cost) as total")->join(
+            "SalesStock",
+            "SalesStock.InvoiceId",
+            "=",
+            "Sales.Id"
+        );
 
         if ($start) {
-            $record = $record->whereRaw(sprintf('DATE(InvoiceDate) >= "%s"', $start));
+            $record = $record->whereRaw(
+                sprintf('DATE(InvoiceDate) >= "%s"', $start)
+            );
         }
 
         if ($end) {
-            $record = $record->whereRaw(sprintf('DATE(InvoiceDate) <= "%s"', $end));
+            $record = $record->whereRaw(
+                sprintf('DATE(InvoiceDate) <= "%s"', $end)
+            );
         }
 
         $record = $record->get()->first();
 
-        return $record->total??0;
+        return $record->total ?? 0;
     }
 }

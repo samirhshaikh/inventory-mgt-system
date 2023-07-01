@@ -12,7 +12,7 @@
  *
  * ToDo: Need to remove customer_sales from here as it can be pretty big list. So need to make customer select box ajax connected.
  */
-import {mapState, mapActions} from "vuex";
+import { mapState, mapActions } from "vuex";
 import Supplier from "../DBObjects/Supplier";
 import Customer from "../DBObjects/CustomerSale";
 import ObjectTypeName from "../DBObjects/ObjectTypeName";
@@ -40,22 +40,22 @@ export const list_controller = {
             phone_sizes: [],
             stock_statuses: [],
             payment_types: [],
-        }
+        };
     },
 
     computed: {
         ...mapState({
-            local_settings: state => state.local_settings,
-            app_settings: state => state.app_settings
-        })
+            local_settings: (state) => state.local_settings,
+            app_settings: (state) => state.app_settings,
+        }),
     },
 
     mounted() {
-        this.stock_types = this.app_settings.stock_types.split(',');
-        this.networks = this.app_settings.networks.split(',');
-        this.phone_sizes = this.app_settings.phone_sizes.split(',');
-        this.stock_statuses = this.app_settings.stock_statuses.split(',');
-        this.payment_types = this.app_settings.payment_types.split(',');
+        this.stock_types = this.app_settings.stock_types.split(",");
+        this.networks = this.app_settings.networks.split(",");
+        this.phone_sizes = this.app_settings.phone_sizes.split(",");
+        this.stock_statuses = this.app_settings.stock_statuses.split(",");
+        this.payment_types = this.app_settings.payment_types.split(",");
 
         this.load_suppliers();
 
@@ -81,27 +81,28 @@ export const list_controller = {
                     .get(route("datatable.suppliers.data"), {
                         params: {
                             get_all_records: 1,
-                            order_by: 'SupplierName'
-                        }
+                            order_by: "SupplierName",
+                        },
                     })
-                    .then(response => {
-                        this.suppliers = response.data.rows;
+                    .then(
+                        (response) => {
+                            this.suppliers = response.data.rows;
 
-                        this.setCachedData({
-                            key: "suppliers",
-                            data: response.data.rows
-                        });
+                            this.setCachedData({
+                                key: "suppliers",
+                                data: response.data.rows,
+                            });
 
-                        this.loading_suppliers = false;
+                            this.loading_suppliers = false;
 
-                        this.load_suppliers_simple();
-                    },
-                    error => {
-                        this.addError(error);
+                            this.load_suppliers_simple();
+                        },
+                        (error) => {
+                            this.addError(error);
 
-                        this.loading_suppliers = false;
-                    }
-                );
+                            this.loading_suppliers = false;
+                        }
+                    );
             }
         },
 
@@ -116,10 +117,13 @@ export const list_controller = {
 
         load_handset_colors() {
             if (
-                this.local_settings.cached_data.hasOwnProperty("handset_colors") &&
+                this.local_settings.cached_data.hasOwnProperty(
+                    "handset_colors"
+                ) &&
                 this.local_settings.cached_data["handset_colors"].length
             ) {
-                this.handset_colors = this.local_settings.cached_data["handset_colors"];
+                this.handset_colors =
+                    this.local_settings.cached_data["handset_colors"];
                 this.load_handset_colors_simple();
             } else {
                 this.loading_handset_colors = true;
@@ -128,27 +132,28 @@ export const list_controller = {
                     .get(route("datatable.handset-colors.data"), {
                         params: {
                             get_all_records: 1,
-                            order_by: 'Name'
-                        }
+                            order_by: "Name",
+                        },
                     })
-                    .then(response => {
-                        this.handset_colors = response.data.rows;
+                    .then(
+                        (response) => {
+                            this.handset_colors = response.data.rows;
 
-                        this.setCachedData({
-                            key: "handset_colors",
-                            data: response.data.rows
-                        });
+                            this.setCachedData({
+                                key: "handset_colors",
+                                data: response.data.rows,
+                            });
 
-                        this.loading_handset_colors = false;
+                            this.loading_handset_colors = false;
 
-                        this.load_handset_colors_simple();
-                    },
-                    error => {
-                        this.addError(error);
+                            this.load_handset_colors_simple();
+                        },
+                        (error) => {
+                            this.addError(error);
 
-                        this.loading_handset_colors = false;
-                    }
-                );
+                            this.loading_handset_colors = false;
+                        }
+                    );
             }
         },
 
@@ -163,10 +168,13 @@ export const list_controller = {
 
         load_handset_models() {
             if (
-                this.local_settings.cached_data.hasOwnProperty("handset_models") &&
+                this.local_settings.cached_data.hasOwnProperty(
+                    "handset_models"
+                ) &&
                 this.local_settings.cached_data["handset_models"].length
             ) {
-                this.handset_models = this.local_settings.cached_data["handset_models"];
+                this.handset_models =
+                    this.local_settings.cached_data["handset_models"];
                 this.load_handset_models_simple();
             } else {
                 this.loading_handset_models = true;
@@ -175,26 +183,27 @@ export const list_controller = {
                     .get(route("datatable.handset-models.data"), {
                         params: {
                             get_all_records: 1,
-                            order_by: 'Name'
-                        }
+                            order_by: "Name",
+                        },
                     })
-                    .then(response => {
-                        this.handset_models = response.data.rows;
+                    .then(
+                        (response) => {
+                            this.handset_models = response.data.rows;
 
-                        this.setCachedData({
-                            key: "handset_models",
-                            data: response.data.rows
-                        });
+                            this.setCachedData({
+                                key: "handset_models",
+                                data: response.data.rows,
+                            });
 
-                        this.loading_handset_models = false;
-                        this.load_handset_models_simple();
-                    },
-                    error => {
-                        this.addError(error);
+                            this.loading_handset_models = false;
+                            this.load_handset_models_simple();
+                        },
+                        (error) => {
+                            this.addError(error);
 
-                        this.loading_handset_models = false;
-                    }
-                );
+                            this.loading_handset_models = false;
+                        }
+                    );
             }
         },
 
@@ -214,7 +223,8 @@ export const list_controller = {
                 ) &&
                 this.local_settings.cached_data["handset_manufacturers"].length
             ) {
-                this.handset_manufacturers = this.local_settings.cached_data["handset_manufacturers"];
+                this.handset_manufacturers =
+                    this.local_settings.cached_data["handset_manufacturers"];
                 this.load_handset_manufacturers_simple();
             } else {
                 this.loading_handset_manufacturers = true;
@@ -223,26 +233,27 @@ export const list_controller = {
                     .get(route("datatable.handset-manufacturers.data"), {
                         params: {
                             get_all_records: 1,
-                            order_by: 'Name'
-                        }
+                            order_by: "Name",
+                        },
                     })
-                    .then(response => {
-                        this.handset_manufacturers = response.data.rows;
+                    .then(
+                        (response) => {
+                            this.handset_manufacturers = response.data.rows;
 
-                        this.setCachedData({
-                            key: "handset_manufacturers",
-                            data: response.data.rows
-                        });
+                            this.setCachedData({
+                                key: "handset_manufacturers",
+                                data: response.data.rows,
+                            });
 
-                        this.loading_handset_manufacturers = false;
-                        this.load_handset_manufacturers_simple();
-                    },
-                    error => {
-                        this.addError(error);
+                            this.loading_handset_manufacturers = false;
+                            this.load_handset_manufacturers_simple();
+                        },
+                        (error) => {
+                            this.addError(error);
 
-                        this.loading_handset_manufacturers = false;
-                    }
-                );
+                            this.loading_handset_manufacturers = false;
+                        }
+                    );
             }
         },
 
@@ -265,16 +276,15 @@ export const list_controller = {
                     options: {
                         id: "suppliers",
                         record_name: "Supplier",
-                        cache_data: true
-                    }
+                        cache_data: true,
+                    },
                 },
                 {
                     width: "750px",
-                    height: "600px"
+                    height: "600px",
                 },
                 {
-                    "closed": event => {
-                    }
+                    closed: (event) => {},
                 }
             );
         },
@@ -283,13 +293,15 @@ export const list_controller = {
             let routes = [];
             routes["get-single"] = route("handset-manufacturers.get-single");
             routes["save"] = route("handset-manufacturers.save");
-            routes["check-duplicate-name"] = route("handset-manufacturers.check-duplicate-name");
+            routes["check-duplicate-name"] = route(
+                "handset-manufacturers.check-duplicate-name"
+            );
 
             this.addObjectTypeName({
                 id: "handset_manufacturers",
                 record_name: "Manufacturer",
                 routes: routes,
-                cache_data: true
+                cache_data: true,
             });
         },
 
@@ -297,13 +309,15 @@ export const list_controller = {
             let routes = [];
             routes["get-single"] = route("handset-models.get-single");
             routes["save"] = route("handset-models.save");
-            routes["check-duplicate-name"] = route("handset-models.check-duplicate-name");
+            routes["check-duplicate-name"] = route(
+                "handset-models.check-duplicate-name"
+            );
 
             this.addObjectTypeName({
                 id: "handset_models",
                 record_name: "Model",
                 routes: routes,
-                cache_data: true
+                cache_data: true,
             });
         },
 
@@ -311,13 +325,15 @@ export const list_controller = {
             let routes = [];
             routes["get-single"] = route("handset-colors.get-single");
             routes["save"] = route("handset-colors.save");
-            routes["check-duplicate-name"] = route("handset-colors.check-duplicate-name");
+            routes["check-duplicate-name"] = route(
+                "handset-colors.check-duplicate-name"
+            );
 
             this.addObjectTypeName({
                 id: "handset_colors",
                 record_name: "Color",
                 routes: routes,
-                cache_data: true
+                cache_data: true,
             });
         },
 
@@ -328,18 +344,18 @@ export const list_controller = {
                 ObjectTypeName,
                 {
                     edit_id: "",
-                    options: options
+                    options: options,
                 },
                 {
                     width: "650px",
-                    height: "600px"
+                    height: "600px",
                 }
             );
         },
 
         ...mapActions({
             setCachedData: "local_settings/setCachedData",
-            addError: "errors/addError"
-        })
-    }
-}
+            addError: "errors/addError",
+        }),
+    },
+};

@@ -11,6 +11,7 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
+        "@prettier/plugin-php": "^0.19.6",
         "axios": "^0.19",
         "cross-env": "^5.1",
         "jquery": "^3.2",
@@ -19,6 +20,7 @@
         "laravel-mix-tailwind": "^0.1.0",
         "lodash": "^4.17.13",
         "popper.js": "^1.12",
+        "prettier": "^2.8.8",
         "resolve-url-loader": "^2.3.1",
         "sass": "^1.15.2",
         "sass-loader": "^7.1.0",

@@ -6,8 +6,8 @@ const state = {
     name: "Store Name",
     address: "",
     phone: "",
-    email: ""
-}
+    email: "",
+};
 
 const getters = {
     name: (state) => {
@@ -22,17 +22,17 @@ const getters = {
     email: (state) => {
         return state.email;
     },
-}
+};
 
 const actions = {
-    setStoreSettings({commit}, payload) {
-        commit('setStoreSettings', payload);
-    }
-}
+    setStoreSettings({ commit }, payload) {
+        commit("setStoreSettings", payload);
+    },
+};
 
 const mutations = {
     setStoreSettingsFromAppSettings(state, payload) {
-        console.log(['restore store_settings from app_settings', payload]);
+        console.log(["restore store_settings from app_settings", payload]);
         for (let key in payload) {
             if (state.hasOwnProperty(key)) {
                 state[key] = payload[key];
@@ -45,13 +45,13 @@ const mutations = {
         state.address = settings.address;
         state.phone = settings.phone;
         state.email = settings.email;
-    }
-}
+    },
+};
 
 export default {
     namespaced: true,
     state,
     getters,
     actions,
-    mutations
-}
+    mutations,
+};

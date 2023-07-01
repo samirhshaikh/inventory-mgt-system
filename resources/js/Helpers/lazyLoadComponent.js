@@ -15,7 +15,7 @@ export default function lazyLoadComponent({
             mounted() {
                 // We immediately load the component if
                 // `IntersectionObserver` is not supported.
-                if (!('IntersectionObserver' in window)) {
+                if (!("IntersectionObserver" in window)) {
                     componentFactory().then(resolveComponent);
                     return;
                 }

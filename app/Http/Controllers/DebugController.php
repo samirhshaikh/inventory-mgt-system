@@ -12,7 +12,7 @@ class DebugController extends BaseController
     public function getDebugInfo(): JsonResponse
     {
         return $this->sendOK([
-            'session' => session()->all()
+            "session" => session()->all(),
         ]);
     }
 }

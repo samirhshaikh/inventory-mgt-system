@@ -26,14 +26,21 @@ abstract class ObjectTypeNameController extends BaseController
      */
     public function changeActiveStatus(IdRequest $request): JsonResponse
     {
-        $object_type_name_service = new ObjectTypeNameService($this->getModel(), $this->getColumnIdInReferenceTables());
+        $object_type_name_service = new ObjectTypeNameService(
+            $this->getModel(),
+            $this->getColumnIdInReferenceTables()
+        );
 
         try {
             $object_type_name_service->changeActiveStatus($request);
 
-            return $this->sendOK([], 'status_changed');
+            return $this->sendOK([], "status_changed");
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         }
     }
 
@@ -43,15 +50,24 @@ abstract class ObjectTypeNameController extends BaseController
      */
     public function getSingle(IdRequest $request): JsonResponse
     {
-        $object_type_name_service = new ObjectTypeNameService($this->getModel(), $this->getColumnIdInReferenceTables());
+        $object_type_name_service = new ObjectTypeNameService(
+            $this->getModel(),
+            $this->getColumnIdInReferenceTables()
+        );
 
         try {
             $response = [];
-            $response['record'] = $object_type_name_service->getSingle($request);
+            $response["record"] = $object_type_name_service->getSingle(
+                $request
+            );
 
             return $this->sendOK($response);
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         }
     }
 
@@ -61,18 +77,32 @@ abstract class ObjectTypeNameController extends BaseController
      */
     public function save(SaveObjectTypeNameRequest $request): JsonResponse
     {
-        $object_type_name_service = new ObjectTypeNameService($this->getModel(), $this->getColumnIdInReferenceTables());
+        $object_type_name_service = new ObjectTypeNameService(
+            $this->getModel(),
+            $this->getColumnIdInReferenceTables()
+        );
 
         try {
             $id = $object_type_name_service->save($request);
 
-            return $this->sendOK([
-                'id' => $id
-            ], self::RECORD_SAVED);
+            return $this->sendOK(
+                [
+                    "id" => $id,
+                ],
+                self::RECORD_SAVED
+            );
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         } catch (DuplicateNameException $e) {
-            return $this->sendError(self::DUPLICATE_NAME, [], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError(
+                self::DUPLICATE_NAME,
+                [],
+                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+            );
         }
     }
 
@@ -82,16 +112,27 @@ abstract class ObjectTypeNameController extends BaseController
      */
     public function delete(IdRequest $request): JsonResponse
     {
-        $object_type_name_service = new ObjectTypeNameService($this->getModel(), $this->getColumnIdInReferenceTables());
+        $object_type_name_service = new ObjectTypeNameService(
+            $this->getModel(),
+            $this->getColumnIdInReferenceTables()
+        );
 
         try {
             $object_type_name_service->delete($request);
 
             return $this->sendOK([], self::RECORD_DELETED);
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         } catch (ReferenceException $e) {
-            return $this->sendError(self::RECORD_REFERENCE_FOUND, [], JsonResponse::HTTP_FORBIDDEN);
+            return $this->sendError(
+                self::RECORD_REFERENCE_FOUND,
+                [],
+                JsonResponse::HTTP_FORBIDDEN
+            );
         }
     }
 
@@ -101,14 +142,21 @@ abstract class ObjectTypeNameController extends BaseController
      */
     public function checkDuplicateName(Request $request): JsonResponse
     {
-        $object_type_name_service = new ObjectTypeNameService($this->getModel(), $this->getColumnIdInReferenceTables());
+        $object_type_name_service = new ObjectTypeNameService(
+            $this->getModel(),
+            $this->getColumnIdInReferenceTables()
+        );
 
         try {
             $object_type_name_service->checkDuplicateName($request);
 
             return $this->sendOK([]);
         } catch (DuplicateNameException $e) {
-            return $this->sendError(self::DUPLICATE_NAME, [], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError(
+                self::DUPLICATE_NAME,
+                [],
+                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+            );
         }
     }
 }

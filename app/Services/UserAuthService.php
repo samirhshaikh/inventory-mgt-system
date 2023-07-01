@@ -18,7 +18,6 @@ class UserAuthService implements UserProvider
      */
     public function retrieveById($identifier)
     {
-
     }
 
     /**
@@ -30,7 +29,6 @@ class UserAuthService implements UserProvider
      */
     public function retrieveByToken($identifier, $token)
     {
-
     }
 
     /**
@@ -42,9 +40,7 @@ class UserAuthService implements UserProvider
      */
     public function updateRememberToken(Authenticatable $user, $token)
     {
-
     }
-
 
     /**
      * Retrieve a user by the given credentials.
@@ -54,8 +50,10 @@ class UserAuthService implements UserProvider
      */
     public function retrieveByCredentials(array $credentials)
     {
-        $user = User::where('UserName', Arr::get($credentials, 'username'))
-            ->first();
+        $user = User::where(
+            "UserName",
+            Arr::get($credentials, "username")
+        )->first();
 
         return $user;
     }
@@ -67,13 +65,23 @@ class UserAuthService implements UserProvider
      * @param array $credentials
      * @return bool
      */
-    public function validateCredentials(Authenticatable $user, array $credentials)
-    {
-        if ($user->getAuthIdentifierName() !== Arr::get($credentials, 'username')) {
+    public function validateCredentials(
+        Authenticatable $user,
+        array $credentials
+    ) {
+        if (
+            $user->getAuthIdentifierName() !==
+            Arr::get($credentials, "username")
+        ) {
             throw new UserValidationException();
         }
 
-        if (!password_verify(Arr::get($credentials, 'password'), $user->getAuthPassword())) {
+        if (
+            !password_verify(
+                Arr::get($credentials, "password"),
+                $user->getAuthPassword()
+            )
+        ) {
             throw new UserValidationException();
         }
 

@@ -14,10 +14,11 @@ abstract class BaseModel extends Model
             return $this;
         }
 
-        return (new $this->transformer)->transform($this);
+        return (new $this->transformer())->transform($this);
     }
 
-    protected static function lastInsertId() {
+    protected static function lastInsertId()
+    {
         return DB::getPDO()->lastInsertId();
     }
 }

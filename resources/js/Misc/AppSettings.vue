@@ -2,7 +2,7 @@
     <div
         class="flex h-full border border-product-color"
         :class="{
-            'bg-gray-700 text-white': dark_mode
+            'bg-gray-700 text-white': dark_mode,
         }"
     >
         <div class="flex-grow flex flex-col justify-between">
@@ -11,14 +11,14 @@
                     class="flex border-b border-product-color-lighter mb-4 pb-1"
                     :class="{
                         'border-product-color-lighter': dark_mode,
-                        'border-product-color': !dark_mode
+                        'border-product-color': !dark_mode,
                     }"
                 >
                     <h1
                         class="text-xl pt-2 ml-1 w-full"
                         :class="{
                             'text-product-color-lighter': dark_mode,
-                            'text-product-color': !dark_mode
+                            'text-product-color': !dark_mode,
                         }"
                     >
                         Application Settings
@@ -65,7 +65,7 @@
                                 :class="{
                                     hidden:
                                         stock_types != '' &&
-                                        stock_types != null
+                                        stock_types != null,
                                 }"
                             >
                                 Required
@@ -89,9 +89,7 @@
                             <p
                                 class="text-red-500 text-xs italic mb-2"
                                 :class="{
-                                    hidden:
-                                        networks != '' &&
-                                        networks != null
+                                    hidden: networks != '' && networks != null,
                                 }"
                             >
                                 Required
@@ -117,7 +115,7 @@
                                 :class="{
                                     hidden:
                                         phone_sizes != '' &&
-                                        phone_sizes != null
+                                        phone_sizes != null,
                                 }"
                             >
                                 Required
@@ -143,7 +141,7 @@
                                 :class="{
                                     hidden:
                                         stock_statuses != '' &&
-                                        stock_statuses != null
+                                        stock_statuses != null,
                                 }"
                             >
                                 Required
@@ -169,7 +167,7 @@
                                 :class="{
                                     hidden:
                                         payment_types != '' &&
-                                        payment_types != null
+                                        payment_types != null,
                                 }"
                             >
                                 Required
@@ -193,15 +191,15 @@ export default {
             phone_sizes: "",
             stock_statuses: "",
             payment_types: "",
-        }
+        };
     },
 
     computed: {
         ...mapState({
-            app_settings: state => state.app_settings,
-            dark_mode: state => state.framework.dark_mode,
-            expanded_sidebar: state => state.framework.expanded_sidebar
-        })
+            app_settings: (state) => state.app_settings,
+            dark_mode: (state) => state.framework.dark_mode,
+            expanded_sidebar: (state) => state.framework.expanded_sidebar,
+        }),
     },
 
     mounted() {
@@ -223,18 +221,18 @@ export default {
                 networks: this.networks,
                 phone_sizes: this.phone_sizes,
                 stock_statuses: this.stock_statuses,
-                payment_types: this.payment_types
+                payment_types: this.payment_types,
             };
             // console.log(settings);
 
             this.setAppSettings(settings);
 
-            this.$modal.hide(this.$parent.name)
+            this.$modal.hide(this.$parent.name);
         },
 
         ...mapActions({
-			setAppSettings: "app_settings/setAppSettings"
-        })
-    }
+            setAppSettings: "app_settings/setAppSettings",
+        }),
+    },
 };
 </script>

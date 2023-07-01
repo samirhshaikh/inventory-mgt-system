@@ -18,28 +18,39 @@ class UsersController extends BaseDatatableController
     {
         $table = new UsersDatatable();
 
-        $order_by = $request->get('order_by', '') == ''
-            ? session('app_settings.datatable.sorting.users.column', Arr::get($table->options(), 'sorting.default'))
-            : $request->get('order_by');
-        $order_direction = $request->get('order_by', '') == ''
-            ? session('app_settings.datatable.sorting.users.direction', Arr::get($table->options(), 'sorting.direction'))
-            : 'asc';
+        $order_by =
+            $request->get("order_by", "") == ""
+                ? session(
+                    "app_settings.datatable.sorting.users.column",
+                    Arr::get($table->options(), "sorting.default")
+                )
+                : $request->get("order_by");
+        $order_direction =
+            $request->get("order_by", "") == ""
+                ? session(
+                    "app_settings.datatable.sorting.users.direction",
+                    Arr::get($table->options(), "sorting.direction")
+                )
+                : "asc";
 
         $user_service = new UserService();
 
-        list('total_records' => $total_records, 'records' => $records) = $user_service->getAll(
+        list(
+            "total_records" => $total_records,
+            "records" => $records,
+        ) = $user_service->getAll(
             $order_by,
             $order_direction,
-            $request->get('search_text', '') ?? ''
+            $request->get("search_text", "") ?? ""
         );
 
         return $this->prepareRecordsOutput(
             $table,
             $records,
             $total_records,
-            (int)$request->get('page_no', 1),
-            $request->get('search_text', ''),
-            (int)$request->get('get_all_records', 0)
+            (int) $request->get("page_no", 1),
+            $request->get("search_text", ""),
+            (int) $request->get("get_all_records", 0)
         );
     }
 }

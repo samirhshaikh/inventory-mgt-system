@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import {datatable_cell} from "./datatable_cell";
+import { datatable_cell } from "./datatable_cell";
 
 export default {
     mixins: [datatable_cell],
@@ -13,7 +13,7 @@ export default {
     computed: {
         phones() {
             return this.data.split(",").join("<br>");
-        }
-    }
-}
+        },
+    },
+};
 </script>

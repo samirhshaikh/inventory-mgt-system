@@ -8,19 +8,17 @@ export const common_functions = {
             this.$modal.show(
                 Invoice,
                 {
-                    invoice_id: String(invoice_id)
+                    invoice_id: String(invoice_id),
                 },
                 {
                     width: "90%",
-                    height: "80%"
+                    height: "80%",
                 },
                 {
-                    "opened": event => {
-                    },
-                    "closed": event => {
-                    }
+                    opened: (event) => {},
+                    closed: (event) => {},
                 }
             );
         },
-    }
-}
+    },
+};

@@ -2,7 +2,7 @@
  * State storage for framework settings. Like expanded side bar, dark mode, page size, etc.
  */
 
-import moment from 'moment';
+import moment from "moment";
 
 const state = {
     expanded_sidebar: true,
@@ -14,8 +14,8 @@ const state = {
     refresh_handset_models: false,
     refresh_handset_manufacturers: false,
     refresh_handset_colors: false,
-    tab_to_refresh: ''
-}
+    tab_to_refresh: "",
+};
 
 const getters = {
     expanded_sidebar: (state) => {
@@ -52,61 +52,61 @@ const getters = {
 
     refresh_handset_colors: (state) => {
         return state.refresh_handset_colors;
-    }
-}
+    },
+};
 
 const actions = {
-    toggleSidebar({state, commit}) {
-        commit('setSidebar', !state.expanded_sidebar);
+    toggleSidebar({ state, commit }) {
+        commit("setSidebar", !state.expanded_sidebar);
     },
 
-    toggleDarkmode({state, commit}) {
-        commit('setDarkmode', !state.dark_mode);
+    toggleDarkmode({ state, commit }) {
+        commit("setDarkmode", !state.dark_mode);
     },
 
-    setPagesize({commit}, page_size) {
-        commit('setPagesize', page_size);
+    setPagesize({ commit }, page_size) {
+        commit("setPagesize", page_size);
     },
 
-    refreshData({commit}, tab) {
-        commit('refreshData', tab);
+    refreshData({ commit }, tab) {
+        commit("refreshData", tab);
     },
 
     setTabToRefresh({ commit }, payload) {
-        commit('setTabToRefresh', payload);
+        commit("setTabToRefresh", payload);
     },
 
-    refreshSuppliers({commit}) {
-        commit('refreshSuppliers');
+    refreshSuppliers({ commit }) {
+        commit("refreshSuppliers");
     },
 
-    refreshCustomerSales({commit}) {
-        commit('refreshCustomerSales');
+    refreshCustomerSales({ commit }) {
+        commit("refreshCustomerSales");
     },
 
-    refreshHandsetModels({commit}) {
-        commit('refreshHandsetModels');
+    refreshHandsetModels({ commit }) {
+        commit("refreshHandsetModels");
     },
 
-    refreshHandsetManufacturers({commit}) {
-        commit('refreshHandsetManufacturers');
+    refreshHandsetManufacturers({ commit }) {
+        commit("refreshHandsetManufacturers");
     },
 
-    refreshHandsetColors({commit}) {
-        commit('refreshHandsetColors');
-    }
-}
+    refreshHandsetColors({ commit }) {
+        commit("refreshHandsetColors");
+    },
+};
 
 const mutations = {
     setFrameworkFromAppSettings(state, payload) {
-        console.log(['restoring framework from app_settings', payload]);
+        console.log(["restoring framework from app_settings", payload]);
         for (let key in payload) {
             if (state.hasOwnProperty(key)) {
                 switch (key) {
-                    case 'dark_mode':
-                        state[key] = (payload[key] != '0');
+                    case "dark_mode":
+                        state[key] = payload[key] != "0";
                         break;
-                    case 'page_size':
+                    case "page_size":
                         state[key] = Number(payload[key]);
                         break;
                     default:
@@ -156,13 +156,13 @@ const mutations = {
 
     refreshHandsetColors(state) {
         state.refresh_handset_colors = moment().format();
-    }
-}
+    },
+};
 
 export default {
     namespaced: true,
     state,
     getters,
     actions,
-    mutations
-}
+    mutations,
+};

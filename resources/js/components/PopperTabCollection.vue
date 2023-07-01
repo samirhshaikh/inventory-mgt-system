@@ -4,7 +4,7 @@
             class="list-none flex px-4 pt-2"
             :class="{
                 'bg-product-color-lighter': !dark_mode,
-                'bg-gray-600': dark_mode
+                'bg-gray-600': dark_mode,
             }"
         >
             <li
@@ -23,7 +23,7 @@
                         'opacity-50 hover:text-product-color': !tab.isActive,
                         'text-gray-400 cursor-not-allowed': tab.isDisabled,
                         'bg-white': !dark_mode,
-                        'bg-gray-800': dark_mode
+                        'bg-gray-800': dark_mode,
                     }"
                     data-turbolinks="false"
                 ></a>
@@ -32,7 +32,7 @@
 
         <div
             class="tabs-component-panels px-4 py-8"
-            style="height: calc(100% - 38px);"
+            style="height: calc(100% - 38px)"
         >
             <slot />
         </div>
@@ -40,23 +40,23 @@
 </template>
 
 <script>
-import expiringStorage from '../Helpers/expiringStorage';
+import expiringStorage from "../Helpers/expiringStorage";
 import { mapState, mapActions } from "vuex";
 export default {
     name: "PopperTabCollection",
 
     props: {
         cacheLifetime: {
-            default: 5
+            default: 5,
         },
         options: {
             type: Object,
             required: false,
             default: () => ({
                 userUrlFragment: true,
-                defaultTabHash: null
-            })
-        }
+                defaultTabHash: null,
+            }),
+        },
     },
 
     data() {
@@ -64,7 +64,7 @@ export default {
             tabs: [],
             activeTabHash: "",
             activeTabIndex: 0,
-            lastActiveTabHash: ""
+            lastActiveTabHash: "",
         };
     },
 
@@ -74,9 +74,10 @@ export default {
         },
 
         ...mapState({
-            dark_mode: state => state.framework.dark_mode,
-            popper_active_tab: state => state.local_settings.popper_active_tab
-        })
+            dark_mode: (state) => state.framework.dark_mode,
+            popper_active_tab: (state) =>
+                state.local_settings.popper_active_tab,
+        }),
     },
 
     created() {
@@ -141,7 +142,7 @@ export default {
                 return;
             }
 
-            this.tabs.forEach(tab => {
+            this.tabs.forEach((tab) => {
                 tab.isActive = tab.hash === selectedTab.hash;
             });
 
@@ -165,7 +166,7 @@ export default {
         },
 
         findTab(hash) {
-            return this.tabs.find(tab => tab.hash === hash);
+            return this.tabs.find((tab) => tab.hash === hash);
         },
 
         setTabVisible(hash, visible) {
@@ -197,7 +198,9 @@ export default {
         },
 
         getTabHash(index) {
-            const tab = this.tabs.find(tab => this.tabs.indexOf(tab) === index);
+            const tab = this.tabs.find(
+                (tab) => this.tabs.indexOf(tab) === index
+            );
 
             if (!tab) {
                 return;
@@ -215,8 +218,8 @@ export default {
         },
 
         ...mapActions({
-            setPopperActiveTab: "local_settings/setPopperActiveTab"
-        })
-    }
+            setPopperActiveTab: "local_settings/setPopperActiveTab",
+        }),
+    },
 };
 </script>

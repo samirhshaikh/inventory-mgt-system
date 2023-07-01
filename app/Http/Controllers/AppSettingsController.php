@@ -18,17 +18,17 @@ class AppSettingsController extends BaseController
         foreach ($settings as $state => $payload) {
             AppSettings::updateOrCreate(
                 [
-                    'UserName' => session('user'),
-                    'State' => $state
+                    "UserName" => session("user"),
+                    "State" => $state,
                 ],
                 [
-                    'Payload' => json_encode($payload),
-                    'CreatedBy' => session('user')
+                    "Payload" => json_encode($payload),
+                    "CreatedBy" => session("user"),
                 ]
             );
         }
 
-        session(['app_settings' => $request->all()]);
+        session(["app_settings" => $request->all()]);
 
         return $request;
     }

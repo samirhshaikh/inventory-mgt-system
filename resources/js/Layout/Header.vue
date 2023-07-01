@@ -5,11 +5,16 @@
         <div
             class="flex flex-shrink-0 text-xl font-semibold text-center mt-0 mb-0 border-r border-white h-full content-center"
             :class="{
-                    'w-64': expanded_sidebar && !small_screen,
-                    'w-12': !expanded_sidebar || small_screen
-                }"
+                'w-64': expanded_sidebar && !small_screen,
+                'w-12': !expanded_sidebar || small_screen,
+            }"
         >
-            <div v-if="expanded_sidebar && !small_screen" class="mb-auto mt-auto w-full">Inventory Mgt System</div>
+            <div
+                v-if="expanded_sidebar && !small_screen"
+                class="mb-auto mt-auto w-full"
+            >
+                Inventory Mgt System
+            </div>
             <div v-else class="mb-auto mt-auto w-full">IMS</div>
         </div>
 
@@ -30,21 +35,18 @@
             </div>
         </div>
 
-        <Window
-            class="hidden"
-            @resizeWindow="resizeWindow"
-        ></Window>
+        <Window class="hidden" @resizeWindow="resizeWindow"></Window>
     </header>
 </template>
 
 <script>
-import {mapActions, mapState} from "vuex";
+import { mapActions, mapState } from "vuex";
 import UserOverlayVue from "../Misc/UserOverlay";
 
 export default {
     data() {
         return {
-            width: 0
+            width: 0,
         };
     },
 
@@ -58,9 +60,9 @@ export default {
         },
 
         ...mapState({
-            dark_mode: state => state.framework.dark_mode,
-            expanded_sidebar: state => state.framework.expanded_sidebar
-        })
+            dark_mode: (state) => state.framework.dark_mode,
+            expanded_sidebar: (state) => state.framework.expanded_sidebar,
+        }),
     },
 
     methods: {
@@ -71,19 +73,21 @@ export default {
         showUserOverlay() {
             this.setPopperOpen(true);
 
-            this.$modal.show(UserOverlayVue, {}, {
-                width: '80%',
-                height: '80%'
-            });
+            this.$modal.show(
+                UserOverlayVue,
+                {},
+                {
+                    width: "80%",
+                    height: "80%",
+                }
+            );
         },
 
         ...mapActions({
-            setPopperOpen: 'local_settings/setPopperOpen'
-        })
+            setPopperOpen: "local_settings/setPopperOpen",
+        }),
     },
-}
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

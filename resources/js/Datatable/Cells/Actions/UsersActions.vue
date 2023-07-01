@@ -4,32 +4,30 @@
             @click.native="edit"
             class="text-white bg-green-600"
             :class="{
-                hidden: !$page.user_details.IsAdmin
+                hidden: !$page.user_details.IsAdmin,
             }"
-        >Edit
-        </Button
-        >
+            >Edit
+        </Button>
         <Button
             @click.native="remove"
             class="text-white bg-red-400 ml-2"
             :class="{
-                hidden: !$page.user_details.IsAdmin
+                hidden: !$page.user_details.IsAdmin,
             }"
             :icon="deleting_record ? 'sync-alt' : ''"
             :icon_class="deleting_record ? 'fa-spin' : ''"
             :split="deleting_record ? 'border-white' : ''"
-        >{{ deleting_record ? "Deleting" : "Delete" }}
-        </Button
-        >
+            >{{ deleting_record ? "Deleting" : "Delete" }}
+        </Button>
     </div>
 </template>
 
 <script>
 import User from "../../../DBObjects/User.vue";
-import {mapActions} from "vuex";
+import { mapActions } from "vuex";
 import Confirm from "../../../components/Confirm.vue";
-import {datatable_cell} from "../datatable_cell";
-import {notifications} from "../../../Helpers/notifications";
+import { datatable_cell } from "../datatable_cell";
+import { notifications } from "../../../Helpers/notifications";
 
 export default {
     mixins: [datatable_cell, notifications],
@@ -42,11 +40,11 @@ export default {
                 User,
                 {
                     edit_id: this.row.UserName,
-                    options: this.options
+                    options: this.options,
                 },
                 {
                     width: "650px",
-                    height: "600px"
+                    height: "600px",
                 }
             );
         },
@@ -65,45 +63,52 @@ export default {
 
                         axios
                             .post(route("users.delete"), {
-                                username: this.row.UserName
+                                username: this.row.UserName,
                             })
-                            .then(
-                                response => {
-                                    if (response.data.message == "record_deleted") {
-                                        this.$notify({
-                                            group: "messages",
-                                            title: "Success",
-                                            text: this.formatMessage(response.data.message, this.options.record_name)
-                                        });
+                            .then((response) => {
+                                if (response.data.message == "record_deleted") {
+                                    this.$notify({
+                                        group: "messages",
+                                        title: "Success",
+                                        text: this.formatMessage(
+                                            response.data.message,
+                                            this.options.record_name
+                                        ),
+                                    });
 
-                                        this.refreshData(this.options.id);
-                                    } else {
-                                        this.$notify({
-                                            group: "messages",
-                                            title: "Error",
-                                            type: "error",
-                                            text: this.formatMessage("unknown_error", this.options.record_name)
-                                        });
-                                    }
-
-                                    this.deleting_record = false;
+                                    this.refreshData(this.options.id);
+                                } else {
+                                    this.$notify({
+                                        group: "messages",
+                                        title: "Error",
+                                        type: "error",
+                                        text: this.formatMessage(
+                                            "unknown_error",
+                                            this.options.record_name
+                                        ),
+                                    });
                                 }
-                            )
-                            .catch(error => {
+
+                                this.deleting_record = false;
+                            })
+                            .catch((error) => {
                                 this.deleting_record = false;
 
                                 this.$notify({
                                     group: "messages",
                                     title: "Error",
                                     type: "error",
-                                    text: this.formatMessage(error.response.data.message, this.options.record_name)
+                                    text: this.formatMessage(
+                                        error.response.data.message,
+                                        this.options.record_name
+                                    ),
                                 });
                             });
-                    }
+                    },
                 },
                 {
                     width: "350px",
-                    height: "auto"
+                    height: "auto",
                 }
             );
         },
@@ -111,8 +116,8 @@ export default {
         ...mapActions({
             refreshData: "framework/refreshData",
             setPopperOpen: "local_settings/setPopperOpen",
-            addError: "errors/addError"
-        })
-    }
+            addError: "errors/addError",
+        }),
+    },
 };
 </script>

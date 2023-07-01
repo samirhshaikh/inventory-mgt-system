@@ -5,7 +5,7 @@
                 class="flex items-stretch datatable_header"
                 :class="{
                     'border-product-color-lighter bg-white': !dark_mode,
-                    'border-product-color bg-gray-800': dark_mode
+                    'border-product-color bg-gray-800': dark_mode,
                 }"
             >
                 <h1
@@ -60,11 +60,11 @@
 </template>
 
 <script>
-import {mapState, mapActions} from "vuex";
+import { mapState, mapActions } from "vuex";
 import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
 import ObjectTypeName from "../DBObjects/ObjectTypeName.vue";
-import {datatable_common} from "../Helpers/datatable_common";
+import { datatable_common } from "../Helpers/datatable_common";
 
 export default {
     mixins: [datatable_common],
@@ -72,26 +72,26 @@ export default {
     components: {
         ObjectType1Datatable: lazyLoadComponent({
             componentFactory: () => import("@/Datatable/Datatable"),
-            loading: loading
-        })
+            loading: loading,
+        }),
     },
 
     data() {
         return {
-            focus_on_search_bar: false
-        }
+            focus_on_search_bar: false,
+        };
     },
 
     computed: {
         ...mapState({
-            dark_mode: state => state.framework.dark_mode
-        })
+            dark_mode: (state) => state.framework.dark_mode,
+        }),
     },
 
     created() {
         this.setTableMetaData({
             columns: this.columns,
-            options: this.options
+            options: this.options,
         });
 
         this.setActiveTab(this.options.id);
@@ -105,26 +105,26 @@ export default {
                 ObjectTypeName,
                 {
                     edit_id: "",
-                    options: this.options
+                    options: this.options,
                 },
                 {
                     width: "650px",
-                    height: "600px"
+                    height: "600px",
                 },
                 {
-                    "closed": event => {
+                    closed: (event) => {
                         this.focus_on_search_bar = true;
-                    }
+                    },
                 }
             );
         },
 
         ...mapActions({
-            setTableMetaData: 'datatable/setTableMetaData',
-            setActiveTab: 'local_settings/setActiveTab',
+            setTableMetaData: "datatable/setTableMetaData",
+            setActiveTab: "local_settings/setActiveTab",
             setPopperOpen: "local_settings/setPopperOpen",
-            addError: 'errors/addError'
-        })
-    }
+            addError: "errors/addError",
+        }),
+    },
 };
 </script>

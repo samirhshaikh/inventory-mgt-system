@@ -2,45 +2,45 @@
  * State storage for errors.
  */
 
-import moment from 'moment';
+import moment from "moment";
 
 const state = {
-    list: []
-}
+    list: [],
+};
 
 const getters = {
     list: (state) => {
         return state.list;
-    }
-}
+    },
+};
 
 const actions = {
-    addError({commit}, payload) {
-        commit('addError', payload)
+    addError({ commit }, payload) {
+        commit("addError", payload);
     },
 
-    clearErrors({commit}) {
-        commit('clearErrors');
-    }
-}
+    clearErrors({ commit }) {
+        commit("clearErrors");
+    },
+};
 
 const mutations = {
     addError(state, payload) {
         state.list.unshift({
-            'time': moment().format(),
-            'error': payload
+            time: moment().format(),
+            error: payload,
         });
     },
 
     clearErrors(state) {
-        state.list = []
-    }
-}
+        state.list = [];
+    },
+};
 
 export default {
     namespaced: true,
     state,
     getters,
     actions,
-    mutations
-}
+    mutations,
+};

@@ -16,7 +16,7 @@ class LoginController extends Controller
      */
     public function doLogin(LoginRequest $request)
     {
-        $userController = new UserController;
+        $userController = new UserController();
         $loginResponse = $userController->login($request);
 
         $status = $loginResponse->status();
@@ -26,19 +26,32 @@ class LoginController extends Controller
                 $loginResponse = json_decode($loginResponse->content(), true);
 
                 session([
-                    'user' => $request->get('username'),
-                    'user_details' => Arr::get($loginResponse, 'response.user_details'),
-                    'api_token' => Arr::get($loginResponse, 'response.access_token'),
-                    'expires_at' => Arr::get($loginResponse, 'response.expires_at')
+                    "user" => $request->get("username"),
+                    "user_details" => Arr::get(
+                        $loginResponse,
+                        "response.user_details"
+                    ),
+                    "api_token" => Arr::get(
+                        $loginResponse,
+                        "response.access_token"
+                    ),
+                    "expires_at" => Arr::get(
+                        $loginResponse,
+                        "response.expires_at"
+                    ),
                 ]);
 
-                $return = ['error' => '', 'api_token' => session('api_token')];
+                $return = ["error" => "", "api_token" => session("api_token")];
 
                 break;
             default:
                 $loginResponse = json_decode($loginResponse->content(), true);
 
-                $return = ['error' => $this->formatErrorMessages(Arr::get($loginResponse, 'error'))];
+                $return = [
+                    "error" => $this->formatErrorMessages(
+                        Arr::get($loginResponse, "error")
+                    ),
+                ];
 
                 break;
         }
@@ -55,7 +68,7 @@ class LoginController extends Controller
     {
         session()->flush();
 
-        return redirect('login');
+        return redirect("login");
     }
 
     /**
@@ -65,10 +78,12 @@ class LoginController extends Controller
     private function formatErrorMessages($error): string
     {
         $error_codes_to_messages = [
-            'invalid_credentials' => 'Invalid Username/Password',
-            'could_not_create_token' => 'Could not create the token'
+            "invalid_credentials" => "Invalid Username/Password",
+            "could_not_create_token" => "Could not create the token",
         ];
 
-        return array_key_exists($error, $error_codes_to_messages) ? $error_codes_to_messages[$error] : 'Unknown Error';
+        return array_key_exists($error, $error_codes_to_messages)
+            ? $error_codes_to_messages[$error]
+            : "Unknown Error";
     }
 }

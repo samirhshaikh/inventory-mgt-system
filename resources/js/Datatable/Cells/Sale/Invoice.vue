@@ -20,7 +20,11 @@
             </Button>
         </div>
 
-        <iframe id="pdf-frame" class="w-full mt-2 pdf" v-show="!loading"></iframe>
+        <iframe
+            id="pdf-frame"
+            class="w-full mt-2 pdf"
+            v-show="!loading"
+        ></iframe>
 
         <Loading v-if="loading"></Loading>
     </div>
@@ -37,7 +41,7 @@ export default {
     props: {
         invoice_id: {
             type: String,
-            required: true
+            required: true,
         },
     },
 
@@ -47,38 +51,44 @@ export default {
             pdf_link: "",
             pdf_source: null,
             pdf_config: {
-                sidebar: false
+                sidebar: false,
             },
             pdf_content: null,
-        }
+        };
     },
 
     computed: {
         filename() {
             return "Invoice_" + this.invoice_id;
-        }
+        },
     },
 
     mounted() {
         axios
             .get(route("sale.get-pdf-invoice"), {
                 params: {
-                    Id: this.invoice_id
+                    Id: this.invoice_id,
                 },
-                responseType: "blob"
-            }).then(
-                response => {
+                responseType: "blob",
+            })
+            .then(
+                (response) => {
                     this.loading = false;
 
-                    let file = new File([response.data], 'Invoice_' + this.invoice_id + '.pdf', { type: 'application/pdf' } )
-                    document.querySelector('#pdf-frame').src = URL.createObjectURL(file)
+                    let file = new File(
+                        [response.data],
+                        "Invoice_" + this.invoice_id + ".pdf",
+                        { type: "application/pdf" }
+                    );
+                    document.querySelector("#pdf-frame").src =
+                        URL.createObjectURL(file);
 
                     // let objectURL = URL.createObjectURL(response.data);
                     // document.querySelector('#pdf-frame').src = '';
                     // document.querySelector('#pdf-frame').src = objectURL;
                     // objectURL = URL.revokeObjectURL(response.data);
                 },
-                error => {
+                (error) => {
                     console.log(error);
                 }
             );
@@ -86,9 +96,9 @@ export default {
 
     methods: {
         printPDF() {
-            document.querySelector('#pdf-frame').contentWindow.print();
+            document.querySelector("#pdf-frame").contentWindow.print();
             // this.$refs.myPdfComponent.print();
-        }
-    }
-}
+        },
+    },
+};
 </script>

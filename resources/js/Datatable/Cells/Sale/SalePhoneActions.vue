@@ -4,7 +4,7 @@
             @click.native="returnItem"
             class="text-white bg-red-400 mr-2"
             :class="{
-                hidden: !$page.user_details.IsAdmin || row['Returned'] == 1
+                hidden: !$page.user_details.IsAdmin || row['Returned'] == 1,
             }"
         >
             Return
@@ -12,27 +12,29 @@
         <span
             class="text-red-700 leading-normal mr-2"
             :class="{
-                hidden: row['Returned'] == 0
+                hidden: row['Returned'] == 0,
             }"
-        >Returned</span>
+            >Returned</span
+        >
         <Button
             @click.native="tradeInDetails"
             class="text-white bg-green-600 mr-2"
             :class="{
-                hidden: !$page.user_details.IsAdmin || !parent_row.hasOwnProperty('tradein')
+                hidden:
+                    !$page.user_details.IsAdmin ||
+                    !parent_row.hasOwnProperty('tradein'),
             }"
         >
             Trade In Details
         </Button>
     </div>
-
 </template>
 
 <script>
 import ReturnItem from "../../../DBObjects/ReturnItem";
-import {datatable_cell} from "../datatable_cell";
-import {notifications} from "../../../Helpers/notifications";
-import {mapActions} from "vuex";
+import { datatable_cell } from "../datatable_cell";
+import { notifications } from "../../../Helpers/notifications";
+import { mapActions } from "vuex";
 import Purchase from "../../../DBObjects/Purchase";
 
 export default {
@@ -40,7 +42,7 @@ export default {
 
     props: {
         parent_row: {
-            default: () => ({})
+            default: () => ({}),
         },
     },
 
@@ -54,11 +56,11 @@ export default {
                     IMEI: this.row["IMEI"],
                     refresh: (IMEI) => {
                         this.$emit("returnItem", IMEI);
-                    }
+                    },
                 },
                 {
                     width: "500px",
-                    height: "500px"
+                    height: "500px",
                 }
             );
         },
@@ -80,13 +82,13 @@ export default {
                         sorting: {
                             default: "UpdatedDate",
                             direction: "desc",
-                            enabled: false
-                        }
+                            enabled: false,
+                        },
                     },
                 },
                 {
                     width: "90%",
-                    height: "90%"
+                    height: "90%",
                 }
             );
         },
@@ -94,8 +96,8 @@ export default {
         ...mapActions({
             refreshData: "framework/refreshData",
             setPopperOpen: "local_settings/setPopperOpen",
-            addError: 'errors/addError'
-        })
-    }
-}
+            addError: "errors/addError",
+        }),
+    },
+};
 </script>

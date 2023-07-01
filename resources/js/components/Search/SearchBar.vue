@@ -3,18 +3,19 @@
         <button
             class="rounded text-green-600 px-2 pt-2"
             :class="{
-                'hidden': search_bar_open,
+                hidden: search_bar_open,
                 'hover:text-gray-800': !dark_mode,
-                'hover:text-product-color-lighter': dark_mode
+                'hover:text-product-color-lighter': dark_mode,
             }"
             @click="openSearchBar"
         >
             <FA :icon="['fas', 'search']"></FA>
         </button>
 
-        <div class="flex flex-row search_bar"
+        <div
+            class="flex flex-row search_bar"
             :class="{
-                hidden: !search_bar_open
+                hidden: !search_bar_open,
             }"
         >
             <input
@@ -46,23 +47,24 @@
 
 <style>
 .search_bar {
-    @apply .bg-gray-200 .text-gray-700 .border .border-gray-400 .rounded .py-1 .px-2 .text-sm
+    @apply .bg-gray-200 .text-gray-700 .border .border-gray-400 .rounded .py-1 .px-2 .text-sm;
 }
 .search_input {
     @apply .appearance-none
-    .bg-transparent
+    .bg-transparent;
 }
 .search_input {
     line-height: 18px;
 }
-.search_input:focus, .search_input:focus {
+.search_input:focus,
+.search_input:focus {
     @apply .outline-none
-    .bg-transparent
+    .bg-transparent;
 }
 </style>
 
 <script>
-import {mapActions, mapState} from 'vuex';
+import { mapActions, mapState } from "vuex";
 import AdvancedSearch from "./AdvancedSearch";
 
 export default {
@@ -71,38 +73,38 @@ export default {
     props: {
         placeholder_text: {
             type: String,
-            default: 'Search'
+            default: "Search",
         },
         columns: {
             type: Array,
-            default: () => ([])
+            default: () => [],
         },
         advanced_search: {
             type: Boolean,
-            default: true
+            default: true,
         },
         focus_on_search_bar: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
 
     data() {
         return {
             search_bar_open: false,
-            search_text: '',
-            current_search_text: ''
-        }
+            search_text: "",
+            current_search_text: "",
+        };
     },
 
     computed: {
         get_placeholder_text() {
-            return 'Search ' + this.placeholder_text + '...';
+            return "Search " + this.placeholder_text + "...";
         },
 
         ...mapState({
-            dark_mode: state => state.framework.dark_mode
-        })
+            dark_mode: (state) => state.framework.dark_mode,
+        }),
     },
 
     mounted() {
@@ -116,14 +118,14 @@ export default {
             this.search_bar_open = true;
 
             if (this.search_bar_open) {
-                setTimeout(x => {
+                setTimeout((x) => {
                     this.$nextTick(() => this.$refs.search_textbox.focus());
                 }, 100);
             }
         },
 
         blurSearchInput(event) {
-            if (this.search_text == '') {
+            if (this.search_text == "") {
                 this.search_bar_open = false;
             }
         },
@@ -134,7 +136,7 @@ export default {
                 this.search_text = "";
             }
 
-            this.$emit('clearSearch');
+            this.$emit("clearSearch");
 
             this.search_bar_open = false;
         },
@@ -142,14 +144,14 @@ export default {
         fireSearch() {
             if (this.current_search_text != this.search_text) {
                 this.current_search_text = this.search_text;
-                this.$emit('searchData', this.search_text);
+                this.$emit("searchData", this.search_text);
             }
         },
 
         searchData(event) {
             switch (event.key) {
                 case "Escape":
-                    this.search_text = '';
+                    this.search_text = "";
                     this.search_bar_open = false;
                     break;
                 case "Enter":
@@ -170,19 +172,19 @@ export default {
                         this.$emit("triggerAdvancedSearch", newValue);
                         this.search_bar_open = false;
                         this.search_text = "";
-                    }
+                    },
                 },
                 {
                     width: "750px",
-                    height: "600px"
+                    height: "600px",
                 }
             );
         },
 
         ...mapActions({
             setPopperOpen: "local_settings/setPopperOpen",
-            addError: 'errors/addError'
-        })
+            addError: "errors/addError",
+        }),
     },
 
     watch: {
@@ -191,7 +193,7 @@ export default {
             if (new_value) {
                 this.openSearchBar();
             }
-        }
-    }
+        },
+    },
 };
 </script>

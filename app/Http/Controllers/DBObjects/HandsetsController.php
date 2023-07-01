@@ -24,9 +24,13 @@ class HandsetsController extends BaseController
         try {
             $handsets_service->changeActiveStatus($request);
 
-            return $this->sendOK([], 'status_changed');
+            return $this->sendOK([], "status_changed");
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         }
     }
 
@@ -40,11 +44,15 @@ class HandsetsController extends BaseController
 
         try {
             $response = [];
-            $response['record'] = $handsets_service->getSingle($request);
+            $response["record"] = $handsets_service->getSingle($request);
 
             return $this->sendOK($response);
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         }
     }
 
@@ -59,13 +67,24 @@ class HandsetsController extends BaseController
         try {
             $id = $handsets_service->save($request);
 
-            return $this->sendOK([
-                'id' => $id
-            ], self::RECORD_SAVED);
+            return $this->sendOK(
+                [
+                    "id" => $id,
+                ],
+                self::RECORD_SAVED
+            );
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         } catch (DuplicateNameException $e) {
-            return $this->sendError(self::DUPLICATE_NAME, [], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError(
+                self::DUPLICATE_NAME,
+                [],
+                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+            );
         }
     }
 
@@ -82,9 +101,17 @@ class HandsetsController extends BaseController
 
             return $this->sendOK([], self::RECORD_DELETED);
         } catch (RecordNotFoundException $e) {
-            return $this->sendError(self::RECORD_NO_FOUND, [], JsonResponse::HTTP_NOT_FOUND);
+            return $this->sendError(
+                self::RECORD_NO_FOUND,
+                [],
+                JsonResponse::HTTP_NOT_FOUND
+            );
         } catch (ReferenceException $e) {
-            return $this->sendError(self::RECORD_REFERENCE_FOUND, [], JsonResponse::HTTP_FORBIDDEN);
+            return $this->sendError(
+                self::RECORD_REFERENCE_FOUND,
+                [],
+                JsonResponse::HTTP_FORBIDDEN
+            );
         }
     }
 
@@ -101,7 +128,11 @@ class HandsetsController extends BaseController
 
             return $this->sendOK([]);
         } catch (DuplicateNameException $e) {
-            return $this->sendError(self::DUPLICATE_NAME, [], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError(
+                self::DUPLICATE_NAME,
+                [],
+                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+            );
         }
     }
 }

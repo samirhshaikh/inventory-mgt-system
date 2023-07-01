@@ -9,13 +9,13 @@ class TradeInTransformer extends TransformerAbstract
     public function transform(TradeIn $model)
     {
         $return = [
-            'SalesInvoiceId' => $model->SalesInvoiceId,
-            'PurchaseInvoiceId' => $model->PurchaseInvoiceId,
+            "SalesInvoiceId" => $model->SalesInvoiceId,
+            "PurchaseInvoiceId" => $model->PurchaseInvoiceId,
         ];
 
-        if ($model->relationLoaded('purchase')) {
+        if ($model->relationLoaded("purchase")) {
             if ($model->purchase) {
-                $return['purchase'] = $model->purchase->transform();
+                $return["purchase"] = $model->purchase->transform();
             }
         }
 

@@ -5,7 +5,7 @@
                 class="flex items-stretch datatable_header"
                 :class="{
                     'border-product-color-lighter bg-white': !dark_mode,
-                    'border-product-color bg-gray-800': dark_mode
+                    'border-product-color bg-gray-800': dark_mode,
                 }"
             >
                 <h1
@@ -26,9 +26,8 @@
                         icon="plus"
                         split="border-white"
                         class="text-white bg-green-600 float-right"
-                    >New {{ options.record_name }}
-                    </Button
-                    >
+                        >New {{ options.record_name }}
+                    </Button>
                 </div>
             </div>
 
@@ -42,7 +41,7 @@
 </template>
 
 <script>
-import {mapState, mapActions} from "vuex";
+import { mapState, mapActions } from "vuex";
 import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
 import Handset from "../DBObjects/Handset.vue";
@@ -51,37 +50,37 @@ export default {
     props: {
         columns: {
             type: Array,
-            default: () => ([])
+            default: () => [],
         },
         options: {
             type: Object,
-            default: () => ({})
+            default: () => ({}),
         },
     },
 
     components: {
         HandsetsDatatable: lazyLoadComponent({
             componentFactory: () => import("@/Datatable/Datatable"),
-            loading: loading
-        })
+            loading: loading,
+        }),
     },
 
     data() {
         return {
-            search_text: ''
+            search_text: "",
         };
     },
 
     computed: {
         ...mapState({
-            dark_mode: state => state.framework.dark_mode
-        })
+            dark_mode: (state) => state.framework.dark_mode,
+        }),
     },
 
     created() {
         this.setTableMetaData({
             columns: this.columns,
-            options: this.options
+            options: this.options,
         });
 
         this.setActiveTab(this.options.id);
@@ -95,11 +94,11 @@ export default {
                 Handset,
                 {
                     edit_id: "",
-                    options: this.options
+                    options: this.options,
                 },
                 {
                     width: "750px",
-                    height: "600px"
+                    height: "600px",
                 }
             );
         },
@@ -109,11 +108,11 @@ export default {
         },
 
         ...mapActions({
-            setTableMetaData: 'datatable/setTableMetaData',
-            setActiveTab: 'local_settings/setActiveTab',
+            setTableMetaData: "datatable/setTableMetaData",
+            setActiveTab: "local_settings/setActiveTab",
             setPopperOpen: "local_settings/setPopperOpen",
-            addError: 'errors/addError'
-        })
-    }
+            addError: "errors/addError",
+        }),
+    },
 };
 </script>

@@ -2,7 +2,7 @@
     <div
         class="flex h-full border border-product-color"
         :class="{
-            'bg-gray-700 text-white': dark_mode
+            'bg-gray-700 text-white': dark_mode,
         }"
     >
         <div class="flex-grow flex flex-col justify-between">
@@ -11,14 +11,14 @@
                     class="flex border-b border-product-color-lighter mb-4 pb-1"
                     :class="{
                         'border-product-color-lighter': dark_mode,
-                        'border-product-color': !dark_mode
+                        'border-product-color': !dark_mode,
                     }"
                 >
                     <h1
                         class="text-base md:text-xl pt-2 ml-1 w-full"
                         :class="{
                             'text-product-color-lighter': dark_mode,
-                            'text-product-color': !dark_mode
+                            'text-product-color': !dark_mode,
                         }"
                     >
                         {{ options.record_name }} Details
@@ -42,7 +42,8 @@
                             class="ml-1"
                             :class="{
                                 'bg-green-600': valid_data,
-                                'bg-gray-600 text-gray-500 cursor-not-allowed': !valid_data
+                                'bg-gray-600 text-gray-500 cursor-not-allowed':
+                                    !valid_data,
                             }"
                         >
                             Save All
@@ -51,30 +52,39 @@
                 </div>
 
                 <div class="flex flex-row" v-if="!loading">
-                    <div class="w-1/2 border-r border-product-color-lighter pr-4">
+                    <div
+                        class="w-1/2 border-r border-product-color-lighter pr-4"
+                    >
                         <form class="pl-2" autocomplete="off" @submit.prevent>
-                            <div class="flex -mx-3 justify-between items-start form_field_container">
+                            <div
+                                class="flex -mx-3 justify-between items-start form_field_container"
+                            >
                                 <div class="px-3">
                                     <label
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Supplier
                                     </label>
-                                    <div class="flex flex-row items-center" v-if="!loading_suppliers">
+                                    <div
+                                        class="flex flex-row items-center"
+                                        v-if="!loading_suppliers"
+                                    >
                                         <v-select
                                             :value="row['SupplierId']"
                                             label="SupplierName"
                                             v-model="row['SupplierId']"
-                                            :reduce="supplier => supplier.Id"
+                                            :reduce="(supplier) => supplier.Id"
                                             :options="suppliers"
                                             class="w-48 generic_vs_select"
                                             v-if="!loading_suppliers"
                                             :class="{
-                                                required_field: row['SupplierId'] == '' || row['SupplierId'] == null
+                                                required_field:
+                                                    row['SupplierId'] == '' ||
+                                                    row['SupplierId'] == null,
                                             }"
                                             ref="supplier_picker"
                                         ></v-select>
@@ -88,21 +98,21 @@
                                             New Supplier
                                         </Button>
                                     </div>
-                                    <Loading v-else/>
+                                    <Loading v-else />
                                 </div>
 
-                                <div class="text-white px-3 mt-5">
-
-                                </div>
+                                <div class="text-white px-3 mt-5"></div>
                             </div>
 
-                            <div class="flex flex-wrap -mx-3 form_field_container">
+                            <div
+                                class="flex flex-wrap -mx-3 form_field_container"
+                            >
                                 <div class="w-full md:w-1/2 px-3">
                                     <label
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Invoice Date
@@ -121,7 +131,7 @@
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Invoice No
@@ -139,21 +149,19 @@
                                 class="flex justify-between border-b border-product-color-lighter mb-4 pb-1"
                                 :class="{
                                     'border-product-color-lighter': dark_mode,
-                                    'border-product-color': !dark_mode
+                                    'border-product-color': !dark_mode,
                                 }"
                             >
                                 <h1
                                     class="text-base pt-2 ml-1"
                                     :class="{
                                         'text-product-color-lighter': dark_mode,
-                                        'text-product-color': !dark_mode
+                                        'text-product-color': !dark_mode,
                                     }"
                                 >
                                     Phone Details
                                 </h1>
-                                <div
-                                    class="mr-2 text-white"
-                                >
+                                <div class="mr-2 text-white">
                                     <Button
                                         @click.native="addRecord"
                                         icon="plus"
@@ -161,7 +169,8 @@
                                         class="ml-1"
                                         :class="{
                                             'bg-green-600': valid_phone_data,
-                                            'bg-gray-600 text-gray-500 cursor-not-allowed': !valid_phone_data
+                                            'bg-gray-600 text-gray-500 cursor-not-allowed':
+                                                !valid_phone_data,
                                         }"
                                     >
                                         {{ add_record_title }}
@@ -169,14 +178,16 @@
                                 </div>
                             </div>
 
-                            <div class="flex flex-wrap -mx-3 form_field_container">
+                            <div
+                                class="flex flex-wrap -mx-3 form_field_container"
+                            >
                                 <div class="w-full px-3 mb-6 md:mb-0">
                                     <label
                                         class="block form_field_label"
                                         :class="{
-                                        'text-gray-700': !dark_mode,
-                                        'text-white': dark_mode
-                                    }"
+                                            'text-gray-700': !dark_mode,
+                                            'text-white': dark_mode,
+                                        }"
                                     >
                                         IMEI
                                     </label>
@@ -187,7 +198,9 @@
                                             v-model.trim="child_row['IMEI']"
                                             v-on:blur="isDuplicateIMEI"
                                             :class="{
-                                                required_field: imei_validation_message != ''
+                                                required_field:
+                                                    imei_validation_message !=
+                                                    '',
                                             }"
                                             autocomplete="off"
                                             ref="imei"
@@ -203,7 +216,10 @@
                                     <p
                                         class="form_field_message"
                                         :class="{
-                                            hidden: imei_validation_message == '' || imei_validation_message == 'Required'
+                                            hidden:
+                                                imei_validation_message == '' ||
+                                                imei_validation_message ==
+                                                    'Required',
                                         }"
                                     >
                                         {{ imei_validation_message }}
@@ -211,13 +227,15 @@
                                 </div>
                             </div>
 
-                            <div class="flex flex-wrap -mx-3 form_field_container">
+                            <div
+                                class="flex flex-wrap -mx-3 form_field_container"
+                            >
                                 <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                     <label
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Stock Type
@@ -229,7 +247,9 @@
                                         :options="stock_types"
                                         class="w-32 generic_vs_select"
                                         :class="{
-                                            required_field: child_row['StockType'] == '' || child_row['StockType'] == null
+                                            required_field:
+                                                child_row['StockType'] == '' ||
+                                                child_row['StockType'] == null,
                                         }"
                                     ></v-select>
                                 </div>
@@ -239,7 +259,7 @@
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Stock Status
@@ -251,39 +271,61 @@
                                         :options="stock_statuses"
                                         class="w-48 generic_vs_select"
                                         :class="{
-                                            required_field: child_row['Status'] == '' || child_row['Status'] == null
+                                            required_field:
+                                                child_row['Status'] == '' ||
+                                                child_row['Status'] == null,
                                         }"
                                     ></v-select>
                                 </div>
                             </div>
 
-                            <div class="flex flex-wrap -mx-3 form_field_container">
+                            <div
+                                class="flex flex-wrap -mx-3 form_field_container"
+                            >
                                 <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                     <label
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Make
                                     </label>
-                                    <div class="flex flex-row items-center" v-if="!loading_handset_manufacturers">
+                                    <div
+                                        class="flex flex-row items-center"
+                                        v-if="!loading_handset_manufacturers"
+                                    >
                                         <v-select
-                                            :value="child_row['manufacturer']['Id']"
+                                            :value="
+                                                child_row['manufacturer']['Id']
+                                            "
                                             label="Name"
-                                            v-model="child_row['manufacturer']['Id']"
-                                            :reduce="manufacturer => manufacturer.Id"
+                                            v-model="
+                                                child_row['manufacturer']['Id']
+                                            "
+                                            :reduce="
+                                                (manufacturer) =>
+                                                    manufacturer.Id
+                                            "
                                             :options="handset_manufacturers"
                                             class="w-48 generic_vs_select"
                                             @input="setManufacturer"
                                             :class="{
-                                                required_field: child_row['manufacturer']['Id'] == '' || child_row['manufacturer']['Id'] == null
+                                                required_field:
+                                                    child_row['manufacturer'][
+                                                        'Id'
+                                                    ] == '' ||
+                                                    child_row['manufacturer'][
+                                                        'Id'
+                                                    ] == null,
                                             }"
                                         ></v-select>
 
                                         <Button
-                                            @click.native="addHandsetManufacturer"
+                                            @click.native="
+                                                addHandsetManufacturer
+                                            "
                                             icon="plus"
                                             split="border-white"
                                             class="ml-1 bg-green-600 text-white"
@@ -300,23 +342,30 @@
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Model
                                     </label>
-                                    <div class="flex flex-row items-center" v-if="!loading_handset_models">
+                                    <div
+                                        class="flex flex-row items-center"
+                                        v-if="!loading_handset_models"
+                                    >
                                         <v-select
                                             :value="child_row['model']['Id']"
                                             label="Name"
                                             v-model="child_row['model']['Id']"
-                                            :reduce="model => model.Id"
+                                            :reduce="(model) => model.Id"
                                             :options="handset_models"
                                             class="w-60 generic_vs_select"
                                             @input="setModel"
                                             :class="{
-                                            required_field: child_row['model']['Id'] == '' || child_row['model']['Id'] == null
-                                        }"
+                                                required_field:
+                                                    child_row['model']['Id'] ==
+                                                        '' ||
+                                                    child_row['model']['Id'] ==
+                                                        null,
+                                            }"
                                         ></v-select>
 
                                         <Button
@@ -328,32 +377,41 @@
                                             New
                                         </Button>
                                     </div>
-                                    <Loading v-else/>
+                                    <Loading v-else />
                                 </div>
                             </div>
 
-                            <div class="flex flex-wrap -mx-3 form_field_container">
+                            <div
+                                class="flex flex-wrap -mx-3 form_field_container"
+                            >
                                 <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                     <label
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Color
                                     </label>
-                                    <div class="flex flex-row items-center" v-if="!loading_handset_colors">
+                                    <div
+                                        class="flex flex-row items-center"
+                                        v-if="!loading_handset_colors"
+                                    >
                                         <v-select
                                             :value="child_row['color']['Id']"
                                             v-model="child_row['color']['Id']"
-                                            :reduce="color => color.Id"
+                                            :reduce="(color) => color.Id"
                                             label="Name"
                                             :options="handset_colors"
                                             class="w-64 generic_vs_select"
                                             @input="setColor"
                                             :class="{
-                                                required_field: child_row['color']['Id'] == '' || child_row['color']['Id'] == null
+                                                required_field:
+                                                    child_row['color']['Id'] ==
+                                                        '' ||
+                                                    child_row['color']['Id'] ==
+                                                        null,
                                             }"
                                         ></v-select>
 
@@ -366,7 +424,7 @@
                                             New
                                         </Button>
                                     </div>
-                                    <Loading v-else/>
+                                    <Loading v-else />
                                 </div>
 
                                 <div class="w-full md:w-1/2 px-3">
@@ -374,7 +432,7 @@
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Size
@@ -386,19 +444,23 @@
                                         :options="phone_sizes"
                                         class="w-32 generic_vs_select"
                                         :class="{
-                                            required_field: child_row['Size'] == '' || child_row['Size'] == null
+                                            required_field:
+                                                child_row['Size'] == '' ||
+                                                child_row['Size'] == null,
                                         }"
                                     ></v-select>
                                 </div>
                             </div>
 
-                            <div class="flex flex-wrap -mx-3 form_field_container border-b border-product-color-lighter pb-5">
+                            <div
+                                class="flex flex-wrap -mx-3 form_field_container border-b border-product-color-lighter pb-5"
+                            >
                                 <div class="w-full md:w-1/2 px-3">
                                     <label
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Network
@@ -410,7 +472,9 @@
                                         :options="networks"
                                         class="w-48 generic_vs_select"
                                         :class="{
-                                            required_field: child_row['Network'] == '' || child_row['Network'] == null
+                                            required_field:
+                                                child_row['Network'] == '' ||
+                                                child_row['Network'] == null,
                                         }"
                                     ></v-select>
                                 </div>
@@ -420,30 +484,35 @@
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Cost
                                     </label>
-                                    £ <input
-                                    class="w-32 generic_input"
-                                    type="number"
-                                    v-model.number="child_row['Cost']"
-                                    autocomplete="off"
-                                    :class="{
-                                        required_field: child_row['Cost'] == '' || child_row['Cost'] == null
-                                    }"
-                                />
+                                    £
+                                    <input
+                                        class="w-32 generic_input"
+                                        type="number"
+                                        v-model.number="child_row['Cost']"
+                                        autocomplete="off"
+                                        :class="{
+                                            required_field:
+                                                child_row['Cost'] == '' ||
+                                                child_row['Cost'] == null,
+                                        }"
+                                    />
                                 </div>
                             </div>
 
-                            <div class="flex flex-wrap -mx-3 form_field_container">
+                            <div
+                                class="flex flex-wrap -mx-3 form_field_container"
+                            >
                                 <div class="w-full px-3">
                                     <label
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Comments
@@ -456,13 +525,16 @@
                                 </div>
                             </div>
 
-                            <div class="flex flex-wrap -mx-3 form_field_container" v-if="edit_id != ''">
+                            <div
+                                class="flex flex-wrap -mx-3 form_field_container"
+                                v-if="edit_id != ''"
+                            >
                                 <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                     <label
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Created By
@@ -471,7 +543,8 @@
                                         class="block form_value_label"
                                         :class="{
                                             'text-gray-600': !dark_mode,
-                                            'text-product-color-lighter': dark_mode
+                                            'text-product-color-lighter':
+                                                dark_mode,
                                         }"
                                     >
                                         {{ getColumnValue("CreatedBy") }}
@@ -482,7 +555,7 @@
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Creation Date
@@ -491,7 +564,8 @@
                                         class="block form_value_label"
                                         :class="{
                                             'text-gray-600': !dark_mode,
-                                            'text-product-color-lighter': dark_mode
+                                            'text-product-color-lighter':
+                                                dark_mode,
                                         }"
                                     >
                                         {{ getColumnValue("CreatedDate") }}
@@ -499,13 +573,16 @@
                                 </div>
                             </div>
 
-                            <div class="flex flex-wrap -mx-3 form_field_container" v-if="edit_id != ''">
+                            <div
+                                class="flex flex-wrap -mx-3 form_field_container"
+                                v-if="edit_id != ''"
+                            >
                                 <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                     <label
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Updated By
@@ -514,7 +591,8 @@
                                         class="block form_value_label"
                                         :class="{
                                             'text-gray-600': !dark_mode,
-                                            'text-product-color-lighter': dark_mode
+                                            'text-product-color-lighter':
+                                                dark_mode,
                                         }"
                                     >
                                         {{ getColumnValue("UpdatedBy") }}
@@ -525,7 +603,7 @@
                                         class="block form_field_label"
                                         :class="{
                                             'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode
+                                            'text-white': dark_mode,
                                         }"
                                     >
                                         Updated Date
@@ -534,7 +612,8 @@
                                         class="block form_value_label"
                                         :class="{
                                             'text-gray-600': !dark_mode,
-                                            'text-product-color-lighter': dark_mode
+                                            'text-product-color-lighter':
+                                                dark_mode,
                                         }"
                                     >
                                         {{ getColumnValue("UpdatedDate") }}
@@ -557,33 +636,33 @@
                     </div>
                 </div>
 
-                <Loading v-else/>
+                <Loading v-else />
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import {mapState, mapActions} from "vuex";
+import { mapState, mapActions } from "vuex";
 import moment from "moment";
 import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
 import helper_functions from "../Helpers/helper_functions";
-import {list_controller} from "../Helpers/list_controller";
-import {notifications} from "../Helpers/notifications";
+import { list_controller } from "../Helpers/list_controller";
+import { notifications } from "../Helpers/notifications";
 
 export default {
     props: {
         options: {
             type: Object,
-            default: () => ({})
+            default: () => ({}),
         },
         edit_id: {
             type: String,
-            default: ""
+            default: "",
         },
         submitRecordSaved: {
-            type: Function
+            type: Function,
         },
     },
 
@@ -592,8 +671,8 @@ export default {
     components: {
         PurchaseItemsDatatable: lazyLoadComponent({
             componentFactory: () => import("@/Datatable/Datatable"),
-            loading: loading
-        })
+            loading: loading,
+        }),
     },
 
     data() {
@@ -602,24 +681,24 @@ export default {
                 SupplierId: "",
                 InvoiceDate: moment().format("D-MMM-YYYY"),
                 InvoiceNo: "",
-                Comments: ""
+                Comments: "",
             },
             child_row: {
                 manufacturer: {
                     Id: "",
-                    Name: ""
+                    Name: "",
                 },
                 model: {
                     Id: "",
-                    Name: ""
+                    Name: "",
                 },
                 color: {
                     Id: "",
-                    Name: ""
+                    Name: "",
                 },
                 StockType: "New",
                 Status: this.phonestock.STATUS_IN_STOCK,
-                Network: "Unlocked"
+                Network: "Unlocked",
             },
             rows: [],
             children_to_delete: [],
@@ -641,7 +720,7 @@ export default {
                     searching: false,
                     sorting: false,
                     td: "w-30 text-left break-words",
-                    th: "text-left"
+                    th: "text-left",
                 },
                 {
                     enabled: true,
@@ -652,7 +731,7 @@ export default {
                     sorting: false,
                     type: "Phone",
                     td: "text-left",
-                    th: "w-32 text-left break-words"
+                    th: "w-32 text-left break-words",
                 },
                 {
                     enabled: true,
@@ -662,7 +741,7 @@ export default {
                     searching: false,
                     sorting: false,
                     td: "text-left",
-                    th: "w-16 text-left break-words"
+                    th: "w-16 text-left break-words",
                 },
                 {
                     enabled: true,
@@ -673,7 +752,7 @@ export default {
                     sorting: false,
                     type: "Float",
                     td: "text-left",
-                    th: "w-16 text-left break-words"
+                    th: "w-16 text-left break-words",
                 },
                 {
                     enabled: true,
@@ -683,9 +762,9 @@ export default {
                     searching: false,
                     sorting: false,
                     th: "w-10",
-                    type: "AddPurchaseActions"
-                }
-            ]
+                    type: "AddPurchaseActions",
+                },
+            ],
         };
     },
 
@@ -693,8 +772,11 @@ export default {
         valid_data() {
             if (
                 this.rows.length == 0 ||
-                this.row_keys.indexOf("InvoiceDate") < 0 || this.row["InvoiceDate"] == "" ||
-                this.row_keys.indexOf("SupplierId") < 0 || this.row["SupplierId"] == "" || this.row["SupplierId"] == null
+                this.row_keys.indexOf("InvoiceDate") < 0 ||
+                this.row["InvoiceDate"] == "" ||
+                this.row_keys.indexOf("SupplierId") < 0 ||
+                this.row["SupplierId"] == "" ||
+                this.row["SupplierId"] == null
             ) {
                 return false;
             }
@@ -705,14 +787,30 @@ export default {
         valid_phone_data() {
             if (
                 this.imei_validation_message != "" ||
-                this.child_row_keys.indexOf("StockType") < 0 || this.child_row["StockType"] == "" || this.child_row["StockType"] == null ||
-                this.child_row_keys.indexOf("manufacturer") < 0 || this.child_row["manufacturer"]["Id"] == "" || this.child_row["manufacturer"]["Id"] == null ||
-                this.child_row_keys.indexOf("model") < 0 || this.child_row["model"]["Id"] == "" || this.child_row["model"]["Id"] == null ||
-                this.child_row_keys.indexOf("color") < 0 || this.child_row["color"]["Id"] == "" || this.child_row["color"]["Id"] == null ||
-                this.child_row_keys.indexOf("Size") < 0 || this.child_row["Size"] == "" || this.child_row['Size'] == null ||
-                this.child_row_keys.indexOf("Cost") < 0 || this.child_row["Cost"] == "" || parseFloat(this.child_row["Cost"]) == 0 ||
-                this.child_row_keys.indexOf("Network") < 0 || this.child_row["Network"] == "" || this.child_row["Network"] == null ||
-                this.child_row_keys.indexOf("Status") < 0 || this.child_row["Status"] == "" || this.child_row["Status"] == null
+                this.child_row_keys.indexOf("StockType") < 0 ||
+                this.child_row["StockType"] == "" ||
+                this.child_row["StockType"] == null ||
+                this.child_row_keys.indexOf("manufacturer") < 0 ||
+                this.child_row["manufacturer"]["Id"] == "" ||
+                this.child_row["manufacturer"]["Id"] == null ||
+                this.child_row_keys.indexOf("model") < 0 ||
+                this.child_row["model"]["Id"] == "" ||
+                this.child_row["model"]["Id"] == null ||
+                this.child_row_keys.indexOf("color") < 0 ||
+                this.child_row["color"]["Id"] == "" ||
+                this.child_row["color"]["Id"] == null ||
+                this.child_row_keys.indexOf("Size") < 0 ||
+                this.child_row["Size"] == "" ||
+                this.child_row["Size"] == null ||
+                this.child_row_keys.indexOf("Cost") < 0 ||
+                this.child_row["Cost"] == "" ||
+                parseFloat(this.child_row["Cost"]) == 0 ||
+                this.child_row_keys.indexOf("Network") < 0 ||
+                this.child_row["Network"] == "" ||
+                this.child_row["Network"] == null ||
+                this.child_row_keys.indexOf("Status") < 0 ||
+                this.child_row["Status"] == "" ||
+                this.child_row["Status"] == null
             ) {
                 return false;
             }
@@ -742,14 +840,17 @@ export default {
         },
 
         ...mapState({
-            dark_mode: state => state.framework.dark_mode,
-            expanded_sidebar: state => state.framework.expanded_sidebar,
-            local_settings: state => state.local_settings,
-            refresh_suppliers: state => state.framework.refresh_suppliers,
-            refresh_handset_models: state => state.framework.refresh_handset_models,
-            refresh_handset_manufacturers: state => state.framework.refresh_handset_manufacturers,
-            refresh_handset_colors: state => state.framework.refresh_handset_colors
-        })
+            dark_mode: (state) => state.framework.dark_mode,
+            expanded_sidebar: (state) => state.framework.expanded_sidebar,
+            local_settings: (state) => state.local_settings,
+            refresh_suppliers: (state) => state.framework.refresh_suppliers,
+            refresh_handset_models: (state) =>
+                state.framework.refresh_handset_models,
+            refresh_handset_manufacturers: (state) =>
+                state.framework.refresh_handset_manufacturers,
+            refresh_handset_colors: (state) =>
+                state.framework.refresh_handset_colors,
+        }),
     },
 
     mounted() {
@@ -762,18 +863,19 @@ export default {
             axios
                 .get(route("purchase.get-single"), {
                     params: {
-                        Id: this.edit_id
-                    }
+                        Id: this.edit_id,
+                    },
                 })
                 .then(
-                    response => {
+                    (response) => {
                         let record = response.data.response.record;
 
                         this.row = _.cloneDeep(record);
 
                         //Assign a random id to the child row.
                         _.forEach(record.children, (child_row, key) => {
-                            child_row["row_id"] = helper_functions.getRandomId();
+                            child_row["row_id"] =
+                                helper_functions.getRandomId();
                             this.rows.push(child_row);
                         });
 
@@ -783,7 +885,7 @@ export default {
                             this.$refs.imei.focus();
                         });
                     },
-                    error => {
+                    (error) => {
                         this.loading = false;
                     }
                 );
@@ -794,7 +896,7 @@ export default {
             this.current_row_id = _.clone(this.child_row["row_id"]);
 
             this.$nextTick(() => {
-                this.$refs.supplier_picker.$el.querySelector('input').focus();
+                this.$refs.supplier_picker.$el.querySelector("input").focus();
                 this.customer_sales_loaded = true;
             });
         }
@@ -817,7 +919,10 @@ export default {
             _.forIn(this.rows, (object, key) => {
                 if (object["row_id"] != row_id) {
                     rows.push(_.cloneDeep(object));
-                } else if (Object.keys(object).indexOf("Id") >= 0 && object["Id"] != "") {
+                } else if (
+                    Object.keys(object).indexOf("Id") >= 0 &&
+                    object["Id"] != ""
+                ) {
                     this.children_to_delete.push(object);
                 }
             });
@@ -826,35 +931,47 @@ export default {
         },
 
         dateSelected(date) {
-            if (date != '' && date != null) {
-                this.row['InvoiceDate'] = date;
+            if (date != "" && date != null) {
+                this.row["InvoiceDate"] = date;
             } else {
-                this.row['InvoiceDate'] = "";
+                this.row["InvoiceDate"] = "";
             }
         },
 
         clearDate(key) {
-            this.row['InvoiceDate'] = "";
+            this.row["InvoiceDate"] = "";
         },
 
         setModel(value) {
-            let object = helper_functions.searchJsonObjects(this.handset_models, "Id", value);
+            let object = helper_functions.searchJsonObjects(
+                this.handset_models,
+                "Id",
+                value
+            );
             if (Object.keys(object).length) {
-                this.child_row['model']['Name'] = object['Name'];
+                this.child_row["model"]["Name"] = object["Name"];
             }
         },
 
         setManufacturer(value) {
-            let object = helper_functions.searchJsonObjects(this.handset_manufacturers, "Id", value);
+            let object = helper_functions.searchJsonObjects(
+                this.handset_manufacturers,
+                "Id",
+                value
+            );
             if (Object.keys(object).length) {
-                this.child_row['manufacturer']['Name'] = object['Name'];
+                this.child_row["manufacturer"]["Name"] = object["Name"];
             }
         },
 
         setColor(value) {
-            let object = helper_functions.searchJsonObjects(this.handset_colors, "Id", value);
+            let object = helper_functions.searchJsonObjects(
+                this.handset_colors,
+                "Id",
+                value
+            );
             if (Object.keys(object).length) {
-                this.child_row['color']['Name'] = object['Name'];
+                this.child_row["color"]["Name"] = object["Name"];
             }
         },
 
@@ -917,54 +1034,65 @@ export default {
             //save the user
             this.saving_data = true;
 
-            axios
-                .post(route("purchase.save"), this.row)
-                .then(
-                    response => {
-                        if (response.data.message == "record_saved") {
-                            this.$notify({
-                                group: "messages",
-                                title: "Success",
-                                text: response.data.response.records_count + " " + this.options.record_name + (response.data.response.records_count > 1 ? "s" : "") + " saved successfully."
-                            });
+            axios.post(route("purchase.save"), this.row).then(
+                (response) => {
+                    if (response.data.message == "record_saved") {
+                        this.$notify({
+                            group: "messages",
+                            title: "Success",
+                            text:
+                                response.data.response.records_count +
+                                " " +
+                                this.options.record_name +
+                                (response.data.response.records_count > 1
+                                    ? "s"
+                                    : "") +
+                                " saved successfully.",
+                        });
 
-                            this.refreshData(this.options.id);
+                        this.refreshData(this.options.id);
 
-                            const handler = this.submitRecordSaved;
-                            if (typeof handler === "function") {
-                                handler(response.data.response.id);
+                        const handler = this.submitRecordSaved;
+                        if (typeof handler === "function") {
+                            handler(response.data.response.id);
 
-                                this.$modal.hide(this.$parent.name);
-                            }
-                        }
-
-                        this.saving_data = false;
-
-                        this.$modal.hide(this.$parent.name);
-                    },
-                    error => {
-                        this.saving_data = false;
-
-                        if (error.response.data.message == "duplicate_imei") {
-                            this.duplicate_imei = true;
-                        } else {
-                            this.$notify({
-                                group: "messages",
-                                title: "Error",
-                                type: "error",
-                                text: this.formatMessage(error.response.data.message, this.options.record_name)
-                            });
-
-                            _.forIn(this.children_to_delete, (object, key) => {
-                                this.rows.push(_.clone(object))
-                            });
+                            this.$modal.hide(this.$parent.name);
                         }
                     }
-                )
+
+                    this.saving_data = false;
+
+                    this.$modal.hide(this.$parent.name);
+                },
+                (error) => {
+                    this.saving_data = false;
+
+                    if (error.response.data.message == "duplicate_imei") {
+                        this.duplicate_imei = true;
+                    } else {
+                        this.$notify({
+                            group: "messages",
+                            title: "Error",
+                            type: "error",
+                            text: this.formatMessage(
+                                error.response.data.message,
+                                this.options.record_name
+                            ),
+                        });
+
+                        _.forIn(this.children_to_delete, (object, key) => {
+                            this.rows.push(_.clone(object));
+                        });
+                    }
+                }
+            );
         },
 
         isDuplicateIMEI() {
-            if (this.child_row_keys.indexOf("IMEI") < 0 || this.child_row["IMEI"] == "") {
+            if (
+                this.child_row_keys.indexOf("IMEI") < 0 ||
+                this.child_row["IMEI"] == ""
+            ) {
                 return false;
             }
 
@@ -975,7 +1103,10 @@ export default {
                     if (object["IMEI"] == this.child_row["IMEI"]) {
                         this.duplicate_imei = true;
                     }
-                } else if (object["Id"] != this.child_row["Id"] && object["IMEI"] == this.child_row["IMEI"]) {
+                } else if (
+                    object["Id"] != this.child_row["Id"] &&
+                    object["IMEI"] == this.child_row["IMEI"]
+                ) {
                     this.duplicate_imei = true;
                 }
             });
@@ -989,32 +1120,32 @@ export default {
             axios
                 .post(route("phonestock.check-duplicate-imei"), {
                     Id: this.child_row["Id"],
-                    IMEI: this.child_row["IMEI"]
+                    IMEI: this.child_row["IMEI"],
                 })
                 .then(
-                    response => {
+                    (response) => {
                         this.checking_duplicate_imei = false;
 
                         this.duplicate_imei = false;
 
                         this.checking_duplicate_imei = false;
                     },
-                    error => {
+                    (error) => {
                         this.checking_duplicate_imei = false;
 
                         if (error.response.data.message == "duplicate_imei") {
                             this.duplicate_imei = true;
                         }
                     }
-                )
+                );
         },
 
         ...mapActions({
-            setPopperOpen: 'local_settings/setPopperOpen',
+            setPopperOpen: "local_settings/setPopperOpen",
             refreshData: "framework/refreshData",
             setCachedData: "local_settings/setCachedData",
-            addError: "errors/addError"
-        })
+            addError: "errors/addError",
+        }),
     },
 
     watch: {
@@ -1032,7 +1163,7 @@ export default {
 
         refresh_handset_colors: function () {
             this.load_handset_colors();
-        }
-    }
+        },
+    },
 };
 </script>

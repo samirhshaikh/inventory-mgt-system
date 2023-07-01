@@ -13,11 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::post('generateToken', 'UserController@login');
-Route::post('register', 'UserController@register');
-Route::get('profile', 'UserController@getAuthenticatedUser');
+Route::post("generateToken", "UserController@login");
+Route::post("register", "UserController@register");
+Route::get("profile", "UserController@getAuthenticatedUser");
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware("auth:api")->get("/user", function (Request $request) {
     return $request->user();
 });
 ?>

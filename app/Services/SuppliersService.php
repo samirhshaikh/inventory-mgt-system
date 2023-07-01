@@ -26,28 +26,37 @@ class SuppliersService
     public function getAll(
         string $order_by,
         string $order_direction,
-        string $search_type = 'simple',
-        string $search_text = '',
-        string $search_data = '{}'
-    ): array
-    {
+        string $search_type = "simple",
+        string $search_text = "",
+        string $search_data = "{}"
+    ): array {
         $records = new Suppliers();
 
-        if ($search_type === 'simple' && $search_text != '') {
+        if ($search_type === "simple" && $search_text != "") {
             $fields_to_search = [
-                'SupplierName',
-                'ContactNo1',
-                'ContactNo2',
-                'ContactNo3',
-                'CurrentBalance',
-                'Comments',
+                "SupplierName",
+                "ContactNo1",
+                "ContactNo2",
+                "ContactNo3",
+                "CurrentBalance",
+                "Comments",
                 'DATE_FORMAT(CreatedDate, "%d-%b-%Y")',
-                'DATE_FORMAT(UpdatedDate, "%d-%b-%Y")'
+                'DATE_FORMAT(UpdatedDate, "%d-%b-%Y")',
             ];
 
-            $records = $this->prepareSearch($records, $fields_to_search, $search_text);
-        } else if ($search_type === 'advanced' && $this->searchDataPresent($search_data)) {
-            $records = $this->prepareAdvancedSearch($records, json_decode($search_data));
+            $records = $this->prepareSearch(
+                $records,
+                $fields_to_search,
+                $search_text
+            );
+        } elseif (
+            $search_type === "advanced" &&
+            $this->searchDataPresent($search_data)
+        ) {
+            $records = $this->prepareAdvancedSearch(
+                $records,
+                json_decode($search_data)
+            );
         }
 
         $records = $records->orderBy($order_by, $order_direction);
@@ -56,8 +65,8 @@ class SuppliersService
         $total_records = $this->getTotalRecords(clone $records);
 
         return [
-            'total_records' => $total_records,
-            'records' => $records
+            "total_records" => $total_records,
+            "records" => $records,
         ];
     }
 
@@ -69,20 +78,36 @@ class SuppliersService
     private function prepareAdvancedSearch($model, $search_data = []): Builder
     {
         foreach ($search_data as $column => $search_text) {
-            if ($search_text == '' || is_null($search_text)) {
+            if ($search_text == "" || is_null($search_text)) {
                 continue;
             }
 
             switch ($column) {
-                case 'SupplierName':
-                case 'CurrentBalance':
-                    $model = $this->prepareAdvancedSearchQuery($model, $column, $search_text);
+                case "SupplierName":
+                case "CurrentBalance":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        $column,
+                        $search_text
+                    );
                     break;
-                case 'ContactNo':
-                    $model = $this->prepareAdvancedSearchQuery($model, ['ContactNo1', 'ContactNo2', 'ContactNo3'], $search_text);
+                case "ContactNo":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        ["ContactNo1", "ContactNo2", "ContactNo3"],
+                        $search_text
+                    );
                     break;
-                case 'UpdatedDate':
-                    $model = $this->prepareAdvancedSearchQuery($model, ['DATE_FORMAT(CreatedDate, "%d-%b-%Y")', 'DATE_FORMAT(UpdatedDate, "%d-%b-%Y")'], $search_text, 'exact_match');
+                case "UpdatedDate":
+                    $model = $this->prepareAdvancedSearchQuery(
+                        $model,
+                        [
+                            'DATE_FORMAT(CreatedDate, "%d-%b-%Y")',
+                            'DATE_FORMAT(UpdatedDate, "%d-%b-%Y")',
+                        ],
+                        $search_text,
+                        "exact_match"
+                    );
                     break;
             }
         }
@@ -97,13 +122,12 @@ class SuppliersService
      */
     public function getSingle(IdRequest $request)
     {
-        $record = Suppliers::where('Id', $request->get('Id'))
-            ->get();
+        $record = Suppliers::where("Id", $request->get("Id"))->get();
 
         if ($record->count()) {
             return $record->map->transform()->first();
         } else {
-            throw new RecordNotFoundException;
+            throw new RecordNotFoundException();
         }
     }
 
@@ -115,9 +139,9 @@ class SuppliersService
     public function changeActiveStatus(IdRequest $request): bool
     {
         try {
-            return $this->changeRecordStatus(new Suppliers, $request);
+            return $this->changeRecordStatus(new Suppliers(), $request);
         } catch (RecordNotFoundException $e) {
-            throw new RecordNotFoundException;
+            throw new RecordNotFoundException();
         }
     }
 
@@ -128,32 +152,34 @@ class SuppliersService
      */
     public function save(SaveSupplierRequest $request): int
     {
-        $record = Suppliers::where('Id', $request->get('Id'))
-            ->get();
+        $record = Suppliers::where("Id", $request->get("Id"))->get();
 
-        if ($request->get('operation', 'add') == 'edit') {
+        if ($request->get("operation", "add") == "edit") {
             if (!$record->count()) {
-                throw new RecordNotFoundException;
+                throw new RecordNotFoundException();
             }
 
             $record = $record->first();
         } else {
-            $record = new Suppliers;
+            $record = new Suppliers();
 
-            $record->CreatedBy = session('user_details.UserName');
+            $record->CreatedBy = session("user_details.UserName");
         }
 
-        $record->SupplierName = $request->get('SupplierName');
-        $record->ContactNo1 = $request->get('ContactNo1');
-        $record->ContactNo2 = $request->get('ContactNo2');
-        $record->CurrentBalance = number_format($request->get('CurrentBalance'), 2);
-        $record->Comments = $request->get('Comments');
-        $record->UpdatedBy = session('user_details.UserName');
-        $record->IsActive = $request->get('IsActive');
+        $record->SupplierName = $request->get("SupplierName");
+        $record->ContactNo1 = $request->get("ContactNo1");
+        $record->ContactNo2 = $request->get("ContactNo2");
+        $record->CurrentBalance = number_format(
+            $request->get("CurrentBalance"),
+            2
+        );
+        $record->Comments = $request->get("Comments");
+        $record->UpdatedBy = session("user_details.UserName");
+        $record->IsActive = $request->get("IsActive");
         $record->save();
 
-        return $request->get('operation', 'add') == 'edit'
-            ? $request->get('Id')
+        return $request->get("operation", "add") == "edit"
+            ? $request->get("Id")
             : Suppliers::lastInsertId();
     }
 
@@ -166,19 +192,25 @@ class SuppliersService
     public function delete(IdRequest $request): bool
     {
         //Check whether the record exist or not
-        $record = Suppliers::where('Id', $request->get('Id'));
+        $record = Suppliers::where("Id", $request->get("Id"));
 
         if ($record->get()->count()) {
-            $tables_to_check = ['Purchase'];
-            if ($this->foreignReferenceFound($tables_to_check, 'SupplierId', $request->get('Id'))) {
-                throw new ReferenceException;
+            $tables_to_check = ["Purchase"];
+            if (
+                $this->foreignReferenceFound(
+                    $tables_to_check,
+                    "SupplierId",
+                    $request->get("Id")
+                )
+            ) {
+                throw new ReferenceException();
             }
 
             $record->delete();
 
             return true;
         } else {
-            throw new RecordNotFoundException;
+            throw new RecordNotFoundException();
         }
     }
 }

@@ -9,11 +9,11 @@ export const datatable_common = {
     props: {
         columns: {
             type: Array,
-            default: () => ([])
+            default: () => [],
         },
         options: {
             type: Object,
-            default: () => ({})
+            default: () => ({}),
         },
     },
 
@@ -22,7 +22,7 @@ export const datatable_common = {
             total_records: 0,
             page_no: 1,
             search_type: "",
-            search_text: '',
+            search_text: "",
             advanced_search_data: {},
             update_search: "",
             expanded_row_id: 0,
@@ -58,5 +58,5 @@ export const datatable_common = {
         changeTotalReports(total_records) {
             this.total_records = total_records;
         },
-    }
-}
+    },
+};

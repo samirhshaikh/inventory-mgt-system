@@ -9,8 +9,8 @@ export default {
     props: {
         loading_message: {
             type: String,
-            default: 'Loading...'
-        }
-    }
-}
+            default: "Loading...",
+        },
+    },
+};
 </script>

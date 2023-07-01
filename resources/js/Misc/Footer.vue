@@ -3,17 +3,6 @@
         <div class="flex">Footer</div>
         <div class="flex">
             <button
-                class="border-gray-500 border-l text-white p-3 hover:bg-gray-800"
-                @click="doRefresh"
-                v-show="isDataTabLoaded"
-                :title="loading ? 'Loading' : 'Refresh'"
-            >
-                <FA
-                    :icon="['fas', 'sync-alt']"
-                    :class="{ 'fa-spin': loading }"
-                ></FA>
-            </button>
-            <button
                 class="border-gray-500 border-l text-white p-3 hover:bg-gray-800 relative"
                 :class="{
                     'text-red-500': errors.list.length,

@@ -11,11 +11,18 @@
         >
             <div
                 v-if="expanded_sidebar && !small_screen"
-                class="mb-auto mt-auto w-full"
+                class="mb-auto mt-auto truncate px-2 text-center w-full"
             >
-                Inventory Mgt System
+                {{ store_settings.name }}
             </div>
-            <div v-else class="mb-auto mt-auto w-full">IMS</div>
+            <div v-else class="mb-auto mt-auto truncate px-1 w-full">
+                {{
+                    store_settings.name
+                        .split(" ")
+                        .map((item) => item[0])
+                        .join("")
+                }}
+            </div>
         </div>
 
         <div class="w-full">
@@ -60,6 +67,7 @@ export default {
         },
 
         ...mapState({
+            store_settings: (state) => state.store_settings,
             dark_mode: (state) => state.framework.dark_mode,
             expanded_sidebar: (state) => state.framework.expanded_sidebar,
         }),

@@ -103,32 +103,31 @@ export default {
                         username: this.username,
                         password: this.password,
                     })
-                    .then(
-                        (response) => {
-                            console.log(response);
-                            if (
-                                typeof response.data.error === "undefined" ||
-                                response.data.error == ""
-                            ) {
-                                this.error_message = "";
+                    .then((response) => {
+                        console.log(response);
+                        if (
+                            typeof response.data.error === "undefined" ||
+                            response.data.error == ""
+                        ) {
+                            this.error_message = "";
 
-                                this.$inertia.replace(route("dashboard"), {
-                                    method: "get",
-                                });
-                            } else {
-                                this.error_message = response.data.error;
-                                console.log(this.error_message);
-                            }
-
-                            this.loading = false;
-                        },
-                        (error) => {
-                            this.error_message =
-                                "Some error occurred. Please try again.";
-
-                            this.loading = false;
+                            this.$inertia.replace(route("dashboard"), {
+                                method: "get",
+                            });
+                        } else {
+                            this.error_message = response.data.error;
+                            console.log(this.error_message);
                         }
-                    );
+
+                        this.loading = false;
+                    })
+                    .catch((error) => {
+                        this.error_message =
+                            error.response.data.error ??
+                            "Some error occurred. Please try again.";
+
+                        this.loading = false;
+                    });
             }
         },
 

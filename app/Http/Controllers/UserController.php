@@ -7,10 +7,10 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Tymon\JWTAuth\Facades\JWTFactory;
-use Tymon\JWTAuth\Exceptions\JWTException;
-use Tymon\JWTAuth\PayloadFactory;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTFactory;
+use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
+use PHPOpenSourceSaver\JWTAuth\PayloadFactory;
 
 class UserController extends BaseAPIController
 {
@@ -101,11 +101,11 @@ class UserController extends BaseAPIController
                     JsonResponse::HTTP_NOT_FOUND
                 );
             }
-        } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+        } catch (PHPOpenSourceSaver\JWTAuth\Exceptions\TokenExpiredException $e) {
             return response()->json(["token_expired"], $e->getStatusCode());
-        } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+        } catch (PHPOpenSourceSaver\JWTAuth\Exceptions\TokenInvalidException $e) {
             return response()->json(["token_invalid"], $e->getStatusCode());
-        } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
+        } catch (PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException $e) {
             return response()->json(["token_absent"], $e->getStatusCode());
         }
 

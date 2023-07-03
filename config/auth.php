@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults
@@ -13,9 +12,9 @@ return [
     |
     */
 
-    'defaults' => [
-        'guard' => 'api',
-        'passwords' => 'users',
+    "defaults" => [
+        "guard" => "api",
+        "passwords" => "users",
     ],
 
     /*
@@ -35,16 +34,16 @@ return [
     |
     */
 
-    'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'user',
+    "guards" => [
+        "web" => [
+            "driver" => "session",
+            "provider" => "users",
         ],
 
-        'api' => [
-            'driver' => 'jwt',
-            'provider' => 'user',
-            'hash' => false,
+        "api" => [
+            "driver" => "jwt",
+            "provider" => "users",
+            "hash" => false,
         ],
     ],
 
@@ -65,16 +64,16 @@ return [
     |
     */
 
-    'providers' => [
-        'user' => [
-            'driver' => 'user',
-            'model' => App\Models\User::class,
-        ],
+    "providers" => [
+        //        "users" => [
+        //            "driver" => "user",
+        //            "model" => App\Models\User::class,
+        //        ],
 
-        // 'users' => [
-        //     'driver' => 'eloquent',
-        //     'model' => App\Models\User::class,
-        // ],
+        "users" => [
+            "driver" => "eloquent",
+            "model" => App\Models\User::class,
+        ],
 
         // 'users' => [
         //     'driver' => 'database',
@@ -97,12 +96,11 @@ return [
     |
     */
 
-    'passwords' => [
-        'users' => [
-            'provider' => 'users',
-            'table' => 'password_resets',
-            'expire' => 60,
+    "passwords" => [
+        "users" => [
+            "provider" => "users",
+            "table" => "password_resets",
+            "expire" => 60,
         ],
     ],
-
 ];

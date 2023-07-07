@@ -20,7 +20,7 @@
                         icon="redo-alt"
                         :icon_class="loading ? 'fa-spin' : ''"
                         split="border-white"
-                        class="text-white bg-green-600 float-right animate-spin"
+                        class="text-white bg-green-600 float-right"
                     >
                         Refresh
                     </Button>

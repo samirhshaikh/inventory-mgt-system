@@ -2,13 +2,13 @@
  * State storage for local data. Will not be sent to server for storing in app settings.
  */
 
-const state = {
+const state = () => ({
     active_tab: null,
     popper_open: false,
     popper_active_tab: null,
     cached_data: {},
     is_IE_11: !!window.MSInputMethodContext && !!document.documentMode,
-};
+});
 
 const getters = {
     active_tab: (state) => {

@@ -1,10 +1,9 @@
 /**
  * State storage for framework settings. Like expanded side bar, dark mode, page size, etc.
  */
-
 import moment from "moment";
 
-const state = {
+const state = () => ({
     expanded_sidebar: true,
     dark_mode: false,
     page_size: 10,
@@ -15,7 +14,7 @@ const state = {
     refresh_handset_manufacturers: false,
     refresh_handset_colors: false,
     tab_to_refresh: "",
-};
+});
 
 const getters = {
     expanded_sidebar: (state) => {

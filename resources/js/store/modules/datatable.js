@@ -2,7 +2,7 @@
  * State storage to datatable objects.
  */
 
-const state = {
+const state = () => ({
     sorting: {
         users: {
             column: "UpdatedDate",
@@ -38,7 +38,7 @@ const state = {
         },
     },
     meta: {},
-};
+});
 
 const getters = {
     columns_in_active_tab: (state) => (active_tab) => {

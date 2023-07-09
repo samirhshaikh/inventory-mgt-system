@@ -104,7 +104,6 @@ export default {
                         password: this.password,
                     })
                     .then((response) => {
-                        console.log(response);
                         if (
                             typeof response.data.error === "undefined" ||
                             response.data.error == ""
@@ -116,7 +115,6 @@ export default {
                             });
                         } else {
                             this.error_message = response.data.error;
-                            console.log(this.error_message);
                         }
 
                         this.loading = false;

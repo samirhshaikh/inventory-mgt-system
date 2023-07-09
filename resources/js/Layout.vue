@@ -53,6 +53,9 @@
 
 <script>
 import { mapState } from "vuex";
+import { usePage } from "@inertiajs/vue3";
+
+const page = usePage();
 
 export default {
     data() {
@@ -60,19 +63,19 @@ export default {
             restoreState: {
                 framework: {
                     method: "framework/setFrameworkFromAppSettings",
-                    payload: this.$page.app_settings,
+                    payload: page.props.app_settings,
                 },
                 app_settings: {
                     method: "app_settings/setAppSettingsFromAppSettings",
-                    payload: this.$page.app_settings,
+                    payload: page.props.app_settings,
                 },
                 store_settings: {
                     method: "store_settings/setStoreSettingsFromAppSettings",
-                    payload: this.$page.app_settings,
+                    payload: page.props.app_settings,
                 },
                 datatable: {
                     method: "datatable/setDatatableFromAppSetting",
-                    payload: this.$page.app_settings,
+                    payload: page.props.app_settings,
                 },
             },
             width: 0,
@@ -82,12 +85,11 @@ export default {
     created() {
         //app_settings in not initialized in the session. So nothing to restore.
         if (
-            this.$page.app_settings === null ||
-            Object.keys(this.$page.app_settings).length === 0
+            page.props.app_settings === null ||
+            Object.keys(page.props.app_settings).length === 0
         ) {
             return;
         }
-
         _.forEach(this.restoreState, (data, key) => {
             console.log(data);
             // Check whether the app_settings (data.payload) contains the state we want to restore

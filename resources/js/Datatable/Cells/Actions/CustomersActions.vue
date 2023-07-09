@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import Customer from "../../../DBObjects/CustomerSale.vue";
+import CustomerSale from "../../../DBObjects/CustomerSale";
 import { mapActions } from "vuex";
 import Confirm from "../../../components/Confirm.vue";
 import { datatable_cell } from "../datatable_cell";
@@ -40,7 +40,7 @@ export default {
             this.setPopperOpen(true);
 
             this.$modal.show(
-                Customer,
+                CustomerSale,
                 {
                     edit_id: String(this.row.Id),
                     options: this.options,

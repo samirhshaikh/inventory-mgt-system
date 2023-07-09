@@ -20,7 +20,7 @@
 
                 <div>
                     <div v-for="link in links">
-                        <inertia-link
+                        <Link
                             :href="route(link.route)"
                             class="px-4 py-2 block text-sm no-underline"
                             :class="linkNavigationClass(link.route)"
@@ -39,7 +39,7 @@
                                     {{ link.title }}
                                 </div>
                             </div>
-                        </inertia-link>
+                        </Link>
 
                         <a
                             class="px-4 py-2 block text-sm no-underline cursor-pointer hover:bg-gray-200"
@@ -100,8 +100,16 @@
 import { mapActions, mapState } from "vuex";
 import AppSettings from "../Misc/AppSettings.vue";
 import StoreSettings from "../Misc/StoreSettings.vue";
+import { Link } from "@inertiajs/vue3";
+import { usePage } from "@inertiajs/vue3";
+
+const page = usePage();
 
 export default {
+    components: {
+        Link,
+    },
+
     data() {
         return {
             navigation: {
@@ -175,21 +183,21 @@ export default {
                         link_type: "route",
                         route: "users",
                         icon: ["fas", "user"],
-                        visible: this.$page.user_details.IsAdmin,
+                        visible: page.props.user_details.IsAdmin,
                     },
                     {
                         title: "Store",
                         link_type: "javascript_link",
                         link_function: "storeSettings",
                         icon: ["fas", "store"],
-                        visible: this.$page.user_details.IsAdmin,
+                        visible: page.props.user_details.IsAdmin,
                     },
                     {
                         title: "Settings",
                         link_type: "javascript_link",
                         link_function: "appSettings",
                         icon: ["fas", "cog"],
-                        visible: this.$page.user_details.IsAdmin,
+                        visible: page.props.user_details.IsAdmin,
                     },
                 ],
             },

@@ -1,15 +1,20 @@
+<template>
+    <Doughnut :data="data" :options="options" />
+</template>
+
 <script>
 import { Doughnut } from "vue-chartjs";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default {
-    extends: Doughnut,
-
     name: "DoughnutChart",
 
     components: { Doughnut },
 
     props: {
-        chartdata: {
+        data: {
             type: Object,
             default: null,
         },
@@ -17,10 +22,10 @@ export default {
             type: Object,
             default: null,
         },
-    },
-
-    mounted() {
-        this.renderChart(this.chartdata, this.options);
+        width: {
+            type: String,
+            default: "w-1/2",
+        },
     },
 };
 </script>

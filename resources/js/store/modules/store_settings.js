@@ -2,12 +2,12 @@
  * State storage for some commonly used items.
  */
 
-const state = {
+const state = () => ({
     name: "Store Name",
     address: "",
     phone: "",
     email: "",
-};
+});
 
 const getters = {
     name: (state) => {

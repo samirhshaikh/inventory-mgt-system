@@ -69,7 +69,7 @@
 import { mapState, mapActions } from "vuex";
 import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
-import Customer from "../DBObjects/CustomerSale.vue";
+import CustomerSale from "../DBObjects/CustomerSale.vue";
 import { datatable_common } from "../Helpers/datatable_common";
 
 export default {
@@ -125,7 +125,7 @@ export default {
             this.setPopperOpen(true);
 
             this.$modal.show(
-                Customer,
+                CustomerSale,
                 {
                     edit_id: "",
                     options: this.options,

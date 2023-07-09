@@ -2,14 +2,14 @@
  * State storage for some commonly used items.
  */
 
-const state = {
+const state = () => ({
     stock_types: "New,Kit,Partial,Refurb,Used,Others,ReTrade",
     networks:
         "BT Mobile,CPW,EE,EMEA,Giffgaff,O2,Orange,Sainsbury,Tesco,Three Mobile,T-Mobile,TPO Mobile,Unlocked,Virgin,Vodafone,Wifi only,Others",
     phone_sizes: "4 GB,8 GB,16 GB,32 GB,64 GB,128 GB,256 GB,512 GB,Other,None",
     stock_statuses: "In Stock,Returned,Sold,Rejected,Others",
     payment_types: "Card,Cash,Cheque,Online",
-};
+});
 
 const getters = {
     stock_types: (state) => {

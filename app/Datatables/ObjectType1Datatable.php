@@ -49,7 +49,7 @@ abstract class ObjectType1Datatable extends BaseDatatable
             "name" => "Actions",
             "key" => "route",
             "enabled" => true,
-            "th" => "sticky",
+            "th" => "text-left sticky",
             "type" => "ObjectTypeNameActions",
             "sorting" => false,
             "searching" => false,

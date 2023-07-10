@@ -19,6 +19,9 @@
                                 'bg-gray-900 text-gray-500 hover:bg-gray-800':
                                     dark_mode,
                             },
+                            {
+                                hidden: !header.enabled,
+                            },
                         ]"
                         :colspan="header.column_span"
                     >
@@ -56,12 +59,12 @@
                             v-if="typeof header.type === undefined"
                             v-html="getValue(totals, header.key)"
                         ></span>
-                        <span
+                        <component
                             v-else
                             :is="header.type"
                             :row="totals"
                             :column="header.key"
-                        ></span>
+                        ></component>
                     </td>
                 </Row>
             </tfoot>
@@ -116,6 +119,9 @@
                             {
                                 'border-gray-200': !dark_mode,
                                 'border-gray-700': dark_mode,
+                            },
+                            {
+                                hidden: !header.enabled,
                             },
                         ]"
                         :colspan="header.column_span"
@@ -204,7 +210,7 @@
                             v-if="typeof child_header.type === 'undefined'"
                             v-html="getValue(child_row, child_header.key)"
                         ></span>
-                        <span
+                        <component
                             v-else
                             :is="child_header.type"
                             :row="child_row"
@@ -216,7 +222,7 @@
                             @removeRecord="removeRecord"
                             @selectRecord="selectRecord"
                             @returnItem="returnItem"
-                        ></span>
+                        ></component>
                     </td>
                 </Row>
             </tbody>

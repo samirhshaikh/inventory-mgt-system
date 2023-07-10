@@ -21,7 +21,7 @@
                         }"
                     />
                     <button
-                        class="rounded-r-md p-2 border border-gray-400 bg-blue-200 bg-opacity-50 border-l-0 hover:bg-red-200"
+                        class="rounded-r-md p-2 border border-gray-400 bg-blue-200/50 border-l-0 hover:bg-red-200"
                         @click.stop="clearDate"
                     >
                         <FA :icon="['fas', 'times']"></FA>

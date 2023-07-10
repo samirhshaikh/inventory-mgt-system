@@ -20,8 +20,8 @@
 
                 <div>
                     <div v-for="link in links">
-                        <Link
-                            :href="route(link.route)"
+                        <a
+                            :href="toRoute(link.route)"
                             class="px-4 py-2 block text-sm no-underline"
                             :class="linkNavigationClass(link.route)"
                             :key="link.title"
@@ -39,7 +39,7 @@
                                     {{ link.title }}
                                 </div>
                             </div>
-                        </Link>
+                        </a>
 
                         <a
                             class="px-4 py-2 block text-sm no-underline cursor-pointer hover:bg-gray-200"
@@ -232,6 +232,10 @@ export default {
             });
 
             return flag;
+        },
+
+        toRoute(link) {
+            return this.$route(link);
         },
 
         linkNavigationClass(link_route) {

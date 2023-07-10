@@ -6,7 +6,7 @@
             split="border-white"
             class="text-white bg-green-600"
             :class="{
-                hidden: !$page.user_details.IsAdmin,
+                hidden: !page.user_details.IsAdmin,
             }"
             >Edit
         </Button>
@@ -14,7 +14,7 @@
             @click.native="remove"
             class="text-white bg-red-400 ml-2"
             :class="{
-                hidden: !$page.user_details.IsAdmin,
+                hidden: !page.user_details.IsAdmin,
             }"
             :icon="deleting_record ? 'sync-alt' : 'trash'"
             :icon_class="deleting_record ? 'fa-spin' : ''"
@@ -31,9 +31,18 @@ import { mapActions } from "vuex";
 import Confirm from "../../../components/Confirm.vue";
 import { datatable_cell } from "../datatable_cell";
 import { notifications } from "../../../Helpers/notifications";
+import { usePage } from "@inertiajs/vue3";
+
+const page = usePage();
 
 export default {
     mixins: [datatable_cell, notifications],
+
+    computed: {
+        page() {
+            return page.props;
+        },
+    },
 
     methods: {
         edit() {

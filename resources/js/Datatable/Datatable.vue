@@ -5,10 +5,10 @@
             ref="table"
         >
             <thead>
-                <Row type="header">
+                <tr type="header">
                     <th
                         v-for="header in active_columns"
-                        v-if="header.enabled"
+                        :key="header.name"
                         class="py-2 lg:py-4 px-1 lg:px-2 font-bold uppercase border-b border-gray-200 z-10 table_header"
                         :class="[
                             header.th,
@@ -46,7 +46,7 @@
                             {{ header.name }}
                         </span>
                     </th>
-                </Row>
+                </tr>
             </thead>
 
             <tfoot v-if="Object.keys(totals).length > 0">
@@ -108,7 +108,6 @@
                 >
                     <td
                         v-for="(header, index) in active_columns"
-                        v-if="header.enabled"
                         class="px-1 lg:px-2 border-b border-gray-200 z-0"
                         :class="[
                             header.th,
@@ -127,7 +126,7 @@
                             v-if="typeof header.type === 'undefined'"
                             v-html="getValue(row, header.key)"
                         ></span>
-                        <span
+                        <component
                             v-else
                             :is="header.type"
                             :row="row"
@@ -143,7 +142,7 @@
                             @selectRecord="selectRecord"
                             @setExpandedRowId="setExpandedRowId"
                             @returnItem="returnItem"
-                        ></span>
+                        ></component>
                     </td>
                 </Row>
 
@@ -151,7 +150,6 @@
                 <Row type="header" v-show="expanded_row_id == row.Id">
                     <th
                         v-for="child_header in active_child_columns"
-                        v-if="child_header.enabled"
                         class="py-2 lg:py-2 px-1 lg:px-2 uppercase border-b border-gray-200"
                         :class="[
                             child_header.th,
@@ -188,7 +186,6 @@
                         v-for="(
                             child_header, child_index
                         ) in active_child_columns"
-                        v-if="child_header.enabled"
                         class="px-1 lg:px-2 border-b border-gray-200 z-0"
                         :class="[
                             child_header.th,

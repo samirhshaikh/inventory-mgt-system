@@ -18,6 +18,7 @@ mix.webpackConfig({
             // vue$: "vue/dist/vue.runtime.js",
             "@": path.resolve("resources/js"),
             "s@": path.resolve("storage/app"),
+            ziggy: path.resolve("vendor/tightenco/ziggy/dist"),
         },
     },
 });

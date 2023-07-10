@@ -5,7 +5,7 @@
             class="text-white bg-green-600"
             :class="{
                 hidden:
-                    !$page.user_details.IsAdmin ||
+                    !page.user_details.IsAdmin ||
                     row.Status == this.phonestock.STATUS_SOLD,
             }"
         >
@@ -19,9 +19,18 @@ import Sale from "../../../DBObjects/Sale.vue";
 import { mapActions } from "vuex";
 import { datatable_cell } from "../datatable_cell";
 import { common_functions } from "../../../Helpers/common_functions";
+import { usePage } from "@inertiajs/vue3";
+
+const page = usePage();
 
 export default {
     mixins: [datatable_cell, common_functions],
+
+    computed: {
+        page() {
+            return page.props;
+        },
+    },
 
     methods: {
         sellItem() {

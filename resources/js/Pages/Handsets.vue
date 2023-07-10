@@ -12,7 +12,7 @@
                     class="pt-1 ml-2 text-product-color text-2xl tracking-tight w-full"
                 >
                     <FA :icon="['fas', 'mobile-alt']" class="mr-1"></FA>
-                    {{ options.record_name }}s
+                    {{ options.record_name }}
                 </h1>
                 <div class="mr-2 flex flex-row">
                     <SearchBar
@@ -42,9 +42,9 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
 import Handset from "../DBObjects/Handset.vue";
+import { defineAsyncComponent } from "vue";
 
 export default {
     props: {
@@ -59,9 +59,9 @@ export default {
     },
 
     components: {
-        HandsetsDatatable: lazyLoadComponent({
-            componentFactory: () => import("@/Datatable/Datatable"),
-            loading: loading,
+        HandsetsDatatable: defineAsyncComponent({
+            loader: () => import("@/Datatable/Datatable"),
+            loadingComponent: loading,
         }),
     },
 

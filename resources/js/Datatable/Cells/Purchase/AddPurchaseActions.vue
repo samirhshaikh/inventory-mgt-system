@@ -5,7 +5,7 @@
             class="text-white bg-green-600"
             :class="{
                 hidden:
-                    !$page.user_details.IsAdmin ||
+                    !page.user_details.IsAdmin ||
                     row['row_id'] == current_row_id,
             }"
         >
@@ -16,7 +16,7 @@
             class="text-white bg-red-400 ml-2"
             :class="{
                 hidden:
-                    !$page.user_details.IsAdmin ||
+                    !page.user_details.IsAdmin ||
                     row['Id'] == '' ||
                     row['row_id'] == current_row_id ||
                     row['Status'] == this.phonestock.STATUS_SOLD,
@@ -31,6 +31,9 @@
 <script>
 import Confirm from "../../../components/Confirm.vue";
 import { datatable_cell } from "../datatable_cell";
+import { usePage } from "@inertiajs/vue3";
+
+const page = usePage();
 
 export default {
     mixins: [datatable_cell],
@@ -39,6 +42,12 @@ export default {
         current_row_id: {
             type: String,
             default: "",
+        },
+    },
+
+    computed: {
+        page() {
+            return page.props;
         },
     },
 

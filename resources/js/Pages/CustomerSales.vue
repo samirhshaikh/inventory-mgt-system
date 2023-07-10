@@ -67,18 +67,18 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
 import CustomerSale from "../DBObjects/CustomerSale.vue";
 import { datatable_common } from "../Helpers/datatable_common";
+import { defineAsyncComponent } from "vue";
 
 export default {
     mixins: [datatable_common],
 
     components: {
-        CustomerSalesDatatable: lazyLoadComponent({
-            componentFactory: () => import("@/Datatable/Datatable"),
-            loading: loading,
+        CustomerSalesDatatable: defineAsyncComponent({
+            loader: () => import("@/Datatable/Datatable"),
+            loadingComponent: loading,
         }),
     },
 

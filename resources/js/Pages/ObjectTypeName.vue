@@ -1,5 +1,5 @@
 <template>
-    <Layout title="Handset Colors">
+    <Layout>
         <div class="px-4 py-4">
             <div
                 class="flex items-stretch datatable_header"
@@ -61,18 +61,18 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
 import ObjectTypeName from "../DBObjects/ObjectTypeName.vue";
 import { datatable_common } from "../Helpers/datatable_common";
+import { defineAsyncComponent } from "vue";
 
 export default {
     mixins: [datatable_common],
 
     components: {
-        ObjectType1Datatable: lazyLoadComponent({
-            componentFactory: () => import("@/Datatable/Datatable"),
-            loading: loading,
+        ObjectType1Datatable: defineAsyncComponent({
+            loader: () => import("@/Datatable/Datatable"),
+            loadingComponent: loading,
         }),
     },
 

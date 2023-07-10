@@ -1,11 +1,12 @@
 <template>
     <div class="z-0">
-        <toggle-button
-            :value="data"
-            :labels="{ checked: 'Yes', unchecked: 'No' }"
-            @change="toggleValue(row)"
-            :disabled="!isAdmin"
-        />
+        Yes
+        <!--        <toggle-button-->
+        <!--            :value="data"-->
+        <!--            :labels="{ checked: 'Yes', unchecked: 'No' }"-->
+        <!--            @change="toggleValue(row)"-->
+        <!--            :disabled="!isAdmin"-->
+        <!--        />-->
     </div>
 </template>
 

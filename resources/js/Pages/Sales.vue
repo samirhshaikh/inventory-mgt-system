@@ -70,13 +70,13 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
 import Sale from "../DBObjects/Sale.vue";
 import { list_controller } from "../Helpers/list_controller";
 import { datatable_common } from "../Helpers/datatable_common";
 import { common_functions } from "../Helpers/common_functions";
 import SearchParameters from "../components/Search/SearchParameters";
+import { defineAsyncComponent } from "vue";
 
 export default {
     mixins: [list_controller, datatable_common, common_functions],
@@ -90,9 +90,9 @@ export default {
 
     components: {
         SearchParameters,
-        SalesDatatable: lazyLoadComponent({
-            componentFactory: () => import("@/Datatable/Datatable"),
-            loading: loading,
+        SalesDatatable: defineAsyncComponent({
+            loader: () => import("@/Datatable/Datatable"),
+            loadingComponent: loading,
         }),
     },
 

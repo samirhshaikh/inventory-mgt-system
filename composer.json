@@ -18,7 +18,7 @@
         "league/fractal": "^0.19.2",
         "mikehaertl/phpwkhtmltopdf": "^2.5",
         "php-open-source-saver/jwt-auth": "^2.1",
-        "tightenco/ziggy": "^0.9.4"
+        "tightenco/ziggy": "^v1.6.0"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

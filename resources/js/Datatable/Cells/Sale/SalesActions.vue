@@ -6,7 +6,7 @@
             split="border-white"
             class="text-white bg-green-600 mr-2"
             :class="{
-                hidden: !$page.user_details.IsAdmin,
+                hidden: !page.user_details.IsAdmin,
             }"
         >
             Invoice
@@ -17,7 +17,7 @@
             split="border-white"
             class="text-white bg-green-600 mr-2"
             :class="{
-                hidden: !$page.user_details.IsAdmin,
+                hidden: !page.user_details.IsAdmin,
             }"
             >Edit</Button
         >
@@ -25,7 +25,7 @@
             @click.native="remove"
             class="text-white bg-red-400 mr-2"
             :class="{
-                hidden: !$page.user_details.IsAdmin,
+                hidden: !page.user_details.IsAdmin,
             }"
             :icon="deleting_record ? 'sync-alt' : 'trash'"
             :icon_class="deleting_record ? 'fa-spin' : ''"
@@ -44,9 +44,18 @@ import { datatable_cell } from "../datatable_cell";
 import { notifications } from "../../../Helpers/notifications";
 import { common_functions } from "../../../Helpers/common_functions";
 import Invoice from "./Invoice";
+import { usePage } from "@inertiajs/vue3";
+
+const page = usePage();
 
 export default {
     mixins: [datatable_cell, notifications, common_functions],
+
+    computed: {
+        page() {
+            return page.props;
+        },
+    },
 
     methods: {
         edit() {

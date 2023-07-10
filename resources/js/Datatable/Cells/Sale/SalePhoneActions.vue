@@ -4,7 +4,7 @@
             @click.native="returnItem"
             class="text-white bg-red-400 mr-2"
             :class="{
-                hidden: !$page.user_details.IsAdmin || row['Returned'] == 1,
+                hidden: !page.user_details.IsAdmin || row['Returned'] == 1,
             }"
         >
             Return
@@ -21,7 +21,7 @@
             class="text-white bg-green-600 mr-2"
             :class="{
                 hidden:
-                    !$page.user_details.IsAdmin ||
+                    !page.user_details.IsAdmin ||
                     !parent_row.hasOwnProperty('tradein'),
             }"
         >
@@ -36,6 +36,9 @@ import { datatable_cell } from "../datatable_cell";
 import { notifications } from "../../../Helpers/notifications";
 import { mapActions } from "vuex";
 import Purchase from "../../../DBObjects/Purchase";
+import { usePage } from "@inertiajs/vue3";
+
+const page = usePage();
 
 export default {
     mixins: [datatable_cell, notifications],
@@ -43,6 +46,12 @@ export default {
     props: {
         parent_row: {
             default: () => ({}),
+        },
+    },
+
+    computed: {
+        page() {
+            return page.props;
         },
     },
 

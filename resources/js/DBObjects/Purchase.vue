@@ -645,11 +645,11 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import moment from "moment";
-import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
 import helper_functions from "../Helpers/helper_functions";
 import { list_controller } from "../Helpers/list_controller";
 import { notifications } from "../Helpers/notifications";
+import { defineAsyncComponent } from "vue";
 
 export default {
     props: {
@@ -669,9 +669,9 @@ export default {
     mixins: [list_controller, notifications],
 
     components: {
-        PurchaseItemsDatatable: lazyLoadComponent({
-            componentFactory: () => import("@/Datatable/Datatable"),
-            loading: loading,
+        PurchaseItemsDatatable: defineAsyncComponent({
+            loader: () => import("@/Datatable/Datatable"),
+            loadingComponent: loading,
         }),
     },
 

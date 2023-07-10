@@ -14,7 +14,7 @@
                         :src="getAvatar"
                         class="w-24 h-24 border-2 border-color-white rounded-full"
                     />
-                    <span class="mt-4">{{ $page.user }}</span>
+                    <span class="mt-4">{{ page.user }}</span>
                 </div>
 
                 <div class="flex flex-col p-4">
@@ -75,6 +75,9 @@
 import { mapState, mapActions } from "vuex";
 import moment from "moment";
 import Button from "../components/Button";
+import { usePage } from "@inertiajs/vue3";
+
+const page = usePage();
 
 export default {
     data() {
@@ -105,6 +108,10 @@ export default {
             expanded_sidebar: (state) => state.db.expanded_sidebar,
             page_size: (state) => state.framework.page_size,
         }),
+
+        page() {
+            return page.props;
+        },
     },
 };
 </script>

@@ -16,8 +16,6 @@ import vSelect from "vue-select";
 // import DatePicker from "v-calendar/lib/components/date-picker.umd";
 // import VuePdfApp from "vue-pdf-app";
 
-const app = createApp({ el: "#app" });
-
 //Start: Fontawesome
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -152,21 +150,8 @@ createInertiaApp({
 
         app.use(store);
 
+        app.config.globalProperties.$route = route;
+
         app.mount(el);
     },
 });
-
-// new Vue({
-//     store,
-//     render: (h) =>
-//         h(InertiaApp, {
-//             props: {
-//                 initialPage: JSON.parse(app.dataset.page),
-//                 resolveComponent: (component) => {
-//                     return import(`@/${component}`).then(
-//                         (module) => module.default
-//                     );
-//                 },
-//             },
-//         }),
-// }).$mount(app);

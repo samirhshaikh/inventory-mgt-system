@@ -5,7 +5,7 @@
             class="text-white bg-green-600 mr-2"
             :class="{
                 hidden:
-                    !$page.user_details.IsAdmin ||
+                    !page.user_details.IsAdmin ||
                     row['row_id'] == current_row_id ||
                     row['Returned'],
             }"
@@ -17,7 +17,7 @@
             class="text-white bg-red-400 mr-2"
             :class="{
                 hidden:
-                    !$page.user_details.IsAdmin ||
+                    !page.user_details.IsAdmin ||
                     row['row_id'] == current_row_id,
             }"
             split="border-white"
@@ -29,7 +29,7 @@
             class="text-white bg-red-400"
             :class="{
                 hidden:
-                    !$page.user_details.IsAdmin ||
+                    !page.user_details.IsAdmin ||
                     !row.hasOwnProperty('Id') ||
                     row['Returned'],
             }"
@@ -52,6 +52,9 @@ import Confirm from "../../../components/Confirm.vue";
 import ReturnItem from "../../../DBObjects/ReturnItem";
 import { datatable_cell } from "../datatable_cell";
 import { mapActions } from "vuex";
+import { usePage } from "@inertiajs/vue3";
+
+const page = usePage();
 
 export default {
     mixins: [datatable_cell],
@@ -63,6 +66,12 @@ export default {
         },
         parent_row: {
             default: () => ({}),
+        },
+    },
+
+    computed: {
+        page() {
+            return page.props;
         },
     },
 

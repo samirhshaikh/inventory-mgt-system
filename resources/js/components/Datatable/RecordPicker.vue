@@ -98,11 +98,11 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import SearchParameters from "../Search/SearchParameters";
-import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
 import { list_controller } from "../../Helpers/list_controller";
 import { datatable_common } from "../../Helpers/datatable_common";
 import moment from "moment";
+import { defineAsyncComponent } from "vue";
 
 export default {
     mixins: [list_controller, datatable_common],
@@ -115,9 +115,9 @@ export default {
 
     components: {
         SearchParameters,
-        Datatable: lazyLoadComponent({
-            componentFactory: () => import("@/Datatable/Datatable"),
-            loading: loading,
+        Datatable: defineAsyncComponent({
+            loader: () => import("@/Datatable/Datatable"),
+            loadingComponent: loading,
         }),
     },
 

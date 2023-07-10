@@ -47,19 +47,19 @@
 
 <style>
 .search_bar {
-    @apply .bg-gray-200 .text-gray-700 .border .border-gray-400 .rounded .py-1 .px-2 .text-sm;
+    @apply bg-gray-200 text-gray-700 border border-gray-400 rounded py-1 px-2 text-sm;
 }
 .search_input {
-    @apply .appearance-none
-    .bg-transparent;
+    @apply appearance-none
+    bg-transparent;
 }
 .search_input {
     line-height: 18px;
 }
 .search_input:focus,
 .search_input:focus {
-    @apply .outline-none
-    .bg-transparent;
+    @apply outline-none
+    bg-transparent;
 }
 </style>
 

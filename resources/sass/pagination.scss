@@ -1,41 +1,41 @@
 
 .pagination {
-    @apply .border
-    .border-gray-400
-    .rounded;
+    @apply border
+    border-gray-400
+    rounded;
 }
 .pagination .page-item {
-    @apply .border-r
-    .border-gray-400;
+    @apply border-r
+    border-gray-400;
 }
 .pagination .page-item:last-child {
-    @apply .border-0;
+    @apply border-0;
 }
 .pagination .page-item .page-link:hover,
 .pagination .page-item.active .page-link {
-    @apply .bg-blue-600
-    .text-white
-    .cursor-pointer;
+    @apply bg-blue-600
+    text-white
+    cursor-pointer;
 }
 .pagination .page-item.disabled .page-link,
 .pagination .page-item.disabled .page-link:hover {
-    @apply .bg-white
-    .text-gray-400
-    .cursor-default;
+    @apply bg-white
+    text-gray-400
+    cursor-default;
 }
 
 @media (min-width: 640px) {
     .pagination .page-item .page-link {
         @apply
-        .p-1
-        .block;
+        p-1
+        block;
     }
 }
 
 @media (min-width: 768px) {
     .pagination .page-item .page-link {
-        @apply .py-2
-        .px-3
-        .block;
+        @apply py-2
+        px-3
+        block;
     }
 }

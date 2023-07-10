@@ -2,19 +2,17 @@
     <Layout>
         <div class="px-4 py-4">
             <div
-                class="flex items-stretch datatable_header"
+                class="datatable_header"
                 :class="{
                     'border-product-color-lighter bg-white': !dark_mode,
                     'border-product-color bg-gray-800': dark_mode,
                 }"
             >
-                <h1
-                    class="pt-1 ml-2 text-product-color text-2xl tracking-tight w-full"
-                >
+                <h1>
                     <FA :icon="['fas', options.icon]" class="mr-1"></FA>
                     {{ options.record_name }}s
                 </h1>
-                <div class="mr-2 flex flex-row">
+                <div class="search_bar_container">
                     <SearchBar
                         :placeholder_text="options.record_name + 's'"
                         :focus_on_search_bar="focus_on_search_bar"

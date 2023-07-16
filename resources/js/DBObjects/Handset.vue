@@ -27,7 +27,7 @@
                         class="float-right flex justify-end mr-2 text-white w-64"
                     >
                         <Button
-                            @click.native="$emit('close')"
+                            @click.native="$emit('closed')"
                             icon="times"
                             split="border-white"
                             class="bg-red-600"
@@ -514,38 +514,38 @@ export default {
                 .post(route("handsets.save"), this.row)
                 .then((response) => {
                     if (response.data.message == "record_saved") {
-                        this.$notify({
-                            group: "messages",
-                            title: "Success",
-                            text:
-                                this.options.record_name +
-                                " " +
-                                (this.row["operation"] == "add"
-                                    ? "added"
-                                    : "edited") +
-                                " successfully.",
-                        });
+                        // this.$notify({
+                        //     group: "messages",
+                        //     title: "Success",
+                        //     text:
+                        //         this.options.record_name +
+                        //         " " +
+                        //         (this.row["operation"] == "add"
+                        //             ? "added"
+                        //             : "edited") +
+                        //         " successfully.",
+                        // });
 
                         this.refreshData(this.options.id);
                     }
 
                     this.saving_data = false;
 
-                    this.$modal.hide(this.$parent.name);
+                    this.$emit("confirm");
                 })
                 .catch((error) => {
                     this.saving_data = false;
 
                     if (error.response.data.message == "record_not_found") {
-                        this.$notify({
-                            group: "messages",
-                            title: "Error",
-                            type: "error",
-                            text: this.formatMessage(
-                                error.response.data.message,
-                                this.options.record_name
-                            ),
-                        });
+                        // this.$notify({
+                        //     group: "messages",
+                        //     title: "Error",
+                        //     type: "error",
+                        //     text: this.formatMessage(
+                        //         error.response.data.message,
+                        //         this.options.record_name
+                        //     ),
+                        // });
                     } else if (
                         error.response.data.message == "duplicate_name"
                     ) {

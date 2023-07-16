@@ -50,6 +50,7 @@
 import { mapActions, mapState } from "vuex";
 import UserOverlayVue from "../Misc/UserOverlay";
 import { usePage } from "@inertiajs/vue3";
+import { useModal } from "vue-final-modal";
 
 const page = usePage();
 
@@ -86,16 +87,25 @@ export default {
         },
 
         showUserOverlay() {
+            const parent = this;
+
             this.setPopperOpen(true);
 
-            this.$modal.show(
-                UserOverlayVue,
-                {},
-                {
-                    width: "80%",
-                    height: "80%",
-                }
-            );
+            const { open, close } = useModal({
+                component: UserOverlayVue,
+                attrs: {
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {
+                        parent.setPopperOpen(false);
+                    },
+                },
+            });
+
+            open();
+
+            this.setPopperOpen(true);
         },
 
         ...mapActions({

@@ -1,6 +1,6 @@
 <template>
     <footer class="flex w-full bg-gray-900 h-10 justify-between">
-        <div class="flex">Footer</div>
+        <div class="flex"></div>
         <div class="flex">
             <button
                 class="border-gray-500 border-l text-white p-3 hover:bg-gray-800 relative"
@@ -31,6 +31,7 @@
 import moment from "moment";
 import { mapState, mapActions } from "vuex";
 import DebugPanel from "../Footer/DebugPanel.vue";
+import { useModal } from "vue-final-modal";
 
 export default {
     data() {
@@ -62,19 +63,23 @@ export default {
         doRefresh() {},
 
         openDebugPanel() {
+            const parent = this;
+
             this.setPopperOpen(true);
 
-            this.$modal.show(
-                DebugPanel,
-                {},
-                {
-                    width: "80%",
-                    height: "80%",
+            const { open, close } = useModal({
+                component: DebugPanel,
+                attrs: {
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {
+                        parent.closeDebugPanel();
+                    },
                 },
-                {
-                    closed: this.closeDebugPanel,
-                }
-            );
+            });
+
+            open();
         },
 
         closeDebugPanel() {

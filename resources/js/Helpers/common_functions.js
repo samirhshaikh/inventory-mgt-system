@@ -1,24 +1,27 @@
 import Invoice from "../Datatable/Cells/Sale/Invoice";
+import { useModal } from "vue-final-modal";
 
 export const common_functions = {
     methods: {
         viewSalesInvoice(invoice_id) {
+            const parent = this;
+
             this.setPopperOpen(true);
 
-            this.$modal.show(
-                Invoice,
-                {
+            const { open, close } = useModal({
+                component: Invoice,
+                attrs: {
                     invoice_id: String(invoice_id),
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {
+                        parent.setPopperOpen(false);
+                    },
                 },
-                {
-                    width: "90%",
-                    height: "80%",
-                },
-                {
-                    opened: (event) => {},
-                    closed: (event) => {},
-                }
-            );
+            });
+
+            open();
         },
     },
 };

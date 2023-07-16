@@ -17,9 +17,9 @@
                         placeholder_text="Phone Stock"
                         v-if="options.enable_search"
                         class="mr-1"
-                        @searchData="searchData"
-                        @clearSearch="clearSearch"
-                        @triggerAdvancedSearch="triggerAdvancedSearch"
+                        @search-data="searchData"
+                        @clear-search="clearSearch"
+                        @advanced-search-data-modified="triggerAdvancedSearch"
                         :columns="search_columns"
                     ></SearchBar>
                     <Button
@@ -35,7 +35,7 @@
 
             <Pagination
                 :total_records="total_records"
-                @changePage="changePage"
+                @change-page="changePage"
                 class="mb-3 w-full inline-flex"
                 :start_page_no="page_no"
                 v-show="total_records"
@@ -45,7 +45,7 @@
                 :columns="search_columns"
                 :search_data="advanced_search_data"
                 v-if="search_type == 'advanced'"
-                @advancedSearchDataModified="triggerAdvancedSearch"
+                @advanced-search-data-modified="triggerAdvancedSearch"
             ></SearchParameters>
 
             <PhoneStockDatatable
@@ -56,8 +56,8 @@
                 :search_text="search_text"
                 :advanced_search_data="advanced_search_data"
                 :update_search="update_search"
-                @changeTotalReports="changeTotalReports"
-                @changePageNo="changePage"
+                @change-total-reports="changeTotalReports"
+                @change-page-no="changePage"
             ></PhoneStockDatatable>
         </div>
     </Layout>
@@ -71,6 +71,7 @@ import { list_controller } from "../Helpers/list_controller";
 import { datatable_common } from "../Helpers/datatable_common";
 import SearchParameters from "../components/Search/SearchParameters";
 import { defineAsyncComponent } from "vue";
+import { useModal } from "vue-final-modal";
 
 export default {
     mixins: [list_controller, datatable_common],
@@ -193,18 +194,20 @@ export default {
         newRecord() {
             this.setPopperOpen(true);
 
-            this.$modal.show(
-                PhoneStock,
-                {
+            const { open, close } = useModal({
+                component: PhoneStock,
+                attrs: {
                     edit_id: "",
                     options: this.options,
                     columns: this.columns,
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {},
                 },
-                {
-                    width: "90%",
-                    height: "80%",
-                }
-            );
+            });
+
+            open();
         },
 
         ...mapActions({

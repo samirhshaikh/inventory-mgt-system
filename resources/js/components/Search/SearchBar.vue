@@ -30,7 +30,7 @@
                 class="ml-1 text-green-600"
                 @click="advancedSearch"
                 title="Advanced Search"
-                v-if="advanced_search"
+                v-if="enable_advanced_search"
             >
                 <FA :icon="['fas', 'magic']" class="ml-1"></FA>
             </button>
@@ -51,7 +51,9 @@
 }
 .search_input {
     @apply appearance-none
-    bg-transparent;
+    bg-transparent
+    border-0
+    p-0;
 }
 .search_input {
     line-height: 18px;
@@ -66,6 +68,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import AdvancedSearch from "./AdvancedSearch";
+import { useModal } from "vue-final-modal";
 
 export default {
     name: "SearchBar",
@@ -79,7 +82,7 @@ export default {
             type: Array,
             default: () => [],
         },
-        advanced_search: {
+        enable_advanced_search: {
             type: Boolean,
             default: true,
         },
@@ -162,23 +165,29 @@ export default {
         },
 
         advancedSearch() {
+            const parent = this;
+
             this.setPopperOpen(true);
 
-            this.$modal.show(
-                AdvancedSearch,
-                {
+            const { open, close } = useModal({
+                component: AdvancedSearch,
+                attrs: {
                     columns: this.columns,
                     triggerAdvancedSearch: (newValue) => {
-                        this.$emit("triggerAdvancedSearch", newValue);
+                        this.$emit("advancedSearchDataModified", newValue);
                         this.search_bar_open = false;
                         this.search_text = "";
                     },
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {
+                        parent.setPopperOpen(false);
+                    },
                 },
-                {
-                    width: "750px",
-                    height: "600px",
-                }
-            );
+            });
+
+            open();
         },
 
         ...mapActions({

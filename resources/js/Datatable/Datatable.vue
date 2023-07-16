@@ -19,9 +19,6 @@
                                 'bg-gray-900 text-gray-500 hover:bg-gray-800':
                                     dark_mode,
                             },
-                            {
-                                hidden: !header.enabled,
-                            },
                         ]"
                         :colspan="header.column_span"
                     >
@@ -120,9 +117,6 @@
                                 'border-gray-200': !dark_mode,
                                 'border-gray-700': dark_mode,
                             },
-                            {
-                                hidden: !header.enabled,
-                            },
                         ]"
                         :colspan="header.column_span"
                         :key="index"
@@ -143,11 +137,11 @@
                             :selected_records="selected_records"
                             :expanded_row_id="expanded_row_id"
                             :parent_row="parent_row"
-                            @editRecord="editRecord"
-                            @removeRecord="removeRecord"
-                            @selectRecord="selectRecord"
-                            @setExpandedRowId="setExpandedRowId"
-                            @returnItem="returnItem"
+                            @edit-record="editRecord"
+                            @remove-record="removeRecord"
+                            @select-record="selectRecord"
+                            @set-expanded-row-id="setExpandedRowId"
+                            @return-item="returnItem"
                         ></component>
                     </td>
                 </Row>
@@ -218,10 +212,10 @@
                             :column="child_header.key"
                             :column_details="child_header"
                             :options="options"
-                            @editRecord="editRecord"
-                            @removeRecord="removeRecord"
-                            @selectRecord="selectRecord"
-                            @returnItem="returnItem"
+                            @edit-record="editRecord"
+                            @remove-record="removeRecord"
+                            @select-record="selectRecord"
+                            @return-item="returnItem"
                         ></component>
                     </td>
                 </Row>

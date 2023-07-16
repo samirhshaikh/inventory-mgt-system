@@ -48,16 +48,22 @@
         />
 
         <Window class="hidden" @resizeWindow="resizeWindow"></Window>
+
+        <ModalsContainer />
     </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import { ModalsContainer } from "vue-final-modal";
 import { usePage } from "@inertiajs/vue3";
 
 const page = usePage();
 
 export default {
+    components: {
+        ModalsContainer,
+    },
     data() {
         return {
             restoreState: {

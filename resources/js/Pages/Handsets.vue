@@ -17,7 +17,7 @@
                         :placeholder_text="options.record_name + 's'"
                         v-if="options.enable_search"
                         class="mr-1"
-                        @searchData="searchData"
+                        @search-data="searchData"
                     ></SearchBar>
                     <Button
                         @click.native="newRecord"

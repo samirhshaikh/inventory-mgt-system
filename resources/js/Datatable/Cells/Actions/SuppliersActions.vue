@@ -32,6 +32,7 @@ import Confirm from "../../../components/Confirm.vue";
 import { datatable_cell } from "../datatable_cell";
 import { notifications } from "../../../Helpers/notifications";
 import { usePage } from "@inertiajs/vue3";
+import { useModal } from "vue-final-modal";
 
 const page = usePage();
 
@@ -46,25 +47,31 @@ export default {
 
     methods: {
         edit() {
+            const parent = this;
+
             this.setPopperOpen(true);
 
-            this.$modal.show(
-                Supplier,
-                {
+            const { open, close } = useModal({
+                component: Supplier,
+                attrs: {
                     edit_id: String(this.row.Id),
                     options: this.options,
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {
+                        parent.setPopperOpen(false);
+                    },
                 },
-                {
-                    width: "750px",
-                    height: "600px",
-                }
-            );
+            });
+
+            open();
         },
 
         remove() {
-            this.$modal.show(
-                Confirm,
-                {
+            const { open, close } = useModal({
+                component: Confirm,
+                attrs: {
                     title: "Delete " + this.options.record_name,
                     text:
                         "Are you sure you want to delete this " +
@@ -79,26 +86,26 @@ export default {
                             })
                             .then((response) => {
                                 if (response.data.message == "record_deleted") {
-                                    this.$notify({
-                                        group: "messages",
-                                        title: "Success",
-                                        text: this.formatMessage(
-                                            response.data.message,
-                                            this.options.record_name
-                                        ),
-                                    });
+                                    // this.$notify({
+                                    //     group: "messages",
+                                    //     title: "Success",
+                                    //     text: this.formatMessage(
+                                    //         response.data.message,
+                                    //         this.options.record_name
+                                    //     ),
+                                    // });
 
                                     this.refreshData(this.options.id);
                                 } else {
-                                    this.$notify({
-                                        group: "messages",
-                                        title: "Error",
-                                        type: "error",
-                                        text: this.formatMessage(
-                                            "unknown_error",
-                                            this.options.record_name
-                                        ),
-                                    });
+                                    // this.$notify({
+                                    //     group: "messages",
+                                    //     title: "Error",
+                                    //     type: "error",
+                                    //     text: this.formatMessage(
+                                    //         "unknown_error",
+                                    //         this.options.record_name
+                                    //     ),
+                                    // });
                                 }
 
                                 this.deleting_record = false;
@@ -106,23 +113,25 @@ export default {
                             .catch((error) => {
                                 this.deleting_record = false;
 
-                                this.$notify({
-                                    group: "messages",
-                                    title: "Error",
-                                    type: "error",
-                                    text: this.formatMessage(
-                                        error.response.data.message,
-                                        this.options.record_name
-                                    ),
-                                });
+                                // this.$notify({
+                                //     group: "messages",
+                                //     title: "Error",
+                                //     type: "error",
+                                //     text: this.formatMessage(
+                                //         error.response.data.message,
+                                //         this.options.record_name
+                                //     ),
+                                // });
                             });
                     },
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {},
                 },
-                {
-                    width: "350px",
-                    height: "auto",
-                }
-            );
+            });
+
+            open();
         },
 
         ...mapActions({

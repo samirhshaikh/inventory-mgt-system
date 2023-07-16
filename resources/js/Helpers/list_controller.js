@@ -16,6 +16,7 @@ import { mapState, mapActions } from "vuex";
 import Supplier from "../DBObjects/Supplier";
 import Customer from "../DBObjects/CustomerSale";
 import ObjectTypeName from "../DBObjects/ObjectTypeName";
+import { useModal } from "vue-final-modal";
 
 export const list_controller = {
     data() {
@@ -267,26 +268,29 @@ export const list_controller = {
         },
 
         addSupplier() {
+            const parent = this;
+
             this.setPopperOpen(true);
 
-            this.$modal.show(
-                Supplier,
-                {
+            const { open, close } = useModal({
+                component: Supplier,
+                attrs: {
                     edit_id: "",
                     options: {
                         id: "suppliers",
                         record_name: "Supplier",
                         cache_data: true,
                     },
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {
+                        parent.setPopperOpen(false);
+                    },
                 },
-                {
-                    width: "750px",
-                    height: "600px",
-                },
-                {
-                    closed: (event) => {},
-                }
-            );
+            });
+
+            open();
         },
 
         addHandsetManufacturer() {
@@ -338,19 +342,25 @@ export const list_controller = {
         },
 
         addObjectTypeName(options) {
+            const parent = this;
+
             this.setPopperOpen(true);
 
-            this.$modal.show(
-                ObjectTypeName,
-                {
+            const { open, close } = useModal({
+                component: ObjectTypeName,
+                attrs: {
                     edit_id: "",
                     options: options,
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {
+                        parent.setPopperOpen(false);
+                    },
                 },
-                {
-                    width: "650px",
-                    height: "600px",
-                }
-            );
+            });
+
+            open();
         },
 
         ...mapActions({

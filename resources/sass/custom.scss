@@ -52,7 +52,7 @@ button:focus {
 .datatable_header {
     top: 0px;
 }
-.datatable_header h1 {
+.datatable_header h1, .datatable_header h2 {
     @apply pt-1
     ml-2
     text-product-color
@@ -60,11 +60,16 @@ button:focus {
     tracking-tight
     w-full
 }
+.datatable_header h2 {
+    @apply text-xl
+}
 .datatable_header .search_bar_container {
     @apply mr-2
+    ml-5
     flex
     flex-row
     self-end
+    text-white
 }
 .table_header {
     top: 35px;
@@ -72,20 +77,30 @@ button:focus {
 
 .form_field_container {
     @apply mb-4
+    flex
+    flex-row
+    flex-wrap
+    px-2
 }
 .form_field_label {
-    @apply uppercase
+    @apply block
+    uppercase
+    w-full
     tracking-wide
+    text-gray-700
     text-sm
     font-semibold
-    mb-1
 }
 .form_value_label {
-    @apply text-xs
+    @apply block
+    uppercase
+    w-full
+    text-xs
     mb-2
 }
 .form_field_message {
     @apply text-red-500
+    w-full
     text-xs
     italic
     mt-2

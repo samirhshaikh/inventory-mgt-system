@@ -1,40 +1,39 @@
 <template>
     <section>
-        <date-picker
-            v-model.trim="date_value"
-            :masks="masks"
-            :attributes="attributes"
-            :is-dark="!dark_mode"
-            @input="dateSelected"
+        <VueDatePicker
+            :model-value="date_value"
+            ref="datepicker"
+            @update:model-value="dateSelected"
+            :enableTimePicker="false"
+            :preview-format="format"
+            :format="format"
+            :class="{
+                required_field:
+                    required_field && (date_value == '' || date_value == null),
+            }"
         >
-            <template v-slot="{ inputValue, inputEvents }">
-                <div class="flex flex-row">
-                    <input
-                        class="w-32 date_input"
-                        autocomplete="off"
-                        :value="inputValue"
-                        v-on="inputEvents"
-                        :class="{
-                            required_field:
-                                required_field &&
-                                (date_value == '' || date_value == null),
-                        }"
-                    />
-                    <button
-                        class="rounded-r-md p-2 border border-gray-400 bg-blue-200/50 border-l-0 hover:bg-red-200"
-                        @click.stop="clearDate"
-                    >
-                        <FA :icon="['fas', 'times']"></FA>
-                    </button>
-                </div>
-            </template>
-        </date-picker>
+        </VueDatePicker>
     </section>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import moment from "moment";
+
+const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+];
 
 export default {
     name: "CustomDatePicker",
@@ -44,6 +43,9 @@ export default {
             type: String,
             default: "",
         },
+        column_name: {
+            type: String,
+        },
         required_field: {
             type: Boolean,
             default: false,
@@ -52,16 +54,13 @@ export default {
 
     data() {
         return {
-            masks: {
-                input: "DD-MMM-YYYY",
-            },
-            attributes: [
-                {
-                    key: "today",
-                    highlight: true,
-                    dates: new Date(),
-                },
-            ],
+            // attributes: [
+            //     {
+            //         key: "today",
+            //         highlight: true,
+            //         dates: new Date(),
+            //     },
+            // ],
             date_value: "",
         };
     },
@@ -77,6 +76,14 @@ export default {
     },
 
     methods: {
+        format(date) {
+            const day = date.getDate();
+            const month = monthNames[date.getMonth()];
+            const year = date.getFullYear();
+
+            return `${day}-${month}-${year}`;
+        },
+
         clearDate() {
             this.date_value = "";
 
@@ -84,13 +91,9 @@ export default {
         },
 
         dateSelected(date) {
-            if (date != "" && date != null) {
-                this.date_value = moment(date).format("D-MMM-YYYY");
-            } else {
-                this.date_value = "";
-            }
+            this.date_value = date;
 
-            this.$emit("dateSelected", this.date_value);
+            this.$emit("dateSelected", this.format(date), this.column_name);
         },
     },
 };

@@ -14,6 +14,7 @@
         "@prettier/plugin-php": "^0.19.6",
         "axios": "^0.19",
         "cross-env": "^5.1",
+        "daisyui": "^3.2.1",
         "jquery": "^3.2",
         "laravel-mix": "^6.0.49",
         "laravel-mix-purgecss": "^6.0.0",
@@ -39,8 +40,8 @@
         "@fortawesome/free-solid-svg-icons": "^6.4.0",
         "@fortawesome/vue-fontawesome": "^3.0.3",
         "@inertiajs/vue3": "^1.0.9",
+        "@vuepic/vue-datepicker": "^5.4.0",
         "autoprefixer": "^10.4.14",
-        "bootstrap": "^4.5.0",
         "chart.js": "^4.3.0",
         "core-js-bundle": "^3.6.5",
         "es6-promise": "^4.2.8",
@@ -48,10 +49,13 @@
         "postcss": "^8.4.25",
         "turbolinks": "^5.2.0",
         "vue-chartjs": "^5.2.0",
+        "vue-final-modal": "^4.4.4",
         "vue-google-autocomplete": "^1.1.0",
         "vue-json-pretty": "^1.6.7",
+        "vue-multiselect": "^3.0.0-beta.2",
         "vue-pdf-app": "^2.0.0",
         "vue-select": "^4.0.0-beta.6",
+        "vuejs-confirm-dialog": "^0.5.0",
         "vuex": "^4.1.0"
     }
 }

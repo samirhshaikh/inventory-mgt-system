@@ -1,3 +1,7 @@
+import { usePage } from "@inertiajs/vue3";
+
+const page = usePage();
+
 export const datatable_cell = {
     props: {
         row: {
@@ -30,7 +34,8 @@ export const datatable_cell = {
         },
 
         isAdmin() {
-            return this.$page.user_details.IsAdmin;
+            console.log(page);
+            return true; //page.user_details.IsAdmin;
         },
     },
 };

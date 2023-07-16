@@ -100,16 +100,12 @@
 import { mapActions, mapState } from "vuex";
 import AppSettings from "../Misc/AppSettings.vue";
 import StoreSettings from "../Misc/StoreSettings.vue";
-import { Link } from "@inertiajs/vue3";
+import { useModal } from "vue-final-modal";
 import { usePage } from "@inertiajs/vue3";
 
 const page = usePage();
 
 export default {
-    components: {
-        Link,
-    },
-
     data() {
         return {
             navigation: {
@@ -268,29 +264,44 @@ export default {
         },
 
         appSettings() {
+            const parent = this;
+
             this.setPopperOpen(true);
 
-            this.$modal.show(
-                AppSettings,
-                {},
-                {
-                    width: "50%",
-                    height: "80%",
-                }
-            );
+            const { open, close } = useModal({
+                component: AppSettings,
+                attrs: {
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {
+                        parent.setPopperOpen(false);
+                    },
+                },
+            });
+
+            open();
         },
 
         storeSettings() {
+            const parent = this;
+
             this.setPopperOpen(true);
 
-            this.$modal.show(
-                StoreSettings,
-                {},
-                {
-                    width: "50%",
-                    height: "80%",
-                }
-            );
+            const { open, close } = useModal({
+                component: StoreSettings,
+                attrs: {
+                    heading: "test data",
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {
+                        parent.setPopperOpen(false);
+                    },
+                },
+            });
+
+            open();
         },
 
         ...mapActions({

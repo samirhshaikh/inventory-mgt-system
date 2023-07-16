@@ -15,11 +15,12 @@
                 <div class="search_bar_container">
                     <SearchBar
                         :placeholder_text="options.record_name + 's'"
+                        :focus_on_search_bar="focus_on_search_bar"
                         v-if="options.enable_search"
                         class="mr-1"
-                        @searchData="searchData"
-                        @clearSearch="clearSearch"
-                        @triggerAdvancedSearch="triggerAdvancedSearch"
+                        @search-data="searchData"
+                        @clear-search="clearSearch"
+                        @advanced-search-data-modified="triggerAdvancedSearch"
                         :columns="search_columns"
                     ></SearchBar>
                     <Button
@@ -35,7 +36,7 @@
 
             <Pagination
                 :total_records="total_records"
-                @changePage="changePage"
+                @change-page="changePage"
                 class="mb-3 w-full inline-flex"
                 :start_page_no="page_no"
                 v-show="total_records"
@@ -45,7 +46,7 @@
                 :columns="search_columns"
                 :search_data="advanced_search_data"
                 v-if="search_type == 'advanced'"
-                @advancedSearchDataModified="triggerAdvancedSearch"
+                @advanced-search-data-modified="triggerAdvancedSearch"
             ></SearchParameters>
 
             <SalesDatatable
@@ -58,9 +59,9 @@
                 :search_text="search_text"
                 :advanced_search_data="advanced_search_data"
                 :update_search="update_search"
-                @changeTotalReports="changeTotalReports"
-                @changePageNo="changePage"
-                @setExpandedRowId="setExpandedRowId"
+                @change-total-reports="changeTotalReports"
+                @change-page-no="changePage"
+                @set-expanded-row-id="setExpandedRowId"
             ></SalesDatatable>
         </div>
     </Layout>
@@ -75,6 +76,7 @@ import { datatable_common } from "../Helpers/datatable_common";
 import { common_functions } from "../Helpers/common_functions";
 import SearchParameters from "../components/Search/SearchParameters";
 import { defineAsyncComponent } from "vue";
+import { useModal } from "vue-final-modal";
 
 export default {
     mixins: [list_controller, datatable_common, common_functions],
@@ -87,11 +89,16 @@ export default {
     },
 
     components: {
-        SearchParameters,
         SalesDatatable: defineAsyncComponent({
             loader: () => import("@/Datatable/Datatable"),
             loadingComponent: loading,
         }),
+    },
+
+    data() {
+        return {
+            focus_on_search_bar: false,
+        };
     },
 
     computed: {
@@ -194,13 +201,13 @@ export default {
 
     methods: {
         newRecord() {
+            const parent = this;
+
             this.setPopperOpen(true);
 
-            //New to refresh the page on save and delete
-
-            this.$modal.show(
-                Sale,
-                {
+            const { open, close } = useModal({
+                component: Sale,
+                attrs: {
                     edit_id: "",
                     options: this.options,
                     columns: this.columns,
@@ -217,14 +224,9 @@ export default {
                         this.viewSalesInvoice(invoice_id);
                     },
                 },
-                {
-                    width: "90%",
-                    height: "80%",
-                },
-                {
-                    closed: (event) => {},
-                }
-            );
+            });
+
+            open();
         },
 
         setExpandedRowId(row_id) {

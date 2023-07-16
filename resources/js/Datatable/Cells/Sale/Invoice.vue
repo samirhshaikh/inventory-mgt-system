@@ -1,8 +1,19 @@
 <template>
-    <div class="p-4 h-full">
+    <VueFinalModal
+        class="flex justify-center items-center"
+        :content-class="[
+            'invoice_modal relative p-4 rounded-lg dark:bg-gray-900',
+            {
+                'bg-gray-700': dark_mode,
+                'bg-white': !dark_mode,
+            },
+        ]"
+        content-transition="vfm-fade"
+        overlay-transition="vfm-fade"
+    >
         <div class="flex flex-row justify-end text-white">
             <Button
-                @click.native="$emit('close')"
+                @click.native="$emit('closed')"
                 icon="times"
                 split="border-white"
                 class="bg-red-600"
@@ -22,22 +33,32 @@
 
         <iframe
             id="pdf-frame"
-            class="w-full mt-2 pdf"
+            class="w-full h-full mt-2 pdf"
             v-show="!loading"
         ></iframe>
 
         <Loading v-if="loading"></Loading>
-    </div>
+    </VueFinalModal>
 </template>
 
 <style>
+.invoice_modal {
+    width: 90%;
+    height: 90%;
+}
 .pdf {
     height: calc(100% - 28px);
 }
 </style>
 
 <script>
+import { VueFinalModal } from "vue-final-modal";
+
 export default {
+    components: {
+        VueFinalModal,
+    },
+
     props: {
         invoice_id: {
             type: String,

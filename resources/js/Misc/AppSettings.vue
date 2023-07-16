@@ -1,189 +1,177 @@
 <template>
-    <div
-        class="flex h-full border border-product-color"
-        :class="{
-            'bg-gray-700 text-white': dark_mode,
-        }"
+    <VueFinalModal
+        class="flex justify-center items-center"
+        :content-class="[
+            'app_settings_modal relative p-4 rounded-lg dark:bg-gray-900',
+            {
+                'bg-gray-700': dark_mode,
+                'bg-white': !dark_mode,
+            },
+        ]"
+        content-transition="vfm-fade"
+        overlay-transition="vfm-fade"
     >
-        <div class="flex-grow flex flex-col justify-between">
-            <div class="p-4 overflow-y-auto text-sm flex-grow">
-                <div
-                    class="flex border-b border-product-color-lighter mb-4 pb-1"
+        <div class="p-0 overflow-y-auto text-sm">
+            <div
+                class="datatable_header"
+                :class="{
+                    'border-product-color-lighter': dark_mode,
+                    'border-product-color': !dark_mode,
+                }"
+            >
+                <h1
                     :class="{
-                        'border-product-color-lighter': dark_mode,
-                        'border-product-color': !dark_mode,
+                        'text-product-color-lighter': dark_mode,
+                        'text-product-color': !dark_mode,
                     }"
                 >
-                    <h1
-                        class="text-xl pt-2 ml-1 w-full"
-                        :class="{
-                            'text-product-color-lighter': dark_mode,
-                            'text-product-color': !dark_mode,
-                        }"
+                    Application Settings
+                </h1>
+                <div class="search_bar_container">
+                    <Button
+                        @click.native="$emit('closed')"
+                        icon="times"
+                        split="border-white"
+                        class="bg-red-600"
                     >
-                        Application Settings
-                    </h1>
-                    <div
-                        class="float-right flex justify-end mr-2 text-white w-64"
+                        Close
+                    </Button>
+                    <Button
+                        @click.native="save"
+                        icon="check"
+                        split="border-white"
+                        class="bg-green-600 ml-1"
                     >
-                        <Button
-                            @click.native="$emit('close')"
-                            icon="times"
-                            split="border-white"
-                            class="bg-red-600"
+                        Save
+                    </Button>
+                </div>
+            </div>
+
+            <form class="w-full pl-2">
+                <div class="flex flex-wrap items-start">
+                    <div class="w-full form_field_container">
+                        <label class="form_field_label" for="stock_types">
+                            Stock Types
+                        </label>
+                        <textarea
+                            class="w-full generic_input"
+                            id="stock_types"
+                            v-model.trim="stock_types"
+                            ref="stock_types"
+                        ></textarea>
+                        <p
+                            class="text-red-500 text-xs italic mb-2"
+                            :class="{
+                                hidden:
+                                    stock_types != '' && stock_types != null,
+                            }"
                         >
-                            Close
-                        </Button>
-                        <Button
-                            @click.native="save"
-                            icon="check"
-                            split="border-white"
-                            class="bg-green-600 ml-1"
+                            Required
+                        </p>
+                    </div>
+
+                    <div class="w-full form_field_container">
+                        <label class="form_field_label" for="networks">
+                            Networks
+                        </label>
+                        <textarea
+                            class="w-full generic_input"
+                            id="networks"
+                            v-model.trim="networks"
+                        ></textarea>
+                        <p
+                            class="text-red-500 text-xs italic mb-2"
+                            :class="{
+                                hidden: networks != '' && networks != null,
+                            }"
                         >
-                            Save
-                        </Button>
+                            Required
+                        </p>
+                    </div>
+
+                    <div class="w-full form_field_container">
+                        <label class="form_field_label" for="phone_sizes">
+                            Phone Sizes
+                        </label>
+                        <textarea
+                            class="w-full generic_input"
+                            id="phone_sizes"
+                            v-model.trim="phone_sizes"
+                        ></textarea>
+                        <p
+                            class="text-red-500 text-xs italic mb-2"
+                            :class="{
+                                hidden:
+                                    phone_sizes != '' && phone_sizes != null,
+                            }"
+                        >
+                            Required
+                        </p>
+                    </div>
+
+                    <div class="w-full form_field_container">
+                        <label class="form_field_label" for="stock_statuses">
+                            Stock Status
+                        </label>
+                        <textarea
+                            class="w-full generic_input"
+                            id="stock_statuses"
+                            v-model.trim="stock_statuses"
+                        ></textarea>
+                        <p
+                            class="text-red-500 text-xs italic mb-2"
+                            :class="{
+                                hidden:
+                                    stock_statuses != '' &&
+                                    stock_statuses != null,
+                            }"
+                        >
+                            Required
+                        </p>
+                    </div>
+
+                    <div class="w-full form_field_container">
+                        <label class="form_field_label" for="payment_types">
+                            Payment Types
+                        </label>
+                        <textarea
+                            class="w-full generic_input"
+                            id="payment_types"
+                            v-model.trim="payment_types"
+                        ></textarea>
+                        <p
+                            class="text-red-500 text-xs italic mb-2"
+                            :class="{
+                                hidden:
+                                    payment_types != '' &&
+                                    payment_types != null,
+                            }"
+                        >
+                            Required
+                        </p>
                     </div>
                 </div>
-
-                <form class="w-full max-w-lg pl-2">
-                    <div class="flex flex-wrap -mx-3 mb-5">
-                        <div class="w-full px-3">
-                            <label
-                                class="block uppercase tracking-wide text-gray-700 text-sm font-semibold mb-2"
-                                for="stock_types"
-                            >
-                                Stock Types
-                            </label>
-                            <textarea
-                                class="block w-full generic_input"
-                                id="stock_types"
-                                v-model.trim="stock_types"
-                                ref="stock_types"
-                            ></textarea>
-                            <p
-                                class="text-red-500 text-xs italic mb-2"
-                                :class="{
-                                    hidden:
-                                        stock_types != '' &&
-                                        stock_types != null,
-                                }"
-                            >
-                                Required
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-wrap -mx-3 mb-5">
-                        <div class="w-full px-3">
-                            <label
-                                class="block uppercase tracking-wide text-gray-700 text-sm font-semibold mb-2"
-                                for="networks"
-                            >
-                                Networks
-                            </label>
-                            <textarea
-                                class="block w-full generic_input"
-                                id="networks"
-                                v-model.trim="networks"
-                            ></textarea>
-                            <p
-                                class="text-red-500 text-xs italic mb-2"
-                                :class="{
-                                    hidden: networks != '' && networks != null,
-                                }"
-                            >
-                                Required
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-wrap -mx-3 mb-5">
-                        <div class="w-full px-3">
-                            <label
-                                class="block uppercase tracking-wide text-gray-700 text-sm font-semibold mb-2"
-                                for="phone_sizes"
-                            >
-                                Phone Sizes
-                            </label>
-                            <textarea
-                                class="block w-full generic_input"
-                                id="phone_sizes"
-                                v-model.trim="phone_sizes"
-                            ></textarea>
-                            <p
-                                class="text-red-500 text-xs italic mb-2"
-                                :class="{
-                                    hidden:
-                                        phone_sizes != '' &&
-                                        phone_sizes != null,
-                                }"
-                            >
-                                Required
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-wrap -mx-3 mb-5">
-                        <div class="w-full px-3">
-                            <label
-                                class="block uppercase tracking-wide text-gray-700 text-sm font-semibold mb-2"
-                                for="stock_statuses"
-                            >
-                                Stock Status
-                            </label>
-                            <textarea
-                                class="block w-full generic_input"
-                                id="stock_statuses"
-                                v-model.trim="stock_statuses"
-                            ></textarea>
-                            <p
-                                class="text-red-500 text-xs italic mb-2"
-                                :class="{
-                                    hidden:
-                                        stock_statuses != '' &&
-                                        stock_statuses != null,
-                                }"
-                            >
-                                Required
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-wrap -mx-3 mb-5">
-                        <div class="w-full px-3">
-                            <label
-                                class="block uppercase tracking-wide text-gray-700 text-sm font-semibold mb-2"
-                                for="payment_types"
-                            >
-                                Payment Types
-                            </label>
-                            <textarea
-                                class="block w-full generic_input"
-                                id="payment_types"
-                                v-model.trim="payment_types"
-                            ></textarea>
-                            <p
-                                class="text-red-500 text-xs italic mb-2"
-                                :class="{
-                                    hidden:
-                                        payment_types != '' &&
-                                        payment_types != null,
-                                }"
-                            >
-                                Required
-                            </p>
-                        </div>
-                    </div>
-                </form>
-            </div>
+            </form>
         </div>
-    </div>
+    </VueFinalModal>
 </template>
+
+<style>
+.app_settings_modal {
+    width: 450px;
+    height: auto;
+}
+</style>
 
 <script>
 import { mapState, mapActions } from "vuex";
+import { VueFinalModal } from "vue-final-modal";
 
 export default {
+    components: {
+        VueFinalModal,
+    },
+
     data() {
         return {
             stock_types: "",
@@ -227,7 +215,7 @@ export default {
 
             this.setAppSettings(settings);
 
-            this.$modal.hide(this.$parent.name);
+            this.$emit("confirm");
         },
 
         ...mapActions({

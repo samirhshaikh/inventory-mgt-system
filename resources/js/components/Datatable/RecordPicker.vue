@@ -1,103 +1,109 @@
 <template>
-    <div
-        class="flex h-full border border-product-color"
-        :class="{
-            'bg-gray-700 text-white': dark_mode,
-        }"
+    <VueFinalModal
+        class="flex justify-center items-center"
+        :content-class="[
+            'record_picker_modal relative p-4 rounded-lg dark:bg-gray-900',
+            {
+                'bg-gray-700': dark_mode,
+                'bg-white': !dark_mode,
+            },
+        ]"
+        content-transition="vfm-fade"
+        overlay-transition="vfm-fade"
     >
-        <div class="flex-grow flex flex-col justify-between">
-            <div class="p-4 overflow-y-auto text-sm flex-grow">
-                <div
-                    class="flex border-b border-product-color-lighter mb-4 pb-1"
+        <div class="p-0 overflow-y-auto text-sm">
+            <div
+                class="datatable_header"
+                :class="{
+                    'border-product-color-lighter': dark_mode,
+                    'border-product-color': !dark_mode,
+                }"
+            >
+                <h1
                     :class="{
-                        'border-product-color-lighter': dark_mode,
-                        'border-product-color': !dark_mode,
+                        'text-product-color-lighter': dark_mode,
+                        'text-product-color': !dark_mode,
                     }"
                 >
-                    <h1
-                        class="text-base md:text-xl pt-2 ml-1 w-full"
+                    Search {{ options.record_name }}
+                </h1>
+                <div class="search_bar_container">
+                    <SearchBar
+                        :placeholder_text="options.record_name + 's'"
+                        v-if="options.enable_search"
+                        class="mr-1"
+                        @search-data="searchData"
+                        @clear-search="clearSearch"
+                        @advanced-search-data-modified="triggerAdvancedSearch"
+                        :columns="search_columns"
+                    ></SearchBar>
+                    <Button
+                        @click.native="$emit('closed')"
+                        icon="times"
+                        split="border-white"
+                        class="bg-red-600"
+                    >
+                        Close
+                    </Button>
+                    <Button
+                        @click.native="submitRecords"
+                        icon="plus"
+                        split="border-white"
+                        class="text-white ml-1"
                         :class="{
-                            'text-product-color-lighter': dark_mode,
-                            'text-product-color': !dark_mode,
+                            'bg-green-600':
+                                timer && Object.keys(selected_records).length,
+                            'bg-gray-600 text-gray-500 cursor-not-allowed':
+                                timer && !Object.keys(selected_records).length,
                         }"
                     >
-                        Search {{ options.record_name }}
-                    </h1>
-                    <div
-                        class="float-right flex justify-end mr-2 text-white w-64"
-                    >
-                        <SearchBar
-                            :placeholder_text="options.record_name + 's'"
-                            v-if="options.enable_search"
-                            class="mr-1"
-                            @searchData="searchData"
-                            @clearSearch="clearSearch"
-                            @triggerAdvancedSearch="triggerAdvancedSearch"
-                            :columns="search_columns"
-                        ></SearchBar>
-                        <Button
-                            @click.native="$emit('close')"
-                            icon="times"
-                            split="border-white"
-                            class="bg-red-600"
-                        >
-                            Close
-                        </Button>
-                        <Button
-                            @click.native="submitRecords"
-                            icon="plus"
-                            split="border-white"
-                            class="text-white ml-1"
-                            :class="{
-                                'bg-green-600':
-                                    timer &&
-                                    Object.keys(selected_records).length,
-                                'bg-gray-600 text-gray-500 cursor-not-allowed':
-                                    timer &&
-                                    !Object.keys(selected_records).length,
-                            }"
-                        >
-                            Submit
-                        </Button>
-                    </div>
+                        Submit
+                    </Button>
                 </div>
-
-                <Pagination
-                    :total_records="total_records"
-                    @changePage="changePage"
-                    class="mb-3 w-full inline-flex"
-                    :start_page_no="page_no"
-                    v-show="total_records"
-                ></Pagination>
-
-                <SearchParameters
-                    :columns="search_columns"
-                    :search_data="advanced_search_data"
-                    v-if="search_type == 'advanced'"
-                    @advancedSearchDataModified="triggerAdvancedSearch"
-                ></SearchParameters>
-
-                <Datatable
-                    :columns="columns"
-                    :options="options"
-                    :page_no="page_no"
-                    :search_type="search_type"
-                    :search_text="search_text"
-                    :advanced_search_data="advanced_search_data"
-                    :update_search="update_search"
-                    :selected_records="selected_records"
-                    @changeTotalReports="changeTotalReports"
-                    @changePageNo="changePage"
-                    @selectRecord="selectRecord"
-                ></Datatable>
             </div>
+
+            <Pagination
+                :total_records="total_records"
+                @change-page="changePage"
+                class="mb-3 w-full inline-flex"
+                :start_page_no="page_no"
+                v-show="total_records"
+            ></Pagination>
+
+            <SearchParameters
+                :columns="search_columns"
+                :search_data="advanced_search_data"
+                v-if="search_type == 'advanced'"
+                @advanced-search-data-modified="triggerAdvancedSearch"
+            ></SearchParameters>
+
+            <Datatable
+                :columns="columns"
+                :options="options"
+                :page_no="page_no"
+                :search_type="search_type"
+                :search_text="search_text"
+                :advanced_search_data="advanced_search_data"
+                :update_search="update_search"
+                :selected_records="selected_records"
+                @change-total-reports="changeTotalReports"
+                @change-page-no="changePage"
+                @select-record="selectRecord"
+            ></Datatable>
         </div>
-    </div>
+    </VueFinalModal>
 </template>
+
+<style>
+.record_picker_modal {
+    width: 85%;
+    height: auto;
+}
+</style>
 
 <script>
 import { mapActions, mapState } from "vuex";
-import SearchParameters from "../Search/SearchParameters";
+import { VueFinalModal } from "vue-final-modal";
 import loading from "@/Misc/Loading.vue";
 import { list_controller } from "../../Helpers/list_controller";
 import { datatable_common } from "../../Helpers/datatable_common";
@@ -114,7 +120,7 @@ export default {
     },
 
     components: {
-        SearchParameters,
+        VueFinalModal,
         Datatable: defineAsyncComponent({
             loader: () => import("@/Datatable/Datatable"),
             loadingComponent: loading,
@@ -220,7 +226,7 @@ export default {
             if (typeof handler === "function") {
                 handler(this.selected_records);
 
-                this.$modal.hide(this.$parent.name);
+                this.$emit("confirm");
             }
         },
 

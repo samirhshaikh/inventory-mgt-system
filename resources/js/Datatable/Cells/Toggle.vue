@@ -1,12 +1,14 @@
 <template>
-    <div class="z-0">
-        Yes
-        <!--        <toggle-button-->
-        <!--            :value="data"-->
-        <!--            :labels="{ checked: 'Yes', unchecked: 'No' }"-->
-        <!--            @change="toggleValue(row)"-->
-        <!--            :disabled="!isAdmin"-->
-        <!--        />-->
+    <div class="z-0 flex items-center">
+        <input
+            type="checkbox"
+            class="toggle"
+            :checked="data"
+            @change="toggleValue"
+            :disabled="!page.user_details.IsAdmin"
+        /><span class="label-text ml-1" v-if="labelled">{{
+            data ? checkedLabel : uncheckedLabel
+        }}</span>
     </div>
 </template>
 
@@ -14,18 +16,53 @@
 import { mapActions } from "vuex";
 import { datatable_cell } from "./datatable_cell";
 import { notifications } from "../../Helpers/notifications";
+import { usePage } from "@inertiajs/vue3";
+
+const page = usePage();
+
+const defaultLabels = {
+    checked: "Yes",
+    unchecked: "No",
+};
 
 export default {
     mixins: [datatable_cell, notifications],
 
+    props: {
+        labelled: {
+            type: Boolean,
+            default: true,
+        },
+        labels: {
+            type: Object,
+            default: () => defaultLabels,
+        },
+    },
+
     computed: {
+        page() {
+            return page.props;
+        },
+
         data() {
             return _.get(this.row, this.column, false);
+        },
+
+        checkedLabel() {
+            return Object.keys(this.labels).indexOf("checked") >= 0
+                ? this.labels.checked
+                : "Yes";
+        },
+
+        uncheckedLabel() {
+            return Object.keys(this.labels).indexOf("unchecked") >= 0
+                ? this.labels.unchecked
+                : "No";
         },
     },
 
     methods: {
-        toggleValue(row) {
+        toggleValue() {
             _.set(this.row, this.column, !_.get(this.row, this.column, false));
 
             if (this.column_details["route"] != "") {
@@ -36,14 +73,14 @@ export default {
                     })
                     .then((response) => {
                         if (response.data.message == "status_changed") {
-                            this.$notify({
-                                group: "messages",
-                                title: "Success",
-                                text: this.formatMessage(
-                                    response.data.message,
-                                    this.options.record_name
-                                ),
-                            });
+                            // this.$notify({
+                            //     group: "messages",
+                            //     title: "Success",
+                            //     text: this.formatMessage(
+                            //         response.data.message,
+                            //         this.options.record_name
+                            //     ),
+                            // });
 
                             //Reset the cache
                             if (
@@ -55,19 +92,18 @@ export default {
                         }
                     })
                     .catch((error) => {
-                        this.deleting_record = false;
-
-                        if (error.response.data.message == "record_not_found") {
-                            this.$notify({
-                                group: "messages",
-                                title: "Error",
-                                type: "error",
-                                text: this.formatMessage(
-                                    error.response.data.message,
-                                    this.options.record_name
-                                ),
-                            });
-                        }
+                        console.log(error);
+                        // if (error.response.data.message == "record_not_found") {
+                        //     this.$notify({
+                        //         group: "messages",
+                        //         title: "Error",
+                        //         type: "error",
+                        //         text: this.formatMessage(
+                        //             error.response.data.message,
+                        //             this.options.record_name
+                        //         ),
+                        //     });
+                        // }
                     });
             }
         },

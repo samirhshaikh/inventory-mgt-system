@@ -8,13 +8,15 @@ require("es6-promise/auto");
 
 import { createInertiaApp } from "@inertiajs/vue3";
 import moment from "moment";
-// import VModal from "vue-js-modal";
-// import ToggleButton from "vue-js-toggle-button";
-// import Notifications from "vue-notification";
 import VueGoogleAutocomplete from "vue-google-autocomplete";
 import vSelect from "vue-select";
-// import DatePicker from "v-calendar/lib/components/date-picker.umd";
 // import VuePdfApp from "vue-pdf-app";
+
+import { createVfm } from "vue-final-modal";
+import "vue-final-modal/style.css";
+
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 
 //Start: Fontawesome
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -108,9 +110,6 @@ window.axios.interceptors.response.use(
 var Turbolinks = require("turbolinks");
 Turbolinks.start();
 
-// app.use(VModal, { dynamic: true, injectModalsContainer: true });
-// app.use(ToggleButton);
-// app.use(Notifications);
 // app.component("date-picker", DatePicker);
 // app.component("vue-pdf-app", VuePdfApp);
 
@@ -147,6 +146,11 @@ createInertiaApp({
             STATUS_IN_STOCK: "In Stock",
             STATUS_SOLD: "Sold",
         };
+
+        const vfm = createVfm();
+        app.use(vfm);
+
+        app.component("VueDatePicker", VueDatePicker);
 
         app.use(store);
 

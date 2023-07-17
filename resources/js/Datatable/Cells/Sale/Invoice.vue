@@ -53,6 +53,7 @@
 
 <script>
 import { VueFinalModal } from "vue-final-modal";
+import { mapState } from "vuex";
 
 export default {
     components: {
@@ -79,6 +80,10 @@ export default {
     },
 
     computed: {
+        ...mapState({
+            dark_mode: (state) => state.framework.dark_mode,
+        }),
+
         filename() {
             return "Invoice_" + this.invoice_id;
         },

@@ -73,14 +73,14 @@ export default {
                     })
                     .then((response) => {
                         if (response.data.message == "status_changed") {
-                            // this.$notify({
-                            //     group: "messages",
-                            //     title: "Success",
-                            //     text: this.formatMessage(
-                            //         response.data.message,
-                            //         this.options.record_name
-                            //     ),
-                            // });
+                            this.$notify({
+                                group: "messages",
+                                title: "Success",
+                                text: this.formatMessage(
+                                    response.data.message,
+                                    this.options.record_name
+                                ),
+                            });
 
                             //Reset the cache
                             if (
@@ -92,18 +92,17 @@ export default {
                         }
                     })
                     .catch((error) => {
-                        console.log(error);
-                        // if (error.response.data.message == "record_not_found") {
-                        //     this.$notify({
-                        //         group: "messages",
-                        //         title: "Error",
-                        //         type: "error",
-                        //         text: this.formatMessage(
-                        //             error.response.data.message,
-                        //             this.options.record_name
-                        //         ),
-                        //     });
-                        // }
+                        if (error.response.data.message == "record_not_found") {
+                            this.$notify({
+                                group: "messages",
+                                title: "Error",
+                                type: "error",
+                                text: this.formatMessage(
+                                    error.response.data.message,
+                                    this.options.record_name
+                                ),
+                            });
+                        }
                     });
             }
         },

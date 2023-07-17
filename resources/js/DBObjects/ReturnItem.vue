@@ -231,44 +231,44 @@ export default {
                     this.saving_data = false;
 
                     if (response.data.message == "record_saved") {
-                        // this.$notify({
-                        //     group: "messages",
-                        //     title: "Success",
-                        //     text: "Item returned successfully.",
-                        // });
+                        this.$notify({
+                            group: "messages",
+                            title: "Success",
+                            text: "Item returned successfully.",
+                        });
 
                         this.refresh(this.IMEI);
 
                         this.$emit("confirm");
                     } else {
-                        // this.$notify({
-                        //     group: "messages",
-                        //     title: "Error",
-                        //     type: "error",
-                        //     text: this.formatMessage(),
-                        // });
+                        this.$notify({
+                            group: "messages",
+                            title: "Error",
+                            type: "error",
+                            text: this.formatMessage(),
+                        });
                     }
                 })
                 .catch((error) => {
                     this.saving_data = false;
 
                     if (error.response.data.message == "record_not_found") {
-                        // this.$notify({
-                        //     group: "messages",
-                        //     title: "Error",
-                        //     type: "error",
-                        //     text: this.formatMessage(
-                        //         error.response.data.message,
-                        //         "Item"
-                        //     ),
-                        // });
+                        this.$notify({
+                            group: "messages",
+                            title: "Error",
+                            type: "error",
+                            text: this.formatMessage(
+                                error.response.data.message,
+                                "Item"
+                            ),
+                        });
                     } else {
-                        // this.$notify({
-                        //     group: "messages",
-                        //     title: "Error",
-                        //     type: "error",
-                        //     text: this.formatMessage(),
-                        // });
+                        this.$notify({
+                            group: "messages",
+                            title: "Error",
+                            type: "error",
+                            text: this.formatMessage(),
+                        });
                     }
                 });
         },

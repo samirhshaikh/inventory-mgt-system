@@ -769,29 +769,29 @@ export default {
                             child_row["Returned"] = false;
                             this.rows.push(child_row);
                         } else {
-                            // this.$notify({
-                            //     group: "messages",
-                            //     title: "Error",
-                            //     type: "error",
-                            //     text: this.formatMessage(
-                            //         "unknown_error",
-                            //         this.options.record_name
-                            //     ),
-                            // });
+                            this.$notify({
+                                group: "messages",
+                                title: "Error",
+                                type: "error",
+                                text: this.formatMessage(
+                                    "unknown_error",
+                                    this.options.record_name
+                                ),
+                            });
                         }
 
                         this.loading = false;
                     })
                     .catch((error) => {
-                        // this.$notify({
-                        //     group: "messages",
-                        //     title: "Error",
-                        //     type: "error",
-                        //     text: this.formatMessage(
-                        //         error.response.data.message,
-                        //         this.options.record_name
-                        //     ),
-                        // });
+                        this.$notify({
+                            group: "messages",
+                            title: "Error",
+                            type: "error",
+                            text: this.formatMessage(
+                                error.response.data.message,
+                                this.options.record_name
+                            ),
+                        });
                         this.loading = false;
                     });
             }
@@ -825,8 +825,6 @@ export default {
         },
 
         returnItem(IMEI) {
-            console.log(["Sale", IMEI]);
-
             let rows = [];
 
             _.forIn(this.rows, (object, key) => {
@@ -894,26 +892,24 @@ export default {
             axios.post(route("sale.save"), this.row).then(
                 (response) => {
                     if (response.data.message == "record_saved") {
-                        // this.$notify({
-                        //     group: "messages",
-                        //     title: "Success",
-                        //     text:
-                        //         response.data.response.records_count +
-                        //         " " +
-                        //         this.options.record_name +
-                        //         (response.data.response.records_count > 1
-                        //             ? "s"
-                        //             : "") +
-                        //         " saved successfully.",
-                        // });
+                        this.$notify({
+                            group: "messages",
+                            title: "Success",
+                            text:
+                                response.data.response.records_count +
+                                " " +
+                                this.options.record_name +
+                                (response.data.response.records_count > 1
+                                    ? "s"
+                                    : "") +
+                                " saved successfully.",
+                        });
 
                         this.refreshData(this.options.id);
 
                         const handler = this.submitRecordSaved;
                         if (typeof handler === "function") {
                             handler(response.data.response.id);
-
-                            this.$emit("confirm");
                         }
                     }
 
@@ -925,25 +921,25 @@ export default {
                     this.saving_data = false;
 
                     if (error.response.data.message == "record_not_found") {
-                        // this.$notify({
-                        //     group: "messages",
-                        //     title: "Error",
-                        //     type: "error",
-                        //     text: this.formatMessage(
-                        //         error.response.data,
-                        //         this.options.record_name
-                        //     ),
-                        // });
+                        this.$notify({
+                            group: "messages",
+                            title: "Error",
+                            type: "error",
+                            text: this.formatMessage(
+                                error.response.data,
+                                this.options.record_name
+                            ),
+                        });
                     } else {
-                        // this.$notify({
-                        //     group: "messages",
-                        //     title: "Error",
-                        //     type: "error",
-                        //     text: this.formatMessage(
-                        //         error.response.data.message,
-                        //         this.options.record_name
-                        //     ),
-                        // });
+                        this.$notify({
+                            group: "messages",
+                            title: "Error",
+                            type: "error",
+                            text: this.formatMessage(
+                                error.response.data.message,
+                                this.options.record_name
+                            ),
+                        });
 
                         _.forIn(this.children_to_delete, (object, key) => {
                             this.rows.push(_.clone(object));
@@ -1165,27 +1161,27 @@ export default {
                             })
                             .then((response) => {
                                 if (response.data.message == "record_deleted") {
-                                    // this.$notify({
-                                    //     group: "messages",
-                                    //     title: "Success",
-                                    //     text: this.formatMessage(
-                                    //         response.data.message,
-                                    //         "Trade In"
-                                    //     ),
-                                    // });
+                                    this.$notify({
+                                        group: "messages",
+                                        title: "Success",
+                                        text: this.formatMessage(
+                                            response.data.message,
+                                            "Trade In"
+                                        ),
+                                    });
 
                                     this.row.tradein.PurchaseInvoiceId = "";
                                     this.row.tradein.purchase = null;
                                 } else {
-                                    // this.$notify({
-                                    //     group: "messages",
-                                    //     title: "Error",
-                                    //     type: "error",
-                                    //     text: this.formatMessage(
-                                    //         "unknown_error",
-                                    //         this.options.record_name
-                                    //     ),
-                                    // });
+                                    this.$notify({
+                                        group: "messages",
+                                        title: "Error",
+                                        type: "error",
+                                        text: this.formatMessage(
+                                            "unknown_error",
+                                            this.options.record_name
+                                        ),
+                                    });
                                 }
 
                                 this.deleting_tradein_record = false;
@@ -1193,15 +1189,15 @@ export default {
                             .catch((error) => {
                                 this.deleting_tradein_record = false;
 
-                                // this.$notify({
-                                //     group: "messages",
-                                //     title: "Error",
-                                //     type: "error",
-                                //     text: this.formatMessage(
-                                //         error.response.data.message,
-                                //         this.options.record_name
-                                //     ),
-                                // });
+                                this.$notify({
+                                    group: "messages",
+                                    title: "Error",
+                                    type: "error",
+                                    text: this.formatMessage(
+                                        error.response.data.message,
+                                        this.options.record_name
+                                    ),
+                                });
                             });
                     },
                 },

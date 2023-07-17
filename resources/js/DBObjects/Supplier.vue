@@ -337,17 +337,17 @@ export default {
                 .post(route("suppliers.save"), this.row)
                 .then((response) => {
                     if (response.data.message == "record_saved") {
-                        // this.$notify({
-                        //     group: "messages",
-                        //     title: "Success",
-                        //     text:
-                        //         this.options.record_name +
-                        //         " " +
-                        //         (this.row["operation"] == "add"
-                        //             ? "added"
-                        //             : "edited") +
-                        //         " successfully.",
-                        // });
+                        this.$notify({
+                            group: "messages",
+                            title: "Success",
+                            text:
+                                this.options.record_name +
+                                " " +
+                                (this.row["operation"] == "add"
+                                    ? "added"
+                                    : "edited") +
+                                " successfully.",
+                        });
 
                         //Reset the cache
                         if (
@@ -370,15 +370,15 @@ export default {
                     this.saving_data = false;
 
                     if (error.response.data.message == "record_not_found") {
-                        // this.$notify({
-                        //     group: "messages",
-                        //     title: "Error",
-                        //     type: "error",
-                        //     text: this.formatMessage(
-                        //         error.response.data,
-                        //         this.options.record_name
-                        //     ),
-                        // });
+                        this.$notify({
+                            group: "messages",
+                            title: "Error",
+                            type: "error",
+                            text: this.formatMessage(
+                                error.response.data,
+                                this.options.record_name
+                            ),
+                        });
                     } else if (
                         error.response.data.message == "duplicate_name"
                     ) {

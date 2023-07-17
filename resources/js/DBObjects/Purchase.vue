@@ -924,18 +924,18 @@ export default {
             axios.post(route("purchase.save"), this.row).then(
                 (response) => {
                     if (response.data.message == "record_saved") {
-                        // this.$notify({
-                        //     group: "messages",
-                        //     title: "Success",
-                        //     text:
-                        //         response.data.response.records_count +
-                        //         " " +
-                        //         this.options.record_name +
-                        //         (response.data.response.records_count > 1
-                        //             ? "s"
-                        //             : "") +
-                        //         " saved successfully.",
-                        // });
+                        this.$notify({
+                            group: "messages",
+                            title: "Success",
+                            text:
+                                response.data.response.records_count +
+                                " " +
+                                this.options.record_name +
+                                (response.data.response.records_count > 1
+                                    ? "s"
+                                    : "") +
+                                " saved successfully.",
+                        });
 
                         this.refreshData(this.options.id);
 
@@ -957,15 +957,15 @@ export default {
                     if (error.response.data.message == "duplicate_imei") {
                         this.duplicate_imei = true;
                     } else {
-                        // this.$notify({
-                        //     group: "messages",
-                        //     title: "Error",
-                        //     type: "error",
-                        //     text: this.formatMessage(
-                        //         error.response.data.message,
-                        //         this.options.record_name
-                        //     ),
-                        // });
+                        this.$notify({
+                            group: "messages",
+                            title: "Error",
+                            type: "error",
+                            text: this.formatMessage(
+                                error.response.data.message,
+                                this.options.record_name
+                            ),
+                        });
 
                         _.forIn(this.children_to_delete, (object, key) => {
                             this.rows.push(_.clone(object));

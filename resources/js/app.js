@@ -18,6 +18,8 @@ import "vue-final-modal/style.css";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
+import Notifications from "@kyvg/vue3-notification";
+
 //Start: Fontawesome
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -110,10 +112,7 @@ window.axios.interceptors.response.use(
 var Turbolinks = require("turbolinks");
 Turbolinks.start();
 
-// app.component("date-picker", DatePicker);
 // app.component("vue-pdf-app", VuePdfApp);
-
-import Layout from "../js/Layout";
 
 createInertiaApp({
     resolve: (name) => require(`./Pages/${name}`),
@@ -149,6 +148,8 @@ createInertiaApp({
 
         const vfm = createVfm();
         app.use(vfm);
+
+        app.use(Notifications);
 
         app.component("VueDatePicker", VueDatePicker);
 

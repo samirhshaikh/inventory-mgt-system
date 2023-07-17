@@ -115,6 +115,9 @@ Turbolinks.start();
 // app.component("vue-pdf-app", VuePdfApp);
 
 createInertiaApp({
+    progress: {
+        color: "#29d",
+    },
     resolve: (name) => require(`./Pages/${name}`),
     setup({ el, App, props, plugin }) {
         const app = createApp({ render: () => h(App, props) });
@@ -127,12 +130,14 @@ createInertiaApp({
 
         //Register all the Vue components
         const files = require.context("./", true, /\.vue$/i);
+        const componentsRegistered = [];
         files.keys().map((key) => {
-            // console.log([key.split("/").pop().split(".")[0], files(key).default]);
-            app.component(
-                key.split("/").pop().split(".")[0],
-                files(key).default
-            );
+            const componentName = key.split("/").pop().split(".")[0];
+            if (componentsRegistered.indexOf(componentName) < 0) {
+                // console.log([key.split("/").pop().split(".")[0], files(key).default]);
+                app.component(componentName, files(key).default);
+                componentsRegistered.push(componentName);
+            }
         });
 
         app.config.globalProperties.moment = moment;

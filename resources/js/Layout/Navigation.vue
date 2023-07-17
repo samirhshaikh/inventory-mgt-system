@@ -20,8 +20,8 @@
 
                 <div>
                     <div v-for="link in links">
-                        <a
-                            :href="toRoute(link.route)"
+                        <Link
+                            :href="$route(link.route)"
                             class="px-4 py-2 block text-sm no-underline"
                             :class="linkNavigationClass(link.route)"
                             :key="link.title"
@@ -39,7 +39,7 @@
                                     {{ link.title }}
                                 </div>
                             </div>
-                        </a>
+                        </Link>
 
                         <a
                             class="px-4 py-2 block text-sm no-underline cursor-pointer hover:bg-gray-200"
@@ -101,11 +101,15 @@ import { mapActions, mapState } from "vuex";
 import AppSettings from "../Misc/AppSettings.vue";
 import StoreSettings from "../Misc/StoreSettings.vue";
 import { useModal } from "vue-final-modal";
-import { usePage } from "@inertiajs/vue3";
+import { usePage, Link } from "@inertiajs/vue3";
 
 const page = usePage();
 
 export default {
+    components: {
+        Link,
+    },
+
     data() {
         return {
             navigation: {
@@ -219,19 +223,9 @@ export default {
         },
 
         atleast_one_link_available(key) {
-            let flag = false;
-            _.forEach(this.navigation[key], (link, key) => {
-                if (link.visible) {
-                    flag = true;
-                    return;
-                }
-            });
-
-            return flag;
-        },
-
-        toRoute(link) {
-            return this.$route(link);
+            return (
+                this.navigation[key].filter((link) => link.visible).length > 0
+            );
         },
 
         linkNavigationClass(link_route) {

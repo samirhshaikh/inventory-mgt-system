@@ -314,19 +314,6 @@ export default {
 
         all_columns() {
             return this.columns;
-
-            // if (
-            //     !this.active_tab ||
-            //     typeof this.datatable.meta[this.active_tab] === "undefined"
-            // ) {
-            //     return this.columns;
-            // }
-            //
-            // return this.datatable.meta[this.active_tab].columns;
-        },
-
-        all_child_columns() {
-            return this.child_columns;
         },
 
         active_columns() {

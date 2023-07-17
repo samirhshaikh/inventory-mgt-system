@@ -32,7 +32,7 @@ const actions = {
 
 const mutations = {
     setStoreSettingsFromAppSettings(state, payload) {
-        console.log(["restore store_settings from app_settings", payload]);
+        // console.log(["restore store_settings from app_settings", payload]);
         for (let key in payload) {
             if (state.hasOwnProperty(key)) {
                 state[key] = payload[key];

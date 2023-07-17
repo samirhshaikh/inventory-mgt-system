@@ -42,7 +42,7 @@ const state = () => ({
 
 const getters = {
     columns_in_active_tab: (state) => (active_tab) => {
-        if (typeof state.meta[active_tab] !== "undefined") {
+        if (Object.keys(state.meta).indexOf("columns") >= 0) {
             return _.cloneDeep(state.meta[active_tab].columns);
         }
 
@@ -73,7 +73,7 @@ const actions = {
 
 const mutations = {
     setDatatableFromAppSetting(state, payload) {
-        console.log(["restore datatable state", payload]);
+        // console.log(["restore datatable state", payload]);
         for (let key in payload) {
             if (state.hasOwnProperty(key)) {
                 state[key] = payload[key];
@@ -82,11 +82,7 @@ const mutations = {
     },
 
     setTableMetaData(state, payload) {
-        if (Object.keys(payload).length) {
-            state.meta[payload.options.id] = payload;
-        } else {
-            state.meta = payload;
-        }
+        state.meta = payload;
     },
 
     setSorting(state, payload) {

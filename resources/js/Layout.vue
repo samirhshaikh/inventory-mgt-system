@@ -97,7 +97,7 @@ export default {
             return;
         }
         _.forEach(this.restoreState, (data, key) => {
-            console.log(data);
+            // console.log(data);
             // Check whether the app_settings (data.payload) contains the state we want to restore
             if (Object.keys(data.payload).indexOf(key) >= 0) {
                 this.$store.commit(data.method, data.payload[key]);

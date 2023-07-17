@@ -98,7 +98,7 @@ const actions = {
 
 const mutations = {
     setFrameworkFromAppSettings(state, payload) {
-        console.log(["restoring framework from app_settings", payload]);
+        // console.log(["restoring framework from app_settings", payload]);
         for (let key in payload) {
             if (state.hasOwnProperty(key)) {
                 switch (key) {

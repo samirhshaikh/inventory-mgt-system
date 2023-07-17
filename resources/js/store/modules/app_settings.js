@@ -37,7 +37,7 @@ const actions = {
 
 const mutations = {
     setAppSettingsFromAppSettings(state, payload) {
-        console.log(["restore app_settings from app_settings", payload]);
+        // console.log(["restore app_settings from app_settings", payload]);
         for (let key in payload) {
             if (state.hasOwnProperty(key)) {
                 state[key] = payload[key];
@@ -46,7 +46,6 @@ const mutations = {
     },
 
     setAppSettings(state, settings) {
-        console.log(settings);
         state.stock_types = settings.stock_types;
         state.networks = settings.networks;
         state.phone_sizes = settings.phone_sizes;

@@ -34,7 +34,7 @@ export const datatable_cell = {
         },
 
         isAdmin() {
-            console.log(page);
+            // console.log(page);
             return true; //page.user_details.IsAdmin;
         },
     },

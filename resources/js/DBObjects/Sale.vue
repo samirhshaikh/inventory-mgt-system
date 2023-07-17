@@ -70,7 +70,7 @@
                                         'text-white': dark_mode,
                                     }"
                                 >
-                                    Customer {{ row["CustomerId"] }}
+                                    Customer
                                 </label>
                                 <CustomerSalesPicker
                                     :selected_value="row['CustomerId']"

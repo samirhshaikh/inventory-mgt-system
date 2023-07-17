@@ -1,19 +1,20 @@
 <template>
     <div class="flex flex-row items-center">
         <v-select
-            :v-model="customer_id"
+            :value="customer_id"
+            v-model="customer_id"
             label="CustomerName"
-            :reduce="(customer) => String(customer.Id)"
+            :reduce="(customer) => customer.Id"
             :options="customer_sales"
             class="w-72 generic_vs_select"
             :loading="loading_customer_sales"
             :class="{
                 required_field: required_field,
             }"
-            ref="customer_id"
+            ref="customer_picker"
             :filterable="false"
             @search="onSearch"
-            @option:selected="onOptionSelected"
+            @update:modelValue="$emit('onOptionSelected', customer_id)"
         >
             <template v-slot:option="option">
                 <strong>{{ option.CustomerName }}</strong>
@@ -70,7 +71,7 @@ export default {
     data() {
         return {
             loading_customer_sales: false,
-            customer_id: this.selected_value,
+            customer_id: "",
             customer_sales: [],
         };
     },
@@ -94,10 +95,6 @@ export default {
             this.loadData(query);
         },
 
-        onOptionSelected(value) {
-            this.$emit("onOptionSelected", value.Id);
-        },
-
         loadData(query) {
             this.loading_customer_sales = true;
 
@@ -114,19 +111,19 @@ export default {
                     (response) => {
                         this.customer_sales = response.data.rows;
 
-                        if (this.customer_id && !query) {
+                        if (this.selected_value && !query) {
                             //Check of the customer is there in first page loaded or not.
                             const object = helper_functions.searchJsonObjects(
                                 this.customer_sales,
                                 "Id",
-                                this.customer_id
+                                this.selected_value
                             );
                             //If not there then we need to get the details of it and add it to available options
                             if (!Object.keys(object).length) {
                                 axios
                                     .get(route("customer_sales.get-single"), {
                                         params: {
-                                            Id: this.customer_id,
+                                            Id: this.selected_value,
                                         },
                                     })
                                     .then((response) => {
@@ -134,8 +131,10 @@ export default {
                                             response.data.response.record;
                                         this.customer_sales.push(record);
 
-                                        console.log(this.customer_sales);
+                                        this.customer_id = this.selected_value;
                                     });
+                            } else {
+                                this.customer_id = this.selected_value;
                             }
                         }
 

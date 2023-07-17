@@ -364,6 +364,7 @@ export const list_controller = {
         },
 
         ...mapActions({
+            setPopperOpen: "local_settings/setPopperOpen",
             setCachedData: "local_settings/setCachedData",
             addError: "errors/addError",
         }),

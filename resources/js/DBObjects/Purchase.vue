@@ -72,36 +72,17 @@
                                 >
                                     Supplier
                                 </label>
-                                <div
-                                    class="flex flex-row items-center"
-                                    v-if="!loading_suppliers"
-                                >
-                                    <v-select
-                                        :value="row['SupplierId']"
-                                        label="SupplierName"
-                                        v-model="row['SupplierId']"
-                                        :reduce="(supplier) => supplier.Id"
-                                        :options="suppliers"
-                                        class="w-48 generic_vs_select"
-                                        v-if="!loading_suppliers"
-                                        :class="{
-                                            required_field:
-                                                row['SupplierId'] == '' ||
-                                                row['SupplierId'] == null,
-                                        }"
-                                        ref="supplier_picker"
-                                    ></v-select>
-
-                                    <Button
-                                        @click.native="addSupplier"
-                                        icon="plus"
-                                        split="border-white"
-                                        class="ml-1 bg-green-600 text-white"
-                                    >
-                                        New Supplier
-                                    </Button>
-                                </div>
-                                <Loading v-else />
+                                <SupplierPicker
+                                    :selected_value="row['SupplierId']"
+                                    :required_field="
+                                        row['SupplierId'] == '' ||
+                                        row['SupplierId'] == null
+                                    "
+                                    :enable_add="true"
+                                    @on-option-selected="onSupplierSelected"
+                                    @on-data-load-complete="customerSalesLoaded"
+                                    ref="supplier_picker"
+                                />
                             </div>
 
                             <div class="w-full md:w-1/2 form_field_container">
@@ -1025,6 +1006,10 @@ export default {
                         }
                     }
                 );
+        },
+
+        onSupplierSelected(value) {
+            this.row["SupplierId"] = value;
         },
 
         ...mapActions({

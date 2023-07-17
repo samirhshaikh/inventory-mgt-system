@@ -2,24 +2,22 @@
     <Layout :title="options.record_name + 's'">
         <div class="px-4 py-4">
             <div
-                class="flex items-stretch datatable_header"
+                class="datatable_header"
                 :class="{
                     'border-product-color-lighter bg-white': !dark_mode,
                     'border-product-color bg-gray-800': dark_mode,
                 }"
             >
-                <h1
-                    class="pt-1 ml-2 text-product-color text-2xl tracking-tight w-full"
-                >
+                <h1>
                     <FA :icon="['fas', 'mobile-alt']" class="mr-1"></FA>
-                    {{ options.record_name }}s
+                    {{ options.record_name }}
                 </h1>
-                <div class="mr-2 flex flex-row">
+                <div class="search_bar_container">
                     <SearchBar
                         :placeholder_text="options.record_name + 's'"
                         v-if="options.enable_search"
                         class="mr-1"
-                        @searchData="searchData"
+                        @search-data="searchData"
                     ></SearchBar>
                     <Button
                         @click.native="newRecord"
@@ -42,9 +40,9 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
 import Handset from "../DBObjects/Handset.vue";
+import { defineAsyncComponent } from "vue";
 
 export default {
     props: {
@@ -59,9 +57,9 @@ export default {
     },
 
     components: {
-        HandsetsDatatable: lazyLoadComponent({
-            componentFactory: () => import("@/Datatable/Datatable"),
-            loading: loading,
+        HandsetsDatatable: defineAsyncComponent({
+            loader: () => import("@/Datatable/Datatable"),
+            loadingComponent: loading,
         }),
     },
 

@@ -27,7 +27,7 @@
                         class="float-right flex justify-end mr-2 text-white w-64"
                     >
                         <Button
-                            @click.native="$emit('close')"
+                            @click.native="$emit('closed')"
                             icon="times"
                             split="border-white"
                             class="bg-red-600"
@@ -531,7 +531,7 @@ export default {
 
                     this.saving_data = false;
 
-                    this.$modal.hide(this.$parent.name);
+                    this.$emit("confirm");
                 })
                 .catch((error) => {
                     this.saving_data = false;

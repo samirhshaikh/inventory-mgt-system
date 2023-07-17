@@ -5,7 +5,7 @@
             class="text-white bg-green-600"
             :class="{
                 hidden:
-                    !$page.user_details.IsAdmin ||
+                    !page.user_details.IsAdmin ||
                     row['row_id'] == current_row_id,
             }"
         >
@@ -16,7 +16,7 @@
             class="text-white bg-red-400 ml-2"
             :class="{
                 hidden:
-                    !$page.user_details.IsAdmin ||
+                    !page.user_details.IsAdmin ||
                     row['Id'] == '' ||
                     row['row_id'] == current_row_id ||
                     row['Status'] == this.phonestock.STATUS_SOLD,
@@ -31,6 +31,10 @@
 <script>
 import Confirm from "../../../components/Confirm.vue";
 import { datatable_cell } from "../datatable_cell";
+import { usePage } from "@inertiajs/vue3";
+import { useModal } from "vue-final-modal";
+
+const page = usePage();
 
 export default {
     mixins: [datatable_cell],
@@ -42,29 +46,39 @@ export default {
         },
     },
 
+    computed: {
+        page() {
+            return page.props;
+        },
+    },
+
     methods: {
         edit() {
             this.$emit("editRecord", this.row);
         },
 
         removeRecord() {
-            this.$modal.show(
-                Confirm,
-                {
+            const parent = this;
+
+            const { open, close } = useModal({
+                component: Confirm,
+                attrs: {
                     title: "Delete " + this.options.record_name,
                     text:
                         "Are you sure you want to delete this " +
                         _.lowerCase(this.options.record_name) +
                         "?",
                     yes_handler: () => {
-                        this.$emit("removeRecord", this.row["row_id"]);
+                        parent.$emit("removeRecord", this.row["row_id"]);
                     },
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {},
                 },
-                {
-                    width: "350px",
-                    height: "auto",
-                }
-            );
+            });
+
+            open();
         },
     },
 };

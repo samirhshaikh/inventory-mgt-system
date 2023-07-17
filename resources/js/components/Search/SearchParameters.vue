@@ -2,11 +2,10 @@
     <section>
         <div class="flex flex-wrap">
             <div
-                v-for="column in columns"
+                v-for="column in non_empty_columns"
                 class="mr-2 mb-2 py-2 px-2 bg-product-color rounded cursor-pointer"
                 title="Click to remove"
                 @click="removeColumnFromSearch(column.key)"
-                v-if="getColumnData(column.key) != ''"
             >
                 <div class="text-sm text-white font-semibold">
                     {{ column.label }}
@@ -31,6 +30,14 @@ export default {
         search_data: {
             type: Object,
             default: () => ({}),
+        },
+    },
+
+    computed: {
+        non_empty_columns() {
+            return this.columns.filter((column) => {
+                return this.getColumnData(column.key) != "";
+            });
         },
     },
 

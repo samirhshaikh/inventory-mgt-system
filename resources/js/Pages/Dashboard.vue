@@ -2,19 +2,17 @@
     <Layout>
         <div class="px-4 py-4">
             <div
-                class="flex items-stretch datatable_header"
+                class="datatable_header"
                 :class="{
                     'border-product-color-lighter bg-white': !dark_mode,
                     'border-product-color bg-gray-800': dark_mode,
                 }"
             >
-                <h1
-                    class="pt-1 ml-2 text-product-color text-2xl tracking-tight w-full"
-                >
+                <h1>
                     <FA :icon="['fas', 'home']" class="mr-1"></FA>
                     Dashboard
                 </h1>
-                <div class="mr-2 flex flex-row">
+                <div class="search_bar_container">
                     <Button
                         @click.native="getData"
                         icon="redo-alt"
@@ -35,17 +33,21 @@
                 v-if="!loading"
             >
                 <div class="flex flex-row justify-between w-full">
-                    <bar-chart
-                        :chartdata="stockChartData"
-                        :options="chartOptions"
-                        class="w-1/2"
-                    />
+                    <div class="w-1/2" style="height: 400px">
+                        <BarChart
+                            :data="stockChartData"
+                            :options="chartOptions"
+                            class="w-1/2"
+                        />
+                    </div>
 
-                    <bar-chart
-                        :chartdata="costData"
-                        :options="chartOptions"
-                        class="w-1/2"
-                    />
+                    <div class="w-1/2" style="height: 400px">
+                        <DoughnutChart
+                            :data="costData"
+                            :options="chartOptions"
+                            class="w-1/2"
+                        />
+                    </div>
                 </div>
             </div>
 
@@ -55,18 +57,12 @@
 </template>
 
 <script>
-import BarChart from "../components/Charts/BarChart";
-import DoughnutChart from "../components/Charts/DoughnutChart";
 import { mapState } from "vuex";
+import { usePage } from "@inertiajs/vue3";
+
+const page = usePage();
 
 export default {
-    name: "Dashboard",
-
-    components: {
-        DoughnutChart,
-        BarChart,
-    },
-
     props: [],
 
     data() {
@@ -78,6 +74,7 @@ export default {
             costData: {},
             chartOptions: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         position: "bottom",
@@ -91,7 +88,7 @@ export default {
         };
     },
 
-    mounted() {
+    created() {
         this.getData();
     },
 

@@ -1,26 +1,29 @@
-import Vue from "vue";
+import { createApp, h } from "vue";
 import store from "./store";
 
-var _ = require("lodash");
+const _ = require("lodash");
 
 import "core-js-bundle/";
 require("es6-promise/auto");
 
-import { InertiaApp } from "@inertiajs/inertia-vue";
+import { createInertiaApp } from "@inertiajs/vue3";
 import moment from "moment";
-import Popper from "vue-popperjs";
-import VModal from "vue-js-modal";
-import ToggleButton from "vue-js-toggle-button";
-import Notifications from "vue-notification";
 import VueGoogleAutocomplete from "vue-google-autocomplete";
 import vSelect from "vue-select";
-import "vue-popperjs/dist/vue-popper.css";
-import DatePicker from "v-calendar/lib/components/date-picker.umd";
-import VueMask from "v-mask";
-import VuePdfApp from "vue-pdf-app";
+// import VuePdfApp from "vue-pdf-app";
+
+import { createVfm } from "vue-final-modal";
+import "vue-final-modal/style.css";
+
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
+
+import Notifications from "@kyvg/vue3-notification";
 
 //Start: Fontawesome
 import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+
 // import {} from '@fortawesome/free-regular-svg-icons';
 
 import {
@@ -54,9 +57,7 @@ import {
     faRedoAlt,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-
-library.add([
+library.add(
     faSpinner,
     faSignOutAlt,
     faAngleDoubleLeft,
@@ -84,23 +85,10 @@ library.add([
     faTrash,
     faFileAlt,
     faStore,
-    faRedoAlt,
-]);
+    faRedoAlt
+);
 
-Vue.component("FA", FontAwesomeIcon);
 //End: Fontawesome
-
-Vue.component("popper", Popper);
-
-//Register all the Vue components
-const files = require.context("./", true, /\.vue$/i);
-files
-    .keys()
-    .map((key) =>
-        Vue.component(key.split("/").pop().split(".")[0], files(key).default)
-    );
-
-Vue.prototype.moment = moment;
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -124,41 +112,51 @@ window.axios.interceptors.response.use(
 var Turbolinks = require("turbolinks");
 Turbolinks.start();
 
-Vue.config.productionTip = false;
-Vue.mixin({ methods: { route: (...args) => window.route(...args).url() } });
-Vue.use(InertiaApp);
-Vue.use(VModal, { dynamic: true, injectModalsContainer: true });
-Vue.use(ToggleButton);
-Vue.use(Notifications);
-Vue.use(VueMask);
-Vue.component("vue-google-autocomplete", VueGoogleAutocomplete);
-Vue.component("v-select", vSelect);
-Vue.component("date-picker", DatePicker);
-Vue.component("vue-pdf-app", VuePdfApp);
+// app.component("vue-pdf-app", VuePdfApp);
 
-Vue.prototype.phonestock = {
-    STATUS_IN_STOCK: "In Stock",
-    STATUS_SOLD: "Sold",
-};
+createInertiaApp({
+    resolve: (name) => require(`./Pages/${name}`),
+    setup({ el, App, props, plugin }) {
+        const app = createApp({ render: () => h(App, props) });
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+        app.use(plugin);
 
-const app = document.getElementById("app");
-new Vue({
-    store,
-    render: (h) =>
-        h(InertiaApp, {
-            props: {
-                initialPage: JSON.parse(app.dataset.page),
-                resolveComponent: (component) => {
-                    return import(`@/${component}`).then(
-                        (module) => module.default
-                    );
-                },
-            },
-        }),
-}).$mount(app);
+        app.component("FA", FontAwesomeIcon);
+        app.component("vue-google-autocomplete", VueGoogleAutocomplete);
+        app.component("v-select", vSelect);
+
+        //Register all the Vue components
+        const files = require.context("./", true, /\.vue$/i);
+        files.keys().map((key) => {
+            // console.log([key.split("/").pop().split(".")[0], files(key).default]);
+            app.component(
+                key.split("/").pop().split(".")[0],
+                files(key).default
+            );
+        });
+
+        app.config.globalProperties.moment = moment;
+
+        app.mixin({
+            methods: { route: (...args) => window.route(...args).url() },
+        });
+
+        app.config.globalProperties.phonestock = {
+            STATUS_IN_STOCK: "In Stock",
+            STATUS_SOLD: "Sold",
+        };
+
+        const vfm = createVfm();
+        app.use(vfm);
+
+        app.use(Notifications);
+
+        app.component("VueDatePicker", VueDatePicker);
+
+        app.use(store);
+
+        app.config.globalProperties.$route = route;
+
+        app.mount(el);
+    },
+});

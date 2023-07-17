@@ -2,6 +2,7 @@
     <div class="flex flex-row items-center">
         <v-select
             :value="customer_id"
+            v-model="customer_id"
             label="CustomerName"
             :reduce="(customer) => customer.Id"
             :options="customer_sales"
@@ -10,10 +11,10 @@
             :class="{
                 required_field: required_field,
             }"
-            ref="customer_id"
+            ref="customer_picker"
             :filterable="false"
             @search="onSearch"
-            @input="onOptionSelected"
+            @update:modelValue="$emit('onOptionSelected', customer_id)"
         >
             <template v-slot:option="option">
                 <strong>{{ option.CustomerName }}</strong>
@@ -40,7 +41,7 @@
             New
         </Button>
         <Button
-            @click.native="edit(customer_id)"
+            @click.native="edit"
             icon="pen"
             split="border-white"
             class="ml-1 bg-green-600 text-white"
@@ -55,6 +56,7 @@
 import { mapState, mapActions } from "vuex";
 import Customer from "../DBObjects/CustomerSale";
 import helper_functions from "../Helpers/helper_functions";
+import { useModal } from "vue-final-modal";
 
 export default {
     name: "CustomerSalesPicker",
@@ -69,7 +71,7 @@ export default {
     data() {
         return {
             loading_customer_sales: false,
-            customer_id: this.selected_value,
+            customer_id: "",
             customer_sales: [],
         };
     },
@@ -93,13 +95,10 @@ export default {
             this.loadData(query);
         },
 
-        onOptionSelected(value) {
-            this.$emit("onOptionSelected", value);
-        },
-
         loadData(query) {
             this.loading_customer_sales = true;
 
+            //Load the first page of customers
             axios
                 .get(route("datatable.customer_sales.data"), {
                     params: {
@@ -112,24 +111,30 @@ export default {
                     (response) => {
                         this.customer_sales = response.data.rows;
 
-                        if (this.customer_id && !query) {
+                        if (this.selected_value && !query) {
+                            //Check of the customer is there in first page loaded or not.
                             const object = helper_functions.searchJsonObjects(
                                 this.customer_sales,
                                 "Id",
-                                this.customer_id
+                                this.selected_value
                             );
+                            //If not there then we need to get the details of it and add it to available options
                             if (!Object.keys(object).length) {
                                 axios
                                     .get(route("customer_sales.get-single"), {
                                         params: {
-                                            Id: this.customer_id,
+                                            Id: this.selected_value,
                                         },
                                     })
                                     .then((response) => {
                                         let record =
                                             response.data.response.record;
                                         this.customer_sales.push(record);
+
+                                        this.customer_id = this.selected_value;
                                     });
+                            } else {
+                                this.customer_id = this.selected_value;
                             }
                         }
 
@@ -148,11 +153,13 @@ export default {
         },
 
         add() {
+            const parent = this;
+
             this.setPopperOpen(true);
 
-            this.$modal.show(
-                Customer,
-                {
+            const { open, close } = useModal({
+                component: Customer,
+                attrs: {
                     edit_id: "",
                     options: {
                         id: "customer_sales",
@@ -160,39 +167,46 @@ export default {
                         cache_data: true,
                     },
                     customerSaved: (id) => {
-                        this.customer_id = id;
+                        parent.customer_id = { Id: id };
                         this.$emit("onOptionSelected", id);
                     },
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {
+                        parent.setPopperOpen(false);
+                    },
                 },
-                {
-                    width: "750px",
-                    height: "600px",
-                },
-                {
-                    closed: (event) => {},
-                }
-            );
+            });
+
+            open();
         },
 
-        edit(customer_id) {
+        edit() {
+            const parent = this;
+
             this.setPopperOpen(true);
 
-            this.$modal.show(
-                Customer,
-                {
-                    edit_id: String(customer_id),
+            const { open, close } = useModal({
+                component: Customer,
+                attrs: {
+                    edit_id: String(parent.customer_id),
                     options: {
                         id: "customer_sales",
                         record_name: "Customer",
                         cache_data: true,
                     },
                     customerSaved: (id) => {},
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {
+                        parent.setPopperOpen(false);
+                    },
                 },
-                {
-                    width: "750px",
-                    height: "600px",
-                }
-            );
+            });
+
+            open();
         },
 
         ...mapActions({
@@ -203,6 +217,7 @@ export default {
 
     watch: {
         refresh_customer_sales: function () {
+            console.log("refresh_customer_sales");
             this.loadData();
         },
 

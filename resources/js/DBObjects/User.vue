@@ -1,324 +1,250 @@
 <template>
-    <div
-        class="flex h-full border border-product-color"
-        :class="{
-            'bg-gray-700 text-white': dark_mode,
-        }"
+    <VueFinalModal
+        class="flex justify-center items-center"
+        :content-class="[
+            'user_modal relative p-4 rounded-lg dark:bg-gray-900',
+            {
+                'bg-gray-700': dark_mode,
+                'bg-white': !dark_mode,
+            },
+        ]"
+        content-transition="vfm-fade"
+        overlay-transition="vfm-fade"
     >
-        <div class="flex-grow flex flex-col justify-between">
-            <div class="p-4 overflow-y-auto text-sm flex-grow">
-                <div
-                    class="flex border-b border-product-color-lighter mb-4 pb-1"
+        <div class="p-0 overflow-y-auto text-sm">
+            <div
+                class="datatable_header"
+                :class="{
+                    'border-product-color-lighter': dark_mode,
+                    'border-product-color': !dark_mode,
+                }"
+            >
+                <h1
                     :class="{
-                        'border-product-color-lighter': dark_mode,
-                        'border-product-color': !dark_mode,
+                        'text-product-color-lighter': dark_mode,
+                        'text-product-color': !dark_mode,
                     }"
                 >
-                    <h1
-                        class="text-xl pt-2 ml-1 w-full"
+                    User Details
+                </h1>
+                <div class="search_bar_container">
+                    <Button
+                        @click.native="$emit('closed')"
+                        icon="times"
+                        split="border-white"
+                        class="bg-red-600"
+                    >
+                        Close
+                    </Button>
+                    <Button
+                        @click.native="save"
+                        :icon="saving_data ? 'sync-alt' : 'check'"
+                        :icon_class="saving_data ? 'fa-spin' : ''"
+                        split="border-white"
+                        class="ml-1"
                         :class="{
-                            'text-product-color-lighter': dark_mode,
-                            'text-product-color': !dark_mode,
+                            'bg-green-600': valid_data,
+                            'bg-gray-600 text-gray-500 cursor-not-allowed':
+                                !valid_data,
                         }"
                     >
-                        User Details
-                    </h1>
-                    <div
-                        class="float-right flex justify-end mr-2 text-white w-64"
-                    >
-                        <Button
-                            @click.native="$emit('close')"
-                            icon="times"
-                            split="border-white"
-                            class="bg-red-600"
-                        >
-                            Close
-                        </Button>
-                        <Button
-                            @click.native="save"
-                            :icon="saving_data ? 'sync-alt' : 'check'"
-                            :icon_class="saving_data ? 'fa-spin' : ''"
-                            split="border-white"
-                            class="ml-1"
+                        Save
+                    </Button>
+                </div>
+            </div>
+
+            <form class="w-full pl-2" autocomplete="off" v-if="!loading">
+                <div class="flex flex-wrap items-start">
+                    <div class="w-full form_field_container">
+                        <label
+                            class="form_field_label"
                             :class="{
-                                'bg-green-600': valid_data,
-                                'bg-gray-600 text-gray-500 cursor-not-allowed':
-                                    !valid_data,
+                                'text-gray-700': !dark_mode,
+                                'text-white': dark_mode,
                             }"
                         >
-                            Save
-                        </Button>
-                    </div>
-                </div>
+                            Username
+                        </label>
+                        <span v-if="edit_id == ''">
+                            <input
+                                class="w-48 generic_input"
+                                type="text"
+                                v-model.trim="row['UserName']"
+                                v-on:blur="isDuplicateName"
+                                autocomplete="off"
+                                :class="{
+                                    required_field:
+                                        name_validation_message != '',
+                                }"
+                                ref="user_name"
+                            />
 
-                <form class="w-full pl-2" autocomplete="off" v-if="!loading">
-                    <div class="flex flex-wrap -mx-3 form_field_container">
-                        <div class="w-full px-3">
-                            <label
-                                class="block form_field_label"
-                                :class="{
-                                    'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode,
-                                }"
-                            >
-                                Username
-                            </label>
-                            <div
-                                class="block flex flex-row"
-                                v-if="edit_id == ''"
-                            >
-                                <input
-                                    class="w-48 generic_input"
-                                    type="text"
-                                    v-model.trim="row['UserName']"
-                                    v-on:blur="isDuplicateName"
-                                    autocomplete="off"
-                                    :class="{
-                                        required_field:
-                                            name_validation_message != '',
-                                    }"
-                                    ref="user_name"
-                                />
-
-                                <Loading
-                                    class="ml-2 mt-3 text-sm"
-                                    v-if="checking_duplicate_name"
-                                    loading_message="Checking name..."
-                                />
-                            </div>
-                            <label
-                                class="block form_value_label"
-                                :class="{
-                                    'text-gray-600': !dark_mode,
-                                    'text-product-color-lighter': dark_mode,
-                                }"
-                                v-else
-                            >
-                                {{ edit_id }}
-                            </label>
-                            <p
-                                class="form_field_message"
-                                :class="{
-                                    hidden:
-                                        name_validation_message == '' ||
-                                        name_validation_message == 'Required',
-                                }"
-                            >
-                                {{ name_validation_message }}
-                            </p>
-                        </div>
+                            <Loading
+                                class="ml-2 mt-3 text-sm"
+                                v-if="checking_duplicate_name"
+                                loading_message="Checking name..."
+                            />
+                        </span>
+                        <label
+                            class="form_value_label"
+                            :class="{
+                                'text-gray-600': !dark_mode,
+                                'text-product-color-lighter': dark_mode,
+                            }"
+                            v-else
+                        >
+                            {{ edit_id }}
+                        </label>
+                        <p
+                            class="form_field_message"
+                            :class="{
+                                hidden:
+                                    name_validation_message == '' ||
+                                    name_validation_message == 'Required',
+                            }"
+                        >
+                            {{ name_validation_message }}
+                        </p>
                     </div>
 
                     <div
-                        class="flex flex-wrap -mx-3 form_field_container"
+                        class="w-1/2 form_field_container"
                         v-if="edit_id == ''"
                     >
-                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <label
-                                class="block form_field_label"
-                                :class="{
-                                    'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode,
-                                }"
-                            >
-                                Password
-                            </label>
-                            <input
-                                class="w-48 block generic_input"
-                                type="password"
-                                v-model.trim="row['Password']"
-                                placeholder="******************"
-                                autocomplete="off"
-                                :class="{
-                                    required_field:
-                                        (row_keys.indexOf('Password') < 0 ||
-                                            row['Password'] == '') &&
-                                        edit_id == '',
-                                }"
-                            />
-                        </div>
-
-                        <div class="w-full md:w-1/2 px-3">
-                            <label
-                                class="block form_field_label"
-                                :class="{
-                                    'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode,
-                                }"
-                            >
-                                Confirm Password
-                            </label>
-                            <input
-                                class="w-48 block generic_input"
-                                type="password"
-                                v-model.trim="row['Confirm_Password']"
-                                placeholder="******************"
-                                autocomplete="off"
-                                :class="{
-                                    required_field:
-                                        (row_keys.indexOf('Confirm_Password') <
-                                            0 ||
-                                            row['Confirm_Password'] == '') &&
-                                        edit_id == '',
-                                }"
-                            />
-                            <p
-                                class="form_field_message"
-                                :class="{
-                                    hidden:
-                                        row['Confirm_Password'] ==
-                                            row['Password'] && edit_id == '',
-                                }"
-                            >
-                                Confirm Password should match with Password
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-wrap -mx-3 form_field_container">
-                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <label
-                                class="block form_field_label"
-                                :class="{
-                                    'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode,
-                                }"
-                            >
-                                Is Admin
-                            </label>
-                            <toggle-button
-                                :value="is_admin"
-                                :sync="true"
-                                :labels="{ checked: 'Yes', unchecked: 'No' }"
-                                @change="toggleIsAdmin()"
-                            />
-                        </div>
-                        <div class="w-full md:w-1/2 px-3">
-                            <label
-                                class="block form_field_label"
-                                :class="{
-                                    'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode,
-                                }"
-                            >
-                                Is Active
-                            </label>
-                            <toggle-button
-                                :value="is_active"
-                                :sync="true"
-                                :labels="{ checked: 'Yes', unchecked: 'No' }"
-                                @change="toggleIsActive()"
-                            />
-                        </div>
+                        <label
+                            class="form_field_label"
+                            :class="{
+                                'text-gray-700': !dark_mode,
+                                'text-white': dark_mode,
+                            }"
+                        >
+                            Password
+                        </label>
+                        <input
+                            class="w-3/4 block generic_input"
+                            type="password"
+                            v-model.trim="row['Password']"
+                            placeholder="******************"
+                            autocomplete="off"
+                            :class="{
+                                required_field:
+                                    (row_keys.indexOf('Password') < 0 ||
+                                        row['Password'] == '') &&
+                                    edit_id == '',
+                            }"
+                        />
                     </div>
 
                     <div
-                        class="flex flex-wrap -mx-3 form_field_container"
-                        v-if="edit_id != ''"
+                        class="w-1/2 form_field_container"
+                        v-if="edit_id == ''"
                     >
-                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <label
-                                class="block form_field_label"
-                                :class="{
-                                    'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode,
-                                }"
-                            >
-                                Created By
-                            </label>
-                            <label
-                                class="block form_value_label"
-                                :class="{
-                                    'text-gray-600': !dark_mode,
-                                    'text-product-color-lighter': dark_mode,
-                                }"
-                            >
-                                {{ row["CreatedBy"] }}
-                            </label>
-                        </div>
-                        <div class="w-full md:w-1/2 px-3">
-                            <label
-                                class="block form_field_label"
-                                :class="{
-                                    'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode,
-                                }"
-                            >
-                                Creation Date
-                            </label>
-                            <label
-                                class="block form_value_label"
-                                :class="{
-                                    'text-gray-600': !dark_mode,
-                                    'text-product-color-lighter': dark_mode,
-                                }"
-                            >
-                                {{ row["CreatedDate"] }}
-                            </label>
+                        <label
+                            class="form_field_label"
+                            :class="{
+                                'text-gray-700': !dark_mode,
+                                'text-white': dark_mode,
+                            }"
+                        >
+                            Confirm Password
+                        </label>
+                        <input
+                            class="w-3/4 block generic_input"
+                            type="password"
+                            v-model.trim="row['Confirm_Password']"
+                            placeholder="******************"
+                            autocomplete="off"
+                            :class="{
+                                required_field:
+                                    (row_keys.indexOf('Confirm_Password') < 0 ||
+                                        row['Confirm_Password'] == '') &&
+                                    edit_id == '',
+                            }"
+                        />
+                        <p
+                            class="form_field_message"
+                            :class="{
+                                hidden:
+                                    row['Confirm_Password'] ==
+                                        row['Password'] && edit_id == '',
+                            }"
+                        >
+                            Confirm Password should match with Password
+                        </p>
+                    </div>
+
+                    <div class="w-1/2 form_field_container">
+                        <label
+                            class="form_field_label"
+                            :class="{
+                                'text-gray-700': !dark_mode,
+                                'text-white': dark_mode,
+                            }"
+                        >
+                            Is Admin
+                        </label>
+
+                        <div class="mt-1 flex items-center">
+                            <input
+                                type="checkbox"
+                                class="toggle"
+                                :checked="is_admin"
+                                @change="toggleIsAdmin"
+                            /><span class="label-text ml-1">{{
+                                is_admin ? "Yes" : "No"
+                            }}</span>
                         </div>
                     </div>
 
-                    <div
-                        class="flex flex-wrap -mx-3 form_field_container"
-                        v-if="edit_id != ''"
-                    >
-                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <label
-                                class="block form_field_label"
-                                :class="{
-                                    'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode,
-                                }"
-                            >
-                                Updated By
-                            </label>
-                            <label
-                                class="block form_value_label"
-                                :class="{
-                                    'text-gray-600': !dark_mode,
-                                    'text-product-color-lighter': dark_mode,
-                                }"
-                            >
-                                {{ row["UpdatedBy"] }}
-                            </label>
-                        </div>
-                        <div class="w-full md:w-1/2 px-3">
-                            <label
-                                class="block form_field_label"
-                                :class="{
-                                    'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode,
-                                }"
-                            >
-                                Updated Date
-                            </label>
-                            <label
-                                class="block form_value_label"
-                                :class="{
-                                    'text-gray-600': !dark_mode,
-                                    'text-product-color-lighter': dark_mode,
-                                }"
-                            >
-                                {{ row["UpdatedDate"] }}
-                            </label>
+                    <div class="w-1/2 form_field_container">
+                        <label
+                            class="form_field_label"
+                            :class="{
+                                'text-gray-700': !dark_mode,
+                                'text-white': dark_mode,
+                            }"
+                        >
+                            Is Active
+                        </label>
+                        <div class="mt-1 flex items-center">
+                            <input
+                                type="checkbox"
+                                class="toggle"
+                                :checked="is_active"
+                                @change="toggleIsActive"
+                            /><span class="label-text ml-1">{{
+                                is_active ? "Yes" : "No"
+                            }}</span>
                         </div>
                     </div>
-                </form>
 
-                <Loading v-else />
-            </div>
+                    <RecordStamp :row="row" v-if="edit_id != ''" />
+                </div>
+            </form>
+
+            <Loading v-else />
         </div>
-    </div>
+    </VueFinalModal>
 </template>
+
+<style>
+.user_modal {
+    width: 550px;
+    height: auto;
+}
+</style>
 
 <script>
 import { mapState, mapActions } from "vuex";
-import moment from "moment";
-import Button from "../components/Button";
+import { VueFinalModal } from "vue-final-modal";
 import { notifications } from "../Helpers/notifications";
 
 export default {
     mixins: [notifications],
+
+    components: {
+        VueFinalModal,
+    },
 
     props: {
         options: {
@@ -459,7 +385,7 @@ export default {
 
                     this.saving_data = false;
 
-                    this.$modal.hide(this.$parent.name);
+                    this.$emit("confirm");
                 })
                 .catch((error) => {
                     this.saving_data = false;

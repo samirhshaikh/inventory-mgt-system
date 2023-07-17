@@ -37,7 +37,7 @@
                         :src="getAvatar"
                         class="w-5 h-5 border-2 border-color-white rounded-full"
                     />
-                    <span class="ml-2 hidden md:block">{{ $page.user }}</span>
+                    <span class="ml-2 hidden md:block">{{ page.user }}</span>
                 </button>
             </div>
         </div>
@@ -49,6 +49,10 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import UserOverlayVue from "../Misc/UserOverlay";
+import { usePage } from "@inertiajs/vue3";
+import { useModal } from "vue-final-modal";
+
+const page = usePage();
 
 export default {
     data() {
@@ -58,12 +62,16 @@ export default {
     },
 
     computed: {
+        page() {
+            return page.props;
+        },
+
         small_screen() {
             return this.width <= 640;
         },
 
         getAvatar() {
-            return "https://i.picsum.photos/id/402/200/200.jpg?hmac=9PZqzeq_aHvVAxvDPNfP6GuD58m4rilq-TUrG4e7V80";
+            return "https://fastly.picsum.photos/id/223/200/200.jpg?hmac=CNNyWbBcEAJ7TPkTmEEwdGrLFEYkxpTeVwJ7U0LB30Y";
         },
 
         ...mapState({
@@ -79,16 +87,25 @@ export default {
         },
 
         showUserOverlay() {
+            const parent = this;
+
             this.setPopperOpen(true);
 
-            this.$modal.show(
-                UserOverlayVue,
-                {},
-                {
-                    width: "80%",
-                    height: "80%",
-                }
-            );
+            const { open, close } = useModal({
+                component: UserOverlayVue,
+                attrs: {
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {
+                        parent.setPopperOpen(false);
+                    },
+                },
+            });
+
+            open();
+
+            this.setPopperOpen(true);
         },
 
         ...mapActions({

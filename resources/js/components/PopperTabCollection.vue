@@ -7,12 +7,7 @@
                 'bg-gray-600': dark_mode,
             }"
         >
-            <li
-                class="mr-1"
-                v-for="(tab, i) in tabs"
-                :key="i"
-                v-show="tab.isVisible"
-            >
+            <li class="mr-1" v-for="(tab, i) in visible_tabs" :key="i">
                 <a
                     v-html="tab.header"
                     class="inline-block py-2 px-4 text-sm rounded-t cursor-pointer"
@@ -42,6 +37,7 @@
 <script>
 import expiringStorage from "../Helpers/expiringStorage";
 import { mapState, mapActions } from "vuex";
+
 export default {
     name: "PopperTabCollection",
 
@@ -69,6 +65,10 @@ export default {
     },
 
     computed: {
+        visible_tabs() {
+            return (this?.tabs ?? []).filter((tab) => tab.isVisible);
+        },
+
         storageKey() {
             return `vue-tabs-component.cache.${window.location.host}${window.location.pathname}`;
         },

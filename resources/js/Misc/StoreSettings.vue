@@ -1,165 +1,158 @@
 <template>
-    <div
-        class="flex h-full border border-product-color"
-        :class="{
-            'bg-gray-700 text-white': dark_mode,
-        }"
+    <VueFinalModal
+        class="flex justify-center items-center"
+        :content-class="[
+            'store_settings_modal relative p-4 rounded-lg dark:bg-gray-900',
+            {
+                'bg-gray-700': dark_mode,
+                'bg-white': !dark_mode,
+            },
+        ]"
+        content-transition="vfm-fade"
+        overlay-transition="vfm-fade"
     >
-        <div class="flex-grow flex flex-col justify-between">
-            <div class="p-4 overflow-y-auto text-sm flex-grow">
-                <div
-                    class="flex border-b border-product-color-lighter mb-4 pb-1"
+        <div class="p-0 overflow-y-auto text-sm">
+            <div
+                class="datatable_header"
+                :class="{
+                    'border-product-color-lighter': dark_mode,
+                    'border-product-color': !dark_mode,
+                }"
+            >
+                <h1
                     :class="{
-                        'border-product-color-lighter': dark_mode,
-                        'border-product-color': !dark_mode,
+                        'text-product-color-lighter': dark_mode,
+                        'text-product-color': !dark_mode,
                     }"
                 >
-                    <h1
-                        class="text-xl pt-2 ml-1 w-full"
+                    Store Settings
+                </h1>
+                <div class="search_bar_container">
+                    <Button
+                        @click.native="$emit('closed')"
+                        icon="times"
+                        split="border-white"
+                        class="bg-red-600"
+                    >
+                        Close
+                    </Button>
+                    <Button
+                        @click.native="save"
+                        icon="check"
+                        split="border-white"
+                        class="ml-1"
                         :class="{
-                            'text-product-color-lighter': dark_mode,
-                            'text-product-color': !dark_mode,
+                            'bg-green-600': valid_data,
+                            'bg-gray-600 text-gray-500 cursor-not-allowed':
+                                !valid_data,
                         }"
                     >
-                        Store Settings
-                    </h1>
-                    <div
-                        class="float-right flex justify-end mr-2 text-white w-64"
-                    >
-                        <Button
-                            @click.native="$emit('close')"
-                            icon="times"
-                            split="border-white"
-                            class="bg-red-600"
-                        >
-                            Close
-                        </Button>
-                        <Button
-                            @click.native="save"
-                            icon="check"
-                            split="border-white"
-                            class="ml-1"
+                        Save
+                    </Button>
+                </div>
+            </div>
+
+            <form class="w-full max-w-lg pl-2">
+                <div class="flex flex-wrap items-start">
+                    <div class="w-full form_field_container">
+                        <label class="form_field_label" for="business_name">
+                            Business Name
+                        </label>
+                        <input
+                            class="w-full generic_input"
+                            id="business_name"
+                            type="text"
+                            v-model.trim="business_name"
+                            ref="business_name"
+                        />
+
+                        <p
+                            class="form_field_message"
                             :class="{
-                                'bg-green-600': valid_data,
-                                'bg-gray-600 text-gray-500 cursor-not-allowed':
-                                    !valid_data,
+                                hidden:
+                                    business_name != '' &&
+                                    business_name != null,
                             }"
                         >
-                            Save
-                        </Button>
+                            Required
+                        </p>
+                    </div>
+
+                    <div class="w-full form_field_container">
+                        <label class="form_field_label"> Address </label>
+                        <textarea
+                            class="w-full generic_input"
+                            id="address"
+                            v-model.trim="store_address"
+                        ></textarea>
+
+                        <p
+                            class="form_field_message"
+                            :class="{
+                                hidden:
+                                    store_address != '' &&
+                                    store_address != null,
+                            }"
+                        >
+                            Required
+                        </p>
+                    </div>
+
+                    <div class="w-full form_field_container">
+                        <label class="form_field_label" for="phone">
+                            Phone
+                        </label>
+                        <input
+                            class="w-full generic_input"
+                            id="phone"
+                            type="text"
+                            v-model.trim="phone"
+                        />
+                    </div>
+
+                    <div class="w-full form_field_container">
+                        <label class="form_field_label" for="phone">
+                            Email
+                        </label>
+                        <input
+                            class="w-full generic_input"
+                            id="email"
+                            type="text"
+                            v-model.trim="email"
+                        />
+
+                        <p
+                            class="form_field_message"
+                            :class="{
+                                hidden: valid_email,
+                            }"
+                        >
+                            Valid email required
+                        </p>
                     </div>
                 </div>
-
-                <form class="w-full max-w-lg pl-2">
-                    <div class="flex flex-wrap -mx-3 mb-5">
-                        <div class="w-full px-3">
-                            <label
-                                class="block uppercase tracking-wide text-gray-700 text-sm font-semibold mb-2"
-                                for="business_name"
-                            >
-                                Business Name
-                            </label>
-                            <input
-                                class="block w-full generic_input"
-                                id="business_name"
-                                type="text"
-                                v-model.trim="business_name"
-                                ref="business_name"
-                            />
-
-                            <p
-                                class="form_field_message"
-                                :class="{
-                                    hidden:
-                                        business_name != '' &&
-                                        business_name != null,
-                                }"
-                            >
-                                Required
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-wrap -mx-3 mb-5">
-                        <div class="w-full px-3">
-                            <label
-                                class="block uppercase tracking-wide text-gray-700 text-sm font-semibold mb-2"
-                                for="address"
-                            >
-                                Address
-                            </label>
-                            <textarea
-                                class="block w-full generic_input"
-                                id="address"
-                                v-model.trim="store_address"
-                            ></textarea>
-
-                            <p
-                                class="form_field_message"
-                                :class="{
-                                    hidden:
-                                        store_address != '' &&
-                                        store_address != null,
-                                }"
-                            >
-                                Required
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-wrap -mx-3 mb-5">
-                        <div class="w-full px-3">
-                            <label
-                                class="block uppercase tracking-wide text-gray-700 text-sm font-semibold mb-2"
-                                for="phone"
-                            >
-                                Phone
-                            </label>
-                            <input
-                                class="block w-full generic_input"
-                                id="phone"
-                                type="text"
-                                v-model.trim="phone"
-                            />
-                        </div>
-                    </div>
-
-                    <div class="flex flex-wrap -mx-3 mb-5">
-                        <div class="w-full px-3">
-                            <label
-                                class="block uppercase tracking-wide text-gray-700 text-sm font-semibold mb-2"
-                                for="phone"
-                            >
-                                Email
-                            </label>
-                            <input
-                                class="block w-full generic_input"
-                                id="email"
-                                type="text"
-                                v-model.trim="email"
-                            />
-
-                            <p
-                                class="form_field_message"
-                                :class="{
-                                    hidden: valid_email,
-                                }"
-                            >
-                                Valid email required
-                            </p>
-                        </div>
-                    </div>
-                </form>
-            </div>
+            </form>
         </div>
-    </div>
+    </VueFinalModal>
 </template>
+
+<style>
+.store_settings_modal {
+    width: 450px;
+    height: auto;
+}
+</style>
 
 <script>
 import { mapState, mapActions } from "vuex";
+import { VueFinalModal } from "vue-final-modal";
 import helper_functions from "../Helpers/helper_functions";
 
 export default {
+    components: {
+        VueFinalModal,
+    },
+
     data() {
         return {
             business_name: "",
@@ -216,11 +209,10 @@ export default {
                 phone: this.phone,
                 email: this.email,
             };
-            // console.log(settings);
 
             this.setStoreSettings(settings);
 
-            this.$modal.hide(this.$parent.name);
+            this.$emit("confirm");
         },
 
         ...mapActions({

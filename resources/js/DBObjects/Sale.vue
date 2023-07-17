@@ -1,640 +1,520 @@
 <template>
-    <div
-        class="flex h-full border border-product-color"
-        :class="{
-            'bg-gray-700 text-white': dark_mode,
-        }"
+    <VueFinalModal
+        class="flex justify-center items-center"
+        :content-class="[
+            'sale_modal relative p-4 rounded-lg dark:bg-gray-900',
+            {
+                'bg-gray-700': dark_mode,
+                'bg-white': !dark_mode,
+            },
+        ]"
+        content-transition="vfm-fade"
+        overlay-transition="vfm-fade"
     >
-        <div class="flex-grow flex flex-col justify-between">
-            <div class="p-4 overflow-y-auto text-sm flex-grow">
-                <div
-                    class="flex border-b border-product-color-lighter mb-4 pb-1"
+        <div class="p-0 overflow-y-auto text-sm">
+            <div
+                class="datatable_header"
+                :class="{
+                    'border-product-color-lighter': dark_mode,
+                    'border-product-color': !dark_mode,
+                }"
+            >
+                <h1
                     :class="{
-                        'border-product-color-lighter': dark_mode,
-                        'border-product-color': !dark_mode,
+                        'text-product-color-lighter': dark_mode,
+                        'text-product-color': !dark_mode,
                     }"
                 >
-                    <h1
-                        class="text-base md:text-xl pt-2 ml-1 w-full"
+                    {{ options.record_name }} Details
+                </h1>
+                <div class="search_bar_container">
+                    <Button
+                        @click.native="$emit('closed')"
+                        icon="times"
+                        split="border-white"
+                        class="bg-red-600"
+                    >
+                        Close
+                    </Button>
+                    <Button
+                        @click.native="saveAll"
+                        :icon="saving_data ? 'sync-alt' : 'check'"
+                        :icon_class="saving_data ? 'fa-spin' : ''"
+                        split="border-white"
+                        class="ml-1"
                         :class="{
-                            'text-product-color-lighter': dark_mode,
-                            'text-product-color': !dark_mode,
+                            'bg-green-600': valid_data,
+                            'bg-gray-600 text-gray-500 cursor-not-allowed':
+                                !valid_data,
                         }"
                     >
-                        {{ options.record_name }} Details
-                    </h1>
-                    <div
-                        class="float-right flex justify-end mr-2 text-white w-64"
-                    >
-                        <Button
-                            @click.native="$emit('close')"
-                            icon="times"
-                            split="border-white"
-                            class="bg-red-600"
-                        >
-                            Close
-                        </Button>
-                        <Button
-                            @click.native="saveAll"
-                            :icon="saving_data ? 'sync-alt' : 'check'"
-                            :icon_class="saving_data ? 'fa-spin' : ''"
-                            split="border-white"
-                            class="ml-1"
-                            :class="{
-                                'bg-green-600': valid_data,
-                                'bg-gray-600 text-gray-500 cursor-not-allowed':
-                                    !valid_data,
-                            }"
-                        >
-                            Save
-                        </Button>
-                    </div>
+                        Save
+                    </Button>
                 </div>
+            </div>
 
-                <div class="flex flex-row" v-if="!loading">
-                    <div
-                        class="w-1/2 border-r border-product-color-lighter pr-4"
+            <div class="flex flex-row w-full" v-if="!loading">
+                <div class="w-1/2 border-r border-product-color-lighter pr-4">
+                    <form
+                        class="w-full pl-2"
+                        autocomplete="off"
+                        v-if="!loading"
+                        @submit.prevent
                     >
-                        <form class="pl-2" autocomplete="off" @submit.prevent>
-                            <div
-                                class="flex -mx-3 justify-between items-start form_field_container"
-                            >
-                                <div class="px-3">
-                                    <label
-                                        class="block form_field_label"
-                                        :class="{
-                                            'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode,
-                                        }"
-                                    >
-                                        Customer
-                                    </label>
-                                    <CustomerSalesPicker
-                                        :selected_value="row['CustomerId']"
-                                        :required_field="
-                                            row['CustomerId'] == '' ||
-                                            row['CustomerId'] == null
-                                        "
-                                        :enable_add="true"
-                                        :enable_edit="true"
-                                        @onOptionSelected="onCustomerSelected"
-                                        @onDataLoadComplete="
-                                            customerSalesLoaded
-                                        "
-                                        ref="customer_sales_picker"
-                                    />
-                                </div>
-
-                                <div class="text-white px-3 mt-5"></div>
-                            </div>
-
-                            <div
-                                class="flex flex-wrap -mx-3 form_field_container"
-                            >
-                                <div class="w-full md:w-1/2 px-3">
-                                    <label
-                                        class="block form_field_label"
-                                        :class="{
-                                            'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode,
-                                        }"
-                                    >
-                                        Invoice Date
-                                    </label>
-
-                                    <CustomDatePicker
-                                        :start_date_value="row['InvoiceDate']"
-                                        v-bind:required_field="true"
-                                        @dateSelected="dateSelected"
-                                        @clearDate="clearDate"
-                                    ></CustomDatePicker>
-                                </div>
-
-                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                    <label
-                                        class="block form_field_label"
-                                        :class="{
-                                            'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode,
-                                        }"
-                                    >
-                                        Invoice No
-                                    </label>
-                                    <div class="flex flex-row items-center">
-                                        <span
-                                            v-if="
-                                                row_keys.indexOf('Id') < 0 ||
-                                                row['Id'] == 0 ||
-                                                row['Id'] == ''
-                                            "
-                                            >Auto Generated</span
-                                        >
-                                        <span v-else>{{
-                                            row["InvoiceNo"]
-                                        }}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div
-                                class="flex flex-wrap -mx-3 form_field_container"
-                            >
-                                <div class="w-full md:w-1/2 px-3">
-                                    <label
-                                        class="block form_field_label"
-                                        :class="{
-                                            'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode,
-                                        }"
-                                    >
-                                        Payment Type
-                                    </label>
-
-                                    <v-select
-                                        :value="row['PaymentMethod']"
-                                        label="Size"
-                                        v-model="row['PaymentMethod']"
-                                        :options="payment_types"
-                                        class="w-40 generic_vs_select"
-                                        :class="{
-                                            required_field:
-                                                row['PaymentMethod'] == '' ||
-                                                row['PaymentMethod'] == null,
-                                        }"
-                                    ></v-select>
-                                </div>
-
-                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                    <label
-                                        class="block form_field_label"
-                                        :class="{
-                                            'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode,
-                                        }"
-                                    >
-                                        VAT
-                                    </label>
-                                    <div class="flex flex-row items-center">
-                                        <input
-                                            class="w-20 generic_input mr-1"
-                                            type="number"
-                                            v-model.number="row['VAT']"
-                                            autocomplete="off"
-                                            ref="cost"
-                                        />%
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div
-                                class="flex justify-between border-b border-product-color-lighter mb-4 pb-1"
-                                :class="{
-                                    'border-product-color-lighter': dark_mode,
-                                    'border-product-color': !dark_mode,
-                                }"
-                            >
-                                <h1
-                                    class="text-base pt-2 ml-1"
+                        <div class="flex flex-wrap items-start">
+                            <div class="w-full form_field_container">
+                                <label
+                                    class="form_field_label"
                                     :class="{
-                                        'text-product-color-lighter': dark_mode,
-                                        'text-product-color': !dark_mode,
+                                        'text-gray-700': !dark_mode,
+                                        'text-white': dark_mode,
                                     }"
                                 >
-                                    Phone Details
-                                </h1>
-                                <div class="mr-2 text-white">
-                                    <Button
-                                        @click.native="updateRecord"
-                                        icon="plus"
-                                        split="border-white"
-                                        class="ml-1"
+                                    Customer
+                                </label>
+                                <CustomerSalesPicker
+                                    :selected_value="row['CustomerId']"
+                                    :required_field="
+                                        row['CustomerId'] == '' ||
+                                        row['CustomerId'] == null
+                                    "
+                                    :enable_add="true"
+                                    :enable_edit="true"
+                                    @on-option-selected="onCustomerSelected"
+                                    @on-data-load-complete="customerSalesLoaded"
+                                    ref="customer_sales_picker"
+                                />
+                            </div>
+
+                            <div class="w-full md:w-1/2 form_field_container">
+                                <label
+                                    class="form_field_label"
+                                    :class="{
+                                        'text-gray-700': !dark_mode,
+                                        'text-white': dark_mode,
+                                    }"
+                                >
+                                    Invoice Date
+                                </label>
+
+                                <CustomDatePicker
+                                    :start_date_value="row['InvoiceDate']"
+                                    v-bind:required_field="true"
+                                    @date-selected="dateSelected"
+                                    @clearDate="clearDate"
+                                ></CustomDatePicker>
+                            </div>
+
+                            <div class="w-full md:w-1/2 form_field_container">
+                                <label
+                                    class="form_field_label"
+                                    :class="{
+                                        'text-gray-700': !dark_mode,
+                                        'text-white': dark_mode,
+                                    }"
+                                >
+                                    Invoice No
+                                </label>
+                                <div class="flex flex-row items-center">
+                                    <span
+                                        v-if="
+                                            row_keys.indexOf('Id') < 0 ||
+                                            row['Id'] == 0 ||
+                                            row['Id'] == ''
+                                        "
+                                        >Auto Generated</span
+                                    >
+                                    <span v-else>{{ row["InvoiceNo"] }}</span>
+                                </div>
+                            </div>
+
+                            <div class="w-full md:w-1/2 form_field_container">
+                                <label
+                                    class="form_field_label"
+                                    :class="{
+                                        'text-gray-700': !dark_mode,
+                                        'text-white': dark_mode,
+                                    }"
+                                >
+                                    Payment Type
+                                </label>
+
+                                <v-select
+                                    :value="row['PaymentMethod']"
+                                    label="Size"
+                                    v-model="row['PaymentMethod']"
+                                    :options="payment_types"
+                                    class="w-40 generic_vs_select"
+                                    :class="{
+                                        required_field:
+                                            row['PaymentMethod'] == '' ||
+                                            row['PaymentMethod'] == null,
+                                    }"
+                                ></v-select>
+                            </div>
+
+                            <div class="w-full md:w-1/2 form_field_container">
+                                <label
+                                    class="form_field_label"
+                                    :class="{
+                                        'text-gray-700': !dark_mode,
+                                        'text-white': dark_mode,
+                                    }"
+                                >
+                                    VAT
+                                </label>
+                                <div class="flex flex-row items-center">
+                                    <input
+                                        class="w-20 generic_input mr-1"
+                                        type="number"
+                                        v-model.number="row['VAT']"
+                                        autocomplete="off"
+                                        ref="cost"
+                                    />%
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="datatable_header"
+                            :class="{
+                                'border-product-color-lighter': dark_mode,
+                                'border-product-color': !dark_mode,
+                            }"
+                        >
+                            <h2
+                                :class="{
+                                    'text-product-color-lighter': dark_mode,
+                                    'text-product-color': !dark_mode,
+                                }"
+                            >
+                                Phone Details
+                            </h2>
+                            <div class="search_bar_container">
+                                <Button
+                                    @click.native="updateRecord"
+                                    icon="plus"
+                                    split="border-white"
+                                    class="ml-1"
+                                    :class="{
+                                        'bg-green-600': valid_phone_data,
+                                        'bg-gray-600 text-gray-500 cursor-not-allowed':
+                                            !valid_phone_data,
+                                    }"
+                                    v-if="current_row_id != ''"
+                                >
+                                    Update
+                                </Button>
+                                <Button
+                                    @click.native="selectPhoneStock"
+                                    icon="search"
+                                    split="border-white"
+                                    class="ml-1 bg-green-600 text-white"
+                                    v-if="current_row_id == ''"
+                                >
+                                    Add Phone
+                                </Button>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap items-start">
+                            <div
+                                class="w-full md:w-1/2 form_field_container"
+                                v-if="current_row_id != ''"
+                            >
+                                <label
+                                    class="form_field_label"
+                                    :class="{
+                                        'text-gray-700': !dark_mode,
+                                        'text-white': dark_mode,
+                                    }"
+                                >
+                                    IMEI
+                                </label>
+                                <div class="block flex flex-row">
+                                    <label
+                                        class="form_value_label"
                                         :class="{
-                                            'bg-green-600': valid_phone_data,
-                                            'bg-gray-600 text-gray-500 cursor-not-allowed':
-                                                !valid_phone_data,
+                                            'text-gray-600': !dark_mode,
+                                            'text-product-color-lighter':
+                                                dark_mode,
                                         }"
-                                        v-if="current_row_id != ''"
                                     >
-                                        Update
-                                    </Button>
-                                    <Button
-                                        @click.native="selectPhoneStock"
-                                        icon="search"
-                                        split="border-white"
-                                        class="ml-1 bg-green-600 text-white"
-                                        v-if="current_row_id == ''"
-                                    >
-                                        Add Phone
-                                    </Button>
+                                        {{ child_row["IMEI"] }}
+                                    </label>
                                 </div>
                             </div>
 
                             <div
-                                class="flex flex-wrap -mx-3 form_field_container"
+                                class="w-full md:w-1/2 form_field_container"
                                 v-if="current_row_id != ''"
                             >
-                                <div class="w-full px-3 mb-6 md:mb-0">
-                                    <label
-                                        class="block form_field_label"
-                                        :class="{
-                                            'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode,
-                                        }"
+                                <label
+                                    class="form_field_label"
+                                    :class="{
+                                        'text-gray-700': !dark_mode,
+                                        'text-white': dark_mode,
+                                    }"
+                                >
+                                    Cost
+                                </label>
+                                £<input
+                                    class="w-32 generic_input ml-1"
+                                    type="number"
+                                    v-model.number="child_row['Cost']"
+                                    autocomplete="off"
+                                    :class="{
+                                        required_field:
+                                            child_row['Cost'] == '' ||
+                                            child_row['Cost'] == null,
+                                    }"
+                                    ref="cost"
+                                />
+                            </div>
+
+                            <div class="w-full form_field_container">
+                                <label
+                                    class="form_field_label"
+                                    :class="{
+                                        'text-gray-700': !dark_mode,
+                                        'text-white': dark_mode,
+                                    }"
+                                >
+                                    Comments
+                                </label>
+                                <textarea
+                                    class="w-3/4 generic_input"
+                                    v-model.trim="row['Comments']"
+                                    rows="3"
+                                />
+                            </div>
+
+                            <RecordStamp :row="row" v-if="edit_id != ''" />
+                        </div>
+
+                        <div
+                            class="datatable_header"
+                            :class="{
+                                'border-product-color-lighter': dark_mode,
+                                'border-product-color': !dark_mode,
+                            }"
+                        >
+                            <h2
+                                :class="{
+                                    'text-product-color-lighter': dark_mode,
+                                    'text-product-color': !dark_mode,
+                                }"
+                            >
+                                Trade In Details
+                            </h2>
+                            <div class="search_bar_container">
+                                <Button
+                                    @click.native="tradeInPhone"
+                                    :icon="tradeInAvailable ? 'pen' : 'plus'"
+                                    split="border-white"
+                                    class="ml-1 bg-green-600"
+                                >
+                                    Trade In Phone
+                                </Button>
+                                <Button
+                                    @click.native="removeTradeInPhone"
+                                    icon="trash"
+                                    split="border-white"
+                                    class="ml-1 bg-red-600"
+                                    v-if="tradeInAvailable"
+                                >
+                                    {{
+                                        deleting_tradein_record
+                                            ? "Deleting"
+                                            : "Delete"
+                                    }}
+                                </Button>
+                            </div>
+                        </div>
+
+                        <div v-if="tradeInAvailable">
+                            <div
+                                v-for="(item, key) in row.tradein.purchase
+                                    .children"
+                                :class="{
+                                    'border-t border-gray-300 pt-5': key > 0,
+                                }"
+                            >
+                                <div class="flex flex-wrap items-start">
+                                    <div
+                                        class="w-full md:w-1/2 form_field_container"
                                     >
-                                        IMEI
-                                    </label>
-                                    <div class="block flex flex-row">
                                         <label
-                                            class="block form_value_label"
+                                            class="form_field_label"
+                                            :class="{
+                                                'text-gray-700': !dark_mode,
+                                                'text-white': dark_mode,
+                                            }"
+                                        >
+                                            IMEI
+                                        </label>
+                                        <label
+                                            class="form_value_label"
                                             :class="{
                                                 'text-gray-600': !dark_mode,
                                                 'text-product-color-lighter':
                                                     dark_mode,
                                             }"
                                         >
-                                            {{ child_row["IMEI"] }}
+                                            {{ item.IMEI }}
+                                        </label>
+                                    </div>
+
+                                    <div
+                                        class="w-full md:w-1/2 form_field_container"
+                                    >
+                                        <label
+                                            class="form_field_label"
+                                            :class="{
+                                                'text-gray-700': !dark_mode,
+                                                'text-white': dark_mode,
+                                            }"
+                                        >
+                                            Phone
+                                        </label>
+                                        <label
+                                            class="form_value_label"
+                                            :class="{
+                                                'text-gray-600': !dark_mode,
+                                                'text-product-color-lighter':
+                                                    dark_mode,
+                                            }"
+                                        >
+                                            {{ item.manufacturer.Name }} -
+                                            {{ item.model.Name }} -
+                                            {{ item.color.Name }}
+                                        </label>
+                                    </div>
+
+                                    <div
+                                        class="w-full md:w-1/2 form_field_container"
+                                    >
+                                        <label
+                                            class="form_field_label"
+                                            :class="{
+                                                'text-gray-700': !dark_mode,
+                                                'text-white': dark_mode,
+                                            }"
+                                        >
+                                            Size
+                                        </label>
+                                        <label
+                                            class="form_value_label"
+                                            :class="{
+                                                'text-gray-600': !dark_mode,
+                                                'text-product-color-lighter':
+                                                    dark_mode,
+                                            }"
+                                        >
+                                            {{ item.Size }}
+                                        </label>
+                                    </div>
+
+                                    <div
+                                        class="w-full md:w-1/2 form_field_container"
+                                    >
+                                        <label
+                                            class="form_field_label"
+                                            :class="{
+                                                'text-gray-700': !dark_mode,
+                                                'text-white': dark_mode,
+                                            }"
+                                        >
+                                            Cost
+                                        </label>
+                                        <label
+                                            class="form_value_label"
+                                            :class="{
+                                                'text-gray-600': !dark_mode,
+                                                'text-product-color-lighter':
+                                                    dark_mode,
+                                            }"
+                                        >
+                                            £{{ item.Cost }}
+                                        </label>
+                                    </div>
+
+                                    <div
+                                        class="w-full md:w-1/2 form_field_container"
+                                    >
+                                        <label
+                                            class="form_field_label"
+                                            :class="{
+                                                'text-gray-700': !dark_mode,
+                                                'text-white': dark_mode,
+                                            }"
+                                        >
+                                            StockType
+                                        </label>
+                                        <label
+                                            class="form_value_label"
+                                            :class="{
+                                                'text-gray-600': !dark_mode,
+                                                'text-product-color-lighter':
+                                                    dark_mode,
+                                            }"
+                                        >
+                                            {{ item.StockType }}
                                         </label>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div
-                                class="flex flex-wrap -mx-3 form_field_container border-b border-product-color-lighter pb-5"
-                                v-if="current_row_id != ''"
-                            >
-                                <div class="w-full md:w-1/2 px-3">
-                                    <label
-                                        class="block form_field_label"
-                                        :class="{
-                                            'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode,
-                                        }"
-                                    >
-                                        Cost
-                                    </label>
-                                    £<input
-                                        class="w-32 generic_input ml-1"
-                                        type="number"
-                                        v-model.number="child_row['Cost']"
-                                        autocomplete="off"
-                                        :class="{
-                                            required_field:
-                                                child_row['Cost'] == '' ||
-                                                child_row['Cost'] == null,
-                                        }"
-                                        ref="cost"
-                                    />
-                                </div>
-                            </div>
-
-                            <div
-                                class="flex flex-wrap -mx-3 form_field_container"
-                            >
-                                <div class="w-full px-3">
-                                    <label
-                                        class="block form_field_label"
-                                        :class="{
-                                            'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode,
-                                        }"
-                                    >
-                                        Comments
-                                    </label>
-                                    <textarea
-                                        class="w-3/4 generic_input"
-                                        v-model.trim="row['Comments']"
-                                        rows="3"
-                                    />
-                                </div>
-                            </div>
-
-                            <div
-                                class="flex flex-wrap -mx-3 form_field_container"
-                                v-if="edit_id != ''"
-                            >
-                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                    <label
-                                        class="block form_field_label"
-                                        :class="{
-                                            'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode,
-                                        }"
-                                    >
-                                        Created By
-                                    </label>
-                                    <label
-                                        class="block form_value_label"
-                                        :class="{
-                                            'text-gray-600': !dark_mode,
-                                            'text-product-color-lighter':
-                                                dark_mode,
-                                        }"
-                                    >
-                                        {{ getColumnValue("CreatedBy") }}
-                                    </label>
-                                </div>
-                                <div class="w-full md:w-1/2 px-3">
-                                    <label
-                                        class="block form_field_label"
-                                        :class="{
-                                            'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode,
-                                        }"
-                                    >
-                                        Creation Date
-                                    </label>
-                                    <label
-                                        class="block form_value_label"
-                                        :class="{
-                                            'text-gray-600': !dark_mode,
-                                            'text-product-color-lighter':
-                                                dark_mode,
-                                        }"
-                                    >
-                                        {{ getColumnValue("CreatedDate") }}
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div
-                                class="flex flex-wrap -mx-3 form_field_container"
-                                v-if="edit_id != ''"
-                            >
-                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                    <label
-                                        class="block form_field_label"
-                                        :class="{
-                                            'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode,
-                                        }"
-                                    >
-                                        Updated By
-                                    </label>
-                                    <label
-                                        class="block form_value_label"
-                                        :class="{
-                                            'text-gray-600': !dark_mode,
-                                            'text-product-color-lighter':
-                                                dark_mode,
-                                        }"
-                                    >
-                                        {{ getColumnValue("UpdatedBy") }}
-                                    </label>
-                                </div>
-                                <div class="w-full md:w-1/2 px-3">
-                                    <label
-                                        class="block form_field_label"
-                                        :class="{
-                                            'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode,
-                                        }"
-                                    >
-                                        Updated Date
-                                    </label>
-                                    <label
-                                        class="block form_value_label"
-                                        :class="{
-                                            'text-gray-600': !dark_mode,
-                                            'text-product-color-lighter':
-                                                dark_mode,
-                                        }"
-                                    >
-                                        {{ getColumnValue("UpdatedDate") }}
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div
-                                class="flex justify-between border-b border-product-color-lighter mb-4 pb-1"
-                                :class="{
-                                    'border-product-color-lighter': dark_mode,
-                                    'border-product-color': !dark_mode,
-                                }"
-                            >
-                                <h1
-                                    class="text-base pt-2 ml-1"
+                        <div
+                            class="flex flex-wrap -mx-3 form_field_container"
+                            v-else
+                        >
+                            <div class="w-full md:w-1/2 form_field_container">
+                                <label
+                                    class="form_value_label"
                                     :class="{
-                                        'text-product-color-lighter': dark_mode,
-                                        'text-product-color': !dark_mode,
+                                        'text-gray-700': !dark_mode,
+                                        'text-white': dark_mode,
                                     }"
                                 >
-                                    Trade In Details
-                                </h1>
-                                <div
-                                    class="float-right flex justify-end mr-2 text-white"
-                                >
-                                    <Button
-                                        @click.native="tradeInPhone"
-                                        :icon="
-                                            tradeInAvailable ? 'pen' : 'plus'
-                                        "
-                                        split="border-white"
-                                        class="ml-1 bg-green-600"
-                                    >
-                                        Trade In Phone
-                                    </Button>
-                                    <Button
-                                        @click.native="removeTradeInPhone"
-                                        icon="trash"
-                                        split="border-white"
-                                        class="ml-1 bg-red-600"
-                                        v-if="tradeInAvailable"
-                                    >
-                                        {{
-                                            deleting_tradein_record
-                                                ? "Deleting"
-                                                : "Delete"
-                                        }}
-                                    </Button>
-                                </div>
+                                    No Trade In with this sale.
+                                </label>
                             </div>
-                            <div v-if="tradeInAvailable">
-                                <div
-                                    v-for="(item, key) in row.tradein.purchase
-                                        .children"
-                                    :class="{
-                                        'border-t border-gray-300 pt-5':
-                                            key > 0,
-                                    }"
-                                >
-                                    <div
-                                        class="flex flex-wrap -mx-3 form_field_container"
-                                    >
-                                        <div
-                                            class="w-full md:w-1/2 px-3 mb-6 md:mb-0"
-                                        >
-                                            <label
-                                                class="block form_field_label"
-                                                :class="{
-                                                    'text-gray-700': !dark_mode,
-                                                    'text-white': dark_mode,
-                                                }"
-                                            >
-                                                IMEI
-                                            </label>
-                                            <label
-                                                class="block form_value_label"
-                                                :class="{
-                                                    'text-gray-600': !dark_mode,
-                                                    'text-product-color-lighter':
-                                                        dark_mode,
-                                                }"
-                                            >
-                                                {{ item.IMEI }}
-                                            </label>
-                                        </div>
-
-                                        <div
-                                            class="w-full md:w-1/2 px-3 mb-6 md:mb-0"
-                                        >
-                                            <label
-                                                class="block form_field_label"
-                                                :class="{
-                                                    'text-gray-700': !dark_mode,
-                                                    'text-white': dark_mode,
-                                                }"
-                                            >
-                                                Phone
-                                            </label>
-                                            <label
-                                                class="block form_value_label"
-                                                :class="{
-                                                    'text-gray-600': !dark_mode,
-                                                    'text-product-color-lighter':
-                                                        dark_mode,
-                                                }"
-                                            >
-                                                {{ item.manufacturer.Name }} -
-                                                {{ item.model.Name }} -
-                                                {{ item.color.Name }}
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div
-                                        class="flex flex-wrap -mx-3 form_field_container"
-                                    >
-                                        <div
-                                            class="w-full md:w-1/2 px-3 mb-6 md:mb-0"
-                                        >
-                                            <label
-                                                class="block form_field_label"
-                                                :class="{
-                                                    'text-gray-700': !dark_mode,
-                                                    'text-white': dark_mode,
-                                                }"
-                                            >
-                                                Size
-                                            </label>
-                                            <label
-                                                class="block form_value_label"
-                                                :class="{
-                                                    'text-gray-600': !dark_mode,
-                                                    'text-product-color-lighter':
-                                                        dark_mode,
-                                                }"
-                                            >
-                                                {{ item.Size }}
-                                            </label>
-                                        </div>
-
-                                        <div
-                                            class="w-full md:w-1/2 px-3 mb-6 md:mb-0"
-                                        >
-                                            <label
-                                                class="block form_field_label"
-                                                :class="{
-                                                    'text-gray-700': !dark_mode,
-                                                    'text-white': dark_mode,
-                                                }"
-                                            >
-                                                Cost
-                                            </label>
-                                            <label
-                                                class="block form_value_label"
-                                                :class="{
-                                                    'text-gray-600': !dark_mode,
-                                                    'text-product-color-lighter':
-                                                        dark_mode,
-                                                }"
-                                            >
-                                                £{{ item.Cost }}
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div
-                                        class="flex flex-wrap -mx-3 form_field_container"
-                                    >
-                                        <div
-                                            class="w-full md:w-1/2 px-3 mb-6 md:mb-0"
-                                        >
-                                            <label
-                                                class="block form_field_label"
-                                                :class="{
-                                                    'text-gray-700': !dark_mode,
-                                                    'text-white': dark_mode,
-                                                }"
-                                            >
-                                                StockType
-                                            </label>
-                                            <label
-                                                class="block form_value_label"
-                                                :class="{
-                                                    'text-gray-600': !dark_mode,
-                                                    'text-product-color-lighter':
-                                                        dark_mode,
-                                                }"
-                                            >
-                                                {{ item.StockType }}
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div
-                                class="flex flex-wrap -mx-3 form_field_container"
-                                v-else
-                            >
-                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                    <label
-                                        class="block form_value_label"
-                                        :class="{
-                                            'text-gray-700': !dark_mode,
-                                            'text-white': dark_mode,
-                                        }"
-                                    >
-                                        No Trade In with this sale.
-                                    </label>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="w-1/2 ml-2 p-2">
-                        <SaleItemsDatatable
-                            :columns="selected_products_columns"
-                            :options="selected_products_options"
-                            :source_data="rows"
-                            v-bind:load_data_from_server="false"
-                            :current_row_id="current_row_id"
-                            :parent_row="row"
-                            @editRecord="editRecord"
-                            @removeRecord="removeRecord"
-                            @returnItem="returnItem"
-                        ></SaleItemsDatatable>
-                    </div>
+                        </div>
+                    </form>
                 </div>
 
-                <Loading v-else />
+                <div class="w-1/2 ml-2 p-2">
+                    <SaleItemsDatatable
+                        :columns="selected_products_columns"
+                        :options="selected_products_options"
+                        :source_data="rows"
+                        v-bind:load_data_from_server="false"
+                        :current_row_id="current_row_id"
+                        :parent_row="row"
+                        @edit-record="editRecord"
+                        @remove-record="removeRecord"
+                        @return-item="returnItem"
+                    ></SaleItemsDatatable>
+                </div>
             </div>
+
+            <Loading v-else />
         </div>
-    </div>
+    </VueFinalModal>
 </template>
+
+<style>
+.sale_modal {
+    width: 90%;
+    height: auto;
+}
+</style>
 
 <script>
 import { mapState, mapActions } from "vuex";
-import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
+import { useModal, VueFinalModal } from "vue-final-modal";
 import loading from "@/Misc/Loading.vue";
 import helper_functions from "../Helpers/helper_functions";
 import { list_controller } from "../Helpers/list_controller";
@@ -643,6 +523,7 @@ import { notifications } from "../Helpers/notifications";
 import moment from "moment";
 import Purchase from "./Purchase";
 import Confirm from "../components/Confirm";
+import { defineAsyncComponent } from "vue";
 
 export default {
     props: {
@@ -666,9 +547,10 @@ export default {
     mixins: [list_controller, notifications],
 
     components: {
-        SaleItemsDatatable: lazyLoadComponent({
-            componentFactory: () => import("@/Datatable/Datatable"),
-            loading: loading,
+        VueFinalModal,
+        SaleItemsDatatable: defineAsyncComponent({
+            loader: () => import("@/Datatable/Datatable"),
+            loadingComponent: loading,
         }),
     },
 
@@ -943,8 +825,6 @@ export default {
         },
 
         returnItem(IMEI) {
-            console.log(["Sale", IMEI]);
-
             let rows = [];
 
             _.forIn(this.rows, (object, key) => {
@@ -1030,14 +910,12 @@ export default {
                         const handler = this.submitRecordSaved;
                         if (typeof handler === "function") {
                             handler(response.data.response.id);
-
-                            this.$modal.hide(this.$parent.name);
                         }
                     }
 
                     this.saving_data = false;
 
-                    this.$modal.hide(this.$parent.name);
+                    this.$emit("confirm");
                 },
                 (error) => {
                     this.saving_data = false;
@@ -1072,11 +950,13 @@ export default {
         },
 
         selectPhoneStock() {
+            const parent = this;
+
             this.setPopperOpen(true);
 
-            this.$modal.show(
-                RecordPicker,
-                {
+            const { open, close } = useModal({
+                component: RecordPicker,
+                attrs: {
                     columns: [
                         {
                             enabled: true,
@@ -1176,23 +1056,28 @@ export default {
                             });
                         });
                     },
-                },
-                {
-                    width: "85%",
-                    height: "600px",
-                },
-                {
-                    closed: (event) => {
-                        this.setTableMetaData({
-                            columns: this.selected_products_columns,
-                            options: this.selected_products_options,
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {
+                        parent.setPopperOpen(false);
+
+                        parent.setTableMetaData({
+                            columns: parent.selected_products_columns,
+                            options: parent.selected_products_options,
                         });
 
-                        this.setActiveTab(this.selected_products_options.id);
-                        this.setTabToRefresh(this.selected_products_options.id);
+                        parent.setActiveTab(
+                            parent.selected_products_options.id
+                        );
+                        parent.setTabToRefresh(
+                            parent.selected_products_options.id
+                        );
                     },
-                }
-            );
+                },
+            });
+
+            open();
         },
 
         onCustomerSelected(value) {
@@ -1213,11 +1098,13 @@ export default {
         tradeInPhone() {
             const purchase_id = this.row?.tradein?.PurchaseInvoiceId ?? "";
 
+            const parent = this;
+
             this.setPopperOpen(true);
 
-            this.$modal.show(
-                Purchase,
-                {
+            const { open, close } = useModal({
+                component: Purchase,
+                attrs: {
                     edit_id: purchase_id ? String(purchase_id) : "",
                     options: {
                         id: "purchases",
@@ -1243,7 +1130,7 @@ export default {
                                 (response) => {
                                     let record = response.data.response.record;
 
-                                    this.$set(this.row, "tradein", {
+                                    parent.$set(this.row, "tradein", {
                                         PurchaseInvoiceId: purchase_invoice_id,
                                         purchase: _.cloneDeep(record),
                                     });
@@ -1252,17 +1139,17 @@ export default {
                             );
                     },
                 },
-                {
-                    width: "90%",
-                    height: "90%",
-                }
-            );
+            });
+
+            open();
         },
 
         removeTradeInPhone() {
-            this.$modal.show(
-                Confirm,
-                {
+            const parent = this;
+
+            const { open, close } = useModal({
+                component: Confirm,
+                attrs: {
                     title: "Delete Trade In",
                     text: "Are you sure you want to delete this Trade In?",
                     yes_handler: () => {
@@ -1314,11 +1201,9 @@ export default {
                             });
                     },
                 },
-                {
-                    width: "350px",
-                    height: "auto",
-                }
-            );
+            });
+
+            open();
         },
 
         ...mapActions({

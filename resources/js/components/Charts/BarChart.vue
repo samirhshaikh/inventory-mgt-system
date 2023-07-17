@@ -1,26 +1,47 @@
+<template>
+    <Bar :data="data" :options="options" />
+</template>
+
 <script>
 import { Bar } from "vue-chartjs";
 
-export default {
-    extends: Bar,
+import {
+    Chart as ChartJS,
+    Title,
+    Tooltip,
+    Legend,
+    BarElement,
+    CategoryScale,
+    LinearScale,
+} from "chart.js";
+ChartJS.register(
+    Title,
+    Tooltip,
+    Legend,
+    BarElement,
+    CategoryScale,
+    LinearScale
+);
 
+export default {
     name: "BarChart",
 
     components: { Bar },
 
     props: {
-        chartdata: {
+        data: {
             type: Object,
             default: null,
+            required: true,
         },
         options: {
             type: Object,
-            default: null,
+            default: () => {},
         },
-    },
-
-    mounted() {
-        this.renderChart(this.chartdata, this.options);
+        width: {
+            type: String,
+            default: "w-1/2",
+        },
     },
 };
 </script>

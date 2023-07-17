@@ -1,144 +1,152 @@
 <template>
-    <div
-        class="flex h-full border border-product-color"
-        :class="{
-            'bg-gray-700 text-white': dark_mode,
-        }"
+    <VueFinalModal
+        class="flex justify-center items-center"
+        :content-class="[
+            'advanced_search_modal relative p-4 rounded-lg dark:bg-gray-900',
+            {
+                'bg-gray-700': dark_mode,
+                'bg-white': !dark_mode,
+            },
+        ]"
+        content-transition="vfm-fade"
+        overlay-transition="vfm-fade"
     >
-        <div class="flex-grow flex flex-col justify-between">
-            <div class="p-4 overflow-y-auto text-sm flex-grow">
-                <div
-                    class="flex border-b border-product-color-lighter mb-4 pb-1"
+        <div class="p-0 text-sm">
+            <div
+                class="datatable_header"
+                :class="{
+                    'border-product-color-lighter': dark_mode,
+                    'border-product-color': !dark_mode,
+                }"
+            >
+                <h1
                     :class="{
-                        'border-product-color-lighter': dark_mode,
-                        'border-product-color': !dark_mode,
+                        'text-product-color-lighter': dark_mode,
+                        'text-product-color': !dark_mode,
                     }"
                 >
-                    <h1
-                        class="text-base md:text-xl pt-2 ml-1 w-full"
+                    Advanced Search
+                </h1>
+                <div class="search_bar_container">
+                    <Button
+                        @click.native="$emit('closed')"
+                        icon="times"
+                        split="border-white"
+                        class="bg-red-600"
+                    >
+                        Close
+                    </Button>
+                    <Button
+                        @click.native="searchData"
+                        icon="search"
+                        split="border-white"
+                        class="ml-1"
                         :class="{
-                            'text-product-color-lighter': dark_mode,
-                            'text-product-color': !dark_mode,
+                            'bg-green-600': valid_search,
+                            'bg-gray-600 text-gray-500 cursor-not-allowed':
+                                !valid_search,
                         }"
                     >
-                        Advanced Search
-                    </h1>
+                        Search
+                    </Button>
+                </div>
+            </div>
+
+            <form class="w-full pl-2" autocomplete="off" @submit.prevent>
+                <div class="flex flex-wrap items-start">
                     <div
-                        class="float-right flex justify-end mr-2 text-white w-64"
+                        class="w-full md:w-1/2 form_field_container"
+                        v-for="column in columns"
                     >
-                        <Button
-                            @click.native="$emit('close')"
-                            icon="times"
-                            split="border-white"
-                            class="bg-red-600"
-                        >
-                            Close
-                        </Button>
-                        <Button
-                            @click.native="searchData"
-                            icon="search"
-                            split="border-white"
-                            class="ml-1"
+                        <label
+                            class="form_field_label"
                             :class="{
-                                'bg-green-600': valid_search,
-                                'bg-gray-600 text-gray-500 cursor-not-allowed':
-                                    !valid_search,
+                                'text-gray-700': !dark_mode,
+                                'text-white': dark_mode,
                             }"
                         >
-                            Search
-                        </Button>
+                            {{ column.label }}
+                        </label>
+
+                        <input
+                            type="text"
+                            v-model="column_data[column.key]"
+                            class="generic_input"
+                            :class="column.class"
+                            v-if="column.type == 'string'"
+                            @keyup="updateTimer"
+                            autocomplete="off"
+                        />
+
+                        <input
+                            type="number"
+                            v-model="column_data[column.key]"
+                            class="generic_input"
+                            :class="column.class"
+                            v-if="column.type == 'currency'"
+                            @keyup="updateTimer"
+                            autocomplete="off"
+                        />
+
+                        <CustomDatePicker
+                            :start_date_value="column_data[column.key]"
+                            :column_name="column.key"
+                            @date-selected="dateSelected"
+                            v-if="column.type == 'date'"
+                        ></CustomDatePicker>
+
+                        <v-select
+                            :label="column.label"
+                            :options="column.data"
+                            class="generic_vs_select"
+                            :class="column.class"
+                            @option:selected="updateTimer"
+                            v-model="column_data[column.key]"
+                            v-if="!loading_suppliers && column.type == 'list'"
+                            :filterable="false"
+                        >
+                            <template v-slot:option="option">
+                                <strong>{{ option[column.label] }}</strong>
+                                <p
+                                    v-if="
+                                        option.ContactNo1 || option.ContactNo2
+                                    "
+                                    class="m-0 p-0"
+                                >
+                                    {{
+                                        option.ContactNo1
+                                            ? option.ContactNo1
+                                            : option.ContactNo2
+                                    }}
+                                </p>
+                            </template>
+                        </v-select>
                     </div>
                 </div>
-
-                <form class="w-full pl-2" autocomplete="off" @submit.prevent>
-                    <div class="flex flex-wrap">
-                        <div
-                            class="w-1/2 form_field_container"
-                            v-for="column in columns"
-                        >
-                            <label
-                                class="block form_field_label capitalize"
-                                :class="{
-                                    'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode,
-                                }"
-                            >
-                                {{ column.label }}
-                            </label>
-
-                            <input
-                                type="text"
-                                v-model="column_data[column.key]"
-                                class="generic_input"
-                                :class="column.class"
-                                v-if="column.type == 'string'"
-                                @keyup="updateTimer"
-                                autocomplete="off"
-                            />
-
-                            <input
-                                type="number"
-                                v-model="column_data[column.key]"
-                                class="generic_input"
-                                :class="column.class"
-                                v-if="column.type == 'currency'"
-                                @keyup="updateTimer"
-                                autocomplete="off"
-                            />
-
-                            <CustomDatePicker
-                                :start_date_value="column_data[column.key]"
-                                @dateSelected="
-                                    dateSelected(column.key, ...arguments)
-                                "
-                                @clearDate="clearDate(column.key)"
-                                v-if="column.type == 'date'"
-                            ></CustomDatePicker>
-
-                            <v-select
-                                :label="column.label"
-                                :options="column.data"
-                                class="generic_vs_select"
-                                :class="column.class"
-                                @input="updateTimer"
-                                v-model="column_data[column.key]"
-                                v-if="
-                                    !loading_suppliers && column.type == 'list'
-                                "
-                                :filterable="false"
-                            >
-                                <template v-slot:option="option">
-                                    <strong>{{ option[column.label] }}</strong>
-                                    <p
-                                        v-if="
-                                            option.ContactNo1 ||
-                                            option.ContactNo2
-                                        "
-                                        class="m-0 p-0"
-                                    >
-                                        {{
-                                            option.ContactNo1
-                                                ? option.ContactNo1
-                                                : option.ContactNo2
-                                        }}
-                                    </p>
-                                </template>
-                            </v-select>
-                        </div>
-                    </div>
-                </form>
-            </div>
+            </form>
         </div>
-    </div>
+    </VueFinalModal>
 </template>
+
+<style>
+.advanced_search_modal {
+    width: 750px;
+    height: auto;
+}
+</style>
 
 <script>
 import { mapActions, mapState } from "vuex";
+import { VueFinalModal } from "vue-final-modal";
 import moment from "moment";
 import { list_controller } from "../../Helpers/list_controller";
 
 export default {
     name: "AdvancedSearch",
+
+    components: {
+        VueFinalModal,
+    },
 
     props: {
         columns: {
@@ -191,7 +199,7 @@ export default {
     },
 
     methods: {
-        dateSelected(key, date) {
+        dateSelected(date, key) {
             this.column_data[key] = date;
 
             this.updateTimer();
@@ -209,9 +217,12 @@ export default {
 
         searchData() {
             if (this.valid_search) {
-                this.triggerAdvancedSearch(this.column_data);
+                const handler = this.triggerAdvancedSearch;
+                if (typeof handler === "function") {
+                    this.triggerAdvancedSearch(this.column_data);
 
-                this.$modal.hide(this.$parent.name);
+                    this.$emit("closed");
+                }
             }
         },
     },

@@ -20,8 +20,8 @@
 
                 <div>
                     <div v-for="link in links">
-                        <inertia-link
-                            :href="route(link.route)"
+                        <a
+                            :href="toRoute(link.route)"
                             class="px-4 py-2 block text-sm no-underline"
                             :class="linkNavigationClass(link.route)"
                             :key="link.title"
@@ -39,7 +39,7 @@
                                     {{ link.title }}
                                 </div>
                             </div>
-                        </inertia-link>
+                        </a>
 
                         <a
                             class="px-4 py-2 block text-sm no-underline cursor-pointer hover:bg-gray-200"
@@ -100,6 +100,10 @@
 import { mapActions, mapState } from "vuex";
 import AppSettings from "../Misc/AppSettings.vue";
 import StoreSettings from "../Misc/StoreSettings.vue";
+import { useModal } from "vue-final-modal";
+import { usePage } from "@inertiajs/vue3";
+
+const page = usePage();
 
 export default {
     data() {
@@ -175,21 +179,21 @@ export default {
                         link_type: "route",
                         route: "users",
                         icon: ["fas", "user"],
-                        visible: this.$page.user_details.IsAdmin,
+                        visible: page.props.user_details.IsAdmin,
                     },
                     {
                         title: "Store",
                         link_type: "javascript_link",
                         link_function: "storeSettings",
                         icon: ["fas", "store"],
-                        visible: this.$page.user_details.IsAdmin,
+                        visible: page.props.user_details.IsAdmin,
                     },
                     {
                         title: "Settings",
                         link_type: "javascript_link",
                         link_function: "appSettings",
                         icon: ["fas", "cog"],
-                        visible: this.$page.user_details.IsAdmin,
+                        visible: page.props.user_details.IsAdmin,
                     },
                 ],
             },
@@ -226,6 +230,10 @@ export default {
             return flag;
         },
 
+        toRoute(link) {
+            return this.$route(link);
+        },
+
         linkNavigationClass(link_route) {
             let cssClasses = [];
 
@@ -256,29 +264,44 @@ export default {
         },
 
         appSettings() {
+            const parent = this;
+
             this.setPopperOpen(true);
 
-            this.$modal.show(
-                AppSettings,
-                {},
-                {
-                    width: "50%",
-                    height: "80%",
-                }
-            );
+            const { open, close } = useModal({
+                component: AppSettings,
+                attrs: {
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {
+                        parent.setPopperOpen(false);
+                    },
+                },
+            });
+
+            open();
         },
 
         storeSettings() {
+            const parent = this;
+
             this.setPopperOpen(true);
 
-            this.$modal.show(
-                StoreSettings,
-                {},
-                {
-                    width: "50%",
-                    height: "80%",
-                }
-            );
+            const { open, close } = useModal({
+                component: StoreSettings,
+                attrs: {
+                    heading: "test data",
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {
+                        parent.setPopperOpen(false);
+                    },
+                },
+            });
+
+            open();
         },
 
         ...mapActions({

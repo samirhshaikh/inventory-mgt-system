@@ -5,7 +5,7 @@
             class="text-white bg-green-600 mr-2"
             :class="{
                 hidden:
-                    !$page.user_details.IsAdmin ||
+                    !page.user_details.IsAdmin ||
                     row['row_id'] == current_row_id ||
                     row['Returned'],
             }"
@@ -17,7 +17,7 @@
             class="text-white bg-red-400 mr-2"
             :class="{
                 hidden:
-                    !$page.user_details.IsAdmin ||
+                    !page.user_details.IsAdmin ||
                     row['row_id'] == current_row_id,
             }"
             split="border-white"
@@ -29,7 +29,7 @@
             class="text-white bg-red-400"
             :class="{
                 hidden:
-                    !$page.user_details.IsAdmin ||
+                    !page.user_details.IsAdmin ||
                     !row.hasOwnProperty('Id') ||
                     row['Returned'],
             }"
@@ -52,6 +52,10 @@ import Confirm from "../../../components/Confirm.vue";
 import ReturnItem from "../../../DBObjects/ReturnItem";
 import { datatable_cell } from "../datatable_cell";
 import { mapActions } from "vuex";
+import { usePage } from "@inertiajs/vue3";
+import { useModal } from "vue-final-modal";
+
+const page = usePage();
 
 export default {
     mixins: [datatable_cell],
@@ -66,15 +70,23 @@ export default {
         },
     },
 
+    computed: {
+        page() {
+            return page.props;
+        },
+    },
+
     methods: {
         edit() {
             this.$emit("editRecord", this.row);
         },
 
         removeRecord() {
-            this.$modal.show(
-                Confirm,
-                {
+            const parent = this;
+
+            const { open, close } = useModal({
+                component: Confirm,
+                attrs: {
                     title: "Delete " + this.options.record_name,
                     text:
                         "Are you sure you want to delete this " +
@@ -83,30 +95,34 @@ export default {
                     yes_handler: () => {
                         this.$emit("removeRecord", this.row["row_id"]);
                     },
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {},
                 },
-                {
-                    width: "350px",
-                    height: "auto",
-                }
-            );
+            });
+
+            open();
         },
 
         returnItem() {
-            this.$modal.show(
-                ReturnItem,
-                {
+            const { open, close } = useModal({
+                component: ReturnItem,
+                attrs: {
                     SalesInvoiceId: this.parent_row["Id"],
                     SalesInvoiceNo: this.parent_row["InvoiceNo"],
                     IMEI: this.row["IMEI"],
                     refresh: (IMEI) => {
                         this.$emit("returnItem", IMEI);
                     },
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {},
                 },
-                {
-                    width: "500px",
-                    height: "500px",
-                }
-            );
+            });
+
+            open();
         },
 
         ...mapActions({

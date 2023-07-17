@@ -10,90 +10,121 @@
 .badge {font-size: 9px; bottom: 1px; right: 1px;}
 
 .generic_input, .generic_select, .date_input {
-    @apply .appearance-none
-    .bg-gray-200
-    .text-gray-700
-    .border
-    .border-gray-400
-    .py-2
-    .px-2
-    .leading-tight
+    @apply appearance-none
+    bg-gray-200
+    text-gray-700
+    border
+    border-gray-400
+    py-2
+    px-2
+    leading-tight
 }
 .generic_input, .generic_select {
-    @apply .rounded
+    @apply rounded
 }
 .date_input {
-    @apply .rounded-l
+    @apply rounded-l
 }
 .generic_input:hover, .generic_select:hover, .date_input:hover {
 }
 .generic_input:focus, .generic_select:focus, .date_input:focus {
-    @apply .outline-none
-    .bg-white
-    .border-gray-500
+    @apply outline-none
+    bg-white
+    border-gray-500
 }
 
 button:active {
-    @apply .outline-none
+    @apply outline-none
 }
 button:focus {
-    @apply .outline-none
+    @apply outline-none
 }
 
 .datatable_header {
-    @apply .border-b
-    .mb-3
-    .pb-1
-    .z-20
-    .sticky
+    @apply flex
+    justify-between
+    border-b
+    mb-3
+    pb-1
+    z-20
+    sticky
 }
 .datatable_header {
     top: 0px;
+}
+.datatable_header h1, .datatable_header h2 {
+    @apply pt-1
+    ml-2
+    text-product-color
+    text-2xl
+    tracking-tight
+    w-full
+}
+.datatable_header h2 {
+    @apply text-xl
+}
+.datatable_header .search_bar_container {
+    @apply mr-2
+    ml-5
+    flex
+    flex-row
+    self-end
+    text-white
 }
 .table_header {
     top: 35px;
 }
 
 .form_field_container {
-    @apply .mb-4
+    @apply mb-4
+    flex
+    flex-row
+    flex-wrap
+    px-2
 }
 .form_field_label {
-    @apply .uppercase
-    .tracking-wide
-    .text-sm
-    .font-semibold
-    .mb-1
+    @apply block
+    uppercase
+    w-full
+    tracking-wide
+    text-gray-700
+    text-sm
+    font-semibold
 }
 .form_value_label {
-    @apply .text-xs
-    .mb-2
+    @apply block
+    uppercase
+    w-full
+    text-xs
+    mb-2
 }
 .form_field_message {
-    @apply .text-red-500
-    .text-xs
-    .italic
-    .mt-2
-    .mb-0
+    @apply text-red-500
+    w-full
+    text-xs
+    italic
+    mt-2
+    mb-0
 }
 
 @media (min-width: 768px){
     .form_field_label {
-        @apply .text-base
+        @apply text-base
     }
     .form_value_label {
-        @apply .text-sm
+        @apply text-sm
     }
 }
 
 /*! purgecss start ignore */
 .generic_vs_select .vs__search::placeholder, .generic_vs_select .vs__dropdown-toggle, .generic_vs_select .vs__dropdown-menu {
-    @apply .bg-gray-200 .text-gray-700 .border .border-gray-400 .text-sm
+    @apply bg-gray-200 text-gray-700 border border-gray-400 text-sm
 }
 
 .generic_vs_select .vs__clear,
 .generic_vs_select .vs__open-indicator {
     @apply
-    .bg-gray-200
+    bg-gray-200
 }
 
 .required_field,
@@ -101,7 +132,7 @@ button:focus {
 .required_field .vs__search::placeholder,
 .required_field .vs__dropdown-toggle,
 .required_field .vs__dropdown-menu {
-    @apply .border-red-300
+    @apply border-red-300
 }
 
 .vs__search, .vs__search:focus {

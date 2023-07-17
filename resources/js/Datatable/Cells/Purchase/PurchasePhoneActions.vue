@@ -5,7 +5,7 @@
             class="text-white bg-green-600"
             :class="{
                 hidden:
-                    !$page.user_details.IsAdmin ||
+                    !page.user_details.IsAdmin ||
                     row.Status == this.phonestock.STATUS_SOLD,
             }"
         >
@@ -19,17 +19,29 @@ import Sale from "../../../DBObjects/Sale.vue";
 import { mapActions } from "vuex";
 import { datatable_cell } from "../datatable_cell";
 import { common_functions } from "../../../Helpers/common_functions";
+import { usePage } from "@inertiajs/vue3";
+import { useModal } from "vue-final-modal";
+
+const page = usePage();
 
 export default {
     mixins: [datatable_cell, common_functions],
 
+    computed: {
+        page() {
+            return page.props;
+        },
+    },
+
     methods: {
         sellItem() {
+            const parent = this;
+
             this.setPopperOpen(true);
 
-            this.$modal.show(
-                Sale,
-                {
+            const { open, close } = useModal({
+                component: Sale,
+                attrs: {
                     edit_id: "",
                     options: {
                         id: "sales",
@@ -37,18 +49,20 @@ export default {
                     },
                     phones: [this.row.Id],
                     submitRecordSaved: (invoice_id) => {
-                        this.setActiveTab(this.options.id);
-                        this.setTabToRefresh(this.options.id);
+                        parent.setActiveTab(this.options.id);
+                        parent.setTabToRefresh(this.options.id);
 
                         //Open Print Invoice dialog
-                        this.viewSalesInvoice(invoice_id);
+                        parent.viewSalesInvoice(invoice_id);
                     },
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {},
                 },
-                {
-                    width: "90%",
-                    height: "80%",
-                }
-            );
+            });
+
+            open();
         },
 
         ...mapActions({

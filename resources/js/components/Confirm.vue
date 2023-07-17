@@ -1,7 +1,18 @@
 <template>
-    <div class="p-2">
+    <VueFinalModal
+        class="flex justify-center items-center"
+        :content-class="[
+            'confirm_modal relative p-4 rounded-lg dark:bg-gray-900',
+            {
+                'bg-gray-700': dark_mode,
+                'bg-white': !dark_mode,
+            },
+        ]"
+        content-transition="vfm-fade"
+        overlay-transition="vfm-fade"
+    >
         <h2
-            class="border-b border-gray-400 text-gray-700 text-base text-center w-full pb-2 capitalize"
+            class="border-b border-gray-400 text-gray-700 text-base text-center w-full pb-0 capitalize"
         >
             {{ title }}
         </h2>
@@ -30,12 +41,25 @@
                 {{ yes_button.title }}
             </Button>
         </div>
-    </div>
+    </VueFinalModal>
 </template>
 
+<style>
+.confirm_modal {
+    width: 350px;
+    height: auto;
+}
+</style>
+
 <script>
+import { VueFinalModal } from "vue-final-modal";
+
 export default {
     name: "Confirm",
+
+    components: {
+        VueFinalModal,
+    },
 
     props: {
         title: {
@@ -70,7 +94,7 @@ export default {
 
     methods: {
         close() {
-            this.$modal.hide(this.$parent.name);
+            this.$emit("closed");
         },
 
         click(event, source = "click") {
@@ -78,7 +102,7 @@ export default {
             if (typeof handler === "function") {
                 handler(event, { source });
 
-                this.$modal.hide(this.$parent.name);
+                this.$emit("closed");
             }
         },
     },

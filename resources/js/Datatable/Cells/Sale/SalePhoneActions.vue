@@ -1,10 +1,10 @@
 <template>
-    <div class="flex">
+    <div class="flex items-center">
         <Button
             @click.native="returnItem"
             class="text-white bg-red-400 mr-2"
             :class="{
-                hidden: !$page.user_details.IsAdmin || row['Returned'] == 1,
+                hidden: !page.user_details.IsAdmin || row['Returned'] == 1,
             }"
         >
             Return
@@ -21,7 +21,7 @@
             class="text-white bg-green-600 mr-2"
             :class="{
                 hidden:
-                    !$page.user_details.IsAdmin ||
+                    !page.user_details.IsAdmin ||
                     !parent_row.hasOwnProperty('tradein'),
             }"
         >
@@ -36,6 +36,10 @@ import { datatable_cell } from "../datatable_cell";
 import { notifications } from "../../../Helpers/notifications";
 import { mapActions } from "vuex";
 import Purchase from "../../../DBObjects/Purchase";
+import { usePage } from "@inertiajs/vue3";
+import { useModal } from "vue-final-modal";
+
+const page = usePage();
 
 export default {
     mixins: [datatable_cell, notifications],
@@ -46,31 +50,41 @@ export default {
         },
     },
 
+    computed: {
+        page() {
+            return page.props;
+        },
+    },
+
     methods: {
         returnItem() {
-            this.$modal.show(
-                ReturnItem,
-                {
+            const { open, close } = useModal({
+                component: ReturnItem,
+                attrs: {
                     SalesInvoiceId: this.parent_row["Id"],
                     SalesInvoiceNo: this.parent_row["InvoiceNo"],
                     IMEI: this.row["IMEI"],
                     refresh: (IMEI) => {
                         this.$emit("returnItem", IMEI);
                     },
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {},
                 },
-                {
-                    width: "500px",
-                    height: "500px",
-                }
-            );
+            });
+
+            open();
         },
 
         tradeInDetails() {
+            const parent = this;
+
             this.setPopperOpen(true);
 
-            this.$modal.show(
-                Purchase,
-                {
+            const { open, close } = useModal({
+                component: Purchase,
+                attrs: {
                     edit_id: String(this.parent_row.tradein.PurchaseInvoiceId),
                     options: {
                         id: "purchases",
@@ -84,13 +98,18 @@ export default {
                             direction: "desc",
                             enabled: false,
                         },
+                        tradeIn: this.row,
+                    },
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {
+                        parent.setPopperOpen(false);
                     },
                 },
-                {
-                    width: "90%",
-                    height: "90%",
-                }
-            );
+            });
+
+            open();
         },
 
         ...mapActions({

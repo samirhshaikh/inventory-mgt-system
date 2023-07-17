@@ -1,16 +1,29 @@
 <template>
-    <div
-        class="flex h-full border border-product-color"
-        :class="{
-            'bg-gray-800 text-white': dark_mode,
-        }"
+    <VueFinalModal
+        class="flex justify-center items-center"
+        :content-class="[
+            'debug_panel_modal relative p-4 rounded-lg dark:bg-gray-900',
+            {
+                'bg-gray-700': dark_mode,
+                'bg-white': !dark_mode,
+            },
+        ]"
+        content-transition="vfm-fade"
+        overlay-transition="vfm-fade"
     >
-        <div
-            class="w-1/5 bg-gray-900 text-white h-full flex flex-col justify-between"
-        >
-            <div class="h-10 p-4">
+        <div class="p-0 overflow-y-auto text-sm">
+            <div
+                class="datatable_header"
+                :class="{
+                    'border-product-color-lighter': dark_mode,
+                    'border-product-color': !dark_mode,
+                }"
+            >
                 <h1
-                    class="text-product-color text-product-color-lighter mb-4 pb-1 text-xl tracking-tight"
+                    :class="{
+                        'text-product-color-lighter': dark_mode,
+                        'text-product-color': !dark_mode,
+                    }"
                 >
                     Quick Actions
                 </h1>
@@ -20,8 +33,13 @@
         <div
             class="w-4/5 flex flex-col flex-grow-0 justify-between overflow-auto relative"
         >
-            <PopperTabCollection>
-                <tab name="Errors" v-if="errors.list.length" id="errors">
+            <div class="tabs">
+                <div
+                    class="tab tab_lg tab-bordered"
+                    name="Errors"
+                    v-if="errors.list.length"
+                    id="errors"
+                >
                     <div
                         class="mb-6 rounded border border-red-700"
                         v-for="(item, key) in errors.list"
@@ -34,7 +52,7 @@
                             {{ item.error }}
                         </div>
                     </div>
-                </tab>
+                </div>
 
                 <tab name="Framework" id="framework">
                     <p class="bg-gray-600 text-white rounded py-3 px-3">
@@ -91,18 +109,26 @@
                     </div>
                     <div v-else>No Data</div>
                 </tab>
-            </PopperTabCollection>
+            </div>
         </div>
-    </div>
+    </VueFinalModal>
 </template>
+
+<style>
+.debug_panel_modal {
+    width: 80%;
+    height: 80%;
+}
+</style>
 
 <script>
 import { mapState } from "vuex";
-import { moment } from "moment";
+import { VueFinalModal } from "vue-final-modal";
 import VueJsonPretty from "vue-json-pretty";
 
 export default {
     components: {
+        VueFinalModal,
         VueJsonPretty,
     },
 

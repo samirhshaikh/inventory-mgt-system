@@ -2,26 +2,24 @@
     <Layout title="PhoneStock">
         <div class="px-4 py-4">
             <div
-                class="flex items-stretch datatable_header"
+                class="datatable_header"
                 :class="{
                     'border-product-color-lighter bg-white': !dark_mode,
                     'border-product-color bg-gray-800': dark_mode,
                 }"
             >
-                <h1
-                    class="pt-1 ml-2 text-product-color text-2xl tracking-tight w-full"
-                >
+                <h1>
                     <FA :icon="['fas', 'mobile-alt']" class="mr-1"></FA>
                     Phone Stock
                 </h1>
-                <div class="mr-2 flex flex-row">
+                <div class="search_bar_container">
                     <SearchBar
                         placeholder_text="Phone Stock"
                         v-if="options.enable_search"
                         class="mr-1"
-                        @searchData="searchData"
-                        @clearSearch="clearSearch"
-                        @triggerAdvancedSearch="triggerAdvancedSearch"
+                        @search-data="searchData"
+                        @clear-search="clearSearch"
+                        @advanced-search-data-modified="triggerAdvancedSearch"
                         :columns="search_columns"
                     ></SearchBar>
                     <Button
@@ -37,7 +35,7 @@
 
             <Pagination
                 :total_records="total_records"
-                @changePage="changePage"
+                @change-page="changePage"
                 class="mb-3 w-full inline-flex"
                 :start_page_no="page_no"
                 v-show="total_records"
@@ -47,7 +45,7 @@
                 :columns="search_columns"
                 :search_data="advanced_search_data"
                 v-if="search_type == 'advanced'"
-                @advancedSearchDataModified="triggerAdvancedSearch"
+                @advanced-search-data-modified="triggerAdvancedSearch"
             ></SearchParameters>
 
             <PhoneStockDatatable
@@ -58,8 +56,8 @@
                 :search_text="search_text"
                 :advanced_search_data="advanced_search_data"
                 :update_search="update_search"
-                @changeTotalReports="changeTotalReports"
-                @changePageNo="changePage"
+                @change-total-reports="changeTotalReports"
+                @change-page-no="changePage"
             ></PhoneStockDatatable>
         </div>
     </Layout>
@@ -67,21 +65,22 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import lazyLoadComponent from "@/Helpers/lazyLoadComponent.js";
 import loading from "@/Misc/Loading.vue";
 import PhoneStock from "../DBObjects/Purchase.vue";
 import { list_controller } from "../Helpers/list_controller";
 import { datatable_common } from "../Helpers/datatable_common";
 import SearchParameters from "../components/Search/SearchParameters";
+import { defineAsyncComponent } from "vue";
+import { useModal } from "vue-final-modal";
 
 export default {
     mixins: [list_controller, datatable_common],
 
     components: {
         SearchParameters,
-        PhoneStockDatatable: lazyLoadComponent({
-            componentFactory: () => import("@/Datatable/Datatable"),
-            loading: loading,
+        PhoneStockDatatable: defineAsyncComponent({
+            loader: () => import("@/Datatable/Datatable"),
+            loadingComponent: loading,
         }),
     },
 
@@ -195,18 +194,20 @@ export default {
         newRecord() {
             this.setPopperOpen(true);
 
-            this.$modal.show(
-                PhoneStock,
-                {
+            const { open, close } = useModal({
+                component: PhoneStock,
+                attrs: {
                     edit_id: "",
                     options: this.options,
                     columns: this.columns,
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {},
                 },
-                {
-                    width: "90%",
-                    height: "80%",
-                }
-            );
+            });
+
+            open();
         },
 
         ...mapActions({

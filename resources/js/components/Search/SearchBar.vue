@@ -30,7 +30,7 @@
                 class="ml-1 text-green-600"
                 @click="advancedSearch"
                 title="Advanced Search"
-                v-if="advanced_search"
+                v-if="enable_advanced_search"
             >
                 <FA :icon="['fas', 'magic']" class="ml-1"></FA>
             </button>
@@ -47,25 +47,28 @@
 
 <style>
 .search_bar {
-    @apply .bg-gray-200 .text-gray-700 .border .border-gray-400 .rounded .py-1 .px-2 .text-sm;
+    @apply bg-gray-200 text-gray-700 border border-gray-400 rounded py-1 px-2 text-sm;
 }
 .search_input {
-    @apply .appearance-none
-    .bg-transparent;
+    @apply appearance-none
+    bg-transparent
+    border-0
+    p-0;
 }
 .search_input {
     line-height: 18px;
 }
 .search_input:focus,
 .search_input:focus {
-    @apply .outline-none
-    .bg-transparent;
+    @apply outline-none
+    bg-transparent;
 }
 </style>
 
 <script>
 import { mapActions, mapState } from "vuex";
 import AdvancedSearch from "./AdvancedSearch";
+import { useModal } from "vue-final-modal";
 
 export default {
     name: "SearchBar",
@@ -79,7 +82,7 @@ export default {
             type: Array,
             default: () => [],
         },
-        advanced_search: {
+        enable_advanced_search: {
             type: Boolean,
             default: true,
         },
@@ -162,23 +165,29 @@ export default {
         },
 
         advancedSearch() {
+            const parent = this;
+
             this.setPopperOpen(true);
 
-            this.$modal.show(
-                AdvancedSearch,
-                {
+            const { open, close } = useModal({
+                component: AdvancedSearch,
+                attrs: {
                     columns: this.columns,
                     triggerAdvancedSearch: (newValue) => {
-                        this.$emit("triggerAdvancedSearch", newValue);
+                        this.$emit("advancedSearchDataModified", newValue);
                         this.search_bar_open = false;
                         this.search_text = "";
                     },
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {
+                        parent.setPopperOpen(false);
+                    },
                 },
-                {
-                    width: "750px",
-                    height: "600px",
-                }
-            );
+            });
+
+            open();
         },
 
         ...mapActions({

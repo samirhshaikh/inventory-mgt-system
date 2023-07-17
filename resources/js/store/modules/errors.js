@@ -4,9 +4,9 @@
 
 import moment from "moment";
 
-const state = {
+const state = () => ({
     list: [],
-};
+});
 
 const getters = {
     list: (state) => {

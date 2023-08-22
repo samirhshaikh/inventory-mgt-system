@@ -103,7 +103,6 @@
                                 Make
                             </label>
                             <v-select
-                                :value="row['MakeId']"
                                 label="Name"
                                 v-model="row['MakeId']"
                                 :reduce="(manufacturer) => manufacturer.Id"

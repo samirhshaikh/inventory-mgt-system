@@ -2,7 +2,7 @@
     <VueFinalModal
         class="flex justify-center items-center"
         :content-class="[
-            'object_type_name_modal relative p-4 rounded-lg dark:bg-gray-900',
+            'object_type_name_modal relative p-4 rounded-lg',
             {
                 'bg-gray-700': dark_mode,
                 'bg-white': !dark_mode,

@@ -1,5 +1,7 @@
-1. Done: Focus on search on list page
-2. Done: Focus on first field in add/edit page
+1. Custom PDF Footer
+2. Email invoice to customer. Custom from address.
+3. Email address in customer details.
 4. Done. Remove Sell action from Purchase details line items (It is not working as well)
-5. Done: Sales > Customer > Need mobile number search. Display Name and Mobile Number. Update button to update customer details. Will open a popup just like New.
-6. Done. Sales > Trade In Phone. Save it in purchase and keep a link with Sales.
+5. Scenario. Customer comes to trade in a phone bought from phone nations. Throwing error that Duplicate IMEI. Bottom line is that same IMEI can come again for purchase. Remove that IMEI check.
+6. IMEI validation
+7. Barcode scan for IMEI

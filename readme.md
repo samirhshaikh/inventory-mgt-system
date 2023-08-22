@@ -2,13 +2,6 @@
 
 ---
 
-**Table of Contents**
-
-* [Tech Stack Used](#tech_stack_used)
-
----
-
-<a id="tech_stack_used"></a>
 ###Tech Stack Used
 
 Purpose of development of this application is to showcase my knowledge of following technologies:
@@ -43,6 +36,12 @@ Please run the following commands in api directory
 ### Running Application
 
 > npm run hot
+> 
+> php artisan route:clear
+>
+> php artisan ziggy:generate
+> 
+> php artisan route:cache
 > 
 > php artisan serve
 

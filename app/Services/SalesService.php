@@ -54,7 +54,7 @@ class SalesService
 
         $records = new Sales();
 
-        $records = $records->leftjoin(
+        $records = $records->leftJoin(
             "Customer_Sales",
             "Customer_Sales.Id",
             "=",
@@ -141,7 +141,7 @@ class SalesService
                     $this->searchDataPresent($search_data))
             ) {
                 $records = $records
-                    ->leftjoin(
+                    ->leftJoin(
                         "Customer_Sales",
                         "Customer_Sales.Id",
                         "=",

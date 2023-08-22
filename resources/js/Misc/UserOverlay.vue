@@ -2,7 +2,7 @@
     <VueFinalModal
         class="flex justify-center items-center text-sm"
         :content-class="[
-            'user_settings_modal relative p-4 rounded-lg dark:bg-gray-900',
+            'user_settings_modal relative p-4 rounded-lg bg-gray-900',
             {
                 'bg-gray-700': dark_mode,
                 'bg-white': !dark_mode,
@@ -31,7 +31,7 @@
                             icon="sign-out-alt"
                             split="border-gray-900"
                             class="mt-2 bg-red-600"
-                            @click.native="change_route(route('doLogout'))"
+                            @click.native="change_route($route('doLogout'))"
                             >Logout</Button
                         >
                     </div>
@@ -43,7 +43,7 @@
             </div>
 
             <div
-                class="grow flex flex-col p-4 overflow-y-auto h-full"
+                class="grow flex flex-col p-4 h-full"
                 :class="{
                     'text-white': dark_mode,
                     'text-black': !dark_mode,
@@ -73,7 +73,7 @@
                     <span class="mr-2">Page Size:</span>
 
                     <v-select
-                        :value="page_size"
+                        v-model="page_size"
                         @option:selected="setPagesize"
                         :options="page_sizes"
                         label="Code"

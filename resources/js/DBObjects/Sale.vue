@@ -2,7 +2,7 @@
     <VueFinalModal
         class="flex justify-center items-center"
         :content-class="[
-            'sale_modal relative p-4 rounded-lg dark:bg-gray-900',
+            'sale_modal relative p-4 rounded-lg',
             {
                 'bg-gray-700': dark_mode,
                 'bg-white': !dark_mode,
@@ -1087,9 +1087,9 @@ export default {
         customerSalesLoaded() {
             if (!this.edit_id && !this.customer_sales_loaded) {
                 this.$nextTick(() => {
-                    this.$refs.customer_sales_picker.$refs.customer_id.$el
-                        .querySelector("input")
-                        .focus();
+                    // this.$refs.customer_sales_picker.$refs.customer_id.$el
+                    //     .querySelector("input")
+                    //     .focus();
                     this.customer_sales_loaded = true;
                 });
             }

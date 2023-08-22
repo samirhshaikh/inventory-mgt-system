@@ -236,7 +236,7 @@ export default {
                 route().current(link_route)
             ) {
                 if (this.dark_mode) {
-                    cssClasses.push("text-product-color-ligher");
+                    cssClasses.push("text-product-color-lighter");
                     cssClasses.push("bg-gray-800");
                 } else {
                     cssClasses.push("text-product-color");

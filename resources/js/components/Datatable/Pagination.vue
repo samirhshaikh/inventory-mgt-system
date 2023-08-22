@@ -73,6 +73,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 const default_labels = {
     first: "First",
     last: "Last",
@@ -85,10 +87,6 @@ export default {
         total_records: {
             type: Number,
             default: 0,
-        },
-        page_size: {
-            type: Number,
-            default: 10,
         },
         labels: {
             type: Object,
@@ -160,6 +158,10 @@ export default {
 
             return no_of_pages;
         },
+
+        ...mapState({
+            page_size: (state) => state.framework.page_size,
+        }),
     },
 
     methods: {

@@ -4,10 +4,11 @@ namespace App\Models;
 
 use App\Traits\CompositeKeysTrait;
 use App\Transformers\ObjectTypeNameTransformer;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 abstract class ObjectTypeName extends BaseModel
 {
-    use CompositeKeysTrait;
+    use HasFactory, CompositeKeysTrait;
 
     protected $connection = "mysql";
     protected $table = "";

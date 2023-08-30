@@ -4,18 +4,18 @@ namespace Tests\Traits;
 trait AuthenticationToken
 {
     /**
-     * @param $user mixed
-     * @return mixed
+     * @param $user
+     * @return string
      */
-    public function authenticate($user)
+    public function authenticate($user): string
     {
-        $response = $this->json('POST', 'doLogin', [
-            'username' => $user['username'],
-            'password' => 'password'
+        $response = $this->postJson("doLogin", [
+            "username" => $user["username"],
+            "password" => "password",
         ]);
 
         $responseData = json_decode($response->getContent(), true);
 
-        return $responseData['api_token'] ?? '';
+        return $responseData["api_token"] ?? "";
     }
 }

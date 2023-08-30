@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class LoginTest extends TestCase
 {
-    protected $user;
+    protected User $user;
 
     protected function setUp(): void
     {
@@ -21,46 +21,34 @@ class LoginTest extends TestCase
     {
         parent::tearDown();
 
-        User::where('username', $this->user['username'])->delete();
+        User::where("username", $this->user["username"])->delete();
     }
 
     /** @test **/
-    public function loginTestFail()
+    public function test_login_fail()
     {
         //Failure
-        $this
-            ->json('POST', 'doLogin')
+        $this->postJson("doLogin")
             ->assertStatus(JsonResponse::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonStructure([
-                'errors'
-            ])
-        ;
+            ->assertJsonStructure(["errors"]);
 
         //Failure
-        $this
-            ->json('POST', 'doLogin', [
-                'username' => $this->user['username'],
-                'password' => 'test123'
-            ])
+        $this->postJson("doLogin", [
+            "username" => $this->user["username"],
+            "password" => "test123",
+        ])
             ->assertStatus(JsonResponse::HTTP_UNAUTHORIZED)
-            ->assertJsonStructure([
-                'error'
-            ])
-        ;
+            ->assertJsonStructure(["error"]);
     }
 
     /** @test **/
-    public function loginTestValidationSuccess()
+    public function test_valid_login()
     {
-        $this
-            ->json('POST', 'doLogin', [
-                'username' => $this->user['username'],
-                'password' => 'password'
-            ])
+        $this->postJson("doLogin", [
+            "username" => $this->user["username"],
+            "password" => "password",
+        ])
             ->assertStatus(JsonResponse::HTTP_OK)
-            ->assertJsonStructure([
-                'api_token'
-            ])
-        ;
+            ->assertJsonStructure(["api_token"]);
     }
 }

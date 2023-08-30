@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Models\User;
 use Tests\TestCase;
@@ -11,7 +11,7 @@ class UserTest extends TestCase
 {
     use AuthenticationToken;
 
-    protected $user;
+    protected User $user;
 
     protected function setUp(): void
     {

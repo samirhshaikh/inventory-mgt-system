@@ -17,3 +17,7 @@ yarn-error.log
 public/css
 public/js
 /phpunit.phar
+composer.lock
+phpunit.xml.bak
+public/js/app.js
+public/mix-manifest.json

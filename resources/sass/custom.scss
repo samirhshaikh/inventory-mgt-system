@@ -1,7 +1,9 @@
 /** Custom CSS */
-
+html {
+    @apply font-sans
+}
 .login_bg {
-    background: url(/images/manuel-boxler--CZERTBlepA-unsplash.jpg) no-repeat center;
+    @apply bg-gradient-to-b from-sky-400 to-sky-200;
 }
 #login_box_container {opacity: 0.93;}
 

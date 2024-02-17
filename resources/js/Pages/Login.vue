@@ -15,7 +15,7 @@
                 >
                     {{ error_message }}
                 </div>
-                <div class="mb-4 mt-6">
+                <div class="mt-6">
                     <label
                         class="block text-gray-700 text-sm font-bold mb-1"
                         for="username"
@@ -32,14 +32,14 @@
                         v-model.trim="username"
                     />
                 </div>
-                <div class="mb-6">
+                <div class="mt-4">
                     <label
                         class="block text-gray-700 text-sm font-bold mb-1"
                         for="password"
                         >Password</label
                     >
                     <input
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         :class="{
                             'border-red-500':
                                 invalid_fields.indexOf('password') >= 0,
@@ -49,7 +49,7 @@
                         v-model.trim="password"
                     />
                 </div>
-                <div class="flex items-center justify-between">
+                <div class="mt-4 flex items-center justify-between">
                     <button
                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         type="button"
@@ -58,11 +58,11 @@
                         <FA :icon="['fa', 'spinner']" v-if="loading"></FA>
                         Sign In
                     </button>
-                    <a
-                        class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-                        href="#"
-                        >Forgot Password?</a
-                    >
+                    <!--                    <a-->
+                    <!--                        class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"-->
+                    <!--                        href="#"-->
+                    <!--                        >Forgot Password?</a-->
+                    <!--                    >-->
                 </div>
 
                 <p class="text-center text-gray-500 text-xs pt-6">

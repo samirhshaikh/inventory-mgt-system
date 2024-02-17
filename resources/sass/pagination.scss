@@ -1,4 +1,3 @@
-
 .pagination {
     @apply border
     border-gray-400
@@ -6,36 +5,32 @@
 }
 .pagination .page-item {
     @apply border-r
-    border-gray-400;
+    border-gray-400
+    h-full
+    text-product-color;
 }
-.pagination .page-item:last-child {
-    @apply border-0;
-}
-.pagination .page-item .page-link:hover,
-.pagination .page-item.active .page-link {
-    @apply bg-blue-600
+.pagination .page-item:hover {
+    @apply text-product-color-lighter bg-blue-600
     text-white
     cursor-pointer;
 }
-.pagination .page-item.disabled .page-link,
-.pagination .page-item.disabled .page-link:hover {
-    @apply bg-white
-    text-gray-400
-    cursor-default;
+.pagination .page-item.active {
+    @apply bg-blue-600
+    text-white;
+}
+.pagination .page-item.last-child {
+    @apply border-0;
 }
 
 @media (min-width: 640px) {
-    .pagination .page-item .page-link {
-        @apply
-        p-1
-        block;
+    .pagination .page-item {
+        @apply px-1 py-2;
     }
 }
 
 @media (min-width: 768px) {
-    .pagination .page-item .page-link {
-        @apply py-2
-        px-3
-        block;
+    .pagination .page-item {
+        @apply
+        px-3 py-2;
     }
 }

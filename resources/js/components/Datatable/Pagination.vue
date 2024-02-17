@@ -7,66 +7,55 @@
         >
             <!-- First button -->
             <li
-                class="page-item first"
+                class="flex items-center page-item"
                 :class="{
                     disabled: current_page_no === 1,
                 }"
+                @click="setCurrentPage(1)"
             >
-                <a class="page-link" @click="setCurrentPage(1)">
-                    {{ labels.first }}
-                </a>
+                {{ labels.first }}
             </li>
 
             <!-- Previous button -->
             <li
-                class="page-item previous"
+                class="flex items-center page-item"
                 :class="{
                     disabled: current_page_no === 1,
                 }"
+                @click="setCurrentPage(current_page_no - 1)"
             >
-                <a
-                    class="page-link"
-                    @click="setCurrentPage(current_page_no - 1)"
-                >
-                    {{ labels.previous }}
-                </a>
+                {{ labels.previous }}
             </li>
 
             <!-- Page number buttons -->
             <li
                 v-for="page in pages"
                 :key="page"
-                class="page-item"
+                class="flex items-center page-item"
                 :class="{
                     active: page === current_page_no,
                 }"
+                @click="setCurrentPage(page)"
             >
-                <a class="page-link" @click="setCurrentPage(page)">
-                    {{ page }}
-                </a>
+                {{ page }}
             </li>
 
             <!-- Next button -->
             <li
-                class="page-item next"
+                class="flex items-center page-item"
                 :class="{ disabled: current_page_no === total_pages }"
+                @click="setCurrentPage(current_page_no + 1)"
             >
-                <a
-                    class="page-link"
-                    @click="setCurrentPage(current_page_no + 1)"
-                >
-                    {{ labels.next }}
-                </a>
+                {{ labels.next }}
             </li>
 
             <!-- Last button -->
             <li
-                class="page-item last"
+                class="flex items-center page-item"
                 :class="{ disabled: current_page_no === total_pages }"
+                @click="setCurrentPage(total_pages)"
             >
-                <a class="page-link" @click="setCurrentPage(total_pages)">
-                    {{ labels.last }}
-                </a>
+                {{ labels.last }}
             </li>
         </ul>
     </div>

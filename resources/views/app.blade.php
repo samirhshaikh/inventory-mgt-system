@@ -13,7 +13,7 @@
 
     @routes
 </head>
-<body class="font-open-sans leading-none antialiased">
+<body>
 
 @inertia
 

@@ -91,6 +91,7 @@
                                 'text-gray-600': !dark_mode,
                                 'text-product-color-lighter': dark_mode,
                             }"
+                            style="text-transform: none"
                             v-else
                         >
                             {{ edit_id }}
@@ -109,7 +110,9 @@
 
                     <div
                         class="w-1/2 form_field_container"
-                        v-if="edit_id == ''"
+                        v-if="
+                            edit_id === '' || page.user === edit_id || !is_admin
+                        "
                     >
                         <label
                             class="form_field_label"
@@ -128,16 +131,17 @@
                             autocomplete="off"
                             :class="{
                                 required_field:
-                                    (row_keys.indexOf('Password') < 0 ||
-                                        row['Password'] == '') &&
-                                    edit_id == '',
+                                    row_keys.indexOf('Password') < 0 ||
+                                    row['Password'] == '',
                             }"
                         />
                     </div>
 
                     <div
                         class="w-1/2 form_field_container"
-                        v-if="edit_id == ''"
+                        v-if="
+                            edit_id === '' || page.user === edit_id || !is_admin
+                        "
                     >
                         <label
                             class="form_field_label"
@@ -156,17 +160,15 @@
                             autocomplete="off"
                             :class="{
                                 required_field:
-                                    (row_keys.indexOf('Confirm_Password') < 0 ||
-                                        row['Confirm_Password'] == '') &&
-                                    edit_id == '',
+                                    row_keys.indexOf('Confirm_Password') < 0 ||
+                                    row['Confirm_Password'] == '',
                             }"
                         />
                         <p
                             class="form_field_message"
                             :class="{
                                 hidden:
-                                    row['Confirm_Password'] ==
-                                        row['Password'] && edit_id == '',
+                                    row['Confirm_Password'] === row['Password'],
                             }"
                         >
                             Confirm Password should match with Password
@@ -238,6 +240,9 @@
 import { mapState, mapActions } from "vuex";
 import { VueFinalModal } from "vue-final-modal";
 import { notifications } from "../Helpers/notifications";
+import { usePage } from "@inertiajs/vue3";
+
+const page = usePage();
 
 export default {
     mixins: [notifications],
@@ -272,6 +277,10 @@ export default {
     },
 
     computed: {
+        page() {
+            return page.props;
+        },
+
         valid_data() {
             if (this.edit_id == "") {
                 if (

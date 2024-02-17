@@ -154,8 +154,15 @@ class UserService
             $user = new User();
 
             $user->UserName = $request->get("UserName");
-            $user->Password = Hash::make($request->get("Password"));
             $user->CreatedBy = session("user_details.UserName");
+        }
+
+        if (
+            $request->get("operation", "add") === "add" ||
+            session("user_details.UserName") === $request->get("UserName") ||
+            !$request->get("IsAdmin", false)
+        ) {
+            $user->Password = Hash::make($request->get("Password"));
         }
 
         $user->UpdatedBy = session("user_details.UserName");

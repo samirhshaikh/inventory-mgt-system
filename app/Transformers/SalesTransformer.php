@@ -73,7 +73,7 @@ class SalesTransformer extends TransformerAbstract
     private function formatInvoiceNumber($invoiceNo, $invoiceDate)
     {
         return sprintf(
-            "%s-%s-%s-%s-000%s",
+            "%s-%s%s%s000%s",
             "INV",
             $invoiceDate->format("Y"),
             $invoiceDate->format("m"),

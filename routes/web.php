@@ -25,8 +25,6 @@ Route::post(
 Route::get("/", "PagesController@index")->name("index");
 Route::get("/dashboard", "PagesController@dashboard")->name("dashboard");
 Route::get("/search", "PagesController@search")->name("search");
-Route::get("/sales", "PagesController@sales")->name("sales");
-Route::get("/purchases", "PagesController@purchases")->name("purchases");
 
 Route::group(["prefix" => "handset-colors"], function ($router) {
     $router->get("", "PagesController@handsetColors")->name("handset-colors");
@@ -237,9 +235,6 @@ Route::group(["prefix" => "phonestock"], function ($router) {
         ->name("phonestock.get-single");
     $router
         ->post("validate-imei", "DBObjects\PhoneStockController@validateIMEI")
-        ->name("phonestock.validate-imei");
-    $router
-        ->get("validate-imei", "DBObjects\PhoneStockController@validateIMEI")
         ->name("phonestock.validate-imei");
 });
 

@@ -213,11 +213,11 @@ Route::group(["prefix" => "phonestock"], function ($router) {
         ->post("get-single", "DBObjects\PhoneStockController@getSingle")
         ->name("phonestock.get-single");
     $router
-        ->post(
-            "check-duplicate-imei",
-            "DBObjects\PhoneStockController@checkDuplicateIMEI"
-        )
-        ->name("phonestock.check-duplicate-imei");
+        ->post("validate-imei", "DBObjects\PhoneStockController@validateIMEI")
+        ->name("phonestock.validate-imei");
+    $router
+        ->get("validate-imei", "DBObjects\PhoneStockController@validateIMEI")
+        ->name("phonestock.validate-imei");
 });
 
 Route::get("/purchases", "PagesController@purchases")->name("purchases");

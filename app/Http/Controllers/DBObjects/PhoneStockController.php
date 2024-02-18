@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\DBObjects;
 
 use App\Exceptions\DuplicateIMEIException;
+use App\Exceptions\InvalidIMEIException;
 use App\Exceptions\RecordNotFoundException;
 use App\Exceptions\ReferenceException;
 use App\Http\Controllers\BaseController;
@@ -67,14 +68,12 @@ class PhoneStockController extends BaseController
      * @param IMEIRequest $request
      * @return JsonResponse
      */
-    public function checkDuplicateIMEI(IMEIRequest $request): JsonResponse
+    public function validateIMEI(IMEIRequest $request): JsonResponse
     {
         $phonestock_service = new PhoneStockService();
 
         try {
             $phonestock_service->checkDuplicateIMEI($request);
-
-            return $this->sendOK([]);
         } catch (DuplicateIMEIException $e) {
             return $this->sendError(
                 self::DUPLICATE_IMEI,
@@ -82,5 +81,17 @@ class PhoneStockController extends BaseController
                 JsonResponse::HTTP_UNPROCESSABLE_ENTITY
             );
         }
+
+        try {
+            $phonestock_service->validateIMEI($request);
+        } catch (InvalidIMEIException $e) {
+            return $this->sendError(
+                self::INVALID_IMEI,
+                [],
+                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
+        return $this->sendOK([]);
     }
 }

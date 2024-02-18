@@ -13,6 +13,7 @@ class BaseController extends Controller
     const RECORD_NO_FOUND = "record_not_found";
     const DUPLICATE_NAME = "duplicate_name";
     const DUPLICATE_IMEI = "duplicate_imei";
+    const INVALID_IMEI = "invalid_imei";
     const INVALID_DATA = "invalid_data";
     const RECORD_REFERENCE_FOUND = "record_reference_found";
 

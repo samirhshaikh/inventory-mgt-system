@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Exceptions\DuplicateIMEIException;
+use App\Exceptions\InvalidIMEIException;
 use App\Exceptions\RecordNotFoundException;
 use App\Exceptions\ReferenceException;
 use App\Http\Requests\IdRequest;
@@ -310,11 +311,50 @@ class PhoneStockService
     }
 
     /**
+     * @param IMEIRequest $request
+     * @return bool
+     * @throws InvalidIMEIException
+     */
+    public function validateIMEI(IMEIRequest $request): bool
+    {
+        $imei = $request->get("IMEI");
+
+        // Remove any non-numeric characters
+        $imei = preg_replace("/[^0-9]/", "", $imei);
+
+        // Check if the IMEI is exactly 15 digits long
+        if (strlen($imei) != 15) {
+            throw new InvalidIMEIException();
+        }
+
+        // Calculate the Luhn check digit
+        $sum = 0;
+        for ($i = 1; $i <= 15; $i++) {
+            $digit = (int) $imei[$i - 1];
+
+            if ($i % 2 == 0) {
+                $digit *= 2;
+                if ($digit > 9) {
+                    $digit -= 9;
+                }
+            }
+
+            $sum += $digit;
+        }
+
+        if ($sum % 10 === 0) {
+            return true;
+        }
+
+        throw new InvalidIMEIException();
+    }
+
+    /**
      * @param mixed $imei
-     * @param $id
+     * @param int $id
      * @return bool
      */
-    public function isDuplicateIMEI($imei, $id = 0): bool
+    public function isDuplicateIMEI(mixed $imei, int $id = 0): bool
     {
         //Check whether the record exists or not
         if (!empty($id)) {

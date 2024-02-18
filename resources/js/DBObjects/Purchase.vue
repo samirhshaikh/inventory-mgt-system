@@ -80,7 +80,7 @@
                                     "
                                     :enable_add="true"
                                     @on-option-selected="onSupplierSelected"
-                                    @on-data-load-complete="customerSalesLoaded"
+                                    @on-data-load-complete="suppliersLoaded"
                                     ref="supplier_picker"
                                 />
                             </div>
@@ -171,7 +171,7 @@
                                         class="w-52 generic_input"
                                         type="text"
                                         v-model.trim="child_row['IMEI']"
-                                        v-on:blur="isDuplicateIMEI"
+                                        v-on:blur="validateIMEI"
                                         :class="{
                                             required_field:
                                                 imei_validation_message != '',
@@ -569,7 +569,9 @@ export default {
             saving_data: false,
             checking_duplicate_imei: false,
             duplicate_imei: false,
+            invalid_imei: false,
             loading: false,
+            supplier_loaded: false,
 
             add_record_title: "Add",
             current_row_id: "",
@@ -684,6 +686,8 @@ export default {
         imei_validation_message() {
             if (this.duplicate_imei) {
                 return "Duplicate IMEI. Please choose another IMEI.";
+            } else if (this.invalid_imei) {
+                return "Invalid IMEI.";
             } else if (
                 this.child_row_keys.indexOf("IMEI") < 0 ||
                 this.child_row["IMEI"] == ""
@@ -764,14 +768,13 @@ export default {
 
             this.$nextTick(() => {
                 this.$refs.supplier_picker.$el.querySelector("input").focus();
-                this.customer_sales_loaded = true;
+                this.supplier_loaded = true;
             });
         }
     },
 
     methods: {
         editRecord(child_row) {
-            console.log(child_row);
             this.child_row = _.cloneDeep(child_row);
 
             this.add_record_title = "Update";
@@ -937,6 +940,8 @@ export default {
 
                     if (error.response.data.message == "duplicate_imei") {
                         this.duplicate_imei = true;
+                    } else if (error.response.data.message == "invalid_imei") {
+                        this.invalid_imei = true;
                     } else {
                         this.$notify({
                             group: "messages",
@@ -956,7 +961,7 @@ export default {
             );
         },
 
-        isDuplicateIMEI() {
+        validateIMEI() {
             if (
                 this.child_row_keys.indexOf("IMEI") < 0 ||
                 this.child_row["IMEI"] == ""
@@ -984,9 +989,10 @@ export default {
 
             this.checking_duplicate_imei = true;
             this.duplicate_imei = false;
+            this.invalid_imei = false;
 
             axios
-                .post(route("phonestock.check-duplicate-imei"), {
+                .post(route("phonestock.validate-imei"), {
                     Id: this.child_row["Id"],
                     IMEI: this.child_row["IMEI"],
                 })
@@ -995,6 +1001,7 @@ export default {
                         this.checking_duplicate_imei = false;
 
                         this.duplicate_imei = false;
+                        this.invalid_imei = false;
 
                         this.checking_duplicate_imei = false;
                     },
@@ -1004,12 +1011,27 @@ export default {
                         if (error.response.data.message == "duplicate_imei") {
                             this.duplicate_imei = true;
                         }
+
+                        if (error.response.data.message == "invalid_imei") {
+                            this.invalid_imei = true;
+                        }
                     }
                 );
         },
 
         onSupplierSelected(value) {
             this.row["SupplierId"] = value;
+        },
+
+        suppliersLoaded() {
+            if (!this.edit_id && !this.supplier_loaded) {
+                this.$nextTick(() => {
+                    // this.$refs.customer_sales_picker.$refs.customer_id.$el
+                    //     .querySelector("input")
+                    //     .focus();
+                    this.supplier_loaded = true;
+                });
+            }
         },
 
         ...mapActions({

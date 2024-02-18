@@ -6,14 +6,20 @@
             :checked="data"
             @change="toggleValue"
             :disabled="!page.user_details.IsAdmin"
-        /><span class="label-text ml-1" v-if="labelled">{{
-            data ? checkedLabel : uncheckedLabel
-        }}</span>
+        /><span
+            class="label-text ml-1"
+            v-if="labelled"
+            :class="{
+                'text-gray-900': !dark_mode,
+                'text-white': dark_mode,
+            }"
+            >{{ data ? checkedLabel : uncheckedLabel }}</span
+        >
     </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 import { datatable_cell } from "./datatable_cell";
 import { notifications } from "../../Helpers/notifications";
 import { usePage } from "@inertiajs/vue3";
@@ -59,6 +65,11 @@ export default {
                 ? this.labels.unchecked
                 : "No";
         },
+
+        ...mapState({
+            dark_mode: (state) => state.framework.dark_mode,
+            expanded_sidebar: (state) => state.framework.expanded_sidebar,
+        }),
     },
 
     methods: {

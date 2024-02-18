@@ -33,6 +33,9 @@ Route::get("/handset-colors", "PagesController@handsetColors")->name(
 );
 Route::group(["prefix" => "handset-colors"], function ($router) {
     $router
+        ->get("data", "DBObjects\HandsetColorsController@getData")
+        ->name("handset-colors.data");
+    $router
         ->post(
             "change-active-status",
             "DBObjects\HandsetColorsController@changeActiveStatus"
@@ -59,6 +62,9 @@ Route::get("/handset-models", "PagesController@handsetModels")->name(
     "handset-models"
 );
 Route::group(["prefix" => "handset-models"], function ($router) {
+    $router
+        ->get("data", "DBObjects\HandsetModelsController@getData")
+        ->name("handset-models.data");
     $router
         ->post(
             "change-active-status",
@@ -88,6 +94,9 @@ Route::get(
 )->name("handset-manufacturers");
 Route::group(["prefix" => "handset-manufacturers"], function ($router) {
     $router
+        ->get("data", "DBObjects\HandsetManufacturersController@getData")
+        ->name("handset-manufacturers.data");
+    $router
         ->post(
             "change-active-status",
             "DBObjects\HandsetManufacturersController@changeActiveStatus"
@@ -116,6 +125,9 @@ Route::group(["prefix" => "handset-manufacturers"], function ($router) {
 Route::get("/handsets", "PagesController@handsets")->name("handsets");
 Route::group(["prefix" => "handsets"], function ($router) {
     $router
+        ->get("data", "DBObjects\HandsetsController@getData")
+        ->name("handsets.data");
+    $router
         ->post(
             "change-active-status",
             "DBObjects\HandsetsController@changeActiveStatus"
@@ -140,6 +152,9 @@ Route::group(["prefix" => "handsets"], function ($router) {
 
 Route::get("/users", "PagesController@users")->name("users");
 Route::group(["prefix" => "users"], function ($router) {
+    $router
+        ->get("data", "DBObjects\UsersController@getData")
+        ->name("users.data");
     $router
         ->post(
             "change-active-status",
@@ -172,6 +187,9 @@ Route::get("/customer_sales", "PagesController@customerSales")->name(
 );
 Route::group(["prefix" => "customer_sales"], function ($router) {
     $router
+        ->get("data", "DBObjects\CustomerSalesController@getData")
+        ->name("customer_sales.data");
+    $router
         ->post(
             "change-active-status",
             "DBObjects\CustomerSalesController@changeActiveStatus"
@@ -190,6 +208,9 @@ Route::group(["prefix" => "customer_sales"], function ($router) {
 
 Route::get("/suppliers", "PagesController@suppliers")->name("suppliers");
 Route::group(["prefix" => "suppliers"], function ($router) {
+    $router
+        ->get("data", "DBObjects\SuppliersController@getData")
+        ->name("suppliers.data");
     $router
         ->post(
             "change-active-status",
@@ -210,6 +231,15 @@ Route::group(["prefix" => "suppliers"], function ($router) {
 Route::get("/phonestock", "PagesController@phoneStock")->name("phonestock");
 Route::group(["prefix" => "phonestock"], function ($router) {
     $router
+        ->get("data", "DBObjects\PhoneStockController@getData")
+        ->name("phonestock.data");
+    $router
+        ->get(
+            "available",
+            "DBObjects\PhoneStockController@getAvailablePhoneData"
+        )
+        ->name("phonestock.available");
+    $router
         ->post("get-single", "DBObjects\PhoneStockController@getSingle")
         ->name("phonestock.get-single");
     $router
@@ -223,6 +253,9 @@ Route::group(["prefix" => "phonestock"], function ($router) {
 Route::get("/purchases", "PagesController@purchases")->name("purchases");
 Route::group(["prefix" => "purchase"], function ($router) {
     $router
+        ->get("data", "DBObjects\PurchaseController@getData")
+        ->name("purchases.data");
+    $router
         ->post("save", "DBObjects\PurchaseController@save")
         ->name("purchase.save");
     $router
@@ -235,6 +268,9 @@ Route::group(["prefix" => "purchase"], function ($router) {
 
 Route::get("/sales", "PagesController@sales")->name("sales");
 Route::group(["prefix" => "sale"], function ($router) {
+    $router
+        ->get("data", "DBObjects\SalesController@getData")
+        ->name("sales.data");
     $router->post("save", "DBObjects\SalesController@save")->name("sale.save");
     $router
         ->get("get-single", "DBObjects\SalesController@getSingle")
@@ -264,71 +300,4 @@ Route::get("/app-settings", "PagesController@appSettings")->name(
     "app-settings"
 );
 
-Route::group(["prefix" => "datatables"], function ($router) {
-    Route::group(["prefix" => "users"], function ($router) {
-        $router
-            ->get("data", "Datatables\UsersController@getData")
-            ->name("datatable.users.data");
-    });
-
-    Route::group(["prefix" => "handset-colors"], function ($router) {
-        $router
-            ->get("data", "Datatables\HandsetColorsController@getData")
-            ->name("datatable.handset-colors.data");
-    });
-
-    Route::group(["prefix" => "handset-models"], function ($router) {
-        $router
-            ->get("data", "Datatables\HandsetModelsController@getData")
-            ->name("datatable.handset-models.data");
-    });
-
-    Route::group(["prefix" => "customer_sales"], function ($router) {
-        $router
-            ->get("data", "Datatables\CustomerSalesController@getData")
-            ->name("datatable.customer_sales.data");
-    });
-
-    Route::group(["prefix" => "handset-manufacturers"], function ($router) {
-        $router
-            ->get("data", "Datatables\HandsetManufacturersController@getData")
-            ->name("datatable.handset-manufacturers.data");
-    });
-
-    Route::group(["prefix" => "handsets"], function ($router) {
-        $router
-            ->get("data", "Datatables\HandsetsController@getData")
-            ->name("datatable.handsets.data");
-    });
-
-    Route::group(["prefix" => "suppliers"], function ($router) {
-        $router
-            ->get("data", "Datatables\SuppliersController@getData")
-            ->name("datatable.suppliers.data");
-    });
-
-    Route::group(["prefix" => "phonestock"], function ($router) {
-        $router
-            ->get("data", "Datatables\PhoneStockController@getData")
-            ->name("datatable.phonestock.data");
-        $router
-            ->get(
-                "available",
-                "Datatables\PhoneStockController@getAvailablePhoneData"
-            )
-            ->name("datatable.phonestock.available");
-    });
-
-    Route::group(["prefix" => "purchases"], function ($router) {
-        $router
-            ->get("data", "Datatables\PurchasesController@getData")
-            ->name("datatable.purchases.data");
-    });
-
-    Route::group(["prefix" => "sales"], function ($router) {
-        $router
-            ->get("data", "Datatables\SalesController@getData")
-            ->name("datatable.sales.data");
-    });
-});
 //Auth::routes();

@@ -79,7 +79,7 @@ export const list_controller = {
                 this.loading_suppliers = true;
 
                 axios
-                    .get(route("datatable.suppliers.data"), {
+                    .get(route("suppliers.data"), {
                         params: {
                             get_all_records: 1,
                             order_by: "SupplierName",
@@ -130,7 +130,7 @@ export const list_controller = {
                 this.loading_handset_colors = true;
 
                 axios
-                    .get(route("datatable.handset-colors.data"), {
+                    .get(route("handset-colors.data"), {
                         params: {
                             get_all_records: 1,
                             order_by: "Name",
@@ -181,7 +181,7 @@ export const list_controller = {
                 this.loading_handset_models = true;
 
                 axios
-                    .get(route("datatable.handset-models.data"), {
+                    .get(route("handset-models.data"), {
                         params: {
                             get_all_records: 1,
                             order_by: "Name",
@@ -231,7 +231,7 @@ export const list_controller = {
                 this.loading_handset_manufacturers = true;
 
                 axios
-                    .get(route("datatable.handset-manufacturers.data"), {
+                    .get(route("handset-manufacturers.data"), {
                         params: {
                             get_all_records: 1,
                             order_by: "Name",

@@ -100,7 +100,7 @@ export default {
 
             //Load the first page of customers
             axios
-                .get(route("datatable.customer_sales.data"), {
+                .get(route("customer_sales.data"), {
                     params: {
                         get_all_records: typeof query === "undefined" ? 0 : 1,
                         order_by: "CustomerName",

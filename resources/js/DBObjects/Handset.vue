@@ -408,7 +408,7 @@ export default {
                 this.local_settings.cached_data["handset_colors"];
         } else {
             this.loading_handset_colors = true;
-            axios.post(route("datatable.handset-colors.data")).then(
+            axios.post(route("handset-colors.data")).then(
                 (response) => {
                     this.handset_colors = response.data.rows;
 
@@ -435,7 +435,7 @@ export default {
                 this.local_settings.cached_data["handset_models"];
         } else {
             this.loading_handset_models = true;
-            axios.post(route("datatable.handset-models.data")).then(
+            axios.post(route("handset-models.data")).then(
                 (response) => {
                     this.handset_models = response.data.rows;
 
@@ -464,7 +464,7 @@ export default {
                 this.local_settings.cached_data["handset_manufacturers"];
         } else {
             this.loading_handset_manufacturers = true;
-            axios.post(route("datatable.handset-manufacturers.data")).then(
+            axios.post(route("handset-manufacturers.data")).then(
                 (response) => {
                     this.handset_manufacturers = response.data.rows;
 

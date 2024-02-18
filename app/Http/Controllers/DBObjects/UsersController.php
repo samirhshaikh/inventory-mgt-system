@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\DBObjects;
 
+use App\Datatables\UsersDatatable;
 use App\Exceptions\DuplicateNameException;
 use App\Exceptions\NotEnoughRightsException;
 use App\Exceptions\RecordNotFoundException;
@@ -11,11 +12,59 @@ use App\Http\Requests\IdStringRequest;
 use App\Http\Requests\SaveUserRequest;
 use App\Http\Requests\UserNameRequest;
 use App\Services\UserService;
+use App\Traits\DataOutputTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class UsersController extends BaseController
 {
+    use DataOutputTrait;
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function getData(Request $request): array
+    {
+        $table = new UsersDatatable();
+
+        $order_by =
+            $request->get("order_by", "") == ""
+                ? session(
+                    "app_settings.datatable.sorting.users.column",
+                    Arr::get($table->options(), "sorting.default")
+                )
+                : $request->get("order_by");
+        $order_direction =
+            $request->get("order_by", "") == ""
+                ? session(
+                    "app_settings.datatable.sorting.users.direction",
+                    Arr::get($table->options(), "sorting.direction")
+                )
+                : "asc";
+
+        $user_service = new UserService();
+
+        list(
+            "total_records" => $total_records,
+            "records" => $records,
+        ) = $user_service->getAll(
+            $order_by,
+            $order_direction,
+            $request->get("search_text", "") ?? ""
+        );
+
+        return $this->prepareRecordsOutput(
+            $table,
+            $records,
+            $total_records,
+            (int) $request->get("page_no", 1),
+            $request->get("search_text", ""),
+            (int) $request->get("get_all_records", 0)
+        );
+    }
+
     /**
      * @param IdStringRequest $request
      * @return JsonResponse

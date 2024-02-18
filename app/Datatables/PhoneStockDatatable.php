@@ -104,7 +104,7 @@ class PhoneStockDatatable extends BaseDatatable
     {
         $this->options = [
             "id" => "phonestock",
-            "url" => route("datatable.phonestock.data"),
+            "url" => route("phonestock.data"),
             "pagination" => false,
             "enable_search" => true,
             "primary_key" => "Id",

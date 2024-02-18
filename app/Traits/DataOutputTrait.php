@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Datatables;
+namespace App\Traits;
 
-use App\Http\Controllers\BaseController;
-
-class BaseDatatableController extends BaseController
+trait DataOutputTrait
 {
     /**
      * @param $table
@@ -20,7 +18,7 @@ class BaseDatatableController extends BaseController
         $records,
         int $total_rows = 0,
         int $page_no,
-        $search_text = "",
+        mixed $search_text = "",
         int $get_all_records = 0
     ): array {
         $page_size = session("app_settings.framework.page_size", 10);

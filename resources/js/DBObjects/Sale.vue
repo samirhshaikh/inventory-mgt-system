@@ -1036,7 +1036,7 @@ export default {
                     ],
                     options: {
                         enable_search: true,
-                        url: route("datatable.phonestock.available"),
+                        url: route("phonestock.available"),
                         id: "phonestock_record_picker",
                         pagination: true,
                         primary_key: "Id",

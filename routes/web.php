@@ -28,10 +28,8 @@ Route::get("/search", "PagesController@search")->name("search");
 Route::get("/sales", "PagesController@sales")->name("sales");
 Route::get("/purchases", "PagesController@purchases")->name("purchases");
 
-Route::get("/handset-colors", "PagesController@handsetColors")->name(
-    "handset-colors"
-);
 Route::group(["prefix" => "handset-colors"], function ($router) {
+    $router->get("", "PagesController@handsetColors")->name("handset-colors");
     $router
         ->get("data", "DBObjects\HandsetColorsController@getData")
         ->name("handset-colors.data");
@@ -58,10 +56,8 @@ Route::group(["prefix" => "handset-colors"], function ($router) {
         ->name("handset-colors.check-duplicate-name");
 });
 
-Route::get("/handset-models", "PagesController@handsetModels")->name(
-    "handset-models"
-);
 Route::group(["prefix" => "handset-models"], function ($router) {
+    $router->get("", "PagesController@handsetModels")->name("handset-models");
     $router
         ->get("data", "DBObjects\HandsetModelsController@getData")
         ->name("handset-models.data");
@@ -88,11 +84,10 @@ Route::group(["prefix" => "handset-models"], function ($router) {
         ->name("handset-models.check-duplicate-name");
 });
 
-Route::get(
-    "/handset-manufacturers",
-    "PagesController@handsetManufacturers"
-)->name("handset-manufacturers");
 Route::group(["prefix" => "handset-manufacturers"], function ($router) {
+    $router
+        ->get("", "PagesController@handsetManufacturers")
+        ->name("handset-manufacturers");
     $router
         ->get("data", "DBObjects\HandsetManufacturersController@getData")
         ->name("handset-manufacturers.data");
@@ -122,8 +117,8 @@ Route::group(["prefix" => "handset-manufacturers"], function ($router) {
         ->name("handset-manufacturers.check-duplicate-name");
 });
 
-Route::get("/handsets", "PagesController@handsets")->name("handsets");
 Route::group(["prefix" => "handsets"], function ($router) {
+    $router->get("", "PagesController@handsets")->name("handsets");
     $router
         ->get("data", "DBObjects\HandsetsController@getData")
         ->name("handsets.data");
@@ -150,8 +145,8 @@ Route::group(["prefix" => "handsets"], function ($router) {
         ->name("handsets.check-duplicate-name");
 });
 
-Route::get("/users", "PagesController@users")->name("users");
 Route::group(["prefix" => "users"], function ($router) {
+    $router->get("", "PagesController@users")->name("users");
     $router
         ->get("data", "DBObjects\UsersController@getData")
         ->name("users.data");
@@ -182,10 +177,8 @@ Route::group(["prefix" => "users"], function ($router) {
         ->name("users.check-duplicate-name");
 });
 
-Route::get("/customer_sales", "PagesController@customerSales")->name(
-    "customer_sales"
-);
 Route::group(["prefix" => "customer_sales"], function ($router) {
+    $router->get("", "PagesController@customerSales")->name("customer_sales");
     $router
         ->get("data", "DBObjects\CustomerSalesController@getData")
         ->name("customer_sales.data");
@@ -206,8 +199,8 @@ Route::group(["prefix" => "customer_sales"], function ($router) {
         ->name("customer_sales.delete");
 });
 
-Route::get("/suppliers", "PagesController@suppliers")->name("suppliers");
 Route::group(["prefix" => "suppliers"], function ($router) {
+    $router->get("", "PagesController@suppliers")->name("suppliers");
     $router
         ->get("data", "DBObjects\SuppliersController@getData")
         ->name("suppliers.data");
@@ -228,8 +221,8 @@ Route::group(["prefix" => "suppliers"], function ($router) {
         ->name("suppliers.delete");
 });
 
-Route::get("/phonestock", "PagesController@phoneStock")->name("phonestock");
 Route::group(["prefix" => "phonestock"], function ($router) {
+    $router->get("", "PagesController@phoneStock")->name("phonestock");
     $router
         ->get("data", "DBObjects\PhoneStockController@getData")
         ->name("phonestock.data");
@@ -250,8 +243,8 @@ Route::group(["prefix" => "phonestock"], function ($router) {
         ->name("phonestock.validate-imei");
 });
 
-Route::get("/purchases", "PagesController@purchases")->name("purchases");
 Route::group(["prefix" => "purchase"], function ($router) {
+    $router->get("", "PagesController@purchases")->name("purchases");
     $router
         ->get("data", "DBObjects\PurchaseController@getData")
         ->name("purchases.data");
@@ -266,8 +259,8 @@ Route::group(["prefix" => "purchase"], function ($router) {
         ->name("purchase.delete");
 });
 
-Route::get("/sales", "PagesController@sales")->name("sales");
 Route::group(["prefix" => "sale"], function ($router) {
+    $router->get("", "PagesController@sales")->name("sales");
     $router
         ->get("data", "DBObjects\SalesController@getData")
         ->name("sales.data");

@@ -114,7 +114,8 @@ export default {
                     key: "InvoiceDate",
                     label: "Invoice Date",
                     type: "date",
-                    class: "w-32",
+                    class: "w-64",
+                    range: true,
                 },
                 {
                     key: "InvoiceNo",

@@ -89,10 +89,13 @@
                         />
 
                         <CustomDatePicker
-                            :start_date_value="column_data[column.key]"
+                            :start_date_value="getDateValue(column.key, 0)"
+                            :end_date_value="getDateValue(column.key, 1)"
                             :column_name="column.key"
                             @date-selected="dateSelected"
                             v-if="column.type == 'date'"
+                            :range="column?.range ?? false"
+                            :class="column.class"
                         ></CustomDatePicker>
 
                         <v-select
@@ -136,7 +139,7 @@
 </style>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapState } from "vuex";
 import { VueFinalModal } from "vue-final-modal";
 import moment from "moment";
 import { list_controller } from "../../Helpers/list_controller";
@@ -199,6 +202,14 @@ export default {
     },
 
     methods: {
+        getDateValue(key, index) {
+            if (_.isArray(this.column_data[key])) {
+                return this.column_data[key][index] ?? "";
+            } else {
+                return this.column_data[key] ?? "";
+            }
+        },
+
         dateSelected(date, key) {
             this.column_data[key] = date;
 

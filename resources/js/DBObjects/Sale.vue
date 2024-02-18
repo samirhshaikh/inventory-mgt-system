@@ -485,7 +485,13 @@
                     </form>
                 </div>
 
-                <div class="w-1/2 ml-2 p-2">
+                <div
+                    class="w-1/2 ml-2 p-2"
+                    :class="{
+                        'text-gray-900': !dark_mode,
+                        'text-white': dark_mode,
+                    }"
+                >
                     <SaleItemsDatatable
                         :columns="selected_products_columns"
                         :options="selected_products_options"
@@ -606,7 +612,7 @@ export default {
                     order: 1,
                     searching: false,
                     sorting: false,
-                    td: "text-left break-words",
+                    td: "break-words",
                     th: "text-left",
                 },
                 {
@@ -617,7 +623,6 @@ export default {
                     searching: false,
                     sorting: false,
                     type: "Phone",
-                    td: "text-left",
                     th: "text-left break-words",
                 },
                 {
@@ -627,7 +632,6 @@ export default {
                     order: 5,
                     searching: false,
                     sorting: false,
-                    td: "text-left",
                     th: "text-left break-words",
                 },
                 {
@@ -638,7 +642,6 @@ export default {
                     searching: false,
                     sorting: false,
                     type: "Float",
-                    td: "text-left",
                     th: "text-left break-words",
                 },
                 {

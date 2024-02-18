@@ -217,11 +217,13 @@ class SalesService
 
     /**
      * @param $model
-     * @param array $search_data
+     * @param mixed $search_data
      * @return Builder
      */
-    private function prepareAdvancedSearch($model, $search_data = []): Builder
-    {
+    private function prepareAdvancedSearch(
+        $model,
+        mixed $search_data = []
+    ): Builder {
         foreach ($search_data as $column => $search_text) {
             if ($search_text == "" || is_null($search_text)) {
                 continue;
@@ -250,12 +252,26 @@ class SalesService
                     );
                     break;
                 case "InvoiceDate":
-                    $model = $this->prepareAdvancedSearchQuery(
-                        $model,
-                        'DATE_FORMAT(Sales.InvoiceDate, "%d-%b-%Y")',
-                        $search_text,
-                        "exact_match"
-                    );
+                    list($start_date, $end_date) = explode(",", $search_text);
+                    if ($end_date) {
+                        $model = $this->prepareAdvancedSearchQuery(
+                            $model,
+                            "Sales.InvoiceDate",
+                            [
+                                DateService::convertToMySQL($start_date),
+                                DateService::convertToMySQL($end_date),
+                            ],
+                            "date_range"
+                        );
+                    } else {
+                        $model = $this->prepareAdvancedSearchQuery(
+                            $model,
+                            'DATE_FORMAT(Sales.InvoiceDate, "%d-%b-%Y")',
+                            $start_date,
+                            "exact_match"
+                        );
+                    }
+
                     break;
                 case "manufacturer":
                     $model = $this->prepareAdvancedSearchQuery(
@@ -334,14 +350,14 @@ class SalesService
     }
 
     /**
-     * For new invoice number we have a different format. INV-YYYY-MM-DD-XXXX where XXXX represents a four digit invoice number with leading zeros.
+     * For new invoice number we have a different format. INV-YYYYMMDDXXXX where XXXX represents a four digit invoice number with leading zeros.
      * We need to special mysql string to get that in search
      *
      * @return string
      */
     private function getInvoiceSearchString(): string
     {
-        return 'IF(InvoiceNo REGEXP "^-?[0-9]+$", CONCAT("INV-", DATE_FORMAT(InvoiceDate, "%Y-%m-%d"), "-", LPAD(InvoiceNo, 4, "0")), "")';
+        return 'IF(InvoiceNo REGEXP "^-?[0-9]+$", CONCAT("INV-", DATE_FORMAT(InvoiceDate, "%Y%m%d"), LPAD(InvoiceNo, 4, "0")), "")';
     }
 
     /**
@@ -349,7 +365,7 @@ class SalesService
      * @return mixed
      * @throws RecordNotFoundException
      */
-    public function getSingleSales(IdRequest $request)
+    public function getSingleSales(IdRequest $request): mixed
     {
         $record = Sales::where("Sales.Id", $request->get("Id"))
             ->with("customer")
@@ -361,9 +377,7 @@ class SalesService
             },
         ]);
 
-        $records = $record->with("tradein");
-
-        $record = $record->get();
+        $record = $record->with("tradein")->get();
 
         if ($record->count()) {
             return $record->map->transform()->first();
@@ -573,7 +587,12 @@ class SalesService
         return $record->count() + 1;
     }
 
-    public function getSalesForPeriod($start = "", $end = "")
+    /**
+     * @param string $start
+     * @param string $end
+     * @return int
+     */
+    public function getSalesForPeriod($start = "", $end = ""): int
     {
         $record = Sales::selectRaw("SUM(Cost) as total")->join(
             "SalesStock",

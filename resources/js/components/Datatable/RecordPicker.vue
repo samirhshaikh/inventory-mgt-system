@@ -97,7 +97,9 @@
 <style>
 .record_picker_modal {
     width: 85%;
-    height: auto;
+    min-height: 90%;
+    max-height: 90%;
+    overflow-y: auto;
 }
 </style>
 

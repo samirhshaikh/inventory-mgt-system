@@ -186,11 +186,13 @@ class PurchaseService
 
     /**
      * @param $model
-     * @param array $search_data
+     * @param mixed $search_data
      * @return Builder
      */
-    private function prepareAdvancedSearch($model, $search_data = []): Builder
-    {
+    private function prepareAdvancedSearch(
+        $model,
+        mixed $search_data = []
+    ): Builder {
         foreach ($search_data as $column => $search_text) {
             if ($search_text == "" || is_null($search_text)) {
                 continue;
@@ -205,12 +207,25 @@ class PurchaseService
                     );
                     break;
                 case "InvoiceDate":
-                    $model = $this->prepareAdvancedSearchQuery(
-                        $model,
-                        'DATE_FORMAT(InvoiceDate, "%d-%b-%Y")',
-                        $search_text,
-                        "exact_match"
-                    );
+                    list($start_date, $end_date) = explode(",", $search_text);
+                    if ($end_date) {
+                        $model = $this->prepareAdvancedSearchQuery(
+                            $model,
+                            "InvoiceDate",
+                            [
+                                DateService::convertToMySQL($start_date),
+                                DateService::convertToMySQL($end_date),
+                            ],
+                            "date_range"
+                        );
+                    } else {
+                        $model = $this->prepareAdvancedSearchQuery(
+                            $model,
+                            'DATE_FORMAT(InvoiceDate, "%d-%b-%Y")',
+                            $search_text,
+                            "exact_match"
+                        );
+                    }
                     break;
                 case "make":
                     $model = $this->prepareAdvancedSearchQuery(
@@ -276,7 +291,7 @@ class PurchaseService
      * @return mixed
      * @throws RecordNotFoundException
      */
-    public function getSinglePurchase(IdRequest $request)
+    public function getSinglePurchase(IdRequest $request): mixed
     {
         $record = new Purchase();
 

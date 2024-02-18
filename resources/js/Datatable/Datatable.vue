@@ -108,9 +108,8 @@
                 >
                     <td
                         v-for="(header, index) in active_columns"
-                        class="px-1 lg:px-2 border-b border-gray-200 z-0"
+                        class="px-1 lg:px-2 border-b z-0"
                         :class="[
-                            header.th,
                             header.td,
                             cellClass(row, header),
                             {

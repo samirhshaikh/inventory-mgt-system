@@ -259,7 +259,7 @@
                                     Make
                                 </label>
                                 <div
-                                    class="flex flex-row items-center"
+                                    class="flex flex-row items-center w-4/5"
                                     v-if="!loading_handset_manufacturers"
                                 >
                                     <v-select
@@ -272,7 +272,7 @@
                                             (manufacturer) => manufacturer.Id
                                         "
                                         :options="handset_manufacturers"
-                                        class="w-32 generic_vs_select"
+                                        class="w-full generic_vs_select"
                                         @option:selected="setManufacturer"
                                         :class="{
                                             required_field:
@@ -309,7 +309,7 @@
                                     Model
                                 </label>
                                 <div
-                                    class="flex flex-row items-center"
+                                    class="flex flex-row items-center w-4/5"
                                     v-if="!loading_handset_models"
                                 >
                                     <v-select
@@ -318,7 +318,7 @@
                                         v-model="child_row['model']['Id']"
                                         :reduce="(model) => model.Id"
                                         :options="handset_models"
-                                        class="w-32 generic_vs_select"
+                                        class="w-full generic_vs_select"
                                         @option:selected="setModel"
                                         :class="{
                                             required_field:
@@ -352,7 +352,7 @@
                                     Color
                                 </label>
                                 <div
-                                    class="flex flex-row items-center"
+                                    class="flex flex-row items-center w-4/5"
                                     v-if="!loading_handset_colors"
                                 >
                                     <v-select
@@ -361,7 +361,7 @@
                                         :reduce="(color) => color.Id"
                                         label="Name"
                                         :options="handset_colors"
-                                        class="w-32 generic_vs_select"
+                                        class="w-full generic_vs_select"
                                         @option:selected="setColor"
                                         :class="{
                                             required_field:

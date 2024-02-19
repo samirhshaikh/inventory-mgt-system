@@ -113,13 +113,12 @@ export default {
 
                         if (this.selected_value && !query) {
                             //Check of the customer is there in first page loaded or not.
-                            const object = helper_functions.searchJsonObjects(
-                                this.customer_sales,
-                                "Id",
-                                this.selected_value
+                            const object = this.customer_sales.find(
+                                (item) => item.Id == this.selected_value
                             );
+
                             //If not there then we need to get the details of it and add it to available options
-                            if (!Object.keys(object).length) {
+                            if (!object) {
                                 axios
                                     .get(route("customer_sales.get-single"), {
                                         params: {

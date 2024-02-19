@@ -435,7 +435,7 @@
                                                     dark_mode,
                                             }"
                                         >
-                                            £{{ item.Cost }}
+                                            £{{ numberFormat(item.Cost) }}
                                         </label>
                                     </div>
 
@@ -1133,7 +1133,7 @@ export default {
                                 (response) => {
                                     let record = response.data.response.record;
 
-                                    parent.$set(this.row, "tradein", {
+                                    parent.setTradeInPhone({
                                         PurchaseInvoiceId: purchase_invoice_id,
                                         purchase: _.cloneDeep(record),
                                     });
@@ -1141,10 +1141,20 @@ export default {
                                 (error) => {}
                             );
                     },
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {
+                        parent.setPopperOpen(false);
+                    },
                 },
             });
 
             open();
+        },
+
+        setTradeInPhone(phoneDetails) {
+            this.row.tradein = phoneDetails;
         },
 
         removeTradeInPhone() {
@@ -1207,6 +1217,10 @@ export default {
             });
 
             open();
+        },
+
+        numberFormat(value) {
+            return helper_functions.number_format(value, 2);
         },
 
         ...mapActions({

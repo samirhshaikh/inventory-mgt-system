@@ -814,35 +814,38 @@ export default {
         },
 
         setModel(value) {
-            let object = helper_functions.searchJsonObjects(
-                this.handset_models,
-                "Id",
-                value
+            const object = this.handset_models.find(
+                (item) => item.Id == value.Id
             );
-            if (Object.keys(object).length) {
-                this.child_row["model"]["Name"] = object["Name"];
+
+            if (object) {
+                if (Object.keys(object).length) {
+                    this.child_row["model"]["Name"] = object["Name"];
+                }
             }
         },
 
         setManufacturer(value) {
-            let object = helper_functions.searchJsonObjects(
-                this.handset_manufacturers,
-                "Id",
-                value
+            const object = this.handset_manufacturers.find(
+                (item) => item.Id == value.Id
             );
-            if (Object.keys(object).length) {
-                this.child_row["manufacturer"]["Name"] = object["Name"];
+
+            if (object) {
+                if (Object.keys(object).length) {
+                    this.child_row["manufacturer"]["Name"] = object["Name"];
+                }
             }
         },
 
         setColor(value) {
-            let object = helper_functions.searchJsonObjects(
-                this.handset_colors,
-                "Id",
-                value
+            const object = this.handset_colors.find(
+                (item) => item.Id == value.Id
             );
-            if (Object.keys(object).length) {
-                this.child_row["color"]["Name"] = object["Name"];
+
+            if (object) {
+                if (Object.keys(object).length) {
+                    this.child_row["color"]["Name"] = object["Name"];
+                }
             }
         },
 

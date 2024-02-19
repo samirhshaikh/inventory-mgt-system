@@ -224,6 +224,12 @@ export default {
                         //Open Print Invoice dialog
                         this.viewSalesInvoice(invoice_id);
                     },
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {
+                        parent.setPopperOpen(false);
+                    },
                 },
             });
 

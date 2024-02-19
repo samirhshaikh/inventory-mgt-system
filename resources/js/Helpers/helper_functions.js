@@ -10,37 +10,6 @@ export default {
         );
     },
 
-    searchJsonObjects(json_object, search_field, search_val, return_first) {
-        return_first =
-            typeof return_first === "undefined" ? true : return_first;
-
-        let results = [];
-
-        if (_.isArray(json_object)) {
-            for (let i = 0; i < json_object.length; i++) {
-                if (json_object[i][search_field] == search_val) {
-                    if (return_first) {
-                        return json_object[i];
-                    }
-
-                    results.push(json_object[i]);
-                }
-            }
-        } else {
-            _.forIn(json_object, (object, key) => {
-                if (object[search_field] == search_val) {
-                    results.push(object);
-                }
-            });
-
-            if (return_first && results.length) {
-                return results[0];
-            }
-        }
-
-        return results;
-    },
-
     validEmail(email) {
         var re =
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

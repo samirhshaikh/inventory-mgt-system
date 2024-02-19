@@ -71,8 +71,14 @@
         <div class="flex flex-col py-2">
             <button
                 icon="sign-out-alt"
-                class="py-2 pl-3 block text-sm"
-                :class="linkNavigationClass('doLogout')"
+                class="py-2 block text-sm"
+                :class="[
+                    linkNavigationClass('doLogout'),
+                    {
+                        'pl-4': expanded_sidebar && !small_screen,
+                        'pl-3': !expanded_sidebar || small_screen,
+                    },
+                ]"
                 @click.native="doLogout"
                 style="display: block"
             >
@@ -91,7 +97,7 @@
 
             <button
                 @click="toggleSidebar"
-                class="bg-product-color text-white p-2 rounded mt-1 ml-2 mr-2"
+                class="bg-product-color text-white p-2 rounded ml-2 mr-2"
                 :class="{
                     'hover:bg-product-color-lighter': dark_mode,
                     'hover: text-gray-900': dark_mode,

@@ -452,7 +452,7 @@ class SalesService
         )->toDateTimeString();
         $record->CustomerId = $request->get("CustomerId");
         $record->PaymentMethod = $request->get("PaymentMethod");
-        $record->VAT = number_format($request->get("VAT", 0), 2);
+        $record->VAT = $request->get("VAT", 0);
         $record->Comments = $request->get("Comments");
         $record->UpdatedBy = session("user_details.UserName");
         $record->save();

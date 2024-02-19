@@ -221,7 +221,7 @@ class PhoneStockService
             $record->ModelId = $row["model"]["Id"];
             $record->ColorId = $row["color"]["Id"];
             $record->Size = $row["Size"];
-            $record->Cost = number_format($row["Cost"], 2);
+            $record->Cost = $row["Cost"];
             $record->StockType = $row["StockType"];
             $record->ModelNo = $row["ModelNo"] ?? "";
             $record->Network = $row["Network"];

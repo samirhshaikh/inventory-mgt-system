@@ -35,20 +35,24 @@ abstract class BaseDatatable
         //transform the keys
         foreach ($this->columns as $colKey => $column) {
             //if we don't have a value then just carry on
-            if (Arr::get($row, $column['key'], null) === null) {
+            if (Arr::get($row, $column["key"], null) === null) {
                 continue;
             }
 
-            $value = Arr::get($row, $column['key']);
+            $value = Arr::get($row, $column["key"]);
 
             //apply rules if defined
-            if (!empty($column['rules'])) {
-                Arr::set($row, $column['key'], $this->processRules($value, $column['rules']));
+            if (!empty($column["rules"])) {
+                Arr::set(
+                    $row,
+                    $column["key"],
+                    $this->processRules($value, $column["rules"])
+                );
             }
 
             //do a check if the type is a actual file
-            if (!$this->is_valid_cell_type(Arr::get($column, 'type', null))) {
-                Arr::set($column, 'type', null);
+            if (!$this->is_valid_cell_type(Arr::get($column, "type", null))) {
+                Arr::set($column, "type", null);
             }
         }
 
@@ -70,7 +74,9 @@ abstract class BaseDatatable
             return $this->cached_cell_type_validation[$type];
         }
 
-        $this->cached_cell_type_validation[$type] = file_exists(base_path('resources/js/Datatable/Cells/' . $type . '.vue'));
+        $this->cached_cell_type_validation[$type] = file_exists(
+            base_path("resources/js/Datatable/Cells/" . $type . ".vue")
+        );
 
         return $this->cached_cell_type_validation[$type];
     }
@@ -78,17 +84,20 @@ abstract class BaseDatatable
     protected function processRules($value, $rules)
     {
         //check whether there are more than one rules
-        $rules = explode('|', $rules);
+        $rules = explode("|", $rules);
 
         foreach ($rules as $rule) {
             $args = [];
 
-            if (strpos($rule, ':') !== false) {
-                $args = explode(':', $rule);
+            if (strpos($rule, ":") !== false) {
+                $args = explode(":", $rule);
                 $rule = array_shift($args);
             }
 
-            $value = call_user_func_array([$this, $rule], array_merge([$value], $args));
+            $value = call_user_func_array(
+                [$this, $rule],
+                array_merge([$value], $args)
+            );
         }
 
         return $value;
@@ -102,13 +111,13 @@ abstract class BaseDatatable
 
     protected function percentage($value): string
     {
-        return $value . '%';
+        return $value . "%";
     }
 
     protected function number($value, $decimalPoint = 0): string
     {
-        $value = str_replace(',', '', $value);
-        return number_format((string)$value, $decimalPoint);
+        $value = str_replace(",", "", $value);
+        return number_format((string) $value, $decimalPoint);
     }
 
     protected function jsondecode($value): array
@@ -116,10 +125,13 @@ abstract class BaseDatatable
         return json_decode($value, true);
     }
 
-    protected function currency($value, $currencySymbol = 'gbp')
+    protected function currency($value, $currencySymbol = "gbp")
     {
         $currencySymbol = strtoupper($currencySymbol);
-        $moneyFormatter = new NumberFormatter('en_GB', NumberFormatter::CURRENCY);
+        $moneyFormatter = new NumberFormatter(
+            "en_GB",
+            NumberFormatter::CURRENCY
+        );
 
         return $moneyFormatter->formatCurrency($value, $currencySymbol);
     }

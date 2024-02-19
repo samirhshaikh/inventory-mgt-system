@@ -56,8 +56,8 @@ class SalesStockService
 
                 $record->IMEI = $row["IMEI"];
                 $record->Qty = 1;
-                $record->Cost = number_format($row["Cost"], 2);
-                $record->Discount = number_format($row["Discount"] ?? 0, 2);
+                $record->Cost = $row["Cost"];
+                $record->Discount = $row["Discount"] ?? 0;
                 $record->UpdatedBy = session("user_details.UserName");
                 $record->save();
 

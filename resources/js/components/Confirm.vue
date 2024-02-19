@@ -53,6 +53,7 @@
 
 <script>
 import { VueFinalModal } from "vue-final-modal";
+import { mapState } from "vuex";
 
 export default {
     name: "Confirm",
@@ -105,6 +106,12 @@ export default {
                 this.$emit("closed");
             }
         },
+    },
+
+    computed: {
+        ...mapState({
+            dark_mode: (state) => state.framework.dark_mode,
+        }),
     },
 };
 </script>

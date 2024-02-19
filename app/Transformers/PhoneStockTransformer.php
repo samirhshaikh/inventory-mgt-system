@@ -13,7 +13,7 @@ class PhoneStockTransformer extends TransformerAbstract
             "Id" => $model->Id,
             "IMEI" => $model->IMEI,
             "Size" => $model->Size,
-            "Cost" => $model->Cost ? number_format($model->Cost, 2) : "",
+            "Cost" => $model->Cost ?: "",
             "StockType" => ucwords(strtolower($model->StockType)),
             "ModelNo" => $model->ModelNo,
             "Network" => $model->Network,

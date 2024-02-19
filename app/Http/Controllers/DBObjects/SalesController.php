@@ -225,9 +225,7 @@ class SalesController extends BaseController
             //                continue;
             //            }
 
-            $price = number_format($child["Cost"], 2);
-
-            $child_total = number_format($price * $child["Qty"], 2);
+            $child_total = $child["Cost"] * $child["Qty"];
 
             if (!$child["Returned"]) {
                 $total += $child_total;
@@ -237,7 +235,8 @@ class SalesController extends BaseController
                 ? '<br><font color="red">Returned</font>'
                 : "";
 
-            $item = <<<EOT
+            $item =
+                "
 <tr>
     <td>{$child["Qty"]}</td>
     <td>{$child["phone_details"]["StockType"]}</td>
@@ -251,10 +250,14 @@ class SalesController extends BaseController
         IMEI: {$child["phone_details"]["IMEI"]}
         {$returned}
     </td>
-    <td style="text-align: right;">&#163; {$price}</td>
-    <td style="text-align: right;">&#163; {$child_total}</td>
+    <td style='text-align: right;'>&#163; " .
+                number_format($child["Cost"], 2) .
+                "</td>
+    <td style='text-align: right;'>&#163; " .
+                number_format($child_total, 2) .
+                "</td>
 </tr>
-EOT;
+";
 
             $items[] = $item;
         }
@@ -274,13 +277,12 @@ EOT;
             ) {
                 $qty = 1;
 
-                $price = number_format($child["Cost"], 2);
-
-                $child_total = number_format($price * $qty, 2);
+                $child_total = $child["Cost"] * $qty;
                 $total -= $child_total;
 
-                $item = <<<EOT
-<tr class="tradein_items">
+                $item =
+                    "
+<tr class='tradein_items'>
     <td>{$qty}</td>
     <td>{$child["StockType"]}</td>
     <td>
@@ -292,10 +294,14 @@ EOT;
         <br>
         IMEI: {$child["IMEI"]}
     </td>
-    <td style="text-align: right;">&#163; {$price}</td>
-    <td style="text-align: right;">&#163; {$child_total}</td>
+    <td style='text-align: right;'>&#163; " .
+                    number_format($child["Cost"], 2) .
+                    "</td>
+     <td style='text-align: right;'>&#163; " .
+                    number_format($child_total, 2) .
+                    "</td>
 </tr>
-EOT;
+";
 
                 $tradein_items[] = $item;
             }
@@ -303,6 +309,8 @@ EOT;
 
         $items = join("", $items);
         $tradein_items = join("", $tradein_items);
+
+        $total = number_format($total, 2);
 
         $body = <<<EOT
 <html xmlns="http://www.w3.org/1999/html">

@@ -26,7 +26,7 @@ class LoginController extends Controller
                 $loginResponse = json_decode($loginResponse->content(), true);
 
                 session([
-                    "user" => $request->get("username"),
+                    "user" => strtolower($request->get("username")),
                     "user_details" => Arr::get(
                         $loginResponse,
                         "response.user_details"

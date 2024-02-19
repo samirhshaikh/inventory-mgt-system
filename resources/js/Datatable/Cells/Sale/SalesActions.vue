@@ -38,7 +38,7 @@
 
 <script>
 import Sale from "../../../DBObjects/Sale.vue";
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 import Confirm from "../../../components/Confirm.vue";
 import { datatable_cell } from "../datatable_cell";
 import { notifications } from "../../../Helpers/notifications";

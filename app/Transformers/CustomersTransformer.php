@@ -11,16 +11,14 @@ class CustomersTransformer extends TransformerAbstract
     {
         return [
             "Id" => $model->Id,
-            "CustomerName" => $model->CustomerName,
+            "CustomerName" => ucwords($model->CustomerName),
             "ContactNo1" => $model->ContactNo1,
             "ContactNo2" => $model->ContactNo2,
             "ContactNo3" => $model->ContactNo3,
             "Address" => $model->Address,
             "City" => $model->City,
             "Comments" => $model->Comments,
-            "Balance" => $model->Balance
-                ? number_format($model->Balance, 2)
-                : "",
+            "Balance" => $model->Balance ?: "",
             "IsActive" => boolval($model->IsActive),
             "CreatedDate" => $model->CreatedDate->format("d-M-Y h:i A"),
             "CreatedBy" => $model->CreatedBy,

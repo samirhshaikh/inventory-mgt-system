@@ -11,15 +11,13 @@ class SuppliersTransformer extends TransformerAbstract
     {
         return [
             "Id" => $model->Id,
-            "SupplierName" => $model->SupplierName,
+            "SupplierName" => ucwords($model->SupplierName),
             "ContactNo1" => $model->ContactNo1,
             "ContactNo2" => $model->ContactNo2,
             "ContactNo3" => $model->ContactNo3,
             "Address" => $model->Address,
             "City" => $model->City,
-            "CurrentBalance" => $model->CurrentBalance
-                ? number_format($model->CurrentBalance, 2)
-                : "",
+            "CurrentBalance" => $model->CurrentBalance ?: "",
             "Comments" => $model->Comments,
             "IsActive" => boolval($model->IsActive),
             "CreatedDate" => empty($model->CreatedDate)

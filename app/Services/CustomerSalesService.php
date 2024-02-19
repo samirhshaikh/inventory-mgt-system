@@ -170,7 +170,7 @@ class CustomerSalesService
         $record->ContactNo1 = $request->get("ContactNo1");
         $record->ContactNo2 = $request->get("ContactNo2");
         $record->Comments = $request->get("Comments");
-        $record->Balance = number_format($request->get("Balance"), 2);
+        $record->Balance = (float) $request->get("Balance");
         $record->UpdatedBy = session("user_details.UserName");
         $record->IsActive = $request->get("IsActive");
         $record->save();

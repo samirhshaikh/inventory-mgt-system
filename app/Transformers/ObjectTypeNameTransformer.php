@@ -11,7 +11,7 @@ class ObjectTypeNameTransformer extends TransformerAbstract
     {
         return [
             "Id" => $model->Id,
-            "Name" => $model->Name,
+            "Name" => ucwords($model->Name),
             "IsActive" => boolval($model->IsActive),
             "CreatedDate" => empty($model->CreatedDate)
                 ? ""

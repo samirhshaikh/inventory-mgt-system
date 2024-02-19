@@ -11,7 +11,7 @@ class HandsetsTransfomer extends TransformerAbstract
     {
         $return = [
             "Id" => $model->Id,
-            "Name" => $model->Name,
+            "Name" => ucwords($model->Name),
             "MakeId" => (int) $model->MakeId,
             "manufacturer" => $model->manufacturer,
             "ModelId" => (int) $model->ModelId,

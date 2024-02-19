@@ -15,10 +15,8 @@ class SalesStockTransformer extends TransformerAbstract
             "IMEI" => $model->IMEI,
             "Qty" => $model->Qty,
             "Description" => $model->Description,
-            "Cost" => $model->Cost ? number_format($model->Cost, 2) : "",
-            "Discount" => $model->Discount
-                ? number_format($model->Discount, 2)
-                : "",
+            "Cost" => $model->Cost ?: "",
+            "Discount" => $model->Discount ?: "",
             "Returned" => $model->Returned,
             "ReturnedDate" => empty($model->ReturnedDate)
                 ? ""

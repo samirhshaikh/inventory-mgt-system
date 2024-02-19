@@ -10,7 +10,7 @@ class UserTransformer extends TransformerAbstract
     public function transform(User $model)
     {
         return [
-            "UserName" => $model->UserName,
+            "UserName" => strtolower($model->UserName),
             "Password" => "***",
             "IsAdmin" => boolval($model->IsAdmin),
             "IsActive" => boolval($model->IsActive),

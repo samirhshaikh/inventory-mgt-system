@@ -169,10 +169,7 @@ class SuppliersService
         $record->SupplierName = $request->get("SupplierName");
         $record->ContactNo1 = $request->get("ContactNo1");
         $record->ContactNo2 = $request->get("ContactNo2");
-        $record->CurrentBalance = number_format(
-            $request->get("CurrentBalance"),
-            2
-        );
+        $record->CurrentBalance = (float) $request->get("CurrentBalance");
         $record->Comments = $request->get("Comments");
         $record->UpdatedBy = session("user_details.UserName");
         $record->IsActive = $request->get("IsActive");

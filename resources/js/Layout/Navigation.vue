@@ -68,16 +68,30 @@
             </section>
         </div>
 
-        <div
-            class="flex py-2"
-            :class="{
-                'flex-col px-2': !expanded_sidebar || small_screen,
-                'px-4': expanded_sidebar && !small_screen,
-            }"
-        >
+        <div class="flex flex-col py-2">
+            <button
+                icon="sign-out-alt"
+                class="py-2 pl-3 block text-sm"
+                :class="linkNavigationClass('doLogout')"
+                @click.native="doLogout"
+                style="display: block"
+            >
+                <div class="flex flex-row">
+                    <div class="w-5 text-center">
+                        <FA :icon="['fas', 'sign-out-alt']"></FA>
+                    </div>
+                    <div
+                        class="ml-1"
+                        v-show="expanded_sidebar && !small_screen"
+                    >
+                        Logout
+                    </div>
+                </div>
+            </button>
+
             <button
                 @click="toggleSidebar"
-                class="bg-product-color text-white p-2 rounded mt-1"
+                class="bg-product-color text-white p-2 rounded mt-1 ml-2 mr-2"
                 :class="{
                     'hover:bg-product-color-lighter': dark_mode,
                     'hover: text-gray-900': dark_mode,
@@ -102,6 +116,7 @@ import AppSettings from "../Misc/AppSettings.vue";
 import StoreSettings from "../Misc/StoreSettings.vue";
 import { useModal } from "vue-final-modal";
 import { usePage, Link } from "@inertiajs/vue3";
+import Confirm from "../components/Confirm";
 
 const page = usePage();
 
@@ -218,6 +233,25 @@ export default {
     },
 
     methods: {
+        doLogout() {
+            const { open, close } = useModal({
+                component: Confirm,
+                attrs: {
+                    title: "Logout",
+                    text: "Are you sure you want to logout",
+                    yes_handler: () => {
+                        location.replace(route("doLogout"));
+                    },
+                    onConfirm() {
+                        close();
+                    },
+                    onClosed() {},
+                },
+            });
+
+            open();
+        },
+
         resizeWindow(width) {
             this.width = width;
         },

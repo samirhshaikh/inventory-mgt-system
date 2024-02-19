@@ -140,6 +140,10 @@ class PhoneStockController extends BaseController
      */
     public function validateIMEI(IMEIRequest $request): JsonResponse
     {
+        if (config("app.env") === "local") {
+            return $this->sendOK([]);
+        }
+
         $phonestock_service = new PhoneStockService();
 
         try {

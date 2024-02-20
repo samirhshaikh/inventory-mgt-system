@@ -108,6 +108,31 @@ button:focus {
     mb-0
 }
 
+.my_tab_container {
+}
+.my_tab_container .my_tabs {
+    @apply flex
+    items-end
+    pl-2;
+}
+.my_tab_container .my_tabs .my_tab {
+    @apply p-2
+    text-base
+    text-center
+    rounded-t-lg
+    text-gray-700
+    bg-product-color-lighter
+    cursor-pointer
+    mr-1;
+}
+.my_tab_container .my_tabs .my_tab.active {
+    @apply bg-product-color
+    text-white;
+}
+.my_tab_container .my_tab_body {
+    @apply p-2 border border-gray-300 rounded-lg overflow-y-auto;
+}
+
 @media (min-width: 768px){
     .form_field_label {
         @apply text-base

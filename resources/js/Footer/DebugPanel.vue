@@ -31,14 +31,36 @@
         </div>
 
         <div
-            class="w-4/5 flex flex-col flex-grow-0 justify-between overflow-auto relative"
+            class="w-full h-full flex flex-col flex-grow-0 justify-between overflow-auto relative"
         >
-            <div class="tabs">
+            <div class="my_tab_container">
+                <div class="my_tabs">
+                    <div
+                        @click.native="changeTab(tab.key)"
+                        class="my_tab"
+                        :class="[
+                            {
+                                active: active_tab === tab.key,
+                            },
+                        ]"
+                        v-for="tab in [
+                            { key: 'errors', label: 'Errors' },
+                            { key: 'framework', label: 'Framework' },
+                            { key: 'local_settings', label: 'Local Settings' },
+                            { key: 'datatable', label: 'Datatable' },
+                            { key: 'user_details', label: 'User' },
+                        ]"
+                    >
+                        {{ tab.label }}
+                    </div>
+                </div>
+
                 <div
-                    class="tab tab_lg tab-bordered"
-                    name="Errors"
-                    v-if="errors.list.length"
-                    id="errors"
+                    class="my_tab_body"
+                    v-if="active_tab === 'errors'"
+                    :class="{
+                        'bg-white': dark_mode,
+                    }"
                 >
                     <div
                         class="mb-6 rounded border border-red-700"
@@ -54,61 +76,73 @@
                     </div>
                 </div>
 
-                <tab name="Framework" id="framework">
-                    <p class="bg-gray-600 text-white rounded py-3 px-3">
-                        session.app_settings.framework
-                    </p>
+                <div
+                    class="my_tab_body"
+                    v-if="active_tab === 'framework'"
+                    :class="{
+                        'bg-white': dark_mode,
+                    }"
+                >
                     <div v-if="'app_settings' in session">
-                        <!--                                        <vue-json-pretty-->
-                        <!--                                            :data="session.app_settings.framework"-->
-                        <!--                                            :showLength="true"-->
-                        <!--                                            :deep="1"-->
-                        <!--                                        ></vue-json-pretty>-->
+                        <vue-json-pretty
+                            :data="session.app_settings.framework"
+                            :showLength="true"
+                            :deep="1"
+                        ></vue-json-pretty>
                     </div>
                     <div v-else>No Data</div>
-                </tab>
+                </div>
 
-                <tab name="Local Settings" id="local_settings">
-                    <p class="bg-gray-600 text-white rounded py-3 px-3">
-                        local_settings
-                    </p>
+                <div
+                    class="my_tab_body"
+                    v-if="active_tab === 'local_settings'"
+                    :class="{
+                        'bg-white': dark_mode,
+                    }"
+                >
                     <div v-if="local_settings">
-                        <!--                                        <vue-json-pretty-->
-                        <!--                                            :data="local_settings"-->
-                        <!--                                            :showLength="true"-->
-                        <!--                                            :deep="1"-->
-                        <!--                                        ></vue-json-pretty>-->
+                        <vue-json-pretty
+                            :data="local_settings"
+                            :showLength="true"
+                            :deep="1"
+                        ></vue-json-pretty>
                     </div>
                     <div v-else>No Data</div>
-                </tab>
+                </div>
 
-                <tab name="Datatable" id="datatable">
-                    <p class="bg-gray-600 text-white rounded py-3 px-3">
-                        session.app_settings.datatable
-                    </p>
+                <div
+                    class="my_tab_body"
+                    v-if="active_tab === 'datatable'"
+                    :class="{
+                        'bg-white': dark_mode,
+                    }"
+                >
                     <div v-if="'app_settings' in session">
-                        <!--                                        <vue-json-pretty-->
-                        <!--                                            :data="session.app_settings.datatable"-->
-                        <!--                                            :showLength="true"-->
-                        <!--                                            :deep="1"-->
-                        <!--                                        ></vue-json-pretty>-->
+                        <vue-json-pretty
+                            :data="session.app_settings.datatable"
+                            :showLength="true"
+                            :deep="1"
+                        ></vue-json-pretty>
                     </div>
                     <div v-else>No Data</div>
-                </tab>
+                </div>
 
-                <tab name="User" id="user_details">
-                    <p class="bg-gray-600 text-white rounded py-3 px-3">
-                        session.user_details
-                    </p>
+                <div
+                    class="my_tab_body"
+                    v-if="active_tab === 'user_details'"
+                    :class="{
+                        'bg-white': dark_mode,
+                    }"
+                >
                     <div v-if="'user_details' in session">
-                        <!--                                        <vue-json-pretty-->
-                        <!--                                            :data="session.user_details"-->
-                        <!--                                            :showLength="true"-->
-                        <!--                                            :deep="1"-->
-                        <!--                                        ></vue-json-pretty>-->
+                        <vue-json-pretty
+                            :data="session.user_details"
+                            :showLength="true"
+                            :deep="1"
+                        ></vue-json-pretty>
                     </div>
                     <div v-else>No Data</div>
-                </tab>
+                </div>
             </div>
         </div>
     </VueFinalModal>
@@ -119,6 +153,10 @@
     width: 80%;
     height: 80%;
 }
+.my_tab_container .my_tab_body {
+    min-height: calc(90vh - 255px);
+    max-height: calc(90vh - 255px);
+}
 </style>
 
 <script>
@@ -126,6 +164,7 @@ import moment from "moment";
 import { mapState } from "vuex";
 import { VueFinalModal } from "vue-final-modal";
 import VueJsonPretty from "vue-json-pretty";
+import "vue-json-pretty/lib/styles.css";
 
 export default {
     components: {
@@ -136,6 +175,7 @@ export default {
     data() {
         return {
             session: {},
+            active_tab: "errors",
         };
     },
 
@@ -148,6 +188,12 @@ export default {
                 this.error_message = "Some error occurred. Please try again.";
             }
         );
+    },
+
+    methods: {
+        changeTab(tab) {
+            this.active_tab = tab;
+        },
     },
 
     computed: {

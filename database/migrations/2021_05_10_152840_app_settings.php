@@ -16,7 +16,7 @@ return new class extends Migration {
                 $table->string("State", 20);
                 $table->text("Payload");
                 $table->datetime("CreatedDate")->nullable();
-                $table->string("CreatedBy", 20)->nullable();
+                $table->string("CreatedBy", 250)->nullable();
                 $table->datetime("UpdatedDate")->nullable();
 
                 $table->primary(["UserName", "State"]);

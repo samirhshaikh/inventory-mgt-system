@@ -13,28 +13,14 @@ return new class extends Migration {
         if (!Schema::hasTable("user")) {
             Schema::create("user", function (Blueprint $table) {
                 $table->string("UserName", 250);
-                $table
-                    ->string("Password", 250)
-                    ->nullable()
-                    ->default("NULL");
-                $table->tinyInteger("IsAdmin");
-                $table->tinyInteger("IsActive");
-                $table
-                    ->datetime("CreatedDate")
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("CreatedBy", 250)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->datetime("UpdatedDate")
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("UpdatedBy", 250)
-                    ->nullable()
-                    ->default("NULL");
+                $table->string("Password", 250)->nullable();
+                $table->tinyInteger("IsAdmin")->default(0);
+                $table->tinyInteger("IsActive")->default(0);
+                $table->datetime("CreatedDate")->nullable();
+                $table->string("CreatedBy", 250)->nullable();
+                $table->datetime("UpdatedDate")->nullable();
+                $table->string("UpdatedBy", 250)->nullable();
+
                 $table->primary("UserName");
 
                 $table

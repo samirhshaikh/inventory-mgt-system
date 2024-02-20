@@ -55,7 +55,14 @@
             <form class="w-full max-w-lg pl-2">
                 <div class="flex flex-wrap items-start">
                     <div class="w-full form_field_container">
-                        <label class="form_field_label" for="business_name">
+                        <label
+                            class="form_field_label"
+                            :class="{
+                                'text-gray-700': !dark_mode,
+                                'text-white': dark_mode,
+                            }"
+                            for="business_name"
+                        >
                             Business Name
                         </label>
                         <input
@@ -79,7 +86,15 @@
                     </div>
 
                     <div class="w-full form_field_container">
-                        <label class="form_field_label"> Address </label>
+                        <label
+                            class="form_field_label"
+                            :class="{
+                                'text-gray-700': !dark_mode,
+                                'text-white': dark_mode,
+                            }"
+                        >
+                            Address
+                        </label>
                         <textarea
                             class="w-full generic_input"
                             id="address"
@@ -99,7 +114,14 @@
                     </div>
 
                     <div class="w-full form_field_container">
-                        <label class="form_field_label" for="phone">
+                        <label
+                            class="form_field_label"
+                            :class="{
+                                'text-gray-700': !dark_mode,
+                                'text-white': dark_mode,
+                            }"
+                            for="phone"
+                        >
                             Phone
                         </label>
                         <input
@@ -111,7 +133,14 @@
                     </div>
 
                     <div class="w-full form_field_container">
-                        <label class="form_field_label" for="phone">
+                        <label
+                            class="form_field_label"
+                            :class="{
+                                'text-gray-700': !dark_mode,
+                                'text-white': dark_mode,
+                            }"
+                            for="email"
+                        >
                             Email
                         </label>
                         <input

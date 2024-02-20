@@ -50,7 +50,14 @@
             <form class="w-full pl-2">
                 <div class="flex flex-wrap items-start">
                     <div class="w-full form_field_container">
-                        <label class="form_field_label" for="stock_types">
+                        <label
+                            class="form_field_label"
+                            :class="{
+                                'text-gray-700': !dark_mode,
+                                'text-white': dark_mode,
+                            }"
+                            for="stock_types"
+                        >
                             Stock Types
                         </label>
                         <textarea
@@ -71,7 +78,14 @@
                     </div>
 
                     <div class="w-full form_field_container">
-                        <label class="form_field_label" for="networks">
+                        <label
+                            class="form_field_label"
+                            :class="{
+                                'text-gray-700': !dark_mode,
+                                'text-white': dark_mode,
+                            }"
+                            for="networks"
+                        >
                             Networks
                         </label>
                         <textarea
@@ -90,7 +104,14 @@
                     </div>
 
                     <div class="w-full form_field_container">
-                        <label class="form_field_label" for="phone_sizes">
+                        <label
+                            class="form_field_label"
+                            :class="{
+                                'text-gray-700': !dark_mode,
+                                'text-white': dark_mode,
+                            }"
+                            for="phone_sizes"
+                        >
                             Phone Sizes
                         </label>
                         <textarea
@@ -110,7 +131,14 @@
                     </div>
 
                     <div class="w-full form_field_container">
-                        <label class="form_field_label" for="stock_statuses">
+                        <label
+                            class="form_field_label"
+                            :class="{
+                                'text-gray-700': !dark_mode,
+                                'text-white': dark_mode,
+                            }"
+                            for="stock_statuses"
+                        >
                             Stock Status
                         </label>
                         <textarea
@@ -131,7 +159,14 @@
                     </div>
 
                     <div class="w-full form_field_container">
-                        <label class="form_field_label" for="payment_types">
+                        <label
+                            class="form_field_label"
+                            :class="{
+                                'text-gray-700': !dark_mode,
+                                'text-white': dark_mode,
+                            }"
+                            for="payment_types"
+                        >
                             Payment Types
                         </label>
                         <textarea

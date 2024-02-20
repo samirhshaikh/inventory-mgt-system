@@ -124,7 +124,14 @@
                                         "
                                         >Auto Generated</span
                                     >
-                                    <span v-else>{{ row["InvoiceNo"] }}</span>
+                                    <span
+                                        v-else
+                                        :class="{
+                                            'text-gray-700': !dark_mode,
+                                            'text-white': dark_mode,
+                                        }"
+                                        >{{ row["InvoiceNo"] }}</span
+                                    >
                                 </div>
                             </div>
 
@@ -170,7 +177,14 @@
                                         v-model.number="row['VAT']"
                                         autocomplete="off"
                                         ref="cost"
-                                    />%
+                                    />
+                                    <span
+                                        :class="{
+                                            'text-gray-700': !dark_mode,
+                                            'text-white': dark_mode,
+                                        }"
+                                        >%</span
+                                    >
                                 </div>
                             </div>
                         </div>

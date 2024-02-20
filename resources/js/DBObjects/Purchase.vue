@@ -478,7 +478,13 @@
                     </form>
                 </div>
 
-                <div class="w-1/2 ml-2 p-2">
+                <div
+                    class="w-1/2 ml-2 p-2"
+                    :class="{
+                        'text-gray-900': !dark_mode,
+                        'text-white': dark_mode,
+                    }"
+                >
                     <PurchaseItemsDatatable
                         :columns="columns"
                         :options="options"

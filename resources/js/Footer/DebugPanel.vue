@@ -46,7 +46,7 @@
                         :key="key"
                     >
                         <div class="bg-red-700 text-white px-4 py-2 text-xs">
-                            {{ moment(item.time).format("Do MMM Y - HH:mm") }}
+                            {{ getTime }}
                         </div>
                         <div class="p-4 text-sm">
                             {{ item.error }}
@@ -59,11 +59,11 @@
                         session.app_settings.framework
                     </p>
                     <div v-if="'app_settings' in session">
-                        <vue-json-pretty
-                            :data="session.app_settings.framework"
-                            :showLength="true"
-                            :deep="1"
-                        ></vue-json-pretty>
+                        <!--                                        <vue-json-pretty-->
+                        <!--                                            :data="session.app_settings.framework"-->
+                        <!--                                            :showLength="true"-->
+                        <!--                                            :deep="1"-->
+                        <!--                                        ></vue-json-pretty>-->
                     </div>
                     <div v-else>No Data</div>
                 </tab>
@@ -73,11 +73,11 @@
                         local_settings
                     </p>
                     <div v-if="local_settings">
-                        <vue-json-pretty
-                            :data="local_settings"
-                            :showLength="true"
-                            :deep="1"
-                        ></vue-json-pretty>
+                        <!--                                        <vue-json-pretty-->
+                        <!--                                            :data="local_settings"-->
+                        <!--                                            :showLength="true"-->
+                        <!--                                            :deep="1"-->
+                        <!--                                        ></vue-json-pretty>-->
                     </div>
                     <div v-else>No Data</div>
                 </tab>
@@ -87,11 +87,11 @@
                         session.app_settings.datatable
                     </p>
                     <div v-if="'app_settings' in session">
-                        <vue-json-pretty
-                            :data="session.app_settings.datatable"
-                            :showLength="true"
-                            :deep="1"
-                        ></vue-json-pretty>
+                        <!--                                        <vue-json-pretty-->
+                        <!--                                            :data="session.app_settings.datatable"-->
+                        <!--                                            :showLength="true"-->
+                        <!--                                            :deep="1"-->
+                        <!--                                        ></vue-json-pretty>-->
                     </div>
                     <div v-else>No Data</div>
                 </tab>
@@ -101,11 +101,11 @@
                         session.user_details
                     </p>
                     <div v-if="'user_details' in session">
-                        <vue-json-pretty
-                            :data="session.user_details"
-                            :showLength="true"
-                            :deep="1"
-                        ></vue-json-pretty>
+                        <!--                                        <vue-json-pretty-->
+                        <!--                                            :data="session.user_details"-->
+                        <!--                                            :showLength="true"-->
+                        <!--                                            :deep="1"-->
+                        <!--                                        ></vue-json-pretty>-->
                     </div>
                     <div v-else>No Data</div>
                 </tab>
@@ -122,6 +122,7 @@
 </style>
 
 <script>
+import moment from "moment";
 import { mapState } from "vuex";
 import { VueFinalModal } from "vue-final-modal";
 import VueJsonPretty from "vue-json-pretty";
@@ -150,6 +151,9 @@ export default {
     },
 
     computed: {
+        getTime() {
+            return moment().format("Do MMM Y - HH:mm");
+        },
         ...mapState({
             dark_mode: (state) => state.framework.dark_mode,
             local_settings: (state) => state.local_settings,

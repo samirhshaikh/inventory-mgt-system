@@ -12,71 +12,24 @@ return new class extends Migration {
         if (!Schema::hasTable("phonestock")) {
             Schema::create("phonestock", function (Blueprint $table) {
                 $table->increments("Id");
-                $table
-                    ->integer("InvoiceId", 11)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->integer("MakeId", 11)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->integer("ModelId", 11)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->integer("ColorId", 11)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("Size", 50)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("IMEI", 50)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->double("Cost")
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("StockType", 15)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("ModelNo", 30)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("Network", 50)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("Status", 20)
-                    ->nullable()
-                    ->default("NULL");
-                $table->tinyInteger("IsActive", 1);
-                $table
-                    ->datetime("CreatedDate")
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("CreatedBy", 250)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->datetime("UpdatedDate")
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("UpdatedBy", 250)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->integer("ParentId", 11)
-                    ->nullable()
-                    ->default("NULL");
+                $table->integer("InvoiceId")->nullable();
+                $table->integer("MakeId")->nullable();
+                $table->integer("ModelId")->nullable();
+                $table->integer("ColorId")->nullable();
+                $table->string("Size", 50)->nullable();
+                $table->string("IMEI", 50)->nullable();
+                $table->double("Cost")->nullable();
+                $table->string("StockType", 15)->nullable();
+                $table->string("ModelNo", 30)->nullable();
+                $table->string("Network", 50)->nullable();
+                $table->string("Status", 20)->nullable();
+                $table->tinyInteger("IsActive")->default(0);
+                $table->datetime("CreatedDate")->nullable();
+                $table->string("CreatedBy", 250)->nullable();
+                $table->datetime("UpdatedDate")->nullable();
+                $table->string("UpdatedBy", 250)->nullable();
+                $table->integer("ParentId")->nullable();
+
                 $table->primary("Id");
 
                 $table

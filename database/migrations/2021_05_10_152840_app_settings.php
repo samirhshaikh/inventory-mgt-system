@@ -15,18 +15,10 @@ return new class extends Migration {
                 $table->string("UserName", 20);
                 $table->string("State", 20);
                 $table->text("Payload");
-                $table
-                    ->datetime("CreatedDate")
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("CreatedBy", 20)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->datetime("UpdatedDate")
-                    ->nullable()
-                    ->default("NULL");
+                $table->datetime("CreatedDate")->nullable();
+                $table->string("CreatedBy", 20)->nullable();
+                $table->datetime("UpdatedDate")->nullable();
+
                 $table->primary(["UserName", "State"]);
 
                 $table

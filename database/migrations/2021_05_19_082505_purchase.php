@@ -13,27 +13,17 @@ return new class extends Migration {
         if (!Schema::hasTable("purchase")) {
             Schema::create("purchase", function (Blueprint $table) {
                 $table->increments("Id");
-                $table
-                    ->string("InvoiceNo", 50)
-                    ->nullable()
-                    ->default("NULL");
+                $table->string("InvoiceNo", 50)->nullable();
                 $table->datetime("InvoiceDate");
-                $table
-                    ->integer("SupplierId", 11)
-                    ->nullable()
-                    ->default("NULL");
+                $table->integer("SupplierId", 11)->nullable();
                 $table->text("Comments");
-                $table->tinyInteger("IsActive", 4);
-                $table->datetime("CreatedDate");
-                $table->string("CreatedBy", 20);
-                $table
-                    ->datetime("UpdatedDate")
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("UpdatedBy", 20)
-                    ->nullable()
-                    ->default("NULL");
+                $table->tinyInteger("IsActive")->default(0);
+                $table->datetime("CreatedDate")->nullable();
+                $table->string("CreatedBy", 250)->nullable();
+                $table->datetime("UpdatedDate")->nullable();
+                $table->string("UpdatedBy", 250)->nullable();
+                $table->integer("ParentId")->nullable();
+
                 $table->primary("Id");
 
                 $table

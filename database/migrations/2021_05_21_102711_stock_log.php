@@ -21,6 +21,7 @@ return new class extends Migration {
                 $table->string("CreatedBy", 250);
                 $table->datetime("UpdatedDate");
                 $table->string("UpdatedBy", 250);
+
                 $table->primary("Id");
 
                 $table

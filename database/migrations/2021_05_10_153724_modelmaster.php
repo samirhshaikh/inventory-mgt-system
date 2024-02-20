@@ -13,27 +13,12 @@ return new class extends Migration {
         if (!Schema::hasTable("modelmaster")) {
             Schema::create("modelmaster", function (Blueprint $table) {
                 $table->increments("Id");
-                $table
-                    ->string("Name")
-                    ->nullable()
-                    ->default("NULL");
-                $table->tinyInteger("IsActive", 1);
-                $table
-                    ->datetime("CreatedDate")
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("CreatedBy", 250)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->datetime("UpdatedDate")
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("UpdatedBy", 250)
-                    ->nullable()
-                    ->default("NULL");
+                $table->string("Name", 255)->nullable();
+                $table->tinyInteger("IsActive")->default(0);
+                $table->datetime("CreatedDate")->nullable();
+                $table->string("CreatedBy", 250)->nullable();
+                $table->datetime("UpdatedDate")->nullable();
+                $table->string("UpdatedBy", 250)->nullable();
                 $table->primary("Id");
 
                 $table

@@ -13,58 +13,23 @@ return new class extends Migration {
         if (!Schema::hasTable("sales")) {
             Schema::create("sales", function (Blueprint $table) {
                 $table->increments("Id");
-                $table
-                    ->integer("CustomerId", 11)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->integer("RepairId", 11)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("InvoiceNo", 20)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->datetime("InvoiceDate")
-                    ->nullable()
-                    ->default("NULL");
-                $table->tinyInteger("BusinessInvoice", 4)->default("0");
-                $table
-                    ->string("PaymentMethod", 200)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("ChequeNo", 50)
-                    ->nullable()
-                    ->default("NULL");
+                $table->integer("CustomerId")->nullable();
+                $table->integer("RepairId")->nullable();
+                $table->string("InvoiceNo", 20)->nullable();
+                $table->datetime("InvoiceDate")->nullable();
+                $table->tinyInteger("BusinessInvoice")->default(0);
+                $table->string("PaymentMethod", 200)->nullable();
+                $table->string("ChequeNo", 50)->nullable();
                 $table->text("Comments");
-                $table
-                    ->double("VAT")
-                    ->nullable()
-                    ->default("NULL");
-                $table->tinyInteger("IsActive", 1);
-                $table
-                    ->datetime("CreatedDate")
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("CreatedBy", 250)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->datetime("UpdatedDate")
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("UpdatedBy", 250)
-                    ->nullable()
-                    ->default("NULL");
+                $table->double("VAT")->nullable();
+                $table->tinyInteger("IsActive")->default(0);
+                $table->datetime("CreatedDate")->nullable();
+                $table->string("CreatedBy", 250)->nullable();
+                $table->datetime("UpdatedDate")->nullable();
+                $table->string("UpdatedBy", 250)->nullable();
                 $table->text("AccessoriesDesc");
-                $table
-                    ->double("AccessoriesAmount")
-                    ->nullable()
-                    ->default("NULL");
+                $table->double("AccessoriesAmount")->nullable();
+
                 $table->primary("Id");
 
                 $table

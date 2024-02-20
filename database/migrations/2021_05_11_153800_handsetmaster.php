@@ -10,10 +10,13 @@ return new class extends Migration {
      */
     public function up()
     {
-        if (!Schema::hasTable("colormaster")) {
-            Schema::create("colormaster", function (Blueprint $table) {
+        if (!Schema::hasTable("handsetmaster")) {
+            Schema::create("handsetmaster", function (Blueprint $table) {
                 $table->increments("Id");
                 $table->string("Name", 255)->nullable();
+                $table->integer("MakeId")->nullable();
+                $table->integer("ModelId")->nullable();
+                $table->integer("ColorId")->nullable();
                 $table->tinyInteger("IsActive")->default(0);
                 $table->datetime("CreatedDate")->nullable();
                 $table->string("CreatedBy", 250)->nullable();
@@ -22,6 +25,18 @@ return new class extends Migration {
 
                 $table->primary("Id");
 
+                $table
+                    ->foreign("MakeId")
+                    ->references("Id")
+                    ->on("manufacturermaster");
+                $table
+                    ->foreign("ModelId")
+                    ->references("Id")
+                    ->on("modelmaster");
+                $table
+                    ->foreign("ColorId")
+                    ->references("Id")
+                    ->on("colormaster");
                 $table
                     ->foreign("CreatedBy")
                     ->references("UserName")
@@ -36,8 +51,8 @@ return new class extends Migration {
 
     public function down()
     {
-        if (Schema::hasTable("colormaster")) {
-            Schema::dropIfExists("colormaster");
+        if (Schema::hasTable("handsetmaster")) {
+            Schema::dropIfExists("handsetmaster");
         }
     }
 };

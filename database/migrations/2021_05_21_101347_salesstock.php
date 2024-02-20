@@ -14,50 +14,24 @@ return new class extends Migration {
             Schema::create("salesstock", function (Blueprint $table) {
                 $table->increments("Id");
                 $table->integer("InvoiceId", 11);
-                $table
-                    ->string("IMEI", 50)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->integer("Qty", 11)
-                    ->nullable()
-                    ->default("NULL");
+                $table->string("IMEI", 50)->nullable();
+                $table->integer("Qty")->nullable();
                 $table->text("Description");
-                $table
-                    ->double("Cost")
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->double("Discount")
-                    ->nullable()
-                    ->default("NULL");
-                $table->tinyInteger("Returned", 1)->default("0");
-                $table
-                    ->datetime("ReturnedDate")
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->datetime("CreatedDate")
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("CreatedBy", 250)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->datetime("UpdatedDate")
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("UpdatedBy", 250)
-                    ->nullable()
-                    ->default("NULL");
+                $table->double("Cost")->nullable();
+                $table->double("Discount")->nullable();
+                $table->tinyInteger("Returned")->default(0);
+                $table->datetime("ReturnedDate")->nullable();
+                $table->datetime("CreatedDate")->nullable();
+                $table->string("CreatedBy", 250)->nullable();
+                $table->datetime("UpdatedDate")->nullable();
+                $table->string("UpdatedBy", 250)->nullable();
+
                 $table->primary("Id");
 
                 $table
                     ->foreign("InvoiceId")
                     ->references("Id")
-                    ->on("purchase");
+                    ->on("sales");
                 $table
                     ->foreign("IMEI")
                     ->references("IMEI")

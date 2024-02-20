@@ -13,48 +13,19 @@ return new class extends Migration {
         if (!Schema::hasTable("supplier")) {
             Schema::create("supplier", function (Blueprint $table) {
                 $table->increments("Id");
-                $table
-                    ->string("SupplierName")
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("ContactNo1", 50)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("ContactNo2", 50)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("ContactNo3", 50)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->double("CurrentBalance")
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->double("InitialBalance")
-                    ->nullable()
-                    ->default("NULL");
+                $table->string("SupplierName", 255)->nullable();
+                $table->string("ContactNo1", 50)->nullable();
+                $table->string("ContactNo2", 50)->nullable();
+                $table->string("ContactNo3", 50)->nullable();
+                $table->double("CurrentBalance")->nullable();
+                $table->double("InitialBalance")->nullable();
                 $table->text("Comments");
-                $table->tinyInteger("IsActive", 1);
-                $table
-                    ->datetime("CreatedDate")
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("CreatedBy", 250)
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->datetime("UpdatedDate")
-                    ->nullable()
-                    ->default("NULL");
-                $table
-                    ->string("UpdatedBy", 250)
-                    ->nullable()
-                    ->default("NULL");
+                $table->tinyInteger("IsActive")->default(0);
+                $table->datetime("CreatedDate")->nullable();
+                $table->string("CreatedBy", 250)->nullable();
+                $table->datetime("UpdatedDate")->nullable();
+                $table->string("UpdatedBy", 250)->nullable();
+
                 $table->primary("Id");
 
                 $table

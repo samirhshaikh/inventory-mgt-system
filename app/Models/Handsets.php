@@ -11,7 +11,7 @@ class Handsets extends BaseModel
 
     protected $connection = "mysql";
     protected $table = "HandsetMaster";
-    protected $primaryKey = ["Id"];
+    protected $primaryKey = ["id"];
     protected $transformer = HandsetsTransfomer::class;
     public $incrementing = false;
     public $timestamps = true;

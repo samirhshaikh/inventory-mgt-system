@@ -110,7 +110,7 @@ export default {
                         ) {
                             this.error_message = "";
 
-                            this.$inertia.get(route("dashboard"), {
+                            this.$inertia.get(route("purchases"), {
                                 method: "get",
                             });
                         } else {

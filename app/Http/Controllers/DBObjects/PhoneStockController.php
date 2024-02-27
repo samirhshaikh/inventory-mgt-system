@@ -135,6 +135,7 @@ class PhoneStockController extends BaseController
     }
 
     /**
+    /**
      * @param IMEIRequest $request
      * @return JsonResponse
      */
@@ -147,16 +148,6 @@ class PhoneStockController extends BaseController
         $phonestock_service = new PhoneStockService();
 
         try {
-            $phonestock_service->checkDuplicateIMEI($request);
-        } catch (DuplicateIMEIException $e) {
-            return $this->sendError(
-                self::DUPLICATE_IMEI,
-                [],
-                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
-            );
-        }
-
-        try {
             $phonestock_service->validateIMEI($request);
         } catch (InvalidIMEIException $e) {
             return $this->sendError(
@@ -164,6 +155,18 @@ class PhoneStockController extends BaseController
                 [],
                 JsonResponse::HTTP_UNPROCESSABLE_ENTITY
             );
+        }
+
+        if ($request->get("check_duplicate", true)) {
+            try {
+                $phonestock_service->checkDuplicateIMEI($request);
+            } catch (DuplicateIMEIException $e) {
+                return $this->sendError(
+                    self::DUPLICATE_IMEI,
+                    [],
+                    JsonResponse::HTTP_UNPROCESSABLE_ENTITY
+                );
+            }
         }
 
         return $this->sendOK([]);

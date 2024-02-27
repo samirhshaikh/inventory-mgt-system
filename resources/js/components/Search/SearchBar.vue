@@ -198,7 +198,6 @@ export default {
 
     watch: {
         focus_on_search_bar: function (new_value) {
-            console.log(new_value);
             if (new_value) {
                 this.openSearchBar();
             }

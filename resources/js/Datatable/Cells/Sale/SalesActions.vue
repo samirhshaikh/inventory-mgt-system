@@ -1,7 +1,7 @@
 <template>
     <div class="flex">
         <Button
-            @click.native="viewSalesInvoice(row.Id)"
+            @click.native="viewSalesInvoice(row.id)"
             icon="file-alt"
             split="border-white"
             class="text-white bg-green-600 mr-2"
@@ -67,7 +67,7 @@ export default {
             const { open, close } = useModal({
                 component: Sale,
                 attrs: {
-                    edit_id: String(this.row.Id),
+                    edit_id: String(this.row.id),
                     options: this.options,
                     submitRecordSaved: (invoice_id) => {
                         this.setTableMetaData({
@@ -109,7 +109,7 @@ export default {
 
                         axios
                             .post(route("sale.delete"), {
-                                Id: this.row.Id,
+                                id: this.row.id,
                             })
                             .then((response) => {
                                 if (response.data.message == "record_deleted") {

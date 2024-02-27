@@ -219,11 +219,11 @@ export default {
     methods: {
         selectRecord(row, select_record) {
             if (select_record) {
-                if (!this.selected_records.hasOwnProperty(row["Id"])) {
-                    this.selected_records[row["Id"]] = row;
+                if (!this.selected_records.hasOwnProperty(row["id"])) {
+                    this.selected_records[row["id"]] = row;
                 }
             } else {
-                delete this.selected_records[row["Id"]];
+                delete this.selected_records[row["id"]];
             }
 
             this.updateTimer();

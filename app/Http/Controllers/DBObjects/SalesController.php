@@ -474,7 +474,7 @@ EOT;
 
         $pdf->addPage($body);
 
-        $filename = "Invoice_" . $request->get("Id") . ".pdf";
+        $filename = "Invoice_" . $request->get("id") . ".pdf";
 
         // Save the PDF
         if (!$pdf->saveAs(storage_path("app/public/" . $filename))) {

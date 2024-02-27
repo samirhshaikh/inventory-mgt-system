@@ -146,7 +146,7 @@
                 </Row>
 
                 <!-- Child rows -->
-                <Row type="header" v-show="expanded_row_id == row.Id">
+                <Row type="header" v-show="expanded_row_id == row.id">
                     <th
                         v-for="child_header in active_child_columns"
                         class="py-2 lg:py-2 px-1 lg:px-2 uppercase border-b border-gray-200"
@@ -179,7 +179,7 @@
                         },
                     ]"
                     :key="child_row.hash"
-                    v-show="expanded_row_id == row.Id"
+                    v-show="expanded_row_id == row.id"
                 >
                     <td
                         v-for="(
@@ -443,7 +443,7 @@ export default {
             if (
                 this.expanded_row_id &&
                 row._level == 0 &&
-                this.expanded_row_id != row.Id
+                this.expanded_row_id != row.id
             ) {
                 classes.push("opacity-10");
             }

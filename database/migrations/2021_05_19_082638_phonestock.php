@@ -11,7 +11,7 @@ return new class extends Migration {
     {
         if (!Schema::hasTable("phonestock")) {
             Schema::create("phonestock", function (Blueprint $table) {
-                $table->increments("Id");
+                $table->id();
                 $table->integer("InvoiceId")->nullable();
                 $table->integer("MakeId")->nullable();
                 $table->integer("ModelId")->nullable();
@@ -30,23 +30,21 @@ return new class extends Migration {
                 $table->string("UpdatedBy", 250)->nullable();
                 $table->integer("ParentId")->nullable();
 
-                $table->primary("Id");
-
                 $table
                     ->foreign("InvoiceId")
-                    ->references("Id")
+                    ->references("id")
                     ->on("purchase");
                 $table
                     ->foreign("MakeId")
-                    ->references("Id")
+                    ->references("id")
                     ->on("manufacturermaster");
                 $table
                     ->foreign("ModelId")
-                    ->references("Id")
+                    ->references("id")
                     ->on("modelmaster");
                 $table
                     ->foreign("ColorId")
-                    ->references("Id")
+                    ->references("id")
                     ->on("colormaster");
                 $table
                     ->foreign("CreatedBy")

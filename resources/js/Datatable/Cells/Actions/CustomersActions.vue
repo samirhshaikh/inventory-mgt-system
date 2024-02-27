@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import CustomerSale from "../../../DBObjects/CustomerSale";
+import Customer from "../../../DBObjects/Customer";
 import { mapActions } from "vuex";
 import Confirm from "../../../components/Confirm.vue";
 import { datatable_cell } from "../datatable_cell";
@@ -52,9 +52,9 @@ export default {
             this.setPopperOpen(true);
 
             const { open, close } = useModal({
-                component: CustomerSale,
+                component: Customer,
                 attrs: {
-                    edit_id: String(this.row.Id),
+                    edit_id: String(this.row.id),
                     options: this.options,
                     onConfirm() {
                         close();
@@ -81,8 +81,8 @@ export default {
                         this.deleting_record = true;
 
                         axios
-                            .post(route("customer_sales.delete"), {
-                                Id: this.row.Id,
+                            .post(route("customers.delete"), {
+                                id: this.row.id,
                             })
                             .then((response) => {
                                 if (response.data.message == "record_deleted") {

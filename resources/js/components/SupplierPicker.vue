@@ -4,26 +4,32 @@
             :value="supplier_id"
             v-model="supplier_id"
             label="SupplierName"
-            :reduce="(supplier) => supplier.Id"
-            :options="suppliers"
+            :reduce="(supplier) => supplier.id"
+            :options="
+                source === 'parts_suppliers' ? parts_suppliers : suppliers
+            "
             class="w-48 generic_vs_select"
-            :loading="loading_suppliers"
+            :loading="
+                source === 'parts_suppliers'
+                    ? loading_parts_suppliers
+                    : loading_suppliers
+            "
             :class="{
                 required_field: required_field,
             }"
             ref="supplier_picker"
-            :filterable="false"
+            :filterable="true"
             @update:modelValue="$emit('onOptionSelected', supplier_id)"
         ></v-select>
 
         <Button
-            @click.native="addSupplier"
+            @click.native="addSupplier(source)"
             icon="plus"
             split="border-white"
             class="ml-1 bg-green-600 text-white"
             v-if="enable_add"
         >
-            New Supplier
+            New
         </Button>
     </div>
 </template>
@@ -36,6 +42,10 @@ export default {
     name: "SupplierPicker",
 
     props: {
+        source: {
+            type: String,
+            default: "suppliers",
+        },
         selected_value: "",
         required_field: false,
         enable_add: false,
@@ -68,7 +78,9 @@ export default {
 
     watch: {
         refresh_suppliers: function () {
-            this.load_suppliers();
+            this.source === "parts_suppliers"
+                ? this.load_parts_suppliers()
+                : this.load_suppliers();
         },
 
         selected_value: function (new_value) {

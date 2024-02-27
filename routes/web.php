@@ -115,6 +115,32 @@ Route::group(["prefix" => "handset-manufacturers"], function ($router) {
         ->name("handset-manufacturers.check-duplicate-name");
 });
 
+Route::group(["prefix" => "parts"], function ($router) {
+    $router->get("", "PagesController@parts")->name("parts");
+    $router
+        ->get("data", "DBObjects\PartsController@getData")
+        ->name("parts.data");
+    $router
+        ->post(
+            "change-active-status",
+            "DBObjects\PartsController@changeActiveStatus"
+        )
+        ->name("parts.change-active-status");
+    $router->post("save", "DBObjects\PartsController@save")->name("parts.save");
+    $router
+        ->get("get-single", "DBObjects\PartsController@getSingle")
+        ->name("parts.get-single");
+    $router
+        ->post("delete", "DBObjects\PartsController@delete")
+        ->name("parts.delete");
+    $router
+        ->post(
+            "check-duplicate-name",
+            "DBObjects\PartsController@checkDuplicateName"
+        )
+        ->name("parts.check-duplicate-name");
+});
+
 Route::group(["prefix" => "handsets"], function ($router) {
     $router->get("", "PagesController@handsets")->name("handsets");
     $router
@@ -175,47 +201,71 @@ Route::group(["prefix" => "users"], function ($router) {
         ->name("users.check-duplicate-name");
 });
 
-Route::group(["prefix" => "customer_sales"], function ($router) {
-    $router->get("", "PagesController@customerSales")->name("customer_sales");
+Route::group(["prefix" => "customers"], function ($router) {
+    $router->get("", "PagesController@customers")->name("customers");
     $router
-        ->get("data", "DBObjects\CustomerSalesController@getData")
-        ->name("customer_sales.data");
+        ->get("data", "DBObjects\CustomersController@getData")
+        ->name("customers.data");
     $router
         ->post(
             "change-active-status",
-            "DBObjects\CustomerSalesController@changeActiveStatus"
+            "DBObjects\CustomersController@changeActiveStatus"
         )
-        ->name("customer_sales.change-active-status");
+        ->name("customers.change-active-status");
     $router
-        ->post("save", "DBObjects\CustomerSalesController@save")
-        ->name("customer_sales.save");
+        ->post("save", "DBObjects\CustomersController@save")
+        ->name("customers.save");
     $router
-        ->get("get-single", "DBObjects\CustomerSalesController@getSingle")
-        ->name("customer_sales.get-single");
+        ->get("get-single", "DBObjects\CustomersController@getSingle")
+        ->name("customers.get-single");
     $router
-        ->post("delete", "DBObjects\CustomerSalesController@delete")
-        ->name("customer_sales.delete");
+        ->post("delete", "DBObjects\CustomersController@delete")
+        ->name("customers.delete");
+});
+
+Route::group(["prefix" => "parts_suppliers"], function ($router) {
+    $router
+        ->get("", "PagesController@parts_suppliers")
+        ->name("parts_suppliers");
+    $router
+        ->get("data", "DBObjects\PartsSuppliersController@getData")
+        ->name("parts_suppliers.data");
+    $router
+        ->post(
+            "change-active-status",
+            "DBObjects\PartsSuppliersController@changeActiveStatus"
+        )
+        ->name("parts_suppliers.change-active-status");
+    $router
+        ->post("save", "DBObjects\PartsSuppliersController@save")
+        ->name("parts_suppliers.save");
+    $router
+        ->get("get-single", "DBObjects\PartsSuppliersController@getSingle")
+        ->name("parts_suppliers.get-single");
+    $router
+        ->post("delete", "DBObjects\PartsSuppliersController@delete")
+        ->name("parts_suppliers.delete");
 });
 
 Route::group(["prefix" => "suppliers"], function ($router) {
     $router->get("", "PagesController@suppliers")->name("suppliers");
     $router
-        ->get("data", "DBObjects\SuppliersController@getData")
+        ->get("data", "DBObjects\MobileSuppliersController@getData")
         ->name("suppliers.data");
     $router
         ->post(
             "change-active-status",
-            "DBObjects\SuppliersController@changeActiveStatus"
+            "DBObjects\MobileSuppliersController@changeActiveStatus"
         )
         ->name("suppliers.change-active-status");
     $router
-        ->post("save", "DBObjects\SuppliersController@save")
+        ->post("save", "DBObjects\MobileSuppliersController@save")
         ->name("suppliers.save");
     $router
-        ->get("get-single", "DBObjects\SuppliersController@getSingle")
+        ->get("get-single", "DBObjects\MobileSuppliersController@getSingle")
         ->name("suppliers.get-single");
     $router
-        ->post("delete", "DBObjects\SuppliersController@delete")
+        ->post("delete", "DBObjects\MobileSuppliersController@delete")
         ->name("suppliers.delete");
 });
 
@@ -236,6 +286,22 @@ Route::group(["prefix" => "phonestock"], function ($router) {
     $router
         ->post("validate-imei", "DBObjects\PhoneStockController@validateIMEI")
         ->name("phonestock.validate-imei");
+});
+
+Route::group(["prefix" => "repairs"], function ($router) {
+    $router->get("", "PagesController@repairs")->name("repairs");
+    $router
+        ->get("data", "DBObjects\RepairsController@getData")
+        ->name("repairs.data");
+    $router
+        ->post("save", "DBObjects\RepairsController@save")
+        ->name("repair.save");
+    $router
+        ->get("get-single", "DBObjects\RepairsController@getSingle")
+        ->name("repair.get-single");
+    $router
+        ->post("delete", "DBObjects\RepairsController@delete")
+        ->name("repair.delete");
 });
 
 Route::group(["prefix" => "purchase"], function ($router) {

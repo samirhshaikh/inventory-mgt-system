@@ -38,7 +38,7 @@ class UserTest extends TestCase
         );
 
         $this->postJson("users/change-active-status", [
-            "Id" => $this->user["username"],
+            "id" => $this->user["username"],
             "value" => "1",
         ])
             ->assertStatus(JsonResponse::HTTP_OK)
@@ -54,7 +54,7 @@ class UserTest extends TestCase
         );
 
         $this->postJson("users/change-admin-status", [
-            "Id" => $this->user["username"],
+            "id" => $this->user["username"],
             "value" => "1",
         ])
             ->assertStatus(JsonResponse::HTTP_OK)

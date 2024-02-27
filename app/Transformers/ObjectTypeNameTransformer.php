@@ -10,7 +10,7 @@ class ObjectTypeNameTransformer extends TransformerAbstract
     public function transform(ObjectTypeName $model)
     {
         return [
-            "Id" => $model->Id,
+            "id" => $model->id,
             "Name" => ucwords($model->Name),
             "IsActive" => boolval($model->IsActive),
             "CreatedDate" => empty($model->CreatedDate)

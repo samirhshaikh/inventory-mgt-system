@@ -86,7 +86,7 @@ class HandsetsDatatable extends BaseDatatable
             "url" => route("handsets.data"),
             "pagination" => false,
             "enable_search" => true,
-            "primary_key" => "Id",
+            "primary_key" => "id",
             "record_name" => "Handset",
             "sorting" => [
                 "enabled" => true,

@@ -14,11 +14,15 @@ use Illuminate\Http\Request;
 
 abstract class ObjectTypeNameController extends BaseController
 {
+    protected array $tables_to_check = ["PhoneStock", "Handsets"]; //'Repair'
+
     abstract protected function getModel();
 
     abstract protected function getRecordName();
 
     abstract protected function getColumnIdInReferenceTables();
+
+    abstract protected function getTablesToCheck();
 
     /**
      * @param IdRequest $request
@@ -118,7 +122,10 @@ abstract class ObjectTypeNameController extends BaseController
         );
 
         try {
-            $object_type_name_service->delete($request);
+            $object_type_name_service->delete(
+                $request,
+                $this->getTablesToCheck()
+            );
 
             return $this->sendOK([], self::RECORD_DELETED);
         } catch (RecordNotFoundException $e) {

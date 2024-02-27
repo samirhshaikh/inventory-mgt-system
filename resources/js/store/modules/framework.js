@@ -9,10 +9,11 @@ const state = () => ({
     page_size: 10,
     refresh_data: false,
     refresh_suppliers: false,
-    refresh_customer_sales: false,
+    refresh_customers: false,
     refresh_handset_models: false,
     refresh_handset_manufacturers: false,
     refresh_handset_colors: false,
+    refresh_parts: false,
     tab_to_refresh: "",
 });
 
@@ -37,8 +38,8 @@ const getters = {
         return state.refresh_suppliers;
     },
 
-    refresh_customer_sales: (state) => {
-        return state.refresh_customer_sales;
+    refresh_customers: (state) => {
+        return state.refresh_customers;
     },
 
     refresh_handset_models: (state) => {
@@ -51,6 +52,10 @@ const getters = {
 
     refresh_handset_colors: (state) => {
         return state.refresh_handset_colors;
+    },
+
+    refresh_parts: (state) => {
+        return state.refresh_parts;
     },
 };
 
@@ -79,8 +84,8 @@ const actions = {
         commit("refreshSuppliers");
     },
 
-    refreshCustomerSales({ commit }) {
-        commit("refreshCustomerSales");
+    refreshCustomers({ commit }) {
+        commit("refreshCustomers");
     },
 
     refreshHandsetModels({ commit }) {
@@ -93,6 +98,10 @@ const actions = {
 
     refreshHandsetColors({ commit }) {
         commit("refreshHandsetColors");
+    },
+
+    refreshParts({ commit }) {
+        commit("refreshParts");
     },
 };
 
@@ -141,8 +150,8 @@ const mutations = {
         state.refresh_suppliers = moment().format();
     },
 
-    refreshCustomerSales(state) {
-        state.refresh_customer_sales = moment().format();
+    refreshCustomers(state) {
+        state.refresh_customers = moment().format();
     },
 
     refreshHandsetModels(state) {
@@ -155,6 +164,10 @@ const mutations = {
 
     refreshHandsetColors(state) {
         state.refresh_handset_colors = moment().format();
+    },
+
+    refreshParts(state) {
+        state.refresh_parts = moment().format();
     },
 };
 

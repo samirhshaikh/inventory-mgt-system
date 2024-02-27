@@ -107,7 +107,7 @@ class PhoneStockDatatable extends BaseDatatable
             "url" => route("phonestock.data"),
             "pagination" => false,
             "enable_search" => true,
-            "primary_key" => "Id",
+            "primary_key" => "id",
             "record_name" => "Phone",
             "sorting" => [
                 "enabled" => true,

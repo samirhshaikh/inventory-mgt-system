@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         if (!Schema::hasTable("sales")) {
             Schema::create("sales", function (Blueprint $table) {
-                $table->increments("Id");
+                $table->id();
                 $table->integer("CustomerId")->nullable();
                 $table->integer("RepairId")->nullable();
                 $table->string("InvoiceNo", 20)->nullable();
@@ -20,22 +20,20 @@ return new class extends Migration {
                 $table->tinyInteger("BusinessInvoice")->default(0);
                 $table->string("PaymentMethod", 200)->nullable();
                 $table->string("ChequeNo", 50)->nullable();
-                $table->text("Comments");
+                $table->text("Comments")->nullable();
                 $table->double("VAT")->nullable();
                 $table->tinyInteger("IsActive")->default(0);
                 $table->datetime("CreatedDate")->nullable();
                 $table->string("CreatedBy", 250)->nullable();
                 $table->datetime("UpdatedDate")->nullable();
                 $table->string("UpdatedBy", 250)->nullable();
-                $table->text("AccessoriesDesc");
+                $table->text("AccessoriesDesc")->nullable();
                 $table->double("AccessoriesAmount")->nullable();
-
-                $table->primary("Id");
 
                 $table
                     ->foreign("CustomerId")
-                    ->references("Id")
-                    ->on("customer_sales");
+                    ->references("id")
+                    ->on("customers");
                 $table
                     ->foreign("CreatedBy")
                     ->references("UserName")

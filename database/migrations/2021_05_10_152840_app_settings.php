@@ -14,7 +14,7 @@ return new class extends Migration {
             Schema::create("app_settings", function (Blueprint $table) {
                 $table->string("UserName", 20);
                 $table->string("State", 20);
-                $table->text("Payload");
+                $table->text("Payload")->nullable();
                 $table->datetime("CreatedDate")->nullable();
                 $table->string("CreatedBy", 250)->nullable();
                 $table->datetime("UpdatedDate")->nullable();

@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col justify-between h-full">
+    <div class="flex flex-col justify-between h-full overflow-y-auto">
         <div class="flex flex-col">
             <section v-for="(links, section_title) in navigation" class="mt-5">
                 <h3
@@ -103,6 +103,7 @@
                     'hover: text-gray-900': dark_mode,
                     'hover: bg-gray-900': !dark_mode,
                 }"
+                style="width: 32px"
             >
                 <FA
                     :icon="['fas', 'angle-double-left']"
@@ -158,16 +159,23 @@ export default {
                         icon: ["fas", "arrow-down"],
                         visible: true,
                     },
-                ],
-
-                Masters: [
+                    {
+                        title: "Repairs",
+                        link_type: "route",
+                        route: "repairs",
+                        icon: ["fas", "screwdriver"],
+                        visible: true,
+                    },
                     {
                         title: "Customers",
                         link_type: "route",
-                        route: "customer_sales",
+                        route: "customers",
                         icon: ["fas", "users"],
                         visible: true,
                     },
+                ],
+
+                Mobile: [
                     {
                         title: "Suppliers",
                         link_type: "route",
@@ -183,17 +191,34 @@ export default {
                         visible: true,
                     },
                     {
+                        title: "Models",
+                        link_type: "route",
+                        route: "handset-models",
+                        icon: ["fas", "mobile-alt"],
+                        visible: true,
+                    },
+                    {
                         title: "Colors",
                         link_type: "route",
                         route: "handset-colors",
                         icon: ["fas", "palette"],
                         visible: true,
                     },
+                ],
+
+                Repairs: [
                     {
-                        title: "Models",
+                        title: "Parts Suppliers",
                         link_type: "route",
-                        route: "handset-models",
-                        icon: ["fas", "mobile-alt"],
+                        route: "parts_suppliers",
+                        icon: ["fas", "screwdriver-wrench"],
+                        visible: true,
+                    },
+                    {
+                        title: "Parts",
+                        link_type: "route",
+                        route: "parts",
+                        icon: ["fas", "industry"],
                         visible: true,
                     },
                 ],

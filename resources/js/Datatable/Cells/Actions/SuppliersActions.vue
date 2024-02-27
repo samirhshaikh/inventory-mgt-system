@@ -54,7 +54,7 @@ export default {
             const { open, close } = useModal({
                 component: Supplier,
                 attrs: {
-                    edit_id: String(this.row.Id),
+                    edit_id: String(this.row.id),
                     options: this.options,
                     onConfirm() {
                         close();
@@ -81,8 +81,8 @@ export default {
                         this.deleting_record = true;
 
                         axios
-                            .post(route("suppliers.delete"), {
-                                Id: this.row.Id,
+                            .post(route(this.options.id + ".delete"), {
+                                id: this.row.id,
                             })
                             .then((response) => {
                                 if (response.data.message == "record_deleted") {

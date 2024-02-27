@@ -28,7 +28,7 @@ class SuppliersDatatable extends BaseDatatable
         ],
         [
             "name" => "Balance",
-            "key" => "CurrentBalance",
+            "key" => "Balance",
             "enabled" => true,
             "th" => "w-1/6 text-left sticky",
             "td" => "text-left",
@@ -78,7 +78,7 @@ class SuppliersDatatable extends BaseDatatable
             "url" => route("suppliers.data"),
             "pagination" => false,
             "enable_search" => true,
-            "primary_key" => "Id",
+            "primary_key" => "id",
             "record_name" => "Supplier",
             "sorting" => [
                 "enabled" => true,

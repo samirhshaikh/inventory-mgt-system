@@ -12,21 +12,19 @@ return new class extends Migration {
     {
         if (!Schema::hasTable("supplier")) {
             Schema::create("supplier", function (Blueprint $table) {
-                $table->increments("Id");
+                $table->id();
                 $table->string("SupplierName", 255)->nullable();
                 $table->string("ContactNo1", 50)->nullable();
                 $table->string("ContactNo2", 50)->nullable();
                 $table->string("ContactNo3", 50)->nullable();
                 $table->double("CurrentBalance")->nullable();
                 $table->double("InitialBalance")->nullable();
-                $table->text("Comments");
+                $table->text("Comments")->nullable();
                 $table->tinyInteger("IsActive")->default(0);
                 $table->datetime("CreatedDate")->nullable();
                 $table->string("CreatedBy", 250)->nullable();
                 $table->datetime("UpdatedDate")->nullable();
                 $table->string("UpdatedBy", 250)->nullable();
-
-                $table->primary("Id");
 
                 $table
                     ->foreign("CreatedBy")

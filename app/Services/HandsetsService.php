@@ -24,10 +24,10 @@ class HandsetsService
         $record = Handsets::selectRaw(
             "HandsetMaster.*, ManufactureMaster.Name as manufacturer, ColorMaster.Name as color, modelmaster.Name as model"
         )
-            ->where("HandsetMaster.Id", $request->get("Id"))
-            ->join("ManufactureMaster", "ManufactureMaster.Id", "=", "MakeId")
-            ->join("ColorMaster", "ColorMaster.Id", "=", "ColorId")
-            ->join("modelmaster", "modelmaster.Id", "=", "ModelId")
+            ->where("HandsetMaster.id", $request->get("id"))
+            ->join("ManufactureMaster", "ManufactureMaster.id", "=", "MakeId")
+            ->join("ColorMaster", "ColorMaster.id", "=", "ColorId")
+            ->join("modelmaster", "modelmaster.id", "=", "ModelId")
             ->get();
 
         if ($record->count()) {
@@ -63,13 +63,13 @@ class HandsetsService
         if (
             $this->isDuplicateName(
                 $request->get("Name"),
-                $request->get("Id", 0)
+                $request->get("id", 0)
             )
         ) {
             throw new DuplicateNameException();
         }
 
-        $record = Handsets::where("Id", $request->get("Id"))->get();
+        $record = Handsets::where("id", $request->get("id"))->get();
 
         if ($request->get("operation", "add") == "edit") {
             if (!$record->count()) {
@@ -92,7 +92,7 @@ class HandsetsService
         $record->save();
 
         return $request->get("operation", "add") == "edit"
-            ? $request->get("Id")
+            ? $request->get("id")
             : Handsets::lastInsertId();
     }
 
@@ -104,12 +104,12 @@ class HandsetsService
     public function delete(IdRequest $request): bool
     {
         //Check whether the record exist or not
-        $record = Handsets::where("Id", $request->get("Id"));
+        $record = Handsets::where("id", $request->get("id"));
 
         if ($record->get()->count()) {
             //ToDo: Find the references of Handsets models before deleting.
             //            $tables_to_check = ['Purchase'];
-            //            if ($this->foreignReferenceFound($tables_to_check, 'SupplierId', $request->get('Id'))) {
+            //            if ($this->foreignReferenceFound($tables_to_check, 'SupplierId', $request->get('id'))) {
             //                throw new ReferenceException;
             //            }
 
@@ -131,7 +131,7 @@ class HandsetsService
         if (
             $this->isDuplicateName(
                 $request->get("Name"),
-                $request->get("Id", 0)
+                $request->get("id", 0)
             )
         ) {
             throw new DuplicateNameException();
@@ -149,7 +149,7 @@ class HandsetsService
     {
         //Check whether the record exists or not
         if (!empty($id)) {
-            $record = Handsets::where("Id", $id)->get();
+            $record = Handsets::where("id", $id)->get();
 
             if (!$record->count()) {
                 return false;

@@ -12,7 +12,7 @@ abstract class ObjectTypeName extends BaseModel
 
     protected $connection = "mysql";
     protected $table = "";
-    protected $primaryKey = ["Id"];
+    protected $primaryKey = ["id"];
     protected $transformer = ObjectTypeNameTransformer::class;
     public $incrementing = false;
     public $timestamps = true;

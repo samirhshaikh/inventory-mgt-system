@@ -11,7 +11,7 @@
         content-transition="vfm-fade"
         overlay-transition="vfm-fade"
     >
-        <div class="p-0 overflow-y-auto text-sm">
+        <div class="p-0 text-sm h-full">
             <div
                 class="datatable_header"
                 :class="{
@@ -263,13 +263,13 @@
                                     v-if="!loading_handset_manufacturers"
                                 >
                                     <v-select
-                                        :value="child_row['manufacturer']['Id']"
+                                        :value="child_row['manufacturer']['id']"
                                         label="Name"
                                         v-model="
-                                            child_row['manufacturer']['Id']
+                                            child_row['manufacturer']['id']
                                         "
                                         :reduce="
-                                            (manufacturer) => manufacturer.Id
+                                            (manufacturer) => manufacturer.id
                                         "
                                         :options="handset_manufacturers"
                                         class="w-full generic_vs_select"
@@ -277,10 +277,10 @@
                                         :class="{
                                             required_field:
                                                 child_row['manufacturer'][
-                                                    'Id'
+                                                    'id'
                                                 ] == '' ||
                                                 child_row['manufacturer'][
-                                                    'Id'
+                                                    'id'
                                                 ] == null,
                                         }"
                                     ></v-select>
@@ -313,18 +313,18 @@
                                     v-if="!loading_handset_models"
                                 >
                                     <v-select
-                                        :value="child_row['model']['Id']"
+                                        :value="child_row['model']['id']"
                                         label="Name"
-                                        v-model="child_row['model']['Id']"
-                                        :reduce="(model) => model.Id"
+                                        v-model="child_row['model']['id']"
+                                        :reduce="(model) => model.id"
                                         :options="handset_models"
                                         class="w-full generic_vs_select"
                                         @option:selected="setModel"
                                         :class="{
                                             required_field:
-                                                child_row['model']['Id'] ==
+                                                child_row['model']['id'] ==
                                                     '' ||
-                                                child_row['model']['Id'] ==
+                                                child_row['model']['id'] ==
                                                     null,
                                         }"
                                     ></v-select>
@@ -356,18 +356,18 @@
                                     v-if="!loading_handset_colors"
                                 >
                                     <v-select
-                                        :value="child_row['color']['Id']"
-                                        v-model="child_row['color']['Id']"
-                                        :reduce="(color) => color.Id"
+                                        :value="child_row['color']['id']"
+                                        v-model="child_row['color']['id']"
+                                        :reduce="(color) => color.id"
                                         label="Name"
                                         :options="handset_colors"
                                         class="w-full generic_vs_select"
                                         @option:selected="setColor"
                                         :class="{
                                             required_field:
-                                                child_row['color']['Id'] ==
+                                                child_row['color']['id'] ==
                                                     '' ||
-                                                child_row['color']['Id'] ==
+                                                child_row['color']['id'] ==
                                                     null,
                                         }"
                                     ></v-select>
@@ -424,15 +424,12 @@
                                     v-model="child_row['Network']"
                                     :options="networks"
                                     class="w-48 generic_vs_select"
-                                    :class="{
-                                        required_field:
-                                            child_row['Network'] == '' ||
-                                            child_row['Network'] == null,
-                                    }"
                                 ></v-select>
                             </div>
 
-                            <div class="w-full md:w-1/2 form_field_container">
+                            <div
+                                class="w-full md:w-1/2 form_field_container items-center"
+                            >
                                 <label
                                     class="form_field_label"
                                     :class="{
@@ -442,7 +439,14 @@
                                 >
                                     Cost
                                 </label>
-                                £
+                                <span
+                                    :class="{
+                                        'text-gray-700': !dark_mode,
+                                        'text-white': dark_mode,
+                                    }"
+                                    class="mr-1"
+                                    >£</span
+                                >
                                 <input
                                     class="w-32 generic_input"
                                     type="number"
@@ -553,20 +557,23 @@ export default {
                 Comments: "",
             },
             child_row: {
+                IMEI: "",
+                StockType: "New",
+                Status: this.phonestock.STATUS_IN_STOCK,
                 manufacturer: {
-                    Id: "",
+                    id: "",
                     Name: "",
                 },
                 model: {
-                    Id: "",
+                    id: "",
                     Name: "",
                 },
                 color: {
-                    Id: "",
+                    id: "",
                     Name: "",
                 },
-                StockType: "New",
-                Status: this.phonestock.STATUS_IN_STOCK,
+                Size: "",
+                Cost: "",
                 Network: "Unlocked",
             },
             rows: [],
@@ -662,23 +669,23 @@ export default {
                 this.child_row["StockType"] == "" ||
                 this.child_row["StockType"] == null ||
                 this.child_row_keys.indexOf("manufacturer") < 0 ||
-                this.child_row["manufacturer"]["Id"] == "" ||
-                this.child_row["manufacturer"]["Id"] == null ||
+                this.child_row["manufacturer"]["id"] == "" ||
+                this.child_row["manufacturer"]["id"] == null ||
                 this.child_row_keys.indexOf("model") < 0 ||
-                this.child_row["model"]["Id"] == "" ||
-                this.child_row["model"]["Id"] == null ||
+                this.child_row["model"]["id"] == "" ||
+                this.child_row["model"]["id"] == null ||
                 this.child_row_keys.indexOf("color") < 0 ||
-                this.child_row["color"]["Id"] == "" ||
-                this.child_row["color"]["Id"] == null ||
+                this.child_row["color"]["id"] == "" ||
+                this.child_row["color"]["id"] == null ||
                 this.child_row_keys.indexOf("Size") < 0 ||
                 this.child_row["Size"] == "" ||
                 this.child_row["Size"] == null ||
                 this.child_row_keys.indexOf("Cost") < 0 ||
                 this.child_row["Cost"] == "" ||
                 parseFloat(this.child_row["Cost"]) == 0 ||
-                this.child_row_keys.indexOf("Network") < 0 ||
-                this.child_row["Network"] == "" ||
-                this.child_row["Network"] == null ||
+                // this.child_row_keys.indexOf("Network") < 0 ||
+                // this.child_row["Network"] == "" ||
+                // this.child_row["Network"] == null ||
                 this.child_row_keys.indexOf("Status") < 0 ||
                 this.child_row["Status"] == "" ||
                 this.child_row["Status"] == null
@@ -736,7 +743,7 @@ export default {
             axios
                 .get(route("purchase.get-single"), {
                     params: {
-                        Id: this.edit_id,
+                        id: this.edit_id,
                     },
                 })
                 .then(
@@ -755,7 +762,7 @@ export default {
                         this.loading = false;
 
                         this.$nextTick(() => {
-                            if (this.options?.tradeIn?.Id) {
+                            if (this.options?.tradeIn?.id) {
                                 // this.editRecord(this.options.tradeIn);
                             } else {
                                 this.$refs.imei.focus();
@@ -797,8 +804,8 @@ export default {
                 if (object["row_id"] != row_id) {
                     rows.push(_.cloneDeep(object));
                 } else if (
-                    Object.keys(object).indexOf("Id") >= 0 &&
-                    object["Id"] != ""
+                    Object.keys(object).indexOf("id") >= 0 &&
+                    object["id"] != ""
                 ) {
                     this.children_to_delete.push(object);
                 }
@@ -821,7 +828,7 @@ export default {
 
         setModel(value) {
             const object = this.handset_models.find(
-                (item) => item.Id == value.Id
+                (item) => item.id == value.id
             );
 
             if (object) {
@@ -833,7 +840,7 @@ export default {
 
         setManufacturer(value) {
             const object = this.handset_manufacturers.find(
-                (item) => item.Id == value.Id
+                (item) => item.id == value.id
             );
 
             if (object) {
@@ -845,7 +852,7 @@ export default {
 
         setColor(value) {
             const object = this.handset_colors.find(
-                (item) => item.Id == value.Id
+                (item) => item.id == value.id
             );
 
             if (object) {
@@ -880,20 +887,31 @@ export default {
             }
             this.rows = _.cloneDeep(rows);
 
+            //Set the data back to empty
             this.child_row["IMEI"] = "";
-            this.child_row["Id"] = "";
-            // this.child_row["StockType"] = "New";
-            // this.child_row["Status"] = this.phonestock.STATUS_IN_STOCK;
-            // this.child_row["manufacturer"]["Id"] = "";
-            // this.child_row["manufacturer"]["Name"] = "";
-            // this.child_row["model"]["Id"] = "";
-            // this.child_row["model"]["Name"] = "";
-            // this.child_row["color"]["Id"] = "";
-            // this.child_row["color"]["Name"] = "";
-            // this.child_row["Size"] = "";
-            // this.child_row["Network"] = "Unlocked";
-            // this.child_row["Cost"] = "";
-            this.child_row["IsActive"] = 1;
+            this.child_row["id"] = "";
+            this.child_row["StockType"] = "New";
+            this.child_row["Status"] = this.phonestock.STATUS_IN_STOCK;
+            this.child_row = {
+                IMEI: "",
+                StockType: "New",
+                Status: this.phonestock.STATUS_IN_STOCK,
+                manufacturer: {
+                    id: "",
+                    Name: "",
+                },
+                model: {
+                    id: "",
+                    Name: "",
+                },
+                color: {
+                    id: "",
+                    Name: "",
+                },
+                Size: "",
+                Cost: "",
+                Network: "Unlocked",
+            };
 
             this.add_record_title = "Add";
             this.child_row["row_id"] = helper_functions.getRandomId();
@@ -981,13 +999,9 @@ export default {
             //Check in existing rows
             this.duplicate_imei = false;
             _.forIn(this.rows, (object, key) => {
-                if (object["Id"] == 0) {
-                    if (object["IMEI"] == this.child_row["IMEI"]) {
-                        this.duplicate_imei = true;
-                    }
-                } else if (
-                    object["Id"] != this.child_row["Id"] &&
-                    object["IMEI"] == this.child_row["IMEI"]
+                if (
+                    object["row_id"] != this.child_row["row_id"] &&
+                    object["IMEI"] === this.child_row["IMEI"]
                 ) {
                     this.duplicate_imei = true;
                 }
@@ -1002,7 +1016,7 @@ export default {
 
             axios
                 .post(route("phonestock.validate-imei"), {
-                    Id: this.child_row["Id"],
+                    id: this.child_row["id"],
                     IMEI: this.child_row["IMEI"],
                 })
                 .then(
@@ -1035,7 +1049,7 @@ export default {
         suppliersLoaded() {
             if (!this.edit_id && !this.supplier_loaded) {
                 this.$nextTick(() => {
-                    // this.$refs.customer_sales_picker.$refs.customer_id.$el
+                    // this.$refs.customers_picker.$refs.customer_id.$el
                     //     .querySelector("input")
                     //     .focus();
                     this.supplier_loaded = true;

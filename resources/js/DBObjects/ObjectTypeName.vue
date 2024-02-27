@@ -11,7 +11,13 @@
         content-transition="vfm-fade"
         overlay-transition="vfm-fade"
     >
-        <div class="p-0 overflow-y-auto text-sm">
+        <div
+            class="p-0 overflow-y-auto text-sm"
+            :class="{
+                'text-gray-900': !dark_mode,
+                'text-white': dark_mode,
+            }"
+        >
             <div
                 class="datatable_header"
                 :class="{
@@ -189,7 +195,7 @@ export default {
             axios
                 .get(this.options.routes["get-single"], {
                     params: {
-                        Id: this.edit_id,
+                        id: this.edit_id,
                     },
                 })
                 .then(
@@ -262,6 +268,9 @@ export default {
                             case "handset_colors":
                                 this.refreshHandsetColors();
                                 break;
+                            case "parts":
+                                this.refreshParts();
+                                break;
                         }
                     }
 
@@ -300,7 +309,7 @@ export default {
 
             axios
                 .post(this.options.routes["check-duplicate-name"], {
-                    Id: this.row["Id"],
+                    id: this.row["id"],
                     Name: this.row["Name"],
                 })
                 .then((response) => {
@@ -326,6 +335,7 @@ export default {
             refreshHandsetManufacturers:
                 "framework/refreshHandsetManufacturers",
             refreshHandsetColors: "framework/refreshHandsetColors",
+            refreshParts: "framework/refreshParts",
             addError: "errors/addError",
         }),
     },

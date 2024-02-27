@@ -72,7 +72,7 @@
                                 >
                                     Customer
                                 </label>
-                                <CustomerSalesPicker
+                                <CustomerPicker
                                     :selected_value="row['CustomerId']"
                                     :required_field="
                                         row['CustomerId'] == '' ||
@@ -81,8 +81,8 @@
                                     :enable_add="true"
                                     :enable_edit="true"
                                     @on-option-selected="onCustomerSelected"
-                                    @on-data-load-complete="customerSalesLoaded"
-                                    ref="customer_sales_picker"
+                                    @on-data-load-complete="customersLoaded"
+                                    ref="customers_picker"
                                 />
                             </div>
 
@@ -118,9 +118,9 @@
                                 <div class="flex flex-row items-center">
                                     <span
                                         v-if="
-                                            row_keys.indexOf('Id') < 0 ||
-                                            row['Id'] == 0 ||
-                                            row['Id'] == ''
+                                            row_keys.indexOf('id') < 0 ||
+                                            row['id'] == 0 ||
+                                            row['id'] == ''
                                         "
                                         >Auto Generated</span
                                     >
@@ -189,103 +189,7 @@
                             </div>
                         </div>
 
-                        <div
-                            class="datatable_header"
-                            :class="{
-                                'border-product-color-lighter': dark_mode,
-                                'border-product-color': !dark_mode,
-                            }"
-                        >
-                            <h2
-                                :class="{
-                                    'text-product-color-lighter': dark_mode,
-                                    'text-product-color': !dark_mode,
-                                }"
-                            >
-                                Phone Details
-                            </h2>
-                            <div class="search_bar_container">
-                                <Button
-                                    @click.native="updateRecord"
-                                    icon="plus"
-                                    split="border-white"
-                                    class="ml-1"
-                                    :class="{
-                                        'bg-green-600': valid_phone_data,
-                                        'bg-gray-600 text-gray-500 cursor-not-allowed':
-                                            !valid_phone_data,
-                                    }"
-                                    v-if="current_row_id != ''"
-                                >
-                                    Update
-                                </Button>
-                                <Button
-                                    @click.native="selectPhoneStock"
-                                    icon="search"
-                                    split="border-white"
-                                    class="ml-1 bg-green-600 text-white"
-                                    v-if="current_row_id == ''"
-                                >
-                                    Add Phone
-                                </Button>
-                            </div>
-                        </div>
-
                         <div class="flex flex-wrap items-start">
-                            <div
-                                class="w-full md:w-1/2 form_field_container"
-                                v-if="current_row_id != ''"
-                            >
-                                <label
-                                    class="form_field_label"
-                                    :class="{
-                                        'text-gray-700': !dark_mode,
-                                        'text-white': dark_mode,
-                                    }"
-                                >
-                                    IMEI
-                                </label>
-                                <div class="block flex flex-row">
-                                    <label
-                                        class="form_value_label"
-                                        :class="{
-                                            'text-gray-600': !dark_mode,
-                                            'text-product-color-lighter':
-                                                dark_mode,
-                                        }"
-                                    >
-                                        {{ child_row["IMEI"] }}
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div
-                                class="w-full md:w-1/2 form_field_container"
-                                v-if="current_row_id != ''"
-                            >
-                                <label
-                                    class="form_field_label"
-                                    :class="{
-                                        'text-gray-700': !dark_mode,
-                                        'text-white': dark_mode,
-                                    }"
-                                >
-                                    Cost
-                                </label>
-                                £<input
-                                    class="w-32 generic_input ml-1"
-                                    type="number"
-                                    v-model.number="child_row['Cost']"
-                                    autocomplete="off"
-                                    :class="{
-                                        required_field:
-                                            child_row['Cost'] == '' ||
-                                            child_row['Cost'] == null,
-                                    }"
-                                    ref="cost"
-                                />
-                            </div>
-
                             <div class="w-full form_field_container">
                                 <label
                                     class="form_field_label"
@@ -506,6 +410,114 @@
                         'text-white': dark_mode,
                     }"
                 >
+                    <div
+                        class="datatable_header"
+                        :class="{
+                            'border-product-color-lighter': dark_mode,
+                            'border-product-color': !dark_mode,
+                        }"
+                        v-if="current_row_id != ''"
+                    >
+                        <h2
+                            :class="{
+                                'text-product-color-lighter': dark_mode,
+                                'text-product-color': !dark_mode,
+                            }"
+                        >
+                            Phone Details
+                        </h2>
+                        <div class="search_bar_container">
+                            <Button
+                                @click.native="updateRecord"
+                                icon="plus"
+                                split="border-white"
+                                class="ml-1"
+                                :class="{
+                                    'bg-green-600': valid_phone_data,
+                                    'bg-gray-600 text-gray-500 cursor-not-allowed':
+                                        !valid_phone_data,
+                                }"
+                                v-if="current_row_id != ''"
+                            >
+                                Update
+                            </Button>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-start">
+                        <div
+                            class="w-full md:w-1/2 form_field_container"
+                            v-if="current_row_id != ''"
+                        >
+                            <label
+                                class="form_field_label"
+                                :class="{
+                                    'text-gray-700': !dark_mode,
+                                    'text-white': dark_mode,
+                                }"
+                            >
+                                IMEI
+                            </label>
+                            <div class="block flex flex-row">
+                                <label
+                                    class="form_value_label"
+                                    :class="{
+                                        'text-gray-600': !dark_mode,
+                                        'text-product-color-lighter': dark_mode,
+                                    }"
+                                >
+                                    {{ child_row["IMEI"] }}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div
+                            class="w-full md:w-1/2 form_field_container items-center"
+                            v-if="current_row_id != ''"
+                        >
+                            <label
+                                class="form_field_label"
+                                :class="{
+                                    'text-gray-700': !dark_mode,
+                                    'text-white': dark_mode,
+                                }"
+                            >
+                                Cost
+                            </label>
+                            <span
+                                :class="{
+                                    'text-gray-700': !dark_mode,
+                                    'text-white': dark_mode,
+                                }"
+                                class="mr-1"
+                                >£</span
+                            ><input
+                                class="w-32 generic_input"
+                                type="number"
+                                v-model.number="child_row['Cost']"
+                                autocomplete="off"
+                                :class="{
+                                    required_field:
+                                        child_row['Cost'] == '' ||
+                                        child_row['Cost'] == null,
+                                }"
+                                ref="cost"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end mb-1">
+                        <Button
+                            @click.native="selectPhoneStock"
+                            icon="search"
+                            split="border-white"
+                            class="ml-1 bg-green-600 text-white"
+                            v-if="current_row_id == ''"
+                        >
+                            Add Phone
+                        </Button>
+                    </div>
+
                     <SaleItemsDatatable
                         :columns="selected_products_columns"
                         :options="selected_products_options"
@@ -596,9 +608,8 @@ export default {
 
             saving_data: false,
             checking_duplicate_imei: false,
-            duplicate_imei: false,
             loading: false,
-            customer_sales_loaded: false,
+            customers_loaded: false,
 
             add_record_title: "Add",
             current_row_id: "",
@@ -610,7 +621,7 @@ export default {
                 url: "",
                 id: "selected_invoices_table",
                 pagination: true,
-                primary_key: "Id",
+                primary_key: "id",
                 record_name: "Phone",
                 sorting: {
                     enabled: true,
@@ -743,7 +754,7 @@ export default {
             axios
                 .get(route("sale.get-single"), {
                     params: {
-                        Id: this.edit_id,
+                        id: this.edit_id,
                     },
                 })
                 .then(
@@ -774,12 +785,12 @@ export default {
                 this.loading = true;
                 axios
                     .post(route("phonestock.get-single"), {
-                        Id: this.phones.pop(),
+                        id: this.phones.pop(),
                     })
                     .then((response) => {
                         if (response.data.message == "OK") {
                             let child_row = response.data.response.record;
-                            child_row["Id"] = "";
+                            child_row["id"] = "";
                             child_row["phone_details"] = _.clone(child_row);
                             child_row["row_id"] =
                                 helper_functions.getRandomId();
@@ -831,8 +842,8 @@ export default {
                 if (object["row_id"] != row_id) {
                     rows.push(_.cloneDeep(object));
                 } else if (
-                    Object.keys(object).indexOf("Id") >= 0 &&
-                    object["Id"] != ""
+                    Object.keys(object).indexOf("id") >= 0 &&
+                    object["id"] != ""
                 ) {
                     this.children_to_delete.push(object);
                 }
@@ -1053,7 +1064,7 @@ export default {
                         url: route("phonestock.available"),
                         id: "phonestock_record_picker",
                         pagination: true,
-                        primary_key: "Id",
+                        primary_key: "id",
                         record_name: "Phone",
                         sorting: {
                             enabled: true,
@@ -1101,13 +1112,13 @@ export default {
             this.row["CustomerId"] = value;
         },
 
-        customerSalesLoaded() {
-            if (!this.edit_id && !this.customer_sales_loaded) {
+        customersLoaded() {
+            if (!this.edit_id && !this.customers_loaded) {
                 this.$nextTick(() => {
-                    // this.$refs.customer_sales_picker.$refs.customer_id.$el
+                    // this.$refs.customers_picker.$refs.customer_id.$el
                     //     .querySelector("input")
                     //     .focus();
-                    this.customer_sales_loaded = true;
+                    this.customers_loaded = true;
                 });
             }
         },
@@ -1129,7 +1140,7 @@ export default {
                         record_name: "Purchase",
                         enable_search: false,
                         pagination: false,
-                        primary_key: "Id",
+                        primary_key: "id",
                         sorting: {
                             default: "UpdatedDate",
                             direction: "desc",
@@ -1140,7 +1151,7 @@ export default {
                         axios
                             .get(route("purchase.get-single"), {
                                 params: {
-                                    Id: purchase_invoice_id,
+                                    id: purchase_invoice_id,
                                 },
                             })
                             .then(

@@ -79,7 +79,7 @@ export default {
             if (this.column_details["route"] != "") {
                 axios
                     .post(route(this.column_details["route"]), {
-                        Id: _.get(this.row, this.options.primary_key),
+                        id: _.get(this.row, this.options.primary_key),
                         value: _.get(this.row, this.column, false) ? 1 : 0,
                     })
                     .then((response) => {

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Datatables\CustomerSalesDatatable;
+use App\Datatables\CustomersDatatable;
 use App\Datatables\HandsetColorsDatatable;
 use App\Datatables\HandsetManufacturersDatatable;
 use App\Datatables\HandsetModelsDatatable;
 use App\Datatables\HandsetsDatatable;
+use App\Datatables\PartsDatatable;
+use App\Datatables\PartSuppliersDatatable;
+use App\Datatables\RepairsDatatable;
 use App\Datatables\SalesDatatable;
 use App\Datatables\PurchasesDatatable;
 use App\Datatables\UsersDatatable;
@@ -21,7 +24,7 @@ class PagesController extends Controller
         if (!session("user", false)) {
             return redirect("login");
         } else {
-            return redirect("dashboard");
+            return redirect("purchase");
         }
     }
 
@@ -65,6 +68,16 @@ class PagesController extends Controller
         ]);
     }
 
+    public function parts()
+    {
+        $table = new PartsDatatable();
+
+        return Inertia::render("ObjectTypeName", [
+            "columns" => $table->columns,
+            "options" => $table->options,
+        ]);
+    }
+
     public function phoneStock()
     {
         $table = new PhoneStockDatatable();
@@ -97,11 +110,22 @@ class PagesController extends Controller
         ]);
     }
 
-    public function customerSales()
+    public function repairs()
     {
-        $table = new CustomerSalesDatatable();
+        $table = new RepairsDatatable();
 
-        return Inertia::render("CustomerSales", [
+        return Inertia::render("Repairs", [
+            "columns" => $table->columns,
+            "child_columns" => $table->child_columns,
+            "options" => $table->options,
+        ]);
+    }
+
+    public function customers()
+    {
+        $table = new CustomersDatatable();
+
+        return Inertia::render("Customers", [
             "columns" => $table->columns,
             "options" => $table->options,
         ]);
@@ -110,6 +134,16 @@ class PagesController extends Controller
     public function suppliers()
     {
         $table = new SuppliersDatatable();
+
+        return Inertia::render("Suppliers", [
+            "columns" => $table->columns,
+            "options" => $table->options,
+        ]);
+    }
+
+    public function parts_suppliers()
+    {
+        $table = new PartSuppliersDatatable();
 
         return Inertia::render("Suppliers", [
             "columns" => $table->columns,

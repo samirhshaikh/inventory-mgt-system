@@ -12,11 +12,11 @@ return new class extends Migration {
     {
         if (!Schema::hasTable("salesstock")) {
             Schema::create("salesstock", function (Blueprint $table) {
-                $table->increments("Id");
-                $table->integer("InvoiceId", 11);
+                $table->id();
+                $table->integer("InvoiceId");
                 $table->string("IMEI", 50)->nullable();
                 $table->integer("Qty")->nullable();
-                $table->text("Description");
+                $table->text("Description")->nullable();
                 $table->double("Cost")->nullable();
                 $table->double("Discount")->nullable();
                 $table->tinyInteger("Returned")->default(0);
@@ -26,11 +26,9 @@ return new class extends Migration {
                 $table->datetime("UpdatedDate")->nullable();
                 $table->string("UpdatedBy", 250)->nullable();
 
-                $table->primary("Id");
-
                 $table
                     ->foreign("InvoiceId")
-                    ->references("Id")
+                    ->references("id")
                     ->on("sales");
                 $table
                     ->foreign("IMEI")

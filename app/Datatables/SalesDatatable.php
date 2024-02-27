@@ -162,7 +162,7 @@ class SalesDatatable extends BaseDatatable
             "url" => route("sales.data"),
             "pagination" => false,
             "enable_search" => true,
-            "primary_key" => "Id",
+            "primary_key" => "id",
             "record_name" => "Sale",
             "child_record_name" => "Phone",
             "sorting" => [

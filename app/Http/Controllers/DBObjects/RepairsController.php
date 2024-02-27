@@ -2,19 +2,23 @@
 
 namespace App\Http\Controllers\DBObjects;
 
-use App\Datatables\CustomerSalesDatatable;
+use App\Datatables\RepairsDatatable;
+use App\Datatables\SalesDatatable;
+use App\Exceptions\InvalidDataException;
 use App\Exceptions\RecordNotFoundException;
 use App\Exceptions\ReferenceException;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\IdRequest;
-use App\Http\Requests\SaveCustomerSalesRequest;
-use App\Services\CustomerSalesService;
+use App\Http\Requests\SaveRepairRequest;
+use App\Services\PurchaseService;
+use App\Services\RepairsService;
+use App\Services\SalesService;
 use App\Traits\DataOutputTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
-class CustomerSalesController extends BaseController
+class RepairsController extends BaseController
 {
     use DataOutputTrait;
 
@@ -24,29 +28,29 @@ class CustomerSalesController extends BaseController
      */
     public function getData(Request $request): array
     {
-        $table = new CustomerSalesDatatable();
+        $table = new RepairsDatatable();
 
         $order_by =
             $request->get("order_by", "") == ""
                 ? session(
-                    "app_settings.datatable.sorting.customer_sales.column",
+                    "app_settings.datatable.sorting.repairs.column",
                     Arr::get($table->options(), "sorting.default")
                 )
                 : $request->get("order_by");
         $order_direction =
             $request->get("order_by", "") == ""
                 ? session(
-                    "app_settings.datatable.sorting.customer_sales.direction",
+                    "app_settings.datatable.sorting.repairs.direction",
                     Arr::get($table->options(), "sorting.direction")
                 )
                 : "asc";
 
-        $customer_sales_service = new CustomerSalesService();
+        $repairs_service = new RepairsService();
 
         list(
             "total_records" => $total_records,
             "records" => $records,
-        ) = $customer_sales_service->getAll(
+        ) = $repairs_service->getAll(
             $order_by,
             $order_direction,
             $request->get("search_type", "simple") ?? "simple",
@@ -68,34 +72,13 @@ class CustomerSalesController extends BaseController
      * @param IdRequest $request
      * @return JsonResponse
      */
-    public function changeActiveStatus(IdRequest $request): JsonResponse
-    {
-        $customers_service = new CustomerSalesService();
-
-        try {
-            $customers_service->changeActiveStatus($request);
-
-            return $this->sendOK([], "status_changed");
-        } catch (RecordNotFoundException $e) {
-            return $this->sendError(
-                self::RECORD_NO_FOUND,
-                [],
-                JsonResponse::HTTP_NOT_FOUND
-            );
-        }
-    }
-
-    /**
-     * @param IdRequest $request
-     * @return JsonResponse
-     */
     public function getSingle(IdRequest $request): JsonResponse
     {
-        $customers_service = new CustomerSalesService();
+        $repair_service = new RepairsService();
 
         try {
             $response = [];
-            $response["record"] = $customers_service->getSingle($request);
+            $response["record"] = $repair_service->getSingleRepair($request);
 
             return $this->sendOK($response);
         } catch (RecordNotFoundException $e) {
@@ -108,27 +91,28 @@ class CustomerSalesController extends BaseController
     }
 
     /**
-     * @param SaveCustomerSalesRequest $request
+     * @param SaveRepairRequest $request
      * @return JsonResponse
      */
-    public function save(SaveCustomerSalesRequest $request): JsonResponse
+    public function save(SaveRepairRequest $request): JsonResponse
     {
-        $customers_service = new CustomerSalesService();
+        $repair_service = new RepairsService();
 
         try {
-            $id = $customers_service->save($request);
+            $response = $repair_service->save($request);
 
-            return $this->sendOK(
-                [
-                    "id" => $id,
-                ],
-                self::RECORD_SAVED
-            );
+            return $this->sendOK($response, self::RECORD_SAVED);
         } catch (RecordNotFoundException $e) {
             return $this->sendError(
                 self::RECORD_NO_FOUND,
                 [],
                 JsonResponse::HTTP_NOT_FOUND
+            );
+        } catch (InvalidDataException $e) {
+            return $this->sendError(
+                self::INVALID_DATA,
+                [],
+                JsonResponse::HTTP_UNPROCESSABLE_ENTITY
             );
         }
     }
@@ -139,10 +123,10 @@ class CustomerSalesController extends BaseController
      */
     public function delete(IdRequest $request): JsonResponse
     {
-        $customers_service = new CustomerSalesService();
+        $repair_service = new RepairsService();
 
         try {
-            $customers_service->delete($request);
+            $repair_service->delete($request);
 
             return $this->sendOK([], self::RECORD_DELETED);
         } catch (RecordNotFoundException $e) {

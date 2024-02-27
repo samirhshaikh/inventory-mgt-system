@@ -12,7 +12,7 @@ class SalesStock extends BaseModel
 
     protected $connection = "mysql";
     protected $table = "SalesStock";
-    protected $primaryKey = ["Id"];
+    protected $primaryKey = ["id"];
     protected $transformer = SalesStockTransformer::class;
     public $incrementing = false;
     public $timestamps = true;

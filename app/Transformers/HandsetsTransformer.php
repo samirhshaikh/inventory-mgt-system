@@ -10,7 +10,7 @@ class HandsetsTransfomer extends TransformerAbstract
     public function transform(Handsets $model)
     {
         $return = [
-            "Id" => $model->Id,
+            "id" => $model->id,
             "Name" => ucwords($model->Name),
             "MakeId" => (int) $model->MakeId,
             "manufacturer" => $model->manufacturer,

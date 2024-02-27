@@ -10,7 +10,7 @@ class PhoneStockTransformer extends TransformerAbstract
     public function transform(PhoneStock $model)
     {
         $return = [
-            "Id" => $model->Id,
+            "id" => $model->id,
             "IMEI" => $model->IMEI,
             "Size" => $model->Size,
             "Cost" => $model->Cost ?: "",

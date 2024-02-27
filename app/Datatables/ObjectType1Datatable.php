@@ -78,7 +78,7 @@ abstract class ObjectType1Datatable extends BaseDatatable
             "url" => route($this->getRouteId() . ".data"),
             "pagination" => false,
             "enable_search" => true,
-            "primary_key" => "Id",
+            "primary_key" => "id",
             "record_name" => $this->getRecordName(),
             "routes" => [
                 "delete" => route($this->getRouteId() . ".delete"),

@@ -93,7 +93,7 @@ export default {
         axios
             .get(route("sale.get-pdf-invoice"), {
                 params: {
-                    Id: this.invoice_id,
+                    id: this.invoice_id,
                 },
                 responseType: "blob",
             })

@@ -18,18 +18,19 @@ trait TableActions
      * @return bool
      * @throws RecordNotFoundException
      */
-    protected function changeRecordStatus(BaseModel $model, IdRequest $request): bool
-    {
-        $record = $model::where('Id', $request->get('Id'))
-            ->first();
+    protected function changeRecordStatus(
+        BaseModel $model,
+        IdRequest $request
+    ): bool {
+        $record = $model::where("id", $request->get("id"))->first();
 
         if ($record) {
-            $record->IsActive = $request->get('value');
+            $record->IsActive = $request->get("value");
             $record->save();
 
             return true;
         } else {
-            throw new RecordNotFoundException;
+            throw new RecordNotFoundException();
         }
     }
 
@@ -41,18 +42,22 @@ trait TableActions
      * @param mixed $id_value
      * @return Boolean
      */
-    protected function foreignReferenceFound(array $tables_to_check, $column_ids, $id_value): bool
-    {
+    protected function foreignReferenceFound(
+        array $tables_to_check,
+        $column_ids,
+        $id_value
+    ): bool {
         if (!is_array($column_ids)) {
             $column_ids = [$column_ids];
         }
 
         foreach ($tables_to_check as $table) {
-            $class = '\\App\\Models\\' . $table;
+            $class = "\\App\\Models\\" . $table;
             $class_reference = new $class();
 
             foreach ($column_ids as $column_id) {
-                $reference = $class_reference->where($column_id, $id_value)
+                $reference = $class_reference
+                    ->where($column_id, $id_value)
                     ->get();
                 if ($reference->count()) {
                     return true;
@@ -70,12 +75,12 @@ trait TableActions
     protected function getTotalRecords(Builder $records): int
     {
         try {
-            $all_records = $records->addSelect(DB::raw('COUNT(*) as Record_Count'))
+            $all_records = $records
+                ->addSelect(DB::raw("COUNT(*) as Record_Count"))
                 ->get()
-                ->first()
-            ;
+                ->first();
 
-            return $all_records['Record_Count'];
+            return $all_records["Record_Count"];
         } catch (\Exception $e) {
             return 0;
         }

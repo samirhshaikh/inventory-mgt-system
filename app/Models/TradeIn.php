@@ -26,7 +26,7 @@ class TradeIn extends BaseModel
      */
     public function sales(): BelongsTo
     {
-        return $this->belongsTo(SalesStock::class, "Id", "SalesInvoiceId");
+        return $this->belongsTo(SalesStock::class, "id", "SalesInvoiceId");
     }
 
     /**
@@ -37,7 +37,7 @@ class TradeIn extends BaseModel
         return $this->belongsTo(
             Purchase::class,
             "PurchaseInvoiceId",
-            "Id"
+            "id"
         )->with("purchases");
     }
 }

@@ -13,7 +13,7 @@ class Purchase extends BaseModel
 
     protected $connection = "mysql";
     protected $table = "Purchase";
-    protected $primaryKey = ["Id"];
+    protected $primaryKey = ["id"];
     protected $transformer = PurchaseTransformer::class;
     public $incrementing = false;
     public $timestamps = true;
@@ -29,7 +29,7 @@ class Purchase extends BaseModel
      */
     public function supplier(): HasOne
     {
-        return $this->hasOne(Suppliers::class, "Id", "SupplierId");
+        return $this->hasOne(Supplier::class, "id", "SupplierId");
     }
 
     /**
@@ -37,7 +37,7 @@ class Purchase extends BaseModel
      */
     public function purchases(): HasMany
     {
-        return $this->hasMany(PhoneStock::class, "InvoiceId", "Id")
+        return $this->hasMany(PhoneStock::class, "InvoiceId", "id")
             ->with("manufacturer")
             ->with("model")
             ->with("color");

@@ -49,7 +49,7 @@
                 @advanced-search-data-modified="triggerAdvancedSearch"
             ></SearchParameters>
 
-            <CustomerSalesDatatable
+            <CustomersDatatable
                 :columns="columns"
                 :options="options"
                 :page_no="page_no"
@@ -59,7 +59,7 @@
                 :update_search="update_search"
                 @change-total-reports="changeTotalReports"
                 @change-page-no="changePage"
-            ></CustomerSalesDatatable>
+            ></CustomersDatatable>
         </div>
     </Layout>
 </template>
@@ -67,7 +67,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import loading from "@/Misc/Loading.vue";
-import CustomerSale from "../DBObjects/CustomerSale.vue";
+import Customer from "../DBObjects/Customer.vue";
 import { datatable_common } from "../Helpers/datatable_common";
 import { defineAsyncComponent } from "vue";
 import { useModal } from "vue-final-modal";
@@ -76,7 +76,7 @@ export default {
     mixins: [datatable_common],
 
     components: {
-        CustomerSalesDatatable: defineAsyncComponent({
+        CustomersDatatable: defineAsyncComponent({
             loader: () => import("@/Datatable/Datatable"),
             loadingComponent: loading,
         }),
@@ -133,7 +133,7 @@ export default {
             this.setPopperOpen(true);
 
             const { open, close } = useModal({
-                component: CustomerSale,
+                component: Customer,
                 attrs: {
                     edit_id: "",
                     options: this.options,

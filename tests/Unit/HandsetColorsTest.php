@@ -43,7 +43,7 @@ class HandsetColorsTest extends TestCase
         );
 
         $this->postJson("handset-colors/change-active-status", [
-            "Id" => $this->handset_color["id"],
+            "id" => $this->handset_color["id"],
             "value" => "1",
         ])
             ->assertStatus(JsonResponse::HTTP_OK)

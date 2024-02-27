@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         if (!Schema::hasTable("handsetmaster")) {
             Schema::create("handsetmaster", function (Blueprint $table) {
-                $table->increments("Id");
+                $table->id();
                 $table->string("Name", 255)->nullable();
                 $table->integer("MakeId")->nullable();
                 $table->integer("ModelId")->nullable();
@@ -23,19 +23,17 @@ return new class extends Migration {
                 $table->datetime("UpdatedDate")->nullable();
                 $table->string("UpdatedBy", 250)->nullable();
 
-                $table->primary("Id");
-
                 $table
                     ->foreign("MakeId")
-                    ->references("Id")
+                    ->references("id")
                     ->on("manufacturermaster");
                 $table
                     ->foreign("ModelId")
-                    ->references("Id")
+                    ->references("id")
                     ->on("modelmaster");
                 $table
                     ->foreign("ColorId")
-                    ->references("Id")
+                    ->references("id")
                     ->on("colormaster");
                 $table
                     ->foreign("CreatedBy")

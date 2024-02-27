@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SaveCustomerSalesRequest extends FormRequest
+class SaveCustomerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class SaveCustomerSalesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'CustomerName' => 'required'
+            "CustomerName" => "required",
         ];
     }
 
@@ -36,7 +36,7 @@ class SaveCustomerSalesRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'CustomerName.required' => 'Customer Name is required'
+            "CustomerName.required" => "Customer Name is required",
         ];
     }
 }

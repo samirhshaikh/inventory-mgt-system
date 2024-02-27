@@ -3,18 +3,18 @@
 namespace App\Models;
 
 use App\Traits\CompositeKeysTrait;
-use App\Transformers\SalesTransformer;
+use App\Transformers\SaleTransformer;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Sales extends BaseModel
+class Sale extends BaseModel
 {
     use CompositeKeysTrait;
 
     protected $connection = "mysql";
     protected $table = "Sales";
-    protected $primaryKey = ["Id"];
-    protected $transformer = SalesTransformer::class;
+    protected $primaryKey = ["id"];
+    protected $transformer = SaleTransformer::class;
     public $incrementing = false;
     public $timestamps = true;
     protected $guarded = [];
@@ -29,7 +29,7 @@ class Sales extends BaseModel
      */
     public function customer(): HasOne
     {
-        return $this->hasOne(CustomerSales::class, "Id", "CustomerId");
+        return $this->hasOne(Customer::class, "id", "CustomerId");
     }
 
     /**
@@ -37,7 +37,7 @@ class Sales extends BaseModel
      */
     public function sales(): HasMany
     {
-        return $this->hasMany(SalesStock::class, "InvoiceId", "Id")->with(
+        return $this->hasMany(SalesStock::class, "InvoiceId", "id")->with(
             "phone"
         );
     }
@@ -47,7 +47,7 @@ class Sales extends BaseModel
      */
     public function tradein(): HasOne
     {
-        return $this->hasOne(TradeIn::class, "SalesInvoiceId", "Id")->with(
+        return $this->hasOne(TradeIn::class, "SalesInvoiceId", "id")->with(
             "purchase"
         );
     }

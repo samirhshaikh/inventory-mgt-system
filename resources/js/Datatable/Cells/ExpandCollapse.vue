@@ -15,7 +15,7 @@ export default {
 
     computed: {
         icon() {
-            return this.row["Id"] == this.expanded_row_id ? "minus" : "plus";
+            return this.row["id"] == this.expanded_row_id ? "minus" : "plus";
         },
     },
 
@@ -23,7 +23,7 @@ export default {
         collapse_expand_row() {
             this.$emit(
                 "setExpandedRowId",
-                this.row["Id"] == this.expanded_row_id ? 0 : this.row["Id"]
+                this.row["id"] == this.expanded_row_id ? 0 : this.row["id"]
             );
         },
     },

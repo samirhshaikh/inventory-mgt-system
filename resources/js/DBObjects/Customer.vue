@@ -2,7 +2,7 @@
     <VueFinalModal
         class="flex justify-center items-center"
         :content-class="[
-            'customer_sale_modal relative p-4 rounded-lg',
+            'customer_modal relative p-4 rounded-lg',
             {
                 'bg-gray-700': dark_mode,
                 'bg-white': !dark_mode,
@@ -141,7 +141,9 @@
                         </vue-google-autocomplete>
                     </div>
 
-                    <div class="w-full md:w-1/2 form_field_container">
+                    <div
+                        class="w-full md:w-1/2 form_field_container items-center"
+                    >
                         <label
                             class="form_field_label"
                             :class="{
@@ -151,7 +153,14 @@
                         >
                             Balance
                         </label>
-                        £
+                        <span
+                            :class="{
+                                'text-gray-700': !dark_mode,
+                                'text-white': dark_mode,
+                            }"
+                            class="mr-1"
+                            >£</span
+                        >
                         <input
                             class="w-32 generic_input"
                             type="number"
@@ -210,7 +219,7 @@
 </template>
 
 <style>
-.customer_sale_modal {
+.customer_modal {
     width: 750px;
     height: auto;
 }
@@ -282,9 +291,9 @@ export default {
             this.loading = true;
 
             axios
-                .get(route("customer_sales.get-single"), {
+                .get(route("customers.get-single"), {
                     params: {
-                        Id: this.edit_id,
+                        id: this.edit_id,
                     },
                 })
                 .then(
@@ -333,7 +342,7 @@ export default {
             this.saving_data = true;
 
             axios
-                .post(route("customer_sales.save"), this.row)
+                .post(route("customers.save"), this.row)
                 .then((response) => {
                     if (response.data.message == "record_saved") {
                         this.$notify({
@@ -358,7 +367,7 @@ export default {
 
                         this.refreshData(this.options.id);
 
-                        this.refreshCustomerSales();
+                        this.refreshCustomers();
 
                         const handler = this.customerSaved;
                         if (typeof handler === "function") {
@@ -401,7 +410,7 @@ export default {
 
             axios
                 .post(route("handsets.check-duplicate-name"), {
-                    Id: this.row["Id"],
+                    id: this.row["id"],
                     Name: this.row["Name"],
                 })
                 .then((response) => {
@@ -422,7 +431,7 @@ export default {
 
         ...mapActions({
             refreshData: "framework/refreshData",
-            refreshCustomerSales: "framework/refreshCustomerSales",
+            refreshCustomers: "framework/refreshCustomers",
             setCachedData: "local_settings/setCachedData",
             resetCachedData: "local_settings/resetCachedData",
             addError: "errors/addError",

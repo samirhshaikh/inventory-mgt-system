@@ -4,10 +4,10 @@
             :value="customer_id"
             v-model="customer_id"
             label="CustomerName"
-            :reduce="(customer) => customer.Id"
-            :options="customer_sales"
+            :reduce="(customer) => customer.id"
+            :options="customers"
             class="w-72 generic_vs_select"
-            :loading="loading_customer_sales"
+            :loading="loading_customers"
             :class="{
                 required_field: required_field,
             }"
@@ -54,12 +54,11 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import Customer from "../DBObjects/CustomerSale";
-import helper_functions from "../Helpers/helper_functions";
+import Customer from "../DBObjects/Customer";
 import { useModal } from "vue-final-modal";
 
 export default {
-    name: "CustomerSalesPicker",
+    name: "CustomerPicker",
 
     props: {
         selected_value: "",
@@ -70,19 +69,17 @@ export default {
 
     data() {
         return {
-            loading_customer_sales: false,
+            loading_customers: false,
             customer_id: "",
-            customer_sales: [],
+            customers: [],
         };
     },
 
     computed: {
-        refresh_customer_sales: (state) =>
-            state.framework.refresh_customer_sales,
+        refresh_customers: (state) => state.framework.refresh_customers,
 
         ...mapState({
-            refresh_customer_sales: (state) =>
-                state.framework.refresh_customer_sales,
+            refresh_customers: (state) => state.framework.refresh_customers,
         }),
     },
 
@@ -96,11 +93,11 @@ export default {
         },
 
         loadData(query) {
-            this.loading_customer_sales = true;
+            this.loading_customers = true;
 
             //Load the first page of customers
             axios
-                .get(route("customer_sales.data"), {
+                .get(route("customers.data"), {
                     params: {
                         get_all_records: typeof query === "undefined" ? 0 : 1,
                         order_by: "CustomerName",
@@ -109,26 +106,26 @@ export default {
                 })
                 .then(
                     (response) => {
-                        this.customer_sales = response.data.rows;
+                        this.customers = response.data.rows;
 
                         if (this.selected_value && !query) {
                             //Check of the customer is there in first page loaded or not.
-                            const object = this.customer_sales.find(
-                                (item) => item.Id == this.selected_value
+                            const object = this.customers.find(
+                                (item) => item.id == this.selected_value
                             );
 
                             //If not there then we need to get the details of it and add it to available options
                             if (!object) {
                                 axios
-                                    .get(route("customer_sales.get-single"), {
+                                    .get(route("customers.get-single"), {
                                         params: {
-                                            Id: this.selected_value,
+                                            id: this.selected_value,
                                         },
                                     })
                                     .then((response) => {
                                         let record =
                                             response.data.response.record;
-                                        this.customer_sales.push(record);
+                                        this.customers.push(record);
 
                                         this.customer_id = this.selected_value;
                                     });
@@ -137,14 +134,14 @@ export default {
                             }
                         }
 
-                        this.loading_customer_sales = false;
+                        this.loading_customers = false;
 
                         this.$emit("onDataLoadComplete", true);
                     },
                     (error) => {
                         this.addError(error);
 
-                        this.loading_customer_sales = false;
+                        this.loading_customers = false;
 
                         this.$emit("onDataLoadComplete", true);
                     }
@@ -161,12 +158,12 @@ export default {
                 attrs: {
                     edit_id: "",
                     options: {
-                        id: "customer_sales",
+                        id: "customers",
                         record_name: "Customer",
                         cache_data: true,
                     },
                     customerSaved: (id) => {
-                        parent.customer_id = { Id: id };
+                        parent.customer_id = { id: id };
                         this.$emit("onOptionSelected", id);
                     },
                     onConfirm() {
@@ -191,7 +188,7 @@ export default {
                 attrs: {
                     edit_id: String(parent.customer_id),
                     options: {
-                        id: "customer_sales",
+                        id: "customers",
                         record_name: "Customer",
                         cache_data: true,
                     },
@@ -215,8 +212,8 @@ export default {
     },
 
     watch: {
-        refresh_customer_sales: function () {
-            console.log("refresh_customer_sales");
+        refresh_customers: function () {
+            console.log("refresh_customers");
             this.loadData();
         },
 

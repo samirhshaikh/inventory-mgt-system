@@ -110,7 +110,7 @@ export default {
     data() {
         return {
             version: require("../../../package.json").version,
-            page_sizes: [10, 20, 30, 40, 50],
+            page_sizes: [10, 20, 30, 40, 50, 60, 70, 80],
         };
     },
 

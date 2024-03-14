@@ -1,6 +1,17 @@
 <template>
     <div class="flex">
         <Button
+            @click.native="viewReturnsInvoice(row.id)"
+            icon="file-alt"
+            split="border-white"
+            class="text-white bg-green-600 mr-2"
+            :class="{
+                hidden: !page.user_details.IsAdmin,
+            }"
+        >
+            Invoice
+        </Button>
+        <Button
             @click.native="edit"
             icon="pen"
             split="border-white"
@@ -31,13 +42,14 @@ import { mapActions } from "vuex";
 import Confirm from "../../../components/Confirm.vue";
 import { datatable_cell } from "../datatable_cell";
 import { notifications } from "../../../Helpers/notifications";
+import { common_functions } from "../../../Helpers/common_functions";
 import { usePage } from "@inertiajs/vue3";
 import { useModal } from "vue-final-modal";
 
 const page = usePage();
 
 export default {
-    mixins: [datatable_cell, notifications],
+    mixins: [datatable_cell, notifications, common_functions],
 
     computed: {
         page() {
@@ -56,6 +68,20 @@ export default {
                 attrs: {
                     edit_id: String(this.row.id),
                     options: this.options,
+                    submitRecordSaved: (invoice_id) => {
+                        this.setTableMetaData({
+                            columns: this.columns,
+                            options: this.options,
+                        });
+
+                        this.setActiveTab(this.options.id);
+                        this.setTabToRefresh(this.options.id);
+
+                        close();
+
+                        //Open Print Invoice dialog
+                        this.viewReturnsInvoice(invoice_id);
+                    },
                     onConfirm() {
                         close();
                     },
@@ -135,6 +161,9 @@ export default {
         },
 
         ...mapActions({
+            setTableMetaData: "datatable/setTableMetaData",
+            setActiveTab: "local_settings/setActiveTab",
+            setTabToRefresh: "framework/setTabToRefresh",
             refreshData: "framework/refreshData",
             setPopperOpen: "local_settings/setPopperOpen",
             addError: "errors/addError",

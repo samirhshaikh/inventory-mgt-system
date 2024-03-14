@@ -222,7 +222,7 @@ export default {
                         this.setTabToRefresh(this.options.id);
 
                         //Open Print Invoice dialog
-                        this.viewSalesInvoice(invoice_id);
+                        this.viewReturnsInvoice(invoice_id);
                     },
                     onConfirm() {
                         close();

@@ -26,7 +26,7 @@ class RepairPart extends BaseModel
      */
     public function supplier(): HasOne
     {
-        return $this->hasOne(Supplier::class, "id", "SupplierId");
+        return $this->hasOne(PartsSupplier::class, "id", "SupplierId");
     }
 
     /**

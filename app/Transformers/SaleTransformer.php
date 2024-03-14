@@ -21,7 +21,6 @@ class SaleTransformer extends TransformerAbstract
                 ? ""
                 : $model->InvoiceDate->format("d-M-Y"),
             "CustomerId" => $model->CustomerId,
-            "customer" => $model->customer,
             "PaymentMethod" => $model->PaymentMethod,
             "ChequeNo" => $model->ChequeNo,
             "Comments" => $model->Comments,

@@ -54,25 +54,22 @@ class SalesService
 
         $records = new Sale();
 
-        $records = $records->leftJoin(
-            "customers",
-            "customers.id",
-            "=",
-            "CustomerId"
-        );
+        $records = $records
+            ->with("customer")
+            ->leftJoin("customers", "customers.id", "=", "CustomerId");
 
         if (!is_null($invoice_ids)) {
             $records = $records->whereIn("Sales.id", $invoice_ids);
         }
-
-        //Get total records
-        $total_records = $this->getTotalRecords(clone $records);
 
         $records = $records->with([
             "sales" => function ($query) {
                 $query->orderBy("IMEI", "ASC");
             },
         ]);
+
+        //Get total records
+        $total_records = $this->getTotalRecords(clone $records);
 
         $records = $records->with("tradein");
 
@@ -96,11 +93,9 @@ class SalesService
                     ->orderBy("Total_Cost", $order_direction);
                 break;
             case "customer.CustomerName":
-                $records = $records->leftJoin(
-                    "customers",
-                    "customers.id",
-                    "=",
-                    "CustomerId"
+                $records = $records->orderBy(
+                    "customers.CustomerName",
+                    $order_direction
                 );
                 break;
             case "UpdatedDate":

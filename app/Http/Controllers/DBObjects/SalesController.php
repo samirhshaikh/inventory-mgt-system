@@ -162,17 +162,8 @@ class SalesController extends BaseController
     }
 
     /**
-     * @return int
-     */
-    public function getNextInvoiceNo(): int
-    {
-        $sales_service = new SalesService();
-
-        return $sales_service->getNextInvoiceNo();
-    }
-
-    /**
      * @param IdRequest $request
+     * @return JsonResponse|void
      */
     public function getPDFInvoice(IdRequest $request)
     {
@@ -324,6 +315,8 @@ EOT;
     .invoice_items_table tbody tr:last-child td {border-bottom: 1px solid #000000;}
     .invoice_items_table tfoot tr td {background: #8cc9e0; font-size: 16px; padding: 5px 3px;}
     .invoice_items_table .tradein_items td {background: #f9eaec;}
+    .terms_table {border: 1px solid #000000; border-collapse: collapse; width: 100%;}
+    .terms_table tr td {padding: 5px;}
     </style>
     <br>
     <table style="width: 100%;">
@@ -425,7 +418,7 @@ EOT;
     <br>
     <br>
 
-    <table style="border: 1px solid #000000; border-collapse: collapse; width: 100%;" cellpadding="10">
+    <table class="terms_table">
         <tr>
             <td>
                 <p style="margin: 0px; text-decoration: underline; font-weight: bold;">Terms & Conditions:</p>

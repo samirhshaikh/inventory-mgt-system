@@ -38,12 +38,11 @@
 
 <script>
 import Sale from "../../../DBObjects/Sale.vue";
-import { mapActions, mapState } from "vuex";
+import { mapActions } from "vuex";
 import Confirm from "../../../components/Confirm.vue";
 import { datatable_cell } from "../datatable_cell";
 import { notifications } from "../../../Helpers/notifications";
 import { common_functions } from "../../../Helpers/common_functions";
-import Invoice from "./Invoice";
 import { usePage } from "@inertiajs/vue3";
 import { useModal } from "vue-final-modal";
 

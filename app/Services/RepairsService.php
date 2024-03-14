@@ -6,15 +6,12 @@ use App\Exceptions\RecordNotFoundException;
 use App\Exceptions\ReferenceException;
 use App\Http\Requests\IdRequest;
 use App\Http\Requests\SaveRepairRequest;
-use App\Models\PhoneStock;
-use App\Models\Purchase;
 use App\Models\Repair;
 use App\Models\RepairPart;
 use App\Traits\SearchTrait;
 use App\Traits\TableActions;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 
 class RepairsService
 {
@@ -53,10 +50,17 @@ class RepairsService
         $records = new Repair();
 
         $records = $records
-            ->with("customer")
+            //            ->with("customer")
             ->with("manufacturer")
             ->with("model")
             ->with("color");
+
+        $records = $records->leftJoin(
+            "customers",
+            "customers.id",
+            "=",
+            "CustomerId"
+        );
 
         if (!is_null($invoice_ids)) {
             $records = $records->whereIn("Repairs.id", $invoice_ids);
@@ -84,11 +88,9 @@ class RepairsService
                     ->orderBy("PartId", $order_direction);
                 break;
             case "customer.CustomerName":
-                $records = $records->leftJoin(
-                    "customers",
-                    "customers.id",
-                    "=",
-                    "CustomerId"
+                $records = $records->orderBy(
+                    "customers.CustomerName",
+                    $order_direction
                 );
                 break;
             case "UpdatedDate":
@@ -416,9 +418,9 @@ class RepairsService
         $record->Amount = $request->get("Amount", 0);
         $record->VAT = $request->get("VAT", 0);
         $record->IMEI = $request->get("IMEI");
-        $record->MakeId = $request->get("manufacturer")["id"];
-        $record->ModelId = $request->get("model")["id"];
-        $record->ColorId = $request->get("color")["id"];
+        $record->MakeId = $request->get("MakeId");
+        $record->ModelId = $request->get("ModelId");
+        $record->ColorId = $request->get("ColorId");
         $record->Notes = $request->get("Notes");
         $record->ReasonForNotRepair = $request->get("ReasonForNotRepair");
         $record->UpdatedBy = session("user_details.UserName");

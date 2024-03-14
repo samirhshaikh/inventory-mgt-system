@@ -21,6 +21,10 @@ class RepairTransformer extends TransformerAbstract
             "InvoiceDate" => empty($model->InvoiceDate)
                 ? ""
                 : $model->InvoiceDate->format("d-M-Y"),
+            "CustomerId" => $model->CustomerId,
+            "MakeId" => $model->MakeId,
+            "ModelId" => $model->ModelId,
+            "ColorId" => $model->ColorId,
             "PaymentMethod" => $model->PaymentMethod,
             "ChequeNo" => $model->ChequeNo,
             "Status" => $model->Status,
@@ -28,6 +32,7 @@ class RepairTransformer extends TransformerAbstract
             "ReasonForNotRepair" => $model->ReasonForNotRepair,
             "Amount" => $model->Amount ?: "",
             "VAT" => $model->VAT ?: "",
+            "IMEI" => $model->IMEI ?: "",
             "CreatedDate" => empty($model->CreatedDate)
                 ? ""
                 : $model->CreatedDate->format("d-M-Y h:i A"),
@@ -107,7 +112,7 @@ class RepairTransformer extends TransformerAbstract
     {
         return sprintf(
             "%s-%s%s%s000%s",
-            "RET",
+            "REP",
             $invoiceDate->format("Y"),
             $invoiceDate->format("m"),
             $invoiceDate->format("d"),

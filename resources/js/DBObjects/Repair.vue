@@ -189,7 +189,7 @@
                                         'text-gray-700': !dark_mode,
                                         'text-white': dark_mode,
                                     }"
-                                    >Cost
+                                    >Service Cost
                                 </label>
                                 <span
                                     :class="{
@@ -311,9 +311,9 @@
                                     v-if="!loading_handset_manufacturers"
                                 >
                                     <v-select
-                                        :value="row['manufacturer']['id']"
+                                        :value="row['MakeId']"
                                         label="Name"
-                                        v-model="row['manufacturer']['id']"
+                                        v-model="row['MakeId']"
                                         :reduce="
                                             (manufacturer) => manufacturer.id
                                         "
@@ -321,10 +321,8 @@
                                         class="w-full generic_vs_select"
                                         :class="{
                                             required_field:
-                                                row['manufacturer']['id'] ==
-                                                    '' ||
-                                                row['manufacturer']['id'] ==
-                                                    null,
+                                                row['MakeId'] == '' ||
+                                                row['MakeId'] == null,
                                         }"
                                     ></v-select>
 
@@ -356,16 +354,16 @@
                                     v-if="!loading_handset_models"
                                 >
                                     <v-select
-                                        :value="row['model']['id']"
+                                        :value="row['ModelId']"
                                         label="Name"
-                                        v-model="row['model']['id']"
+                                        v-model="row['ModelId']"
                                         :reduce="(model) => model.id"
                                         :options="handset_models"
                                         class="w-full generic_vs_select"
                                         :class="{
                                             required_field:
-                                                row['model']['id'] == '' ||
-                                                row['model']['id'] == null,
+                                                row['ModelId'] == '' ||
+                                                row['ModelId'] == null,
                                         }"
                                     ></v-select>
 
@@ -396,16 +394,16 @@
                                     v-if="!loading_handset_colors"
                                 >
                                     <v-select
-                                        :value="row['color']['id']"
-                                        v-model="row['color']['id']"
+                                        :value="row['ColorId']"
+                                        v-model="row['ColorId']"
                                         :reduce="(color) => color.id"
                                         label="Name"
                                         :options="handset_colors"
                                         class="w-full generic_vs_select"
                                         :class="{
                                             required_field:
-                                                row['color']['id'] == '' ||
-                                                row['color']['id'] == null,
+                                                row['ColorId'] == '' ||
+                                                row['ColorId'] == null,
                                         }"
                                     ></v-select>
 
@@ -569,18 +567,9 @@ export default {
                 Amount: 0,
                 VAT: 0,
                 IMEI: "",
-                manufacturer: {
-                    id: "",
-                    Name: "",
-                },
-                model: {
-                    id: "",
-                    Name: "",
-                },
-                color: {
-                    id: "",
-                    Name: "",
-                },
+                MakeId: "",
+                ModelId: "",
+                ColorId: "",
                 Notes: "",
                 ReasonForNotRepair: "",
             },
@@ -969,7 +958,13 @@ export default {
                 this.row["PaymentMethod"] == "" ||
                 this.row["PaymentMethod"] == null ||
                 (this.row_keys.indexOf("VAT") >= 0 &&
-                    parseFloat(this.row["VAT"]) < 0)
+                    parseFloat(this.row["VAT"]) < 0) ||
+                this.row["MakeId"] == "" ||
+                this.row["MakeId"] == null ||
+                this.row["ModelId"] == "" ||
+                this.row["ModelId"] == null ||
+                this.row["ColorId"] == "" ||
+                this.row["ColorId"] == null
             ) {
                 return false;
             }
@@ -980,12 +975,13 @@ export default {
         imei_validation_message() {
             if (this.invalid_imei) {
                 return "Invalid IMEI.";
-            } else if (
-                this.row_keys.indexOf("IMEI") < 0 ||
-                this.row["IMEI"] === ""
-            ) {
-                return "Required";
             }
+            // else if (
+            //     this.row_keys.indexOf("IMEI") < 0 ||
+            //     this.row["IMEI"] === ""
+            // ) {
+            //     return "Required";
+            // }
 
             return "";
         },

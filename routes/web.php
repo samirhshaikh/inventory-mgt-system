@@ -302,6 +302,9 @@ Route::group(["prefix" => "repairs"], function ($router) {
     $router
         ->post("delete", "DBObjects\RepairsController@delete")
         ->name("repair.delete");
+    $router
+        ->get("get-pdf-invoice", "DBObjects\RepairsController@getPDFInvoice")
+        ->name("repair.get-pdf-invoice");
 });
 
 Route::group(["prefix" => "purchase"], function ($router) {

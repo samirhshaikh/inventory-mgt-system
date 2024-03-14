@@ -52,10 +52,6 @@ return new class extends Migration {
                     ->foreign("ColorId")
                     ->references("id")
                     ->on("colormaster");
-                $table
-                    ->foreign("CustomerId")
-                    ->references("id")
-                    ->on("customers");
             });
         }
     }

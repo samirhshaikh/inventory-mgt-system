@@ -25,10 +25,6 @@ return new class extends Migration {
                 $table->string("UpdatedBy", 250)->nullable();
 
                 $table
-                    ->foreign("RepairId")
-                    ->references("id")
-                    ->on("repairs");
-                $table
                     ->foreign("SupplierID")
                     ->references("id")
                     ->on("supplier");

@@ -56,14 +56,6 @@ return new class extends Migration {
                     ->foreign("CustomerId")
                     ->references("id")
                     ->on("customers");
-                $table
-                    ->foreign("CreatedBy")
-                    ->references("UserName")
-                    ->on("user");
-                $table
-                    ->foreign("UpdatedBy")
-                    ->references("UserName")
-                    ->on("user");
             });
         }
     }

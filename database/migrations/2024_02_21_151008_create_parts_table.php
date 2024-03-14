@@ -19,15 +19,6 @@ return new class extends Migration {
                 $table->string("CreatedBy", 250)->nullable();
                 $table->datetime("UpdatedDate")->nullable();
                 $table->string("UpdatedBy", 250)->nullable();
-
-                $table
-                    ->foreign("CreatedBy")
-                    ->references("UserName")
-                    ->on("user");
-                $table
-                    ->foreign("UpdatedBy")
-                    ->references("UserName")
-                    ->on("user");
             });
         }
     }

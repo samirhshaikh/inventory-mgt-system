@@ -49,11 +49,11 @@ button:focus {
     mb-3
     pb-1
     z-20
-    sticky
 }
-.datatable_header {
-    top: 0px;
-}
+//sticky
+//.datatable_header {
+    //top: 0px;
+//}
 .datatable_header h1, .datatable_header h2 {
     @apply pt-1
     ml-2

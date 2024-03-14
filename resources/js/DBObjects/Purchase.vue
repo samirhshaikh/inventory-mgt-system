@@ -509,7 +509,15 @@
 <style>
 .purchase_modal {
     width: 90%;
-    height: auto;
+    min-height: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+}
+
+@media (min-width: 900px) {
+    .purchase_modal {
+        width: 950px;
+    }
 }
 </style>
 

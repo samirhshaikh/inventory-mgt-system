@@ -12,7 +12,7 @@ class StockLog extends BaseModel
 
     protected $connection = "mysql";
     protected $table = "stock_log";
-    protected $primaryKey = ["Id"];
+    protected $primaryKey = ["id"];
     protected $transformer = StockLogTransformer::class;
     public $incrementing = false;
     public $timestamps = true;

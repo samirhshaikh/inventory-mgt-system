@@ -91,9 +91,9 @@ export default {
 
     mounted() {
         axios
-            .get(route("sale.get-pdf-invoice"), {
+            .get(route("repair.get-pdf-invoice"), {
                 params: {
-                    Id: this.invoice_id,
+                    id: this.invoice_id,
                 },
                 responseType: "blob",
             })
@@ -103,7 +103,7 @@ export default {
 
                     let file = new File(
                         [response.data],
-                        "Invoice_" + this.invoice_id + ".pdf",
+                        "Repair_Invoice_" + this.invoice_id + ".pdf",
                         { type: "application/pdf" }
                     );
                     document.querySelector("#pdf-frame").src =

@@ -5,13 +5,13 @@ namespace App\Services;
 use App\Exceptions\RecordNotFoundException;
 use App\Exceptions\ReferenceException;
 use App\Http\Requests\IdRequest;
-use App\Http\Requests\SaveCustomerSalesRequest;
-use App\Models\CustomerSales;
+use App\Http\Requests\SaveCustomerRequest;
+use App\Models\Customer;
 use App\Traits\SearchTrait;
 use App\Traits\TableActions;
 use Illuminate\Database\Eloquent\Builder;
 
-class CustomerSalesService
+class CustomersService
 {
     use TableActions, SearchTrait;
 
@@ -30,7 +30,7 @@ class CustomerSalesService
         string $search_text = "",
         string $search_data = "{}"
     ): array {
-        $records = new CustomerSales();
+        $records = new Customer();
 
         if ($search_type === "simple" && $search_text != "") {
             $columns_to_search = [
@@ -122,7 +122,7 @@ class CustomerSalesService
      */
     public function getSingle(IdRequest $request)
     {
-        $record = CustomerSales::where("Id", $request->get("Id"))->get();
+        $record = Customer::where("id", $request->get("id"))->get();
 
         if ($record->count()) {
             return $record->map->transform()->first();
@@ -139,20 +139,20 @@ class CustomerSalesService
     public function changeActiveStatus(IdRequest $request): bool
     {
         try {
-            return $this->changeRecordStatus(new CustomerSales(), $request);
+            return $this->changeRecordStatus(new Customer(), $request);
         } catch (RecordNotFoundException $e) {
             throw new RecordNotFoundException();
         }
     }
 
     /**
-     * @param SaveCustomerSalesRequest $request
+     * @param SaveCustomerRequest $request
      * @return int
      * @throws RecordNotFoundException
      */
-    public function save(SaveCustomerSalesRequest $request): int
+    public function save(SaveCustomerRequest $request): int
     {
-        $record = CustomerSales::where("Id", $request->get("Id"))->get();
+        $record = Customer::where("id", $request->get("id"))->get();
 
         if ($request->get("operation", "add") == "edit") {
             if (!$record->count()) {
@@ -161,7 +161,7 @@ class CustomerSalesService
 
             $record = $record->first();
         } else {
-            $record = new CustomerSales();
+            $record = new Customer();
 
             $record->CreatedBy = session("user_details.UserName");
         }
@@ -176,8 +176,8 @@ class CustomerSalesService
         $record->save();
 
         return $request->get("operation", "add") == "edit"
-            ? $request->get("Id")
-            : CustomerSales::lastInsertId();
+            ? $request->get("id")
+            : Customer::lastInsertId();
     }
 
     /**
@@ -189,7 +189,7 @@ class CustomerSalesService
     public function delete(IdRequest $request): bool
     {
         //Check whether the record exist or not
-        $record = CustomerSales::where("Id", $request->get("Id"));
+        $record = Customer::where("id", $request->get("id"));
 
         if ($record->get()->count()) {
             $tables_to_check = ["Sales"];
@@ -197,7 +197,7 @@ class CustomerSalesService
                 $this->foreignReferenceFound(
                     $tables_to_check,
                     "CustomerId",
-                    $request->get("Id")
+                    $request->get("id")
                 )
             ) {
                 throw new ReferenceException();

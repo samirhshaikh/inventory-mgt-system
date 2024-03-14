@@ -123,7 +123,7 @@
                         />
                     </div>
 
-                    <div class="w-full md:w-1/2 form_field_container">
+                    <div class="w-full form_field_container">
                         <label
                             class="form_field_label"
                             :class="{
@@ -135,32 +135,39 @@
                         </label>
                         <vue-google-autocomplete
                             id="address"
-                            classname="w-1/2 generic_input"
+                            classname="w-2/3 generic_input"
                             placeholder="Address"
                         >
                         </vue-google-autocomplete>
                     </div>
 
-                    <div class="w-full md:w-1/2 form_field_container">
-                        <div class="hidden">
-                            <label
-                                class="form_field_label"
-                                :class="{
-                                    'text-gray-700': !dark_mode,
-                                    'text-white': dark_mode,
-                                }"
-                            >
-                                Cost
-                            </label>
-                            £
-                            <input
-                                class="w-32 generic_input"
-                                type="number"
-                                v-model.number="row['CurrentBalance']"
-                                autocomplete="off"
-                            />
-                        </div>
-                    </div>
+                    <!--                    <div-->
+                    <!--                        class="w-full md:w-1/2 form_field_container items-center"-->
+                    <!--                    >-->
+                    <!--                        <label-->
+                    <!--                            class="form_field_label"-->
+                    <!--                            :class="{-->
+                    <!--                                'text-gray-700': !dark_mode,-->
+                    <!--                                'text-white': dark_mode,-->
+                    <!--                            }"-->
+                    <!--                        >-->
+                    <!--                            Balance-->
+                    <!--                        </label>-->
+                    <!--                        <span-->
+                    <!--                            :class="{-->
+                    <!--                                'text-gray-700': !dark_mode,-->
+                    <!--                                'text-white': dark_mode,-->
+                    <!--                            }"-->
+                    <!--                            class="mr-1"-->
+                    <!--                            >£</span-->
+                    <!--                        >-->
+                    <!--                        <input-->
+                    <!--                            class="w-32 generic_input"-->
+                    <!--                            type="number"-->
+                    <!--                            v-model.number="row['Balance']"-->
+                    <!--                            autocomplete="off"-->
+                    <!--                        />-->
+                    <!--                    </div>-->
 
                     <div class="w-full md:w-1/2 form_field_container">
                         <label
@@ -278,14 +285,15 @@ export default {
     },
 
     mounted() {
+        console.log(this.options.id + ".save");
         //Get the data from server
         if (this.edit_id != "") {
             this.loading = true;
 
             axios
-                .get(route("suppliers.get-single"), {
+                .get(route(this.options.id + ".get-single"), {
                     params: {
-                        Id: this.edit_id,
+                        id: this.edit_id,
                     },
                 })
                 .then(
@@ -334,7 +342,7 @@ export default {
             this.saving_data = true;
 
             axios
-                .post(route("suppliers.save"), this.row)
+                .post(route(this.options.id + ".save"), this.row)
                 .then((response) => {
                     if (response.data.message == "record_saved") {
                         this.$notify({

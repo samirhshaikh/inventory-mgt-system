@@ -30,7 +30,7 @@
             :class="{
                 hidden:
                     !page.user_details.IsAdmin ||
-                    !row.hasOwnProperty('Id') ||
+                    !row.hasOwnProperty('id') ||
                     row['Returned'],
             }"
             v-if="typeof row.SalesInvoiceId !== 'undefined'"
@@ -109,7 +109,7 @@ export default {
             const { open, close } = useModal({
                 component: ReturnItem,
                 attrs: {
-                    SalesInvoiceId: this.parent_row["Id"],
+                    SalesInvoiceId: this.parent_row["id"],
                     SalesInvoiceNo: this.parent_row["InvoiceNo"],
                     IMEI: this.row["IMEI"],
                     refresh: (IMEI) => {

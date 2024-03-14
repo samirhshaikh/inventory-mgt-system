@@ -47,7 +47,7 @@ export default {
                         id: "sales",
                         record_name: "Sale",
                     },
-                    phones: [this.row.Id],
+                    phones: [this.row.id],
                     submitRecordSaved: (invoice_id) => {
                         parent.setActiveTab(this.options.id);
                         parent.setTabToRefresh(this.options.id);

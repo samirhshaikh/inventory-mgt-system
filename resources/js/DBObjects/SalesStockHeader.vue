@@ -1,5 +1,5 @@
 <template>
-    <tr type="header" v-show="expanded_row_id == row.Id">
+    <tr type="header" v-show="expanded_row_id == row.id">
         <th
             v-for="child_header in active_child_columns"
             v-if="child_header.enabled"
@@ -82,7 +82,7 @@ export default {
             if (
                 this.expanded_row_id &&
                 row._level == 0 &&
-                this.expanded_row_id != row.Id
+                this.expanded_row_id != row.id
             ) {
                 classes.push("opacity-10");
             }

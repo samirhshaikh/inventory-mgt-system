@@ -6,7 +6,7 @@ use App\Exceptions\RecordNotFoundException;
 use App\Exceptions\ReferenceException;
 use App\Http\Requests\IdRequest;
 use App\Http\Requests\SaveSupplierRequest;
-use App\Models\Suppliers;
+use App\Models\Supplier;
 use App\Traits\SearchTrait;
 use App\Traits\TableActions;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,6 +14,18 @@ use Illuminate\Database\Eloquent\Builder;
 class SuppliersService
 {
     use TableActions, SearchTrait;
+
+    private string $model;
+    private string $table_name;
+
+    public function __construct($table_name = "suppliers")
+    {
+        $this->table_name = $table_name;
+        $this->model = match ($this->table_name) {
+            "suppliers" => "App\Models\Supplier",
+            "parts_suppliers" => "App\Models\PartsSupplier",
+        };
+    }
 
     /**
      * @param string $order_by
@@ -30,7 +42,7 @@ class SuppliersService
         string $search_text = "",
         string $search_data = "{}"
     ): array {
-        $records = new Suppliers();
+        $records = new $this->model();
 
         if ($search_type === "simple" && $search_text != "") {
             $fields_to_search = [
@@ -38,7 +50,7 @@ class SuppliersService
                 "ContactNo1",
                 "ContactNo2",
                 "ContactNo3",
-                "CurrentBalance",
+                "Balance",
                 "Comments",
                 'DATE_FORMAT(CreatedDate, "%d-%b-%Y")',
                 'DATE_FORMAT(UpdatedDate, "%d-%b-%Y")',
@@ -84,7 +96,7 @@ class SuppliersService
 
             switch ($column) {
                 case "SupplierName":
-                case "CurrentBalance":
+                case "Balance":
                     $model = $this->prepareAdvancedSearchQuery(
                         $model,
                         $column,
@@ -122,7 +134,8 @@ class SuppliersService
      */
     public function getSingle(IdRequest $request)
     {
-        $record = Suppliers::where("Id", $request->get("Id"))->get();
+        $supplier = new $this->model();
+        $record = $supplier::where("id", $request->get("id"))->get();
 
         if ($record->count()) {
             return $record->map->transform()->first();
@@ -139,7 +152,7 @@ class SuppliersService
     public function changeActiveStatus(IdRequest $request): bool
     {
         try {
-            return $this->changeRecordStatus(new Suppliers(), $request);
+            return $this->changeRecordStatus(new $this->model(), $request);
         } catch (RecordNotFoundException $e) {
             throw new RecordNotFoundException();
         }
@@ -152,7 +165,8 @@ class SuppliersService
      */
     public function save(SaveSupplierRequest $request): int
     {
-        $record = Suppliers::where("Id", $request->get("Id"))->get();
+        $supplier = new $this->model();
+        $record = $supplier::where("id", $request->get("id"))->get();
 
         if ($request->get("operation", "add") == "edit") {
             if (!$record->count()) {
@@ -161,7 +175,7 @@ class SuppliersService
 
             $record = $record->first();
         } else {
-            $record = new Suppliers();
+            $record = new $this->model();
 
             $record->CreatedBy = session("user_details.UserName");
         }
@@ -169,15 +183,15 @@ class SuppliersService
         $record->SupplierName = $request->get("SupplierName");
         $record->ContactNo1 = $request->get("ContactNo1");
         $record->ContactNo2 = $request->get("ContactNo2");
-        $record->CurrentBalance = (float) $request->get("CurrentBalance");
+        $record->Balance = (float) $request->get("Balance");
         $record->Comments = $request->get("Comments");
         $record->UpdatedBy = session("user_details.UserName");
         $record->IsActive = $request->get("IsActive");
         $record->save();
 
         return $request->get("operation", "add") == "edit"
-            ? $request->get("Id")
-            : Suppliers::lastInsertId();
+            ? $request->get("id")
+            : $supplier::lastInsertId();
     }
 
     /**
@@ -189,7 +203,8 @@ class SuppliersService
     public function delete(IdRequest $request): bool
     {
         //Check whether the record exist or not
-        $record = Suppliers::where("Id", $request->get("Id"));
+        $supplier = new $this->model();
+        $record = $supplier::where("id", $request->get("id"));
 
         if ($record->get()->count()) {
             $tables_to_check = ["Purchase"];
@@ -197,7 +212,7 @@ class SuppliersService
                 $this->foreignReferenceFound(
                     $tables_to_check,
                     "SupplierId",
-                    $request->get("Id")
+                    $request->get("id")
                 )
             ) {
                 throw new ReferenceException();

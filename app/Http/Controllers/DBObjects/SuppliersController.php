@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\DBObjects;
 
+use App\Datatables\PartSuppliersDatatable;
 use App\Datatables\SuppliersDatatable;
 use App\Exceptions\RecordNotFoundException;
 use App\Exceptions\ReferenceException;
@@ -10,38 +11,49 @@ use App\Http\Requests\IdRequest;
 use App\Http\Requests\SaveSupplierRequest;
 use App\Services\SuppliersService;
 use App\Traits\DataOutputTrait;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Symfony\Component\HttpFoundation\Response;
 
 class SuppliersController extends BaseController
 {
     use DataOutputTrait;
 
+    public string $table_name;
+
+    public function setTableName($table_name)
+    {
+        $this->table_name = $table_name;
+    }
+
     /**
      * @param Request $request
+     * @param $datatable
      * @return array
      */
-    public function getData(Request $request): array
+    protected function getData(Request $request): array
     {
-        $table = new SuppliersDatatable();
-
+        $datatable = match ($this->table_name) {
+            "suppliers" => new SuppliersDatatable(),
+            "parts_suppliers" => new PartSuppliersDatatable(),
+            default => null,
+        };
         $order_by =
             $request->get("order_by", "") == ""
                 ? session(
-                    "app_settings.datatable.sorting.suppliers.column",
-                    Arr::get($table->options(), "sorting.default")
+                    "app_settings.datatable.sorting.{$this->table_name}.column",
+                    Arr::get($datatable->options(), "sorting.default")
                 )
                 : $request->get("order_by");
         $order_direction =
             $request->get("order_by", "") == ""
                 ? session(
-                    "app_settings.datatable.sorting.suppliers.direction",
-                    Arr::get($table->options(), "sorting.direction")
+                    "app_settings.datatable.sorting.{$this->table_name}.direction",
+                    Arr::get($datatable->options(), "sorting.direction")
                 )
                 : "asc";
 
-        $suppliers_service = new SuppliersService();
+        $suppliers_service = new SuppliersService($this->table_name);
 
         list(
             "total_records" => $total_records,
@@ -55,7 +67,7 @@ class SuppliersController extends BaseController
         );
 
         return $this->prepareRecordsOutput(
-            $table,
+            $datatable,
             $records,
             $total_records,
             (int) $request->get("page_no", 1),
@@ -66,11 +78,11 @@ class SuppliersController extends BaseController
 
     /**
      * @param IdRequest $request
-     * @return JsonResponse
+     * @return Response
      */
-    public function changeActiveStatus(IdRequest $request): JsonResponse
+    protected function changeActiveStatus(IdRequest $request): Response
     {
-        $suppliers_service = new SuppliersService();
+        $suppliers_service = new SuppliersService($this->table_name);
 
         try {
             $suppliers_service->changeActiveStatus($request);
@@ -80,18 +92,18 @@ class SuppliersController extends BaseController
             return $this->sendError(
                 self::RECORD_NO_FOUND,
                 [],
-                JsonResponse::HTTP_NOT_FOUND
+                Response::HTTP_NOT_FOUND
             );
         }
     }
 
     /**
      * @param IdRequest $request
-     * @return JsonResponse
+     * @return Response
      */
-    public function getSingle(IdRequest $request): JsonResponse
+    protected function getSingle(IdRequest $request): Response
     {
-        $suppliers_service = new SuppliersService();
+        $suppliers_service = new SuppliersService($this->table_name);
 
         try {
             $response = [];
@@ -102,18 +114,18 @@ class SuppliersController extends BaseController
             return $this->sendError(
                 self::RECORD_NO_FOUND,
                 [],
-                JsonResponse::HTTP_NOT_FOUND
+                Response::HTTP_NOT_FOUND
             );
         }
     }
 
     /**
      * @param SaveSupplierRequest $request
-     * @return JsonResponse
+     * @return Response
      */
-    public function save(SaveSupplierRequest $request): JsonResponse
+    protected function save(SaveSupplierRequest $request): Response
     {
-        $suppliers_service = new SuppliersService();
+        $suppliers_service = new SuppliersService($this->table_name);
 
         try {
             $id = $suppliers_service->save($request);
@@ -128,18 +140,18 @@ class SuppliersController extends BaseController
             return $this->sendError(
                 self::RECORD_NO_FOUND,
                 [],
-                JsonResponse::HTTP_NOT_FOUND
+                Response::HTTP_NOT_FOUND
             );
         }
     }
 
     /**
      * @param IdRequest $request
-     * @return JsonResponse
+     * @return Response
      */
-    public function delete(IdRequest $request): JsonResponse
+    protected function delete(IdRequest $request): Response
     {
-        $suppliers_service = new SuppliersService();
+        $suppliers_service = new SuppliersService($this->table_name);
 
         try {
             $suppliers_service->delete($request);
@@ -149,13 +161,13 @@ class SuppliersController extends BaseController
             return $this->sendError(
                 self::RECORD_NO_FOUND,
                 [],
-                JsonResponse::HTTP_NOT_FOUND
+                Response::HTTP_NOT_FOUND
             );
         } catch (ReferenceException $e) {
             return $this->sendError(
                 self::RECORD_REFERENCE_FOUND,
                 [],
-                JsonResponse::HTTP_FORBIDDEN
+                Response::HTTP_FORBIDDEN
             );
         }
     }

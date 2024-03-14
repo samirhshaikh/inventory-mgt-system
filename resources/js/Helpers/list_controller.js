@@ -1,20 +1,22 @@
 /**
  * Mixin file. It maintains the cache of the following items:
  * Suppliers
+ * Parts Suppliers
  * Colors
  * Models
  * Manufacturers
  * Customer Sales
+ * Parts
  * Stock Types
  * Networks
  * Phone sizes
  * Payment Types
  *
- * ToDo: Need to remove customer_sales from here as it can be pretty big list. So need to make customer select box ajax connected.
+ * ToDo: Need to remove customers from here as it can be pretty big list. So need to make customer select box ajax connected.
  */
 import { mapState, mapActions } from "vuex";
 import Supplier from "../DBObjects/Supplier";
-import Customer from "../DBObjects/CustomerSale";
+import Customer from "../DBObjects/Customer";
 import ObjectTypeName from "../DBObjects/ObjectTypeName";
 import { useModal } from "vue-final-modal";
 
@@ -22,19 +24,25 @@ export const list_controller = {
     data() {
         return {
             loading_suppliers: false,
+            loading_parts_suppliers: false,
             loading_handset_colors: false,
             loading_handset_models: false,
             loading_handset_manufacturers: false,
+            loading_parts: false,
 
             suppliers: [],
+            parts_suppliers: [],
             handset_colors: [],
             handset_models: [],
             handset_manufacturers: [],
+            parts: [],
 
             suppliers_simple: [],
+            parts_suppliers_simple: [],
             handset_colors_simple: [],
             handset_models_simple: [],
             handset_manufacturers_simple: [],
+            parts_simple: [],
 
             stock_types: [],
             networks: [],
@@ -60,11 +68,15 @@ export const list_controller = {
 
         this.load_suppliers();
 
+        this.load_parts_suppliers();
+
         this.load_handset_colors();
 
         this.load_handset_models();
 
         this.load_handset_manufacturers();
+
+        this.load_parts();
     },
 
     methods: {
@@ -112,6 +124,59 @@ export const list_controller = {
             _.forEach(this.suppliers, (data, key) => {
                 if (!this.suppliers_simple.includes(data["SupplierName"])) {
                     this.suppliers_simple.push(data["SupplierName"]);
+                }
+            });
+        },
+
+        load_parts_suppliers() {
+            if (
+                this.local_settings.cached_data.hasOwnProperty(
+                    "parts_suppliers"
+                ) &&
+                this.local_settings.cached_data["parts_suppliers"].length
+            ) {
+                this.parts_suppliers =
+                    this.local_settings.cached_data["parts_suppliers"];
+                this.load_parts_suppliers_simple();
+            } else {
+                this.loading_parts_suppliers = true;
+
+                axios
+                    .get(route("parts_suppliers.data"), {
+                        params: {
+                            get_all_records: 1,
+                            order_by: "SupplierName",
+                        },
+                    })
+                    .then(
+                        (response) => {
+                            this.parts_suppliers = response.data.rows;
+
+                            this.setCachedData({
+                                key: "parts_suppliers",
+                                data: response.data.rows,
+                            });
+
+                            this.loading_parts_suppliers = false;
+
+                            this.load_parts_suppliers_simple();
+                        },
+                        (error) => {
+                            this.addError(error);
+
+                            this.loading_parts_suppliers = false;
+                        }
+                    );
+            }
+        },
+
+        load_parts_suppliers_simple() {
+            this.parts_suppliers_simple = [];
+            _.forEach(this.parts_suppliers, (data, key) => {
+                if (
+                    !this.parts_suppliers_simple.includes(data["SupplierName"])
+                ) {
+                    this.parts_suppliers_simple.push(data["SupplierName"]);
                 }
             });
         },
@@ -267,7 +332,55 @@ export const list_controller = {
             });
         },
 
-        addSupplier() {
+        load_parts() {
+            if (
+                this.local_settings.cached_data.hasOwnProperty("parts") &&
+                this.local_settings.cached_data["parts"].length
+            ) {
+                this.parts = this.local_settings.cached_data["parts"];
+                this.load_parts_simple();
+            } else {
+                this.loading_parts = true;
+
+                axios
+                    .get(route("parts.data"), {
+                        params: {
+                            get_all_records: 1,
+                            order_by: "Name",
+                        },
+                    })
+                    .then(
+                        (response) => {
+                            this.parts = response.data.rows;
+
+                            this.setCachedData({
+                                key: "parts",
+                                data: response.data.rows,
+                            });
+
+                            this.loading_parts = false;
+
+                            this.load_parts_simple();
+                        },
+                        (error) => {
+                            this.addError(error);
+
+                            this.loading_parts = false;
+                        }
+                    );
+            }
+        },
+
+        load_parts_simple() {
+            this.parts_simple = [];
+            _.forEach(this.parts, (data, key) => {
+                if (!this.parts_simple.includes(data["Name"])) {
+                    this.parts_simple.push(data["Name"]);
+                }
+            });
+        },
+
+        addSupplier(source) {
             const parent = this;
 
             this.setPopperOpen(true);
@@ -277,8 +390,11 @@ export const list_controller = {
                 attrs: {
                     edit_id: "",
                     options: {
-                        id: "suppliers",
-                        record_name: "Supplier",
+                        id: source,
+                        record_name:
+                            source === "parts_suppliers"
+                                ? "Part Supplier"
+                                : "Supplier",
                         cache_data: true,
                     },
                     onConfirm() {
@@ -336,6 +452,22 @@ export const list_controller = {
             this.addObjectTypeName({
                 id: "handset_colors",
                 record_name: "Color",
+                routes: routes,
+                cache_data: true,
+            });
+        },
+
+        addPart() {
+            let routes = [];
+            routes["get-single"] = route("parts.get-single");
+            routes["save"] = route("parts.save");
+            routes["check-duplicate-name"] = route(
+                "parts.check-duplicate-name"
+            );
+
+            this.addObjectTypeName({
+                id: "parts",
+                record_name: "Part",
                 routes: routes,
                 cache_data: true,
             });

@@ -1,7 +1,7 @@
 <template>
     <div class="flex">
         <Button
-            @click.native="viewSalesInvoice(row.Id)"
+            @click.native="viewSalesInvoice(row.id)"
             icon="file-alt"
             split="border-white"
             class="text-white bg-green-600 mr-2"
@@ -38,12 +38,11 @@
 
 <script>
 import Sale from "../../../DBObjects/Sale.vue";
-import { mapActions, mapState } from "vuex";
+import { mapActions } from "vuex";
 import Confirm from "../../../components/Confirm.vue";
 import { datatable_cell } from "../datatable_cell";
 import { notifications } from "../../../Helpers/notifications";
 import { common_functions } from "../../../Helpers/common_functions";
-import Invoice from "./Invoice";
 import { usePage } from "@inertiajs/vue3";
 import { useModal } from "vue-final-modal";
 
@@ -67,7 +66,7 @@ export default {
             const { open, close } = useModal({
                 component: Sale,
                 attrs: {
-                    edit_id: String(this.row.Id),
+                    edit_id: String(this.row.id),
                     options: this.options,
                     submitRecordSaved: (invoice_id) => {
                         this.setTableMetaData({
@@ -109,7 +108,7 @@ export default {
 
                         axios
                             .post(route("sale.delete"), {
-                                Id: this.row.Id,
+                                id: this.row.id,
                             })
                             .then((response) => {
                                 if (response.data.message == "record_deleted") {

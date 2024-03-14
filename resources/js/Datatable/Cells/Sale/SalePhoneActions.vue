@@ -61,7 +61,7 @@ export default {
             const { open, close } = useModal({
                 component: ReturnItem,
                 attrs: {
-                    SalesInvoiceId: this.parent_row["Id"],
+                    SalesInvoiceId: this.parent_row["id"],
                     SalesInvoiceNo: this.parent_row["InvoiceNo"],
                     IMEI: this.row["IMEI"],
                     refresh: (IMEI) => {
@@ -92,7 +92,7 @@ export default {
                         record_name: "Purchase",
                         enable_search: false,
                         pagination: false,
-                        primary_key: "Id",
+                        primary_key: "id",
                         sorting: {
                             default: "UpdatedDate",
                             direction: "desc",

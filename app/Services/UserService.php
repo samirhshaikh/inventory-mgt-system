@@ -81,7 +81,7 @@ class UserService
      */
     public function changeActiveStatus(IdStringRequest $request): bool
     {
-        $user = User::where("UserName", $request->get("Id"))
+        $user = User::where("UserName", $request->get("id"))
             ->get()
             ->first();
 
@@ -108,7 +108,7 @@ class UserService
      */
     public function changeAdminStatus(IdStringRequest $request): bool
     {
-        $user = User::where("UserName", $request->get("Id"))
+        $user = User::where("UserName", $request->get("id"))
             ->get()
             ->first();
 

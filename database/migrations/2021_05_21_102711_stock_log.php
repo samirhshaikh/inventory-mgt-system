@@ -12,17 +12,15 @@ return new class extends Migration {
     {
         if (!Schema::hasTable("stock_log")) {
             Schema::create("stock_log", function (Blueprint $table) {
-                $table->increments("Id");
+                $table->id();
                 $table->string("IMEI", 50);
                 $table->datetime("LogDate");
-                $table->text("Comments");
+                $table->text("Comments")->nullable();
                 $table->string("Activity", 45)->default("Sold");
                 $table->datetime("CreatedDate");
                 $table->string("CreatedBy", 250);
                 $table->datetime("UpdatedDate");
                 $table->string("UpdatedBy", 250);
-
-                $table->primary("Id");
 
                 $table
                     ->foreign("IMEI")

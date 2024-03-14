@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\DBObjects;
 
-use App\Datatables\CustomerSalesDatatable;
+use App\Datatables\CustomersDatatable;
 use App\Exceptions\RecordNotFoundException;
 use App\Exceptions\ReferenceException;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\IdRequest;
-use App\Http\Requests\SaveCustomerSalesRequest;
-use App\Services\CustomerSalesService;
+use App\Http\Requests\SaveCustomerRequest;
+use App\Services\CustomersService;
 use App\Traits\DataOutputTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
-class CustomerSalesController extends BaseController
+class CustomersController extends BaseController
 {
     use DataOutputTrait;
 
@@ -24,29 +24,29 @@ class CustomerSalesController extends BaseController
      */
     public function getData(Request $request): array
     {
-        $table = new CustomerSalesDatatable();
+        $table = new CustomersDatatable();
 
         $order_by =
             $request->get("order_by", "") == ""
                 ? session(
-                    "app_settings.datatable.sorting.customer_sales.column",
+                    "app_settings.datatable.sorting.customers.column",
                     Arr::get($table->options(), "sorting.default")
                 )
                 : $request->get("order_by");
         $order_direction =
             $request->get("order_by", "") == ""
                 ? session(
-                    "app_settings.datatable.sorting.customer_sales.direction",
+                    "app_settings.datatable.sorting.customers.direction",
                     Arr::get($table->options(), "sorting.direction")
                 )
                 : "asc";
 
-        $customer_sales_service = new CustomerSalesService();
+        $customers_service = new CustomersService();
 
         list(
             "total_records" => $total_records,
             "records" => $records,
-        ) = $customer_sales_service->getAll(
+        ) = $customers_service->getAll(
             $order_by,
             $order_direction,
             $request->get("search_type", "simple") ?? "simple",
@@ -70,7 +70,7 @@ class CustomerSalesController extends BaseController
      */
     public function changeActiveStatus(IdRequest $request): JsonResponse
     {
-        $customers_service = new CustomerSalesService();
+        $customers_service = new CustomersService();
 
         try {
             $customers_service->changeActiveStatus($request);
@@ -91,7 +91,7 @@ class CustomerSalesController extends BaseController
      */
     public function getSingle(IdRequest $request): JsonResponse
     {
-        $customers_service = new CustomerSalesService();
+        $customers_service = new CustomersService();
 
         try {
             $response = [];
@@ -108,12 +108,12 @@ class CustomerSalesController extends BaseController
     }
 
     /**
-     * @param SaveCustomerSalesRequest $request
+     * @param SaveCustomerRequest $request
      * @return JsonResponse
      */
-    public function save(SaveCustomerSalesRequest $request): JsonResponse
+    public function save(SaveCustomerRequest $request): JsonResponse
     {
-        $customers_service = new CustomerSalesService();
+        $customers_service = new CustomersService();
 
         try {
             $id = $customers_service->save($request);
@@ -139,7 +139,7 @@ class CustomerSalesController extends BaseController
      */
     public function delete(IdRequest $request): JsonResponse
     {
-        $customers_service = new CustomerSalesService();
+        $customers_service = new CustomersService();
 
         try {
             $customers_service->delete($request);

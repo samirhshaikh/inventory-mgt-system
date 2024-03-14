@@ -22,7 +22,7 @@ class IdStringRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'Id' => 'required'
+            "id" => "required",
         ];
     }
 
@@ -34,7 +34,7 @@ class IdStringRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'Id.required' => 'Id cannot be empty'
+            "id.required" => "id cannot be empty",
         ];
     }
 }

@@ -17,7 +17,7 @@
             :class="{
                 hidden:
                     !page.user_details.IsAdmin ||
-                    row['Id'] == '' ||
+                    row['id'] == '' ||
                     row['row_id'] == current_row_id ||
                     row['Status'] == this.phonestock.STATUS_SOLD,
             }"

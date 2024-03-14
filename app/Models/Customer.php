@@ -3,16 +3,16 @@
 namespace App\Models;
 
 use App\Traits\CompositeKeysTrait;
-use App\Transformers\SuppliersTransformer;
+use App\Transformers\CustomerTransformer;
 
-class Suppliers extends BaseModel
+class Customer extends BaseModel
 {
     use CompositeKeysTrait;
 
     protected $connection = "mysql";
-    protected $table = "Supplier";
-    protected $primaryKey = ["Id"];
-    protected $transformer = SuppliersTransformer::class;
+    protected $table = "customers";
+    protected $primaryKey = ["id"];
+    protected $transformer = CustomerTransformer::class;
     public $incrementing = false;
     public $timestamps = true;
     protected $guarded = [];

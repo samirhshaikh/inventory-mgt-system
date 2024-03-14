@@ -2,15 +2,15 @@
 
 namespace App\Transformers;
 
-use App\Models\Sales;
+use App\Models\Sale;
 use League\Fractal\TransformerAbstract;
 
-class SalesTransformer extends TransformerAbstract
+class SaleTransformer extends TransformerAbstract
 {
-    public function transform(Sales $model)
+    public function transform(Sale $model)
     {
         $return = [
-            "Id" => $model->Id,
+            "id" => $model->id,
             "InvoiceNo" => is_numeric($model->InvoiceNo)
                 ? $this->formatInvoiceNumber(
                     $model->InvoiceNo,
@@ -21,8 +21,6 @@ class SalesTransformer extends TransformerAbstract
                 ? ""
                 : $model->InvoiceDate->format("d-M-Y"),
             "CustomerId" => $model->CustomerId,
-            "customer" => $model->customer,
-            "RepairId" => $model->RepairId,
             "PaymentMethod" => $model->PaymentMethod,
             "ChequeNo" => $model->ChequeNo,
             "Comments" => $model->Comments,
@@ -70,7 +68,12 @@ class SalesTransformer extends TransformerAbstract
         return $return;
     }
 
-    private function formatInvoiceNumber($invoiceNo, $invoiceDate)
+    /**
+     * @param $invoiceNo
+     * @param $invoiceDate
+     * @return string
+     */
+    private function formatInvoiceNumber($invoiceNo, $invoiceDate): string
     {
         return sprintf(
             "%s-%s%s%s000%s",

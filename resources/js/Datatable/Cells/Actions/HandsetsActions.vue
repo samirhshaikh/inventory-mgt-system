@@ -49,7 +49,7 @@ export default {
             this.$modal.show(
                 Handset,
                 {
-                    edit_id: String(this.row.Id),
+                    edit_id: String(this.row.id),
                     options: this.options,
                 },
                 {
@@ -73,7 +73,7 @@ export default {
 
                         axios
                             .post(route("handsets.delete"), {
-                                Id: this.row.Id,
+                                id: this.row.id,
                             })
                             .then((response) => {
                                 if (response.data.message == "record_deleted") {

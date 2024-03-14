@@ -10,7 +10,7 @@ class SalesStockTransformer extends TransformerAbstract
     public function transform(SalesStock $model)
     {
         $return = [
-            "Id" => $model->Id,
+            "id" => $model->id,
             "InvoiceId" => $model->InvoiceId,
             "IMEI" => $model->IMEI,
             "Qty" => $model->Qty,

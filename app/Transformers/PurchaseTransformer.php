@@ -10,7 +10,7 @@ class PurchaseTransformer extends TransformerAbstract
     public function transform(Purchase $model)
     {
         $return = [
-            "Id" => $model->Id,
+            "id" => $model->id,
             "InvoiceNo" => $model->InvoiceNo,
             "InvoiceDate" => empty($model->InvoiceDate)
                 ? ""

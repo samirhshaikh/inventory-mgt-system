@@ -41,9 +41,9 @@ class HandsetsController extends BaseController
         $handsets = Handsets::selectRaw(
             "HandsetMaster.*, ManufactureMaster.Name as manufacturer, ColorMaster.Name as color, modelmaster.Name as model"
         )
-            ->join("ManufactureMaster", "ManufactureMaster.Id", "=", "MakeId")
-            ->join("ColorMaster", "ColorMaster.Id", "=", "ColorId")
-            ->join("modelmaster", "modelmaster.Id", "=", "ModelId")
+            ->join("ManufactureMaster", "ManufactureMaster.id", "=", "MakeId")
+            ->join("ColorMaster", "ColorMaster.id", "=", "ColorId")
+            ->join("modelmaster", "modelmaster.id", "=", "ModelId")
             ->orderBy($order_by, $order_direction)
             ->get();
 

@@ -17,7 +17,7 @@ class ObjectTypeNameService
     use TableActions, SearchTrait;
 
     private $model;
-    private $id_column;
+    private string $id_column;
 
     /**
      * ObjectTypeNameService constructor.
@@ -57,7 +57,9 @@ class ObjectTypeNameService
             );
         }
 
-        $records = $records->orderBy($order_by, $order_direction);
+        $records = $records
+            ->where("Name", "!=", "")
+            ->orderBy($order_by, $order_direction);
 
         //Get total records
         $total_records = $this->getTotalRecords(clone $records);
@@ -75,7 +77,7 @@ class ObjectTypeNameService
      */
     public function getSingle(IdRequest $request)
     {
-        $record = $this->model::where("Id", $request->get("Id"))->get();
+        $record = $this->model::where("id", $request->get("id"))->get();
 
         if ($record->count()) {
             return $record->map->transform()->first();
@@ -110,13 +112,13 @@ class ObjectTypeNameService
         if (
             $this->isDuplicateName(
                 $request->get("Name"),
-                $request->get("Id", 0)
+                $request->get("id", 0)
             )
         ) {
             throw new DuplicateNameException();
         }
 
-        $record = $this->model::where("Id", $request->get("Id"))->get();
+        $record = $this->model::where("id", $request->get("id"))->get();
 
         if ($request->get("operation", "add") == "edit") {
             if (!$record->count()) {
@@ -136,35 +138,35 @@ class ObjectTypeNameService
         $record->save();
 
         return $request->get("operation", "add") == "edit"
-            ? $request->get("Id")
+            ? $request->get("id")
             : $this->model::lastInsertId();
     }
 
     /**
      * @param IdRequest $request
+     * @param array $tables_to_check
      * @return bool
      * @throws RecordNotFoundException
      * @throws ReferenceException
      */
-    public function delete(IdRequest $request): bool
+    public function delete(IdRequest $request, array $tables_to_check): bool
     {
         //Check whether the record exist or not
-        $record = $this->model::where("Id", $request->get("Id"))->get();
+        $record = $this->model::where("id", $request->get("id"))->get();
 
         if ($record->count()) {
             //Check whether the record is used as a reference in other tables.
-            $tables_to_check = ["PhoneStock", "Handsets"]; //'Repair'
             if (
                 $this->foreignReferenceFound(
                     $tables_to_check,
                     $this->id_column,
-                    $request->get("Id")
+                    $request->get("id")
                 )
             ) {
                 throw new ReferenceException();
             }
 
-            $this->model::where("Id", $request->get("Id"))->delete();
+            $this->model::where("id", $request->get("id"))->delete();
 
             return true;
         } else {
@@ -182,7 +184,7 @@ class ObjectTypeNameService
         if (
             $this->isDuplicateName(
                 $request->get("Name"),
-                $request->get("Id", 0)
+                $request->get("id", 0)
             )
         ) {
             throw new DuplicateNameException();
@@ -200,7 +202,7 @@ class ObjectTypeNameService
     {
         //Check whether the record exists or not
         if (!empty($id)) {
-            $record = $this->model::where("Id", $id)->get();
+            $record = $this->model::where("id", $id)->get();
 
             if (!$record->count()) {
                 return false;

@@ -2,24 +2,16 @@
 
 namespace App\Transformers;
 
-use App\Models\Suppliers;
+use App\Models\RepairPart;
 use League\Fractal\TransformerAbstract;
 
-class SuppliersTransformer extends TransformerAbstract
+class RepairPartTransformer extends TransformerAbstract
 {
-    public function transform(Suppliers $model)
+    public function transform(RepairPart $model)
     {
-        return [
-            "Id" => $model->Id,
-            "SupplierName" => ucwords($model->SupplierName),
-            "ContactNo1" => $model->ContactNo1,
-            "ContactNo2" => $model->ContactNo2,
-            "ContactNo3" => $model->ContactNo3,
-            "Address" => $model->Address,
-            "City" => $model->City,
-            "CurrentBalance" => $model->CurrentBalance ?: "",
-            "Comments" => $model->Comments,
-            "IsActive" => boolval($model->IsActive),
+        $return = [
+            "id" => $model->id,
+            "Cost" => $model->Cost ?: "",
             "CreatedDate" => empty($model->CreatedDate)
                 ? ""
                 : $model->CreatedDate->format("d-M-Y h:i A"),
@@ -33,5 +25,19 @@ class SuppliersTransformer extends TransformerAbstract
                 ? $model->CreatedBy
                 : $model->UpdatedBy,
         ];
+
+        if ($model->relationLoaded("supplier")) {
+            if ($model->supplier) {
+                $return["supplier"] = $model->supplier->transform();
+            }
+        }
+
+        if ($model->relationLoaded("part")) {
+            if ($model->part) {
+                $return["part"] = $model->part->transform();
+            }
+        }
+
+        return $return;
     }
 }

@@ -2,15 +2,15 @@
 
 namespace App\Transformers;
 
-use App\Models\CustomerSales;
+use App\Models\Customer;
 use League\Fractal\TransformerAbstract;
 
-class CustomerSalesTransformer extends TransformerAbstract
+class CustomerTransformer extends TransformerAbstract
 {
-    public function transform(CustomerSales $model)
+    public function transform(Customer $model)
     {
         return [
-            "Id" => $model->Id,
+            "id" => $model->id,
             "CustomerName" => ucwords($model->CustomerName),
             "ContactNo1" => $model->ContactNo1,
             "ContactNo2" => $model->ContactNo2,
@@ -18,7 +18,6 @@ class CustomerSalesTransformer extends TransformerAbstract
             "City" => $model->City,
             "Comments" => $model->Comments,
             "Balance" => $model->Balance ?: "",
-            "Comments" => $model->Comments,
             "IsActive" => boolval($model->IsActive),
             "CreatedDate" => is_null($model->CreatedDate)
                 ? ""

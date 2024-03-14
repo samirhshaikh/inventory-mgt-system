@@ -103,7 +103,7 @@ export default {
                     class: "w-48",
                 },
                 {
-                    key: "CurrentBalance",
+                    key: "Balance",
                     label: "Balance",
                     type: "currency",
                     class: "w-32",

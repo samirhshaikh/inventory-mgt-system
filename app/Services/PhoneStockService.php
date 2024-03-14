@@ -39,12 +39,12 @@ class PhoneStockService
         )
             ->leftJoin(
                 "ManufactureMaster",
-                "ManufactureMaster.Id",
+                "ManufactureMaster.id",
                 "=",
                 "MakeId"
             )
-            ->leftJoin("ColorMaster", "ColorMaster.Id", "=", "ColorId")
-            ->leftJoin("ModelMaster", "ModelMaster.Id", "=", "ModelId");
+            ->leftJoin("ColorMaster", "ColorMaster.id", "=", "ColorId")
+            ->leftJoin("ModelMaster", "ModelMaster.id", "=", "ModelId");
 
         if ($available_stock_only) {
             $records = $records->whereRaw('PhoneStock.Status != "Sold"');
@@ -167,15 +167,15 @@ class PhoneStockService
         $record = PhoneStock::selectRaw(
             "PhoneStock.*, ManufactureMaster.Name, ColorMaster.Name, ModelMaster.Name"
         )
-            ->where("PhoneStock.Id", $request->get("Id"))
+            ->where("PhoneStock.id", $request->get("id"))
             ->leftJoin(
                 "ManufactureMaster",
-                "ManufactureMaster.Id",
+                "ManufactureMaster.id",
                 "=",
                 "MakeId"
             )
-            ->leftJoin("ColorMaster", "ColorMaster.Id", "=", "ColorId")
-            ->leftJoin("ModelMaster", "ModelMaster.Id", "=", "ModelId")
+            ->leftJoin("ColorMaster", "ColorMaster.id", "=", "ColorId")
+            ->leftJoin("ModelMaster", "ModelMaster.id", "=", "ModelId")
             ->get();
 
         if ($record->count()) {
@@ -194,12 +194,12 @@ class PhoneStockService
     {
         $records_count = 0;
         foreach ($phones as $row) {
-            if ($this->isDuplicateIMEI($row["IMEI"], $row["Id"] ?? 0)) {
+            if ($this->isDuplicateIMEI($row["IMEI"], $row["id"] ?? 0)) {
                 continue;
             }
 
             //New Record
-            if (empty($row["Id"] ?? 0)) {
+            if (empty($row["id"] ?? 0)) {
                 $record = new PhoneStock();
 
                 $record->InvoiceId = $invoiceId;
@@ -207,7 +207,7 @@ class PhoneStockService
             }
             //Edit Record
             else {
-                $record = PhoneStock::where("Id", $row["Id"])->get();
+                $record = PhoneStock::where("id", $row["id"])->get();
 
                 if (!$record->count()) {
                     continue;
@@ -217,9 +217,9 @@ class PhoneStockService
             }
 
             $record->IMEI = $row["IMEI"];
-            $record->MakeId = $row["manufacturer"]["Id"];
-            $record->ModelId = $row["model"]["Id"];
-            $record->ColorId = $row["color"]["Id"];
+            $record->MakeId = $row["manufacturer"]["id"];
+            $record->ModelId = $row["model"]["id"];
+            $record->ColorId = $row["color"]["id"];
             $record->Size = $row["Size"];
             $record->Cost = $row["Cost"];
             $record->StockType = $row["StockType"];
@@ -245,7 +245,7 @@ class PhoneStockService
     public function delete(IdRequest $request): bool
     {
         //Check whether the record exist or not
-        $record = PhoneStock::where("Id", $request->get("Id"));
+        $record = PhoneStock::where("id", $request->get("id"));
 
         if ($record->get()->count()) {
             $record = $record->first();
@@ -301,7 +301,7 @@ class PhoneStockService
         if (
             $this->isDuplicateIMEI(
                 $request->get("IMEI"),
-                $request->get("Id", 0)
+                $request->get("id", 0)
             )
         ) {
             throw new DuplicateIMEIException();
@@ -358,7 +358,7 @@ class PhoneStockService
     {
         //Check whether the record exists or not
         if (!empty($id)) {
-            $record = PhoneStock::where("Id", $id)->get();
+            $record = PhoneStock::where("id", $id)->get();
 
             if (!$record->count()) {
                 return false;

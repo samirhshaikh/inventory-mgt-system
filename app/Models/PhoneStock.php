@@ -14,7 +14,7 @@ class PhoneStock extends BaseModel
 
     protected $connection = "mysql";
     protected $table = "PhoneStock";
-    protected $primaryKey = ["Id"];
+    protected $primaryKey = ["id"];
     protected $transformer = PhoneStockTransformer::class;
     public $incrementing = false;
     public $timestamps = true;
@@ -31,7 +31,7 @@ class PhoneStock extends BaseModel
      */
     public function manufacturer(): HasOne
     {
-        return $this->hasOne(HandsetManufacturers::class, "Id", "MakeId");
+        return $this->hasOne(HandsetManufacturers::class, "id", "MakeId");
     }
 
     /**
@@ -39,7 +39,7 @@ class PhoneStock extends BaseModel
      */
     public function model(): HasOne
     {
-        return $this->hasOne(HandsetModels::class, "Id", "ModelId");
+        return $this->hasOne(HandsetModels::class, "id", "ModelId");
     }
 
     /**
@@ -47,7 +47,7 @@ class PhoneStock extends BaseModel
      */
     public function color(): HasOne
     {
-        return $this->hasOne(HandsetColors::class, "Id", "ColorId");
+        return $this->hasOne(HandsetColors::class, "id", "ColorId");
     }
 
     /**
@@ -55,7 +55,7 @@ class PhoneStock extends BaseModel
      */
     public function sales(): HasOne
     {
-        return $this->hasOne(Sales::class, "Id", "InvoiceId");
+        return $this->hasOne(Sale::class, "id", "InvoiceId");
     }
 
     /**
@@ -71,6 +71,6 @@ class PhoneStock extends BaseModel
      */
     public function purchase(): BelongsTo
     {
-        return $this->belongsTo(Purchase::class, "InvoiceId", "Id");
+        return $this->belongsTo(Purchase::class, "InvoiceId", "id");
     }
 }

@@ -12,15 +12,13 @@ return new class extends Migration {
     {
         if (!Schema::hasTable("manufacturemaster")) {
             Schema::create("manufacturemaster", function (Blueprint $table) {
-                $table->increments("Id");
+                $table->id();
                 $table->string("Name", 255)->nullable();
                 $table->tinyInteger("IsActive")->default(0);
                 $table->datetime("CreatedDate")->nullable();
                 $table->string("CreatedBy", 250)->nullable();
                 $table->datetime("UpdatedDate")->nullable();
                 $table->string("UpdatedBy", 250)->nullable();
-
-                $table->primary("Id");
 
                 $table
                     ->foreign("CreatedBy")

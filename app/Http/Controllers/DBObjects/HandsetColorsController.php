@@ -38,7 +38,7 @@ class HandsetColorsController extends ObjectTypeNameController
 
         $object_type_name_service = new ObjectTypeNameService(
             new HandsetColors(),
-            "ColorId"
+            $this->getColumnIdInReferenceTables()
         );
 
         list(
@@ -73,5 +73,10 @@ class HandsetColorsController extends ObjectTypeNameController
     protected function getColumnIdInReferenceTables()
     {
         return "ColorId";
+    }
+
+    protected function getTablesToCheck()
+    {
+        return ["PhoneStock", "Handsets"]; //'Repair';
     }
 }

@@ -105,7 +105,7 @@
                             <v-select
                                 label="Name"
                                 v-model="row['MakeId']"
-                                :reduce="(manufacturer) => manufacturer.Id"
+                                :reduce="(manufacturer) => manufacturer.id"
                                 :options="handset_manufacturers"
                                 class="w-48 generic_vs_select"
                                 v-if="!loading_handset_manufacturers"
@@ -131,7 +131,7 @@
                                 :value="row['ModelId']"
                                 label="Name"
                                 v-model="row['ModelId']"
-                                :reduce="(model) => model.Id"
+                                :reduce="(model) => model.id"
                                 :options="handset_models"
                                 class="w-64 generic_vs_select"
                                 v-if="!loading_handset_models"
@@ -160,7 +160,7 @@
                                 :value="row['ColorId']"
                                 label="Name"
                                 v-model="row['ColorId']"
-                                :reduce="(color) => color.Id"
+                                :reduce="(color) => color.id"
                                 :options="handset_colors"
                                 class="w-64 generic_vs_select"
                                 v-if="!loading_handset_colors"
@@ -380,7 +380,7 @@ export default {
             axios
                 .get(route("handsets.get-single"), {
                     params: {
-                        Id: this.edit_id,
+                        id: this.edit_id,
                     },
                 })
                 .then(
@@ -563,7 +563,7 @@ export default {
 
             axios
                 .post(route("handsets.check-duplicate-name"), {
-                    Id: this.row["Id"],
+                    id: this.row["id"],
                     Name: this.row["Name"],
                 })
                 .then((response) => {

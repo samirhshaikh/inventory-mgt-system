@@ -41,7 +41,7 @@ export default {
 
     mounted() {
         this.row_selected = this.selected_records.hasOwnProperty(
-            this.row["Id"]
+            this.row["id"]
         );
     },
 

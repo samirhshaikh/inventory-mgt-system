@@ -31,7 +31,7 @@ class SalesStockService
                 );
 
                 //New Record
-                if (empty($row["Id"] ?? 0)) {
+                if (empty($row["id"] ?? 0)) {
                     $stocklog_service = new StockLogService();
                     $stocklog_service->add(
                         $row["IMEI"],
@@ -45,7 +45,7 @@ class SalesStockService
                 }
                 //Edit Record
                 else {
-                    $record = SalesStock::where("Id", $row["Id"])->get();
+                    $record = SalesStock::where("id", $row["id"])->get();
 
                     if (!$record->count()) {
                         continue;

@@ -112,6 +112,7 @@ class PurchasesDatatable extends BaseDatatable
         ],
         [
             "name" => "Phone",
+            "key" => "phone_details",
             "enabled" => true,
             "th" => "text-left",
             "td" => "text-left",
@@ -160,7 +161,7 @@ class PurchasesDatatable extends BaseDatatable
             "url" => route("purchases.data"),
             "pagination" => false,
             "enable_search" => true,
-            "primary_key" => "Id",
+            "primary_key" => "id",
             "record_name" => "Purchase",
             "child_record_name" => "Phone",
             "sorting" => [

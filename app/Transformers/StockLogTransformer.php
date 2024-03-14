@@ -10,7 +10,7 @@ class StockLogTransformer extends TransformerAbstract
     public function transform(StockLog $model)
     {
         $return = [
-            "Id" => $model->Id,
+            "id" => $model->id,
             "LogDate" => empty($model->LogDate)
                 ? ""
                 : $model->LogDate->format("d-M-Y"),

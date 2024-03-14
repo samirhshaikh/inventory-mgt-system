@@ -10,23 +10,20 @@ return new class extends Migration {
      */
     public function up()
     {
-        if (!Schema::hasTable("customer")) {
-            Schema::create("customer", function (Blueprint $table) {
-                $table->increments("Id");
-                $table->string("CustomerName", 350)->nullable();
-                $table->string("ContactNo1", 20)->nullable();
-                $table->string("ContactNo2", 20)->nullable();
-                $table->string("ContactNo3", 20)->nullable();
-                $table->string("City", 100)->nullable();
+        if (!Schema::hasTable("parts_supplier")) {
+            Schema::create("parts_supplier", function (Blueprint $table) {
+                $table->id();
+                $table->string("SupplierName", 255)->nullable();
+                $table->string("ContactNo1", 50)->nullable();
+                $table->string("ContactNo2", 50)->nullable();
+                $table->string("ContactNo3", 50)->nullable();
                 $table->double("Balance")->nullable();
-                $table->text("Comments");
+                $table->text("Comments")->nullable();
                 $table->tinyInteger("IsActive")->default(0);
                 $table->datetime("CreatedDate")->nullable();
                 $table->string("CreatedBy", 250)->nullable();
                 $table->datetime("UpdatedDate")->nullable();
                 $table->string("UpdatedBy", 250)->nullable();
-
-                $table->primary("Id");
 
                 $table
                     ->foreign("CreatedBy")
@@ -42,8 +39,8 @@ return new class extends Migration {
 
     public function down()
     {
-        if (Schema::hasTable("customer")) {
-            Schema::dropIfExists("customer");
+        if (Schema::hasTable("parts_supplier")) {
+            Schema::dropIfExists("parts_supplier");
         }
     }
 };

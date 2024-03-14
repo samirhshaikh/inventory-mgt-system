@@ -55,6 +55,8 @@ import {
     faFileAlt,
     faStore,
     faRedoAlt,
+    faScrewdriverWrench,
+    faScrewdriver,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -85,7 +87,9 @@ library.add(
     faTrash,
     faFileAlt,
     faStore,
-    faRedoAlt
+    faRedoAlt,
+    faScrewdriverWrench,
+    faScrewdriver
 );
 
 //End: Fontawesome

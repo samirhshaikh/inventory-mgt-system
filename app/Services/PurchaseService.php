@@ -59,7 +59,7 @@ class PurchaseService
         ]);
 
         if (!is_null($invoice_ids)) {
-            $records = $records->whereIn("Purchase.Id", $invoice_ids);
+            $records = $records->whereIn("Purchase.id", $invoice_ids);
         }
 
         //Get total records
@@ -77,15 +77,15 @@ class PurchaseService
                         "PhoneStock",
                         "PhoneStock.InvoiceId",
                         "=",
-                        "Purchase.Id"
+                        "Purchase.id"
                     )
-                    ->groupBy("Purchase.Id")
+                    ->groupBy("Purchase.id")
                     ->orderBy("Total_Cost", $order_direction);
                 break;
             case "supplier.SupplierName":
                 $records = $records->leftJoin(
                     "Supplier",
-                    "Supplier.Id",
+                    "Supplier.id",
                     "=",
                     "SupplierId"
                 );
@@ -114,7 +114,7 @@ class PurchaseService
         string $search_data = "{}"
     ): array {
         try {
-            $records = Purchase::selectRaw("Purchase.Id");
+            $records = Purchase::selectRaw("Purchase.id");
 
             if (
                 ($search_type === "simple" && $search_text != "") ||
@@ -122,21 +122,21 @@ class PurchaseService
                     $this->searchDataPresent($search_data))
             ) {
                 $records = $records
-                    ->join("Supplier", "Supplier.Id", "=", "SupplierId")
+                    ->join("Supplier", "Supplier.id", "=", "SupplierId")
                     ->join(
                         "PhoneStock",
                         "PhoneStock.InvoiceId",
                         "=",
-                        "Purchase.Id"
+                        "Purchase.id"
                     )
                     ->join(
                         "ManufactureMaster",
-                        "ManufactureMaster.Id",
+                        "ManufactureMaster.id",
                         "=",
                         "MakeId"
                     )
-                    ->join("ColorMaster", "ColorMaster.Id", "=", "ColorId")
-                    ->join("ModelMaster", "ModelMaster.Id", "=", "ModelId");
+                    ->join("ColorMaster", "ColorMaster.id", "=", "ColorId")
+                    ->join("ModelMaster", "ModelMaster.id", "=", "ModelId");
             }
 
             if ($search_type === "simple" && $search_text != "") {
@@ -176,9 +176,9 @@ class PurchaseService
                 );
             }
 
-            $records = $records->orderBy("Purchase.Id", "ASC")->get();
+            $records = $records->orderBy("Purchase.id", "ASC")->get();
 
-            return $records->pluck("Id")->all();
+            return $records->pluck("id")->all();
         } catch (\Exception $e) {
             return [""];
         }
@@ -295,7 +295,7 @@ class PurchaseService
     {
         $record = new Purchase();
 
-        $record = $record->where("Id", $request->get("Id"));
+        $record = $record->where("id", $request->get("id"));
 
         $record = $record->with("supplier");
 
@@ -349,7 +349,7 @@ class PurchaseService
             if (
                 $phonestock_service->isDuplicateIMEI(
                     $row["IMEI"],
-                    $row["Id"] ?? 0
+                    $row["id"] ?? 0
                 )
             ) {
                 throw new DuplicateIMEIException();
@@ -358,7 +358,7 @@ class PurchaseService
 
         //Check whether the purchase being edited exist or not.
         if ($request->get("operation", "add") == "edit") {
-            $record = Purchase::where("Id", $request->get("Id"))->get();
+            $record = Purchase::where("id", $request->get("id"))->get();
             if (!$record->count()) {
                 throw new RecordNotFoundException();
             }
@@ -370,7 +370,7 @@ class PurchaseService
             count($request->get("children_to_delete", []))
         ) {
             foreach ($request->get("children_to_delete", []) as $row) {
-                PhoneStock::where("Id", $row["Id"])->delete();
+                PhoneStock::where("id", $row["id"])->delete();
             }
         }
 
@@ -395,17 +395,17 @@ class PurchaseService
         $record->save();
 
         if ($request->get("operation", "add") == "add") {
-            $record->Id = Purchase::lastInsertId();
+            $record->id = Purchase::lastInsertId();
         }
 
         //Create/Update records in phonestock table
         $records_count = $phonestock_service->save(
-            $record->Id,
+            $record->id,
             $request->get("children", [])
         );
 
         return [
-            "id" => $record->Id,
+            "id" => $record->id,
             "records_count" => $records_count,
         ];
     }
@@ -419,7 +419,7 @@ class PurchaseService
     public function delete(IdRequest $request): bool
     {
         //Check whether the record exist or not
-        $invoice = Purchase::where("Id", $request->get("Id"))->get();
+        $invoice = Purchase::where("id", $request->get("id"))->get();
 
         if ($invoice->count()) {
             $invoice = $invoice->first();
@@ -428,14 +428,14 @@ class PurchaseService
                 $this->foreignReferenceFound(
                     ["TradeIn"],
                     "PurchaseInvoiceId",
-                    $request->get("Id")
+                    $request->get("id")
                 )
             ) {
                 throw new ReferenceException();
             }
 
             //Get all the phones in this invoice
-            $phones = PhoneStock::where("InvoiceId", $invoice->Id)->get();
+            $phones = PhoneStock::where("InvoiceId", $invoice->id)->get();
             if ($phones->count()) {
                 $tables_to_check = ["SalesStock"];
                 foreach ($phones as $phone) {
@@ -451,11 +451,11 @@ class PurchaseService
                 }
 
                 foreach ($phones as $phone) {
-                    PhoneStock::where("Id", $phone->Id)->delete();
+                    PhoneStock::where("id", $phone->id)->delete();
                 }
             }
 
-            Purchase::where("Id", $request->get("Id"))->delete();
+            Purchase::where("id", $request->get("id"))->delete();
 
             return true;
         } else {
@@ -491,7 +491,7 @@ class PurchaseService
             "PhoneStock",
             "PhoneStock.InvoiceId",
             "=",
-            "Purchase.Id"
+            "Purchase.id"
         );
 
         if ($start) {

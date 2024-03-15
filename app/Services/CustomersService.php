@@ -39,7 +39,6 @@ class CustomersService
                 "ContactNo2",
                 "Address",
                 "City",
-                "Balance",
                 "Comments",
                 'DATE_FORMAT(CreatedDate, "%d-%b-%Y")',
                 'DATE_FORMAT(UpdatedDate, "%d-%b-%Y")',

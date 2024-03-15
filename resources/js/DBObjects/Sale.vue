@@ -11,7 +11,7 @@
         content-transition="vfm-fade"
         overlay-transition="vfm-fade"
     >
-        <div class="p-0 overflow-y-auto text-sm">
+        <div class="p-0 overflow-y-auto overflow-x-hidden text-sm">
             <div
                 class="datatable_header"
                 :class="{

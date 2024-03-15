@@ -133,12 +133,17 @@
                         >
                             Address
                         </label>
-                        <vue-google-autocomplete
-                            id="address"
-                            classname="w-1/2 generic_input"
-                            placeholder="Address"
-                        >
-                        </vue-google-autocomplete>
+                        <textarea
+                            class="w-3/4 generic_input"
+                            v-model.trim="row['Address']"
+                            rows="3"
+                        />
+                        <!--                        <vue-google-autocomplete-->
+                        <!--                            id="address"-->
+                        <!--                            classname="w-1/2 generic_input"-->
+                        <!--                            placeholder="Address"-->
+                        <!--                        >-->
+                        <!--                        </vue-google-autocomplete>-->
                     </div>
 
                     <div

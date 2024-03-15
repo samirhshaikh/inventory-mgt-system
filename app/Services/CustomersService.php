@@ -168,6 +168,7 @@ class CustomersService
         $record->CustomerName = $request->get("CustomerName");
         $record->ContactNo1 = $request->get("ContactNo1");
         $record->ContactNo2 = $request->get("ContactNo2");
+        $record->Address = $request->get("Address");
         $record->Comments = $request->get("Comments");
         $record->Balance = (float) $request->get("Balance");
         $record->UpdatedBy = session("user_details.UserName");

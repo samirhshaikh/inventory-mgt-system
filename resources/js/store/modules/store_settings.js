@@ -5,6 +5,7 @@
 const state = () => ({
     name: "Store Name",
     address: "",
+    account_details: "",
     phone: "",
     email: "",
 });
@@ -15,6 +16,9 @@ const getters = {
     },
     address: (state) => {
         return state.address;
+    },
+    account_details: (state) => {
+        return state.account_details;
     },
     phone: (state) => {
         return state.phone;
@@ -43,6 +47,7 @@ const mutations = {
     setStoreSettings(state, settings) {
         state.name = settings.name;
         state.address = settings.address;
+        state.account_details = settings.account_details;
         state.phone = settings.phone;
         state.email = settings.email;
     },

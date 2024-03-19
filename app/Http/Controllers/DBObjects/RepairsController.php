@@ -179,6 +179,7 @@ class RepairsController extends BaseController
             "app_settings.store_settings.name",
             "Store Name"
         );
+        $store_name = $store_details[0];
         if (session("app_settings.store_settings.address", "")) {
             $store_details[] = nl2br(
                 session("app_settings.store_settings.address")
@@ -193,6 +194,13 @@ class RepairsController extends BaseController
                 "Email: " . session("app_settings.store_settings.email");
         }
         $store_details = join("<br>", $store_details);
+
+        $account_details = "";
+        if (session("app_settings.store_settings.account_details", "")) {
+            $account_details = session(
+                "app_settings.store_settings.account_details"
+            );
+        }
 
         $parts_total = 0;
         $items = [];
@@ -212,7 +220,7 @@ class RepairsController extends BaseController
             //            $items[] = $item;
         }
 
-        $grand_total = $parts_total + $invoice["Amount"];
+        $grand_total = $invoice["Amount"]; //+ $parts_total
 
         $items = join("", $items);
 
@@ -257,8 +265,8 @@ class RepairsController extends BaseController
     <table style="width: 100%;">
         <tr>
             <td>
-                <h1 style="font-size: 21px; font-weight: bold; margin-bottom: 2px;">Smartfix Solutions LTD</h1>
-                <h1 style="font-size: 21px; font-weight: bold; margin-top: 0px;">T/A PHONENATION</h1>
+                <h1 style="font-size: 21px; font-weight: bold; margin-bottom: 2px;">{$store_name}</h1>
+<!--                <h1 style="font-size: 21px; font-weight: bold; margin-top: 0px;">T/A PHONENATION</h1>-->
             </td>
             <td style="text-align: right;">
                 <h1 style="font-size: 27px; font-weight: bold; color: #3B5E90;">REPAIR INVOICE</h1>
@@ -392,7 +400,7 @@ class RepairsController extends BaseController
                     <li>
                         FOR BACS PLEASE USE ACCOUNT DETAILS AS BELOW:
                         <br>
-                        SMARTFIX SOLUTIONS LTD, ACC. No.: 713565541, Sort code: 60-15-48
+                        {$account_details}
                     </li>
                 </ul>
             </td>

@@ -120,6 +120,25 @@
                                 'text-gray-700': !dark_mode,
                                 'text-white': dark_mode,
                             }"
+                            for="account_details"
+                        >
+                            Account Details
+                        </label>
+                        <input
+                            class="w-full generic_input"
+                            id="account_details"
+                            type="text"
+                            v-model.trim="account_details"
+                        />
+                    </div>
+
+                    <div class="w-full form_field_container">
+                        <label
+                            class="form_field_label"
+                            :class="{
+                                'text-gray-700': !dark_mode,
+                                'text-white': dark_mode,
+                            }"
                             for="phone"
                         >
                             Phone
@@ -186,6 +205,7 @@ export default {
         return {
             business_name: "",
             store_address: "",
+            account_details: "",
             phone: "",
             email: "",
         };
@@ -218,6 +238,7 @@ export default {
     mounted() {
         this.business_name = this.store_settings.name;
         this.store_address = this.store_settings.address;
+        this.account_details = this.store_settings.account_details;
         this.phone = this.store_settings.phone;
         this.email = this.store_settings.email;
 
@@ -235,6 +256,7 @@ export default {
             let settings = {
                 name: this.business_name,
                 address: this.store_address,
+                account_details: this.account_details,
                 phone: this.phone,
                 email: this.email,
             };
